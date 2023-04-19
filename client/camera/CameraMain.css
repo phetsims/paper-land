@@ -1,8 +1,7 @@
 @value cameraMainPadding: 20px;
-
 @value cameraMainSidebarWidth: 320px;
-
 @value backgroundColor: #2E4152;
+@value transitionTime: 0.1s;
 
 :local(.root) {
   display: flex;
@@ -12,13 +11,28 @@
 
 :local(.appRoot) {
   display: flex;
+  flex-direction: column;
   padding: 10px;
+}
+
+:local(.pageTitle) {
+  margin: 10px;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+:local(.mainView) {
+  display: flex;
+  flex-direction: row;
 }
 
 :local(.videoAndEditorContainer) {
   display: flex;
   flex-direction: column;
   margin-right: 20px;
+  transition: width transitionTime;
 }
 
 :local(.video) {
@@ -72,8 +86,12 @@
   color: white;
   font: 16px sans-serif;
   font-weight: 300;
+  width: 0;
   height: 95vh;
+  overflow-x: hidden;
   overflow-y: auto;
+  z-index: 1;
+  transition: width transitionTime;
 }
 
 :local(.sidebar) h1,

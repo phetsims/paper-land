@@ -14,6 +14,7 @@ import { printCalibrationPage, printPage } from './printPdf';
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
 const PROGRAM_DELETE_WARNING = 'This will remove the program for all users of the database.\nAre you sure you want to delete this program?';
+const OPEN_SIDEBAR_WIDTH = parseInt( styles.cameraMainSidebarWidth, 10 );
 
 // Produces a unique ID for each debug marker component, important for React to
 // render a list of components.
@@ -38,6 +39,7 @@ export default class CameraMain extends React.Component {
       programListFilterString: '',
       copyProgramListFilterString: '',
       showCreateProgramDialog: false,
+      sidebarOpen: false,
 
       // {Object|null} - The program currently selected and being displayed in the editor, null for none.
       programInEditor: null,
@@ -497,11 +499,11 @@ export default class CameraMain extends React.Component {
 
   render() {
     const padding = parseInt( styles.cameraMainPadding, 10 );
-    const sidebarWidth = parseInt( styles.cameraMainSidebarWidth, 10 );
     const editorUrl = new URL(
       `editor.html?${this.state.spaceData.spaceName}`,
       window.location.origin
     ).toString();
+    const sidebarWidth = this.state.sidebarOpen ? OPEN_SIDEBAR_WIDTH : 0;
 
     // Determine whether it is okay for the user to make changes to the program that is currently shown in the editor.
     const okayToEditSelectedProgram = !!this.state.programInEditor &&
@@ -513,7 +515,7 @@ export default class CameraMain extends React.Component {
       this._editor.updateOptions( { readOnly: !okayToEditSelectedProgram } );
     }
 
-    // Return the JSX that essentially renders the component.
+    // Return the JSX that defines this component.
     return (
       <div className={styles.root}>
         <div className={styles.appRoot}>
@@ -525,466 +527,477 @@ export default class CameraMain extends React.Component {
             setSearchString={str => this.setState( { copyProgramListFilterString: str } )}
           />
 
-          <div
-            className={styles.videoAndEditorContainer}
-            style={{ width: this.state.pageWidth - padding * 3 - sidebarWidth }}
-          >
-            <div className={styles.video}>
-              <CameraVideo
-                width={this.state.pageWidth - padding * 3 - sidebarWidth}
-                config={this.props.config}
-                onConfigChange={this.props.onConfigChange}
-                onProcessVideo={( { programsToRender, markers, framerate } ) => {
-                  this.setState( { framerate } );
-                  this._programsChange( programsToRender );
-                  this.props.onMarkersChange( markers );
-                }}
-                allowSelectingDetectedPoints={this.state.selectedColorIndex !== -1}
-                onSelectPoint={( { color, size } ) => {
-                  if ( this.state.selectedColorIndex === -1 ) {
-                    return;
-                  }
-
-                  const colorsRGB = this.props.config.colorsRGB.slice();
-                  colorsRGB[ this.state.selectedColorIndex ] = color.map( value => Math.round( value ) );
-
-                  const paperDotSizes = this.props.config.paperDotSizes.slice();
-                  paperDotSizes[ this.state.selectedColorIndex ] = size;
-
-                  this.props.onConfigChange( { ...this.props.config, colorsRGB, paperDotSizes } );
-                  this.setState( { selectedColorIndex: -1 } );
-                }}
-                debugPrograms={this.state.debugPrograms}
-                removeDebugProgram={program => {
-                  const debugPrograms = this.state.debugPrograms.filter( p => p !== program );
-                  this.setState( { debugPrograms } );
-                }}
-                debugMarkers={this.state.debugMarkers}
-                removeDebugMarker={marker => {
-                  const debugMarkers = this.state.debugMarkers.slice();
-                  const index = debugMarkers.indexOf( marker );
-                  debugMarkers.splice( index, 1 );
-                  this.setState( { debugMarkers } );
-                }}
-              />
-            </div>
-
-            <div className={styles.editorTitleBar}>
-              <p>{this._getEditorLabelText()}</p>
-              {
-                okayToEditSelectedProgram &&
-                (
-                  <>
-                    <Button
-                      onClick={this._saveProgram.bind( this )}
-                      disabled={!this._isCodeChanged()}
-                    >
-                      <span className={styles.iconButtonSpan}>
-                        <img src={'media/images/upload.svg'} alt={'Save icon'}/>
-                        Save to DB
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={() => {
-                        if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
-                          this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
-                        }
-                      }}
-                    >
-                      <span className={styles.iconButtonSpan}>
-                        <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
-                        Delete
-                      </span>
-                    </Button>
-                  </>
-                )
-              }
-            </div>
-
-            <div className={styles.editor}>
-              <MonacoEditor
-                language='javascript'
-                theme='vs-dark'
-                value={this.state.codeInEditor || '// Select Program'}
-                onChange={code => this.setState( { codeInEditor: code } )}
-                editorDidMount={this._onEditorDidMount.bind( this )}
-                options={{
-                  tabSize: 2,
-                  fontSize: '16px',
-                  minimap: { enabled: false },
-                  automaticLayout: true
-                }}
-              />
-            </div>
+          <div className={styles.pageTitle}>
+            <h4>Camera & Editor View</h4>
+            <Button
+              onClick={() => this.setState( { sidebarOpen: !this.state.sidebarOpen } )}
+            >
+              {this.state.sidebarOpen ? '☰ Close Sidebar' : '☰ Open Sidebar'}
+            </Button>
           </div>
 
-          <div className={styles.sidebar}>
-            {this.showTestButton ? (
-              <Button
-                onClick={() => {
+          <div className={styles.mainView}>
+            <div
+              className={styles.videoAndEditorContainer}
+              style={{ width: this.state.pageWidth - padding * 3 - sidebarWidth }}
+            >
+              <div className={styles.video}>
+                <CameraVideo
+                  width={this.state.pageWidth - padding * 3 - sidebarWidth}
+                  config={this.props.config}
+                  onConfigChange={this.props.onConfigChange}
+                  onProcessVideo={( { programsToRender, markers, framerate } ) => {
+                    this.setState( { framerate } );
+                    this._programsChange( programsToRender );
+                    this.props.onMarkersChange( markers );
+                  }}
+                  allowSelectingDetectedPoints={this.state.selectedColorIndex !== -1}
+                  onSelectPoint={( { color, size } ) => {
+                    if ( this.state.selectedColorIndex === -1 ) {
+                      return;
+                    }
 
-                  // Get a list of the supported constraints for the devices available from this browser.
-                  const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-                  console.log( '===== Supported Constraints =====' );
-                  console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );
+                    const colorsRGB = this.props.config.colorsRGB.slice();
+                    colorsRGB[ this.state.selectedColorIndex ] = color.map( value => Math.round( value ) );
 
-                  // Get a list of all media devices and log some of the information to the console.
-                  navigator.mediaDevices
-                    .enumerateDevices()
-                    .then( devices => {
-                      console.log( '===== Device List =====' );
-                      devices.forEach( device => {
-                        console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );
-                      } );
-                    } )
-                    .catch( err => {
-                      console.error( `${err.name}: ${err.message}` );
-                    } );
+                    const paperDotSizes = this.props.config.paperDotSizes.slice();
+                    paperDotSizes[ this.state.selectedColorIndex ] = size;
 
-                  // Get the video track.
-                  navigator.mediaDevices.getUserMedia( { video: true } )
-                    .then( mediaStream => {
-                      const track = mediaStream.getVideoTracks()[ 0 ];
-                      if ( track ) {
+                    this.props.onConfigChange( { ...this.props.config, colorsRGB, paperDotSizes } );
+                    this.setState( { selectedColorIndex: -1 } );
+                  }}
+                  debugPrograms={this.state.debugPrograms}
+                  removeDebugProgram={program => {
+                    const debugPrograms = this.state.debugPrograms.filter( p => p !== program );
+                    this.setState( { debugPrograms } );
+                  }}
+                  debugMarkers={this.state.debugMarkers}
+                  removeDebugMarker={marker => {
+                    const debugMarkers = this.state.debugMarkers.slice();
+                    const index = debugMarkers.indexOf( marker );
+                    debugMarkers.splice( index, 1 );
+                    this.setState( { debugMarkers } );
+                  }}
+                />
+              </div>
 
-                        // Log information about the video track to the console.
-                        console.log( `===== found track = ${track.label}, capabilities below =====` );
-                        console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );
-
-                        console.log( '===== track settings =====' );
-                        console.log( `${JSON.stringify( track.getSettings(), null, 1 )}` );
-
-                        console.log( '===== track constraints =====' );
-                        console.log( `${JSON.stringify( track.getConstraints(), null, 1 )}` );
-                      }
-                    } )
-                    .catch( e => {
-                      console.log( `Error getting video track = ${e}` );
-                    } );
+              <div className={styles.editorTitleBar}>
+                <p>{this._getEditorLabelText()}</p>
+                {
+                  okayToEditSelectedProgram &&
+                  (
+                    <>
+                      <Button
+                        onClick={this._saveProgram.bind( this )}
+                        disabled={!this._isCodeChanged()}
+                      >
+                        <span className={styles.iconButtonSpan}>
+                          <img src={'media/images/upload.svg'} alt={'Save icon'}/>
+                        Save to DB
+                        </span>
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
+                            this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
+                          }
+                        }}
+                      >
+                        <span className={styles.iconButtonSpan}>
+                          <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
+                        Delete
+                        </span>
+                      </Button>
+                    </>
+                  )
                 }
-                }
-              >
-                Test Button
-              </Button>
-            ) : ( '' )}
-            <div className={`${styles.sidebarSection} ${styles.create}`}>
-              <button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create Programs</button>
-              <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
-                Open Code Editor <br></br>
-                for this Space
-              </a>
-            </div>
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.sidebarSubSection}>Space</h3>
-              <div>
-                <div>
-                  <label htmlFor='spaces'>Select a Space:</label>
-                  <select
-                    name='spaces'
-                    id='spaces'
-                    value={this.state.selectedSpaceName}
-                    onChange={event => {
-                      this.setState( { selectedSpaceName: event.target.value } );
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        selectedSpaceName: event.target.value
-                      } );
-                    }}
-                  >
-                    {this.state.availableSpaces.map( ( option, index ) => {
-                      return <option key={index}>
-                        {option}
-                      </option>;
-                    } )}
-                  </select>
-                </div>
-                <div>
-                  {this.state.isAddingNewSpace ? (
-                    <div>
-                      <form onSubmit={event => {
-                        if ( this._handleNewSpaceNameSubmit( event ) ) {
-                          this.setState( { isAddingNewSpace: false } );
-                        }
-                      }}>
-                        <label>
-                          Name:&nbsp;
-                          <input
-                            type='text'
-                            onChange={this._handleNewSpaceNameChange.bind( this )}
-                          />
-                        </label>
-                        <br/>
-                        <button type='submit'>
-                          Confirm
-                        </button>
-                        <button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
-                          Cancel
-                        </button>
-                      </form>
-                    </div>
-                  ) : (
-                     <div>
-                       <button onClick={() => {
-                         this.setState( { isAddingNewSpace: true } );
-                         this.setState( { newSpaceName: '' } );
-                       }}>
-                         Add New Space
-                       </button>
-                     </div>
-                   )}
-                </div>
+              </div>
+
+              <div className={styles.editor}>
+                <MonacoEditor
+                  language='javascript'
+                  theme='vs-dark'
+                  value={this.state.codeInEditor || '// Select Program'}
+                  onChange={code => this.setState( { codeInEditor: code } )}
+                  editorDidMount={this._onEditorDidMount.bind( this )}
+                  options={{
+                    tabSize: 2,
+                    fontSize: '16px',
+                    minimap: { enabled: false },
+                    automaticLayout: true
+                  }}
+                />
               </div>
             </div>
-            <div className={styles.sidebarSection}>
-              <h3>Programs</h3>
-              <label>Filter on:
-                <input
-                  name='filterProgramsOn'
-                  style={{ marginBottom: '10px' }}
-                  onChange={e => this.setState( { programListFilterString: e.target.value } )}
-                />
-              </label>
-              <div className={`${styles.sidebarSubSection} ${styles.programList}`}>
+
+            <div className={styles.sidebar}>
+              {this.showTestButton ? (
+                <Button
+                  onClick={() => {
+
+                    // Get a list of the supported constraints for the devices available from this browser.
+                    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+                    console.log( '===== Supported Constraints =====' );
+                    console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );
+
+                    // Get a list of all media devices and log some of the information to the console.
+                    navigator.mediaDevices
+                      .enumerateDevices()
+                      .then( devices => {
+                        console.log( '===== Device List =====' );
+                        devices.forEach( device => {
+                          console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );
+                        } );
+                      } )
+                      .catch( err => {
+                        console.error( `${err.name}: ${err.message}` );
+                      } );
+
+                    // Get the video track.
+                    navigator.mediaDevices.getUserMedia( { video: true } )
+                      .then( mediaStream => {
+                        const track = mediaStream.getVideoTracks()[ 0 ];
+                        if ( track ) {
+
+                          // Log information about the video track to the console.
+                          console.log( `===== found track = ${track.label}, capabilities below =====` );
+                          console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );
+
+                          console.log( '===== track settings =====' );
+                          console.log( `${JSON.stringify( track.getSettings(), null, 1 )}` );
+
+                          console.log( '===== track constraints =====' );
+                          console.log( `${JSON.stringify( track.getConstraints(), null, 1 )}` );
+                        }
+                      } )
+                      .catch( e => {
+                        console.log( `Error getting video track = ${e}` );
+                      } );
+                  }
+                  }
+                >
+                  Test Button
+                </Button>
+              ) : ( '' )}
+              <div className={`${styles.sidebarSection} ${styles.create}`}>
+                <button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create Programs</button>
+                <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
+                  Open Code Editor <br></br>
+                  for this Space
+                </a>
+              </div>
+              <div className={styles.sidebarSection}>
+                <h3 className={styles.sidebarSubSection}>Space</h3>
                 <div>
-                  {this.state.spaceData.programs
-                    .filter( program => programMatchesFilterString( program.currentCode, this.state.programListFilterString ) )
-                    .sort( ( programA, programB ) => programA.number - programB.number )
-                    .map( program => (
-                      <div
-                        key={program.number}
-                        className={[
-                          this.state.programInEditor && program.number === this.state.programInEditor.number ?
-                          styles.selectedProgramListItem :
-                          styles.programListItem
-                        ].join( ' ' )}
-                      >
-                        <span
-                          className={styles.programListItemContent}
-                          onClick={event => {
-                            event.stopPropagation();
-                            this.setState( {
-                              programInEditor: program,
-                              codeInEditor: program.currentCode.slice()
-                            } );
-                          }}
+                  <div>
+                    <label htmlFor='spaces'>Select a Space:</label>
+                    <select
+                      name='spaces'
+                      id='spaces'
+                      value={this.state.selectedSpaceName}
+                      onChange={event => {
+                        this.setState( { selectedSpaceName: event.target.value } );
+                        this.props.onConfigChange( {
+                          ...this.props.config,
+                          selectedSpaceName: event.target.value
+                        } );
+                      }}
+                    >
+                      {this.state.availableSpaces.map( ( option, index ) => {
+                        return <option key={index}>
+                          {option}
+                        </option>;
+                      } )}
+                    </select>
+                  </div>
+                  <div>
+                    {this.state.isAddingNewSpace ? (
+                      <div>
+                        <form onSubmit={event => {
+                          if ( this._handleNewSpaceNameSubmit( event ) ) {
+                            this.setState( { isAddingNewSpace: false } );
+                          }
+                        }}>
+                          <label>
+                            Name:&nbsp;
+                            <input
+                              type='text'
+                              onChange={this._handleNewSpaceNameChange.bind( this )}
+                            />
+                          </label>
+                          <br/>
+                          <button type='submit'>
+                            Confirm
+                          </button>
+                          <button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
+                            Cancel
+                          </button>
+                        </form>
+                      </div>
+                    ) : (
+                       <div>
+                         <button onClick={() => {
+                           this.setState( { isAddingNewSpace: true } );
+                           this.setState( { newSpaceName: '' } );
+                         }}>
+                           Add New Space
+                         </button>
+                       </div>
+                     )}
+                  </div>
+                </div>
+              </div>
+              <div className={styles.sidebarSection}>
+                <h3>Programs</h3>
+                <label>Filter on:
+                  <input
+                    name='filterProgramsOn'
+                    style={{ marginBottom: '10px' }}
+                    onChange={e => this.setState( { programListFilterString: e.target.value } )}
+                  />
+                </label>
+                <div className={`${styles.sidebarSubSection} ${styles.programList}`}>
+                  <div>
+                    {this.state.spaceData.programs
+                      .filter( program => programMatchesFilterString( program.currentCode, this.state.programListFilterString ) )
+                      .sort( ( programA, programB ) => programA.number - programB.number )
+                      .map( program => (
+                        <div
+                          key={program.number}
+                          className={[
+                            this.state.programInEditor && program.number === this.state.programInEditor.number ?
+                            styles.selectedProgramListItem :
+                            styles.programListItem
+                          ].join( ' ' )}
                         >
                           <span
-                            className={styles.programListItemName}
+                            className={styles.programListItemContent}
+                            onClick={event => {
+                              event.stopPropagation();
+                              this.setState( {
+                                programInEditor: program,
+                                codeInEditor: program.currentCode.slice()
+                              } );
+                            }}
                           >
-                            <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
+                            <span
+                              className={styles.programListItemName}
+                            >
+                              <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
+                            </span>
                           </span>
-                        </span>
-                        <span
-                          className={styles.programListIcon}
-                          onClick={event => {
-                            event.stopPropagation();
-                            this._print( program );
-                          }}
-                        >
-                          <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
-                        </span>
-                        {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
                           <span
                             className={styles.programListIcon}
                             onClick={event => {
                               event.stopPropagation();
-                              this._createDebugProgram( program.number, codeToName( program.currentCode ) );
+                              this._print( program );
                             }}
                           >
-                            <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
+                            <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
                           </span>
-                        ) : (
-                           ''
-                         )}
-                      </div>
-                    ) )}
+                          {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
+                            <span
+                              className={styles.programListIcon}
+                              onClick={event => {
+                                event.stopPropagation();
+                                this._createDebugProgram( program.number, codeToName( program.currentCode ) );
+                              }}
+                            >
+                              <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
+                            </span>
+                          ) : (
+                             ''
+                           )}
+                        </div>
+                      ) )}
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.sidebarSection}>
-              <h3>Markers</h3>
-              <div
-                className={styles.sidebarSubSection}
-              >
-                {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
-                  <ColorListItem
-                    key={colorIndex}
-                    colorIndex={colorIndex}
-                    color={color}
-                    size={50}
-                    onClick={this._createDebugMarker.bind( this )}
-                  ></ColorListItem>
-                ) )}
-              </div>
-            </div>
-
-            <div className={styles.sidebarSection}>
-              <h3>Printing</h3>
-              <p>Click the print icon next to the program name to print.</p>
-              <div className={styles.sidebarSubSection}>
-                <span>Paper Size: </span>
-                <select
-                  value={this.props.config.paperSize}
-                  onChange={event => {
-                    const paperSize = event.target.value;
-                    this.props.onConfigChange( { ...this.props.config, paperSize } );
-                  }}
+              <div className={styles.sidebarSection}>
+                <h3>Markers</h3>
+                <div
+                  className={styles.sidebarSubSection}
                 >
-                  <optgroup label='Common'>
-                    {clientConstants.commonPaperSizeNames.map( name => {
-                      return (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      );
-                    } )}
-                  </optgroup>
-                  <optgroup label='Other'>
-                    {clientConstants.otherPaperSizeNames.map( name => {
-                      return (
-                        <option key={name} value={name}>
-                          {name}
-                        </option>
-                      );
-                    } )}
-                  </optgroup>
-                </select>
+                  {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                    <ColorListItem
+                      key={colorIndex}
+                      colorIndex={colorIndex}
+                      color={color}
+                      size={50}
+                      onClick={this._createDebugMarker.bind( this )}
+                    ></ColorListItem>
+                  ) )}
+                </div>
               </div>
-              <div>
-                <button onClick={this._printCalibration}>Print Calibration Page</button>
-                {' '}
+
+              <div className={styles.sidebarSection}>
+                <h3>Printing</h3>
+                <p>Click the print icon next to the program name to print.</p>
+                <div className={styles.sidebarSubSection}>
+                  <span>Paper Size: </span>
+                  <select
+                    value={this.props.config.paperSize}
+                    onChange={event => {
+                      const paperSize = event.target.value;
+                      this.props.onConfigChange( { ...this.props.config, paperSize } );
+                    }}
+                  >
+                    <optgroup label='Common'>
+                      {clientConstants.commonPaperSizeNames.map( name => {
+                        return (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        );
+                      } )}
+                    </optgroup>
+                    <optgroup label='Other'>
+                      {clientConstants.otherPaperSizeNames.map( name => {
+                        return (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        );
+                      } )}
+                    </optgroup>
+                  </select>
+                </div>
+                <div>
+                  <button onClick={this._printCalibration}>Print Calibration Page</button>
+                  {' '}
+                </div>
               </div>
+
+              <div className={styles.sidebarSection}>
+                <h3>Calibration</h3>
+                <div className={styles.sidebarSubSection}>
+                  {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                    <ColorListItem
+                      colorIndex={colorIndex}
+                      color={color}
+                      key={colorIndex}
+                    ></ColorListItem>
+
+                  ) )}
+                </div>
+              </div>
+
+              <div className={styles.sidebarSection}>
+                <h3 className={styles.headerWithOption}>Detection</h3>
+                <div className={styles.optionWithHeader}>
+                  <input
+                    type='checkbox'
+                    name='freezeDetection'
+                    checked={this.props.config.freezeDetection}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        freezeDetection: !this.props.config.freezeDetection
+                      } )
+                    }
+                  />
+                  <label htmlFor='freezeDetection'>pause</label>
+                </div>
+
+                <div className={styles.sidebarSubSection}>
+                  <span>Accuracy</span>
+                  <input
+                    name='scaleFactor'
+                    type='range'
+                    min='1'
+                    max='10'
+                    step='1'
+                    value={this.props.config.scaleFactor}
+                    onChange={event => {
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        scaleFactor: event.target.valueAsNumber
+                      } );
+                    }}
+                  />
+                  <span>Performance</span>
+                </div>
+                <div className={styles.sidebarSubSection}>
+                  Framerate <strong>{this.state.framerate}</strong>
+                </div>
+
+                <h4>Overlays</h4>
+                <div className={styles.sidebarSubSection}>
+                  <input
+                    type='checkbox'
+                    checked={this.props.config.showOverlayKeyPointCircles}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        showOverlayKeyPointCircles: !this.props.config.showOverlayKeyPointCircles
+                      } )
+                    }
+                  />{' '}
+                  keypoint circles
+                </div>
+
+                <div className={styles.sidebarSubSection}>
+                  <input
+                    type='checkbox'
+                    checked={this.props.config.showOverlayKeyPointText}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        showOverlayKeyPointText: !this.props.config.showOverlayKeyPointText
+                      } )
+                    }
+                  />{' '}
+                  keypoint text
+                </div>
+
+                <div className={styles.sidebarSubSection}>
+                  <input
+                    type='checkbox'
+                    checked={this.props.config.showOverlayComponentLines}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        showOverlayComponentLines: !this.props.config.showOverlayComponentLines
+                      } )
+                    }
+                  />{' '}
+                  component lines
+                </div>
+
+                <div className={styles.sidebarSubSection}>
+                  <input
+                    type='checkbox'
+                    checked={this.props.config.showOverlayShapeId}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        showOverlayShapeId: !this.props.config.showOverlayShapeId
+                      } )
+                    }
+                  />{' '}
+                  shape ids
+                </div>
+
+                <div className={styles.sidebarSubSection}>
+                  <input
+                    type='checkbox'
+                    checked={this.props.config.showOverlayProgram}
+                    onChange={() =>
+                      this.props.onConfigChange( {
+                        ...this.props.config,
+                        showOverlayProgram: !this.props.config.showOverlayProgram
+                      } )
+                    }
+                  />{' '}
+                  programs
+                </div>
+              </div>
+              {/*<div className={styles.sidebarSection}>*/}
+              {/*  <CameraControls*/}
+              {/*    data={this.state}*/}
+              {/*  />*/}
+              {/*</div>*/}
             </div>
-
-            <div className={styles.sidebarSection}>
-              <h3>Calibration</h3>
-              <div className={styles.sidebarSubSection}>
-                {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
-                  <ColorListItem
-                    colorIndex={colorIndex}
-                    color={color}
-                    key={colorIndex}
-                  ></ColorListItem>
-
-                ) )}
-              </div>
-            </div>
-
-            <div className={styles.sidebarSection}>
-              <h3 className={styles.headerWithOption}>Detection</h3>
-              <div className={styles.optionWithHeader}>
-                <input
-                  type='checkbox'
-                  name='freezeDetection'
-                  checked={this.props.config.freezeDetection}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      freezeDetection: !this.props.config.freezeDetection
-                    } )
-                  }
-                />
-                <label htmlFor='freezeDetection'>pause</label>
-              </div>
-
-              <div className={styles.sidebarSubSection}>
-                <span>Accuracy</span>
-                <input
-                  name='scaleFactor'
-                  type='range'
-                  min='1'
-                  max='10'
-                  step='1'
-                  value={this.props.config.scaleFactor}
-                  onChange={event => {
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      scaleFactor: event.target.valueAsNumber
-                    } );
-                  }}
-                />
-                <span>Performance</span>
-              </div>
-              <div className={styles.sidebarSubSection}>
-                Framerate <strong>{this.state.framerate}</strong>
-              </div>
-
-              <h4>Overlays</h4>
-              <div className={styles.sidebarSubSection}>
-                <input
-                  type='checkbox'
-                  checked={this.props.config.showOverlayKeyPointCircles}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      showOverlayKeyPointCircles: !this.props.config.showOverlayKeyPointCircles
-                    } )
-                  }
-                />{' '}
-                keypoint circles
-              </div>
-
-              <div className={styles.sidebarSubSection}>
-                <input
-                  type='checkbox'
-                  checked={this.props.config.showOverlayKeyPointText}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      showOverlayKeyPointText: !this.props.config.showOverlayKeyPointText
-                    } )
-                  }
-                />{' '}
-                keypoint text
-              </div>
-
-              <div className={styles.sidebarSubSection}>
-                <input
-                  type='checkbox'
-                  checked={this.props.config.showOverlayComponentLines}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      showOverlayComponentLines: !this.props.config.showOverlayComponentLines
-                    } )
-                  }
-                />{' '}
-                component lines
-              </div>
-
-              <div className={styles.sidebarSubSection}>
-                <input
-                  type='checkbox'
-                  checked={this.props.config.showOverlayShapeId}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      showOverlayShapeId: !this.props.config.showOverlayShapeId
-                    } )
-                  }
-                />{' '}
-                shape ids
-              </div>
-
-              <div className={styles.sidebarSubSection}>
-                <input
-                  type='checkbox'
-                  checked={this.props.config.showOverlayProgram}
-                  onChange={() =>
-                    this.props.onConfigChange( {
-                      ...this.props.config,
-                      showOverlayProgram: !this.props.config.showOverlayProgram
-                    } )
-                  }
-                />{' '}
-                programs
-              </div>
-            </div>
-            {/*<div className={styles.sidebarSection}>*/}
-            {/*  <CameraControls*/}
-            {/*    data={this.state}*/}
-            {/*  />*/}
-            {/*</div>*/}
           </div>
         </div>
       </div>
