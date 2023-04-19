@@ -1,4 +1,4 @@
-// Add PhET Checkbox - Copy - Copy
+// Add PhET Checkbox - 1
 // Keywords: checkbox, view, simple, phet
 // ------------------------------- //
 // Required Programs (dependencies) [none]
@@ -71,6 +71,5 @@ importScripts('paper.js');
   ctx.fillStyle = 'rgb(155,25,34)';
   ctx.fillText('Checkbox', canvas.width / 2, canvas.height / 2 + 20);
 })();
-
 
 
