@@ -50,10 +50,13 @@ export default class CameraMain extends React.Component {
     // @private {Object|null} - local reference to the editor, initialized when the editor component mounts
     this._editor = null;
 
-    // @private {number|null} - id of current timeout for polling the space info in the DB, null when no timeout set
-    this._pollSpaceTimeout = null;
+    // @private {number} - time of the last update of the space data in epoch time
+    this._timeOfLastSpaceDataUpdate = Number.NEGATIVE_INFINITY;
 
-    // Process query parameters
+    // @private {boolean} - whether there is currently an update of the space data in progress
+    this._spaceDataUpdateInProgress = false;
+
+    // Process query parameters.
     const urlSearchParams = new URLSearchParams( window.location.search );
     const params = Object.fromEntries( urlSearchParams.entries() );
     this.showTestButton = params.showTestButton !== undefined;
@@ -63,7 +66,16 @@ export default class CameraMain extends React.Component {
     window.addEventListener( 'resize', this._updatePageWidth.bind( this ) );
     this._updatePageWidth();
     this._updateSpacesList();
-    this._pollSpaceUrl();
+
+    // Set up a periodic update of the space data using animation frames.
+    const animationFrameHandler = () => {
+      if ( !this._spaceDataUpdateInProgress &&
+           Date.now() > this._timeOfLastSpaceDataUpdate + SPACE_DATA_POLLING_PERIOD * 1000 ) {
+        this._updateSpaceData();
+      }
+      requestAnimationFrame( animationFrameHandler );
+    };
+    requestAnimationFrame( animationFrameHandler );
   }
 
   /**
@@ -86,7 +98,7 @@ export default class CameraMain extends React.Component {
             this.setState( { selectedSpaceName: this.state.availableSpaces[ 0 ] } );
 
             // Since the space was changed, we need to update the information associated with it.
-            this._pollSpaceUrl();
+            this._updateSpaceData();
           }
         }
       }
@@ -94,18 +106,27 @@ export default class CameraMain extends React.Component {
   }
 
   /**
-   * Update the data about the "space" that is currently in use by requesting the latest data from the server and
-   * updating the local state with the response.  Also, set a timeout to poll again at the next time period.
+   * Update the space data, which is the data that contains the programs for the currently selected space and which is
+   * stored by the server.
    * @private
    */
-  _pollSpaceUrl() {
-    const beginTimeMs = Date.now();
+  _updateSpaceData() {
+
+    // If there is already an update in progress, log a warning and bail.  This isn't necessarily incorrect program
+    // behavior because this can occur if a user happens to switch spaces while an update is in progress.  But, if
+    // this warning is occurring frequently, there may be a problem with the code that should be investigated.
+    if ( this._spaceDataUpdateInProgress ) {
+      console.warn( 'Skipping space data update because one is already in progress.' );
+      return;
+    }
+
+    this._spaceDataUpdateInProgress = true;
 
     // Request the space data from the server.
     const spaceUrl = getApiUrl( this.state.selectedSpaceName );
     xhr.get( spaceUrl, { json: true }, ( error, response ) => {
       if ( error ) {
-        console.error( error );
+        console.error( `Error retrieving space data: ${error.message}` );
       }
       else {
         if ( !_.isEqual( this.state.spaceData, response.body ) ) {
@@ -118,24 +139,18 @@ export default class CameraMain extends React.Component {
             ) !== undefined;
             if ( !selectedProgramInSpace ) {
 
-              // The selected space does not contain the currently selected program, probably because the user chose
-              // a new space.  Load a default program from the selected space into the editor.
+              // The selected space does not contain the currently selected program, probably because the user changed
+              // which space was selected.  Load a default program from the currently selected space into the editor.
               this._loadEditorWithDefault();
             }
           } );
         }
-      }
-    } );
 
-    // Set a timeout to call this function again at the appropriate time.
-    const elapsedTimeMs = Date.now() - beginTimeMs;
-    if ( this._pollSpaceTimeout !== null ) {
-      clearTimeout( this._pollSpaceTimeout );
-    }
-    this._pollSpaceTimeout = setTimeout(
-      this._pollSpaceUrl.bind( this ),
-      Math.max( 0, SPACE_DATA_POLLING_PERIOD * 1000 - elapsedTimeMs )
-    );
+        // Mark the time of the last successful update.
+        this._timeOfLastSpaceDataUpdate = Date.now();
+      }
+      this._spaceDataUpdateInProgress = false;
+    } );
   }
 
   /**
@@ -160,6 +175,9 @@ export default class CameraMain extends React.Component {
 
           // Select this space.
           this.setState( { selectedSpaceName: spaceName } );
+
+          // Update the space data.
+          this._updateSpaceData();
         }
       }
     );
@@ -347,14 +365,9 @@ export default class CameraMain extends React.Component {
             programInEditor.currentCode = codeInEditor;
             this.setState( { programInEditor } );
 
-            // Update the space data.  This would be updated on the next poll anyway, but it's probably best to make
-            // sure that they aren't out of sync, even briefly.
-            const spaceData = this.state.spaceData;
-            const programInSpaceData = this.state.spaceData.programs.find(
-              program => program.number === programInEditor.number
-            );
-            programInSpaceData.currentCode = codeInEditor;
-            this.setState( { spaceData } );
+            // Initiate an immediate update of the space data, since this should update the program code too and keep
+            // it in sync with what is in the editor.
+            this._updateSpaceData();
           }
         }
       );
