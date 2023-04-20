@@ -6,7 +6,7 @@
 
 import React from 'react';
 import Alert from 'react-bootstrap/Alert';
-import styles from './EditorMain.css';
+import styles from '../editor/EditorMain.css';
 
 class SaveAlert extends React.Component {
 

@@ -262,6 +262,14 @@
   border-radius: 3px;
 }
 
+:local(.saveAlert ) {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
 /*bootstrap*/
 
 .btn.btn-primary[disabled] {

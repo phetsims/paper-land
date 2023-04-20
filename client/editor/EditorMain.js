@@ -8,7 +8,7 @@ import {
 } from '../utils';
 import CodeSnippetsDialog from './CodeSnippetsDialog.js';
 import styles from './EditorMain.css';
-import SaveAlert from './SaveAlert.js';
+import SaveAlert from '../common/SaveAlert.js';
 
 export default class EditorMain extends React.Component {
 

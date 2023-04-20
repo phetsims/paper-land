@@ -10,6 +10,7 @@ import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
+import SaveAlert from '../common/SaveAlert.js';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
@@ -40,6 +41,8 @@ export default class CameraMain extends React.Component {
       copyProgramListFilterString: '',
       showCreateProgramDialog: false,
       sidebarOpen: false,
+      showSaveModal: false,
+      saveSuccess: false,
 
       // {Object|null} - The program currently selected and being displayed in the editor, null for none.
       programInEditor: null,
@@ -57,6 +60,9 @@ export default class CameraMain extends React.Component {
 
     // @private {boolean} - whether there is currently an update of the space data in progress
     this._spaceDataUpdateInProgress = false;
+
+    // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
+    this.saveAlertTimeout = null;
 
     // Process query parameters.
     const urlSearchParams = new URLSearchParams( window.location.search );
@@ -348,6 +354,9 @@ export default class CameraMain extends React.Component {
     if ( !programInEditor ) {
       alert( 'Error: No program selected, save operation not possible.' );
     }
+    else if ( programInEditor.currentCode === codeInEditor ) {
+      console.warn( 'Save attempted with unsaved code, ignoring.' );
+    }
     else {
 
       // Save this program by sending it to the server.
@@ -358,7 +367,7 @@ export default class CameraMain extends React.Component {
         },
         error => {
           if ( error ) {
-            alert( `Error saving program: ${error}` );
+            this.setState( { saveSuccess: false } );
           }
           else {
 
@@ -370,7 +379,21 @@ export default class CameraMain extends React.Component {
             // Initiate an immediate update of the space data, since this should update the program code too and keep
             // it in sync with what is in the editor.
             this._updateSpaceData();
+
+            this.setState( { saveSuccess: true } );
           }
+
+          // Show the save alert element.
+          this.setState( { showSaveModal: true } );
+
+          // Clear previous timeout for the save alert if one is still running.
+          window.clearTimeout( this.saveAlertTimeout );
+
+          // Remove the save alert notification after a brief time.
+          this.saveAlertTimeout = window.setTimeout( () => {
+            this.setState( { showSaveModal: false } );
+            this.saveAlertTimeout = null;
+          }, 2000 );
         }
       );
     }
@@ -526,6 +549,12 @@ export default class CameraMain extends React.Component {
             hideDialog={() => this.setState( { showCreateProgramDialog: false } )}
             setSearchString={str => this.setState( { copyProgramListFilterString: str } )}
           />
+
+          {/*The "save alert" element, which is briefly shown after a program is successfully saved to the server.*/}
+          <SaveAlert
+            success={this.state.saveSuccess}
+            show={this.state.showSaveModal}
+          ></SaveAlert>
 
           <div className={styles.pageTitle}>
             <h4>Camera & Editor View</h4>
