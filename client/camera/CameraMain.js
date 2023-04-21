@@ -671,8 +671,7 @@ export default class CameraMain extends React.Component {
             <div
               className={styles.sidebar}
               style={{
-                width: sidebarWidth,
-                visibility: sidebarWidth > 0 ? 'visible' : 'hidden'
+                visibility: this.state.sidebarOpen ? 'visible' : 'hidden'
               }}
             >
               {this.showTestButton ? (
