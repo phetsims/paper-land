@@ -1,4 +1,5 @@
 @value cameraMainPadding: 20px;
+@value commonMargin: 10px;
 @value cameraMainSidebarWidth: 320px;
 @value backgroundColor: #2E4152;
 @value transitionTime: 0.1s;
@@ -12,14 +13,12 @@
 :local(.appRoot) {
   display: flex;
   flex-direction: column;
-  padding: 10px;
 }
 
 :local(.pageTitle) {
-  margin: 10px;
   display: flex;
   flex-direction: row;
-  padding: 10px;
+  padding: 12px;
   justify-content: space-between;
 }
 
@@ -28,27 +27,32 @@
   flex-direction: row;
 }
 
+:local(.containerWithBackground) {
+  background: #6C8EAC;
+  border-radius: 6px;
+}
+
 :local(.videoAndEditorContainer) {
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
+  margin-left: commonMargin;
+  margin-right: commonMargin;
   transition: width transitionTime;
 }
 
 :local(.video) {
+  margin: commonMargin;
   width: 100%;
-  margin-right: 10px;
-  margin-bottom: 10px;
 }
 
 :local(.editor) {
   width: 100%;
   height: 800px;
-  margin-top: 10px;
-  margin-right: 10px;
+  margin: commonMargin;
 }
 
 :local(.editorTitleBar) {
+  margin: commonMargin;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -101,7 +105,7 @@
 :local(.sidebar) h4,
 :local(.sidebar) h5,
 :local(.sidebar) h6 {
-  margin: 10px 0;
+  margin: commonMargin 0;
 }
 
 :local(.sidebar) a {
@@ -119,9 +123,9 @@
 }
 
 :local(.sidebarSection:not(:last-child)) {
-  margin-bottom: 10px;
+  margin-bottom: commonMargin;
   border-bottom: 1px #999 solid;
-  padding-bottom: 10px;
+  padding-bottom: commonMargin;
 }
 
 :local(.sidebar) a,

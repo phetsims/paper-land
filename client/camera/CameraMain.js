@@ -200,7 +200,7 @@ export default class CameraMain extends React.Component {
   }
 
   _updatePageWidth() {
-    this.setState( { pageWidth: document.body.clientWidth } );
+    this.setState( { pageWidth: window.innerWidth } );
   }
 
   _print( program ) {
@@ -522,11 +522,13 @@ export default class CameraMain extends React.Component {
 
   render() {
     const padding = parseInt( styles.cameraMainPadding, 10 );
+    const commonMargin = parseInt( styles.commonMargin, 10 );
     const editorUrl = new URL(
       `editor.html?${this.state.spaceData.spaceName}`,
       window.location.origin
     ).toString();
     const sidebarWidth = this.state.sidebarOpen ? OPEN_SIDEBAR_WIDTH : 0;
+    const videoAndEditorWidth = this.state.pageWidth - sidebarWidth - commonMargin * 8;
 
     // Determine whether it is okay for the user to make changes to the program that is currently shown in the editor.
     const okayToEditSelectedProgram = !!this.state.programInEditor &&
@@ -556,6 +558,7 @@ export default class CameraMain extends React.Component {
             show={this.state.showSaveModal}
           ></SaveAlert>
 
+          {/* Title bar and sidebar control button that goes across the top */}
           <div className={styles.pageTitle}>
             <h4>Camera & Editor View</h4>
             <Button
@@ -570,92 +573,100 @@ export default class CameraMain extends React.Component {
               className={styles.videoAndEditorContainer}
               style={{ width: this.state.pageWidth - padding * 3 - sidebarWidth }}
             >
-              <div className={styles.video}>
-                <CameraVideo
-                  width={this.state.pageWidth - padding * 3 - sidebarWidth}
-                  config={this.props.config}
-                  onConfigChange={this.props.onConfigChange}
-                  onProcessVideo={( { programsToRender, markers, framerate } ) => {
-                    this.setState( { framerate } );
-                    this._programsChange( programsToRender );
-                    this.props.onMarkersChange( markers );
-                  }}
-                  allowSelectingDetectedPoints={this.state.selectedColorIndex !== -1}
-                  onSelectPoint={( { color, size } ) => {
-                    if ( this.state.selectedColorIndex === -1 ) {
-                      return;
-                    }
+              <div
+                className={styles.containerWithBackground}
+                style={{ marginBottom: '15px' }}
+              >
+                <div className={styles.video}>
+                  <CameraVideo
+                    width={videoAndEditorWidth}
+                    config={this.props.config}
+                    onConfigChange={this.props.onConfigChange}
+                    onProcessVideo={( { programsToRender, markers, framerate } ) => {
+                      this.setState( { framerate } );
+                      this._programsChange( programsToRender );
+                      this.props.onMarkersChange( markers );
+                    }}
+                    allowSelectingDetectedPoints={this.state.selectedColorIndex !== -1}
+                    onSelectPoint={( { color, size } ) => {
+                      if ( this.state.selectedColorIndex === -1 ) {
+                        return;
+                      }
 
-                    const colorsRGB = this.props.config.colorsRGB.slice();
-                    colorsRGB[ this.state.selectedColorIndex ] = color.map( value => Math.round( value ) );
+                      const colorsRGB = this.props.config.colorsRGB.slice();
+                      colorsRGB[ this.state.selectedColorIndex ] = color.map( value => Math.round( value ) );
 
-                    const paperDotSizes = this.props.config.paperDotSizes.slice();
-                    paperDotSizes[ this.state.selectedColorIndex ] = size;
+                      const paperDotSizes = this.props.config.paperDotSizes.slice();
+                      paperDotSizes[ this.state.selectedColorIndex ] = size;
 
-                    this.props.onConfigChange( { ...this.props.config, colorsRGB, paperDotSizes } );
-                    this.setState( { selectedColorIndex: -1 } );
-                  }}
-                  debugPrograms={this.state.debugPrograms}
-                  removeDebugProgram={program => {
-                    const debugPrograms = this.state.debugPrograms.filter( p => p !== program );
-                    this.setState( { debugPrograms } );
-                  }}
-                  debugMarkers={this.state.debugMarkers}
-                  removeDebugMarker={marker => {
-                    const debugMarkers = this.state.debugMarkers.slice();
-                    const index = debugMarkers.indexOf( marker );
-                    debugMarkers.splice( index, 1 );
-                    this.setState( { debugMarkers } );
-                  }}
-                />
+                      this.props.onConfigChange( { ...this.props.config, colorsRGB, paperDotSizes } );
+                      this.setState( { selectedColorIndex: -1 } );
+                    }}
+                    debugPrograms={this.state.debugPrograms}
+                    removeDebugProgram={program => {
+                      const debugPrograms = this.state.debugPrograms.filter( p => p !== program );
+                      this.setState( { debugPrograms } );
+                    }}
+                    debugMarkers={this.state.debugMarkers}
+                    removeDebugMarker={marker => {
+                      const debugMarkers = this.state.debugMarkers.slice();
+                      const index = debugMarkers.indexOf( marker );
+                      debugMarkers.splice( index, 1 );
+                      this.setState( { debugMarkers } );
+                    }}
+                  />
+                </div>
               </div>
 
-              <div className={styles.editorTitleBar}>
-                <p>{this._getEditorLabelText()}</p>
-                {
-                  okayToEditSelectedProgram &&
-                  (
-                    <>
-                      <Button
-                        onClick={this._saveProgram.bind( this )}
-                        disabled={!this._isCodeChanged()}
-                      >
-                        <span className={styles.iconButtonSpan}>
-                          <img src={'media/images/upload.svg'} alt={'Save icon'}/>
-                        Save to DB
-                        </span>
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
-                            this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
-                          }
-                        }}
-                      >
-                        <span className={styles.iconButtonSpan}>
-                          <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
-                        Delete
-                        </span>
-                      </Button>
-                    </>
-                  )
-                }
-              </div>
+              <div className={styles.containerWithBackground}>
+                <div className={styles.editorTitleBar}>
+                  <p>{this._getEditorLabelText()}</p>
+                  {
+                    okayToEditSelectedProgram &&
+                    (
+                      <>
+                        <Button
+                          onClick={this._saveProgram.bind( this )}
+                          disabled={!this._isCodeChanged()}
+                        >
+                          <span className={styles.iconButtonSpan}>
+                            <img src={'media/images/upload.svg'} alt={'Save icon'}/>
+                          Save to DB
+                          </span>
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
+                              this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
+                            }
+                          }}
+                        >
+                          <span className={styles.iconButtonSpan}>
+                            <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
+                          Delete
+                          </span>
+                        </Button>
+                      </>
+                    )
+                  }
+                </div>
 
-              <div className={styles.editor}>
-                <MonacoEditor
-                  language='javascript'
-                  theme='vs-dark'
-                  value={this.state.codeInEditor || '// Select Program'}
-                  onChange={code => this.setState( { codeInEditor: code } )}
-                  editorDidMount={this._onEditorDidMount.bind( this )}
-                  options={{
-                    tabSize: 2,
-                    fontSize: '16px',
-                    minimap: { enabled: false },
-                    automaticLayout: true
-                  }}
-                />
+                <div className={styles.editor}>
+                  <MonacoEditor
+                    language='javascript'
+                    theme='vs-dark'
+                    value={this.state.codeInEditor || '// Select Program'}
+                    onChange={code => this.setState( { codeInEditor: code } )}
+                    editorDidMount={this._onEditorDidMount.bind( this )}
+                    width={videoAndEditorWidth}
+                    options={{
+                      tabSize: 2,
+                      fontSize: '16px',
+                      minimap: { enabled: false },
+                      automaticLayout: true
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -1027,11 +1038,6 @@ export default class CameraMain extends React.Component {
                   programs
                 </div>
               </div>
-              {/*<div className={styles.sidebarSection}>*/}
-              {/*  <CameraControls*/}
-              {/*    data={this.state}*/}
-              {/*  />*/}
-              {/*</div>*/}
             </div>
           </div>
         </div>
