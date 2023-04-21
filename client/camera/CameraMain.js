@@ -495,12 +495,12 @@ export default class CameraMain extends React.Component {
            this.state.programInEditor.editorInfo.claimed ) {
 
         // The text should indicate that the file is only available for viewing, not editing.
-        editorLabelText = `Viewing program #${program.number} (read only)`;
+        editorLabelText = `Viewing (read-only): Program #${program.number}`;
       }
       else {
 
         // The program is in a state where the user should be able to edit it.
-        editorLabelText = `Editing program #${program.number}`;
+        editorLabelText = `Editing: Program #${program.number}`;
       }
     }
     return editorLabelText;
@@ -521,14 +521,13 @@ export default class CameraMain extends React.Component {
   }
 
   render() {
-    const padding = parseInt( styles.cameraMainPadding, 10 );
     const commonMargin = parseInt( styles.commonMargin, 10 );
     const editorUrl = new URL(
       `editor.html?${this.state.spaceData.spaceName}`,
       window.location.origin
     ).toString();
     const sidebarWidth = this.state.sidebarOpen ? OPEN_SIDEBAR_WIDTH : 0;
-    const videoAndEditorWidth = this.state.pageWidth - sidebarWidth - commonMargin * 8;
+    const videoAndEditorWidth = this.state.pageWidth - sidebarWidth - commonMargin * 6;
 
     // Determine whether it is okay for the user to make changes to the program that is currently shown in the editor.
     const okayToEditSelectedProgram = !!this.state.programInEditor &&
@@ -571,7 +570,6 @@ export default class CameraMain extends React.Component {
           <div className={styles.mainView}>
             <div
               className={styles.videoAndEditorContainer}
-              style={{ width: this.state.pageWidth - padding * 3 - sidebarWidth }}
             >
 
               {/* video */}
@@ -623,7 +621,7 @@ export default class CameraMain extends React.Component {
               {/* editor with title/control bar */}
               <div className={styles.containerWithBackground}>
                 <div className={styles.editorTitleBar}>
-                  <p>{this._getEditorLabelText()}</p>
+                  <h5>{this._getEditorLabelText()}</h5>
                   <>
                     <Button
                       className={okayToEditSelectedProgram ? 'visible' : 'invisible'}

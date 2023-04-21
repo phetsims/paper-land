@@ -27,17 +27,17 @@
   flex-direction: row;
 }
 
-:local(.containerWithBackground) {
-  background: #6C8EAC;
-  border-radius: 6px;
-}
-
 :local(.videoAndEditorContainer) {
   display: flex;
   flex-direction: column;
   margin-left: commonMargin;
   margin-right: commonMargin;
   transition: width transitionTime;
+}
+
+:local(.containerWithBackground) {
+  background: #6C8EAC;
+  border-radius: 6px;
 }
 
 :local(.video) {
