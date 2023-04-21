@@ -1,8 +1,10 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import clientConstants from '../clientConstants.js';
+import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils';
 import styles from './CameraMain.css';
 import CameraVideo from './CameraVideo.js';
@@ -10,7 +12,6 @@ import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
-import SaveAlert from '../common/SaveAlert.js';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
@@ -668,6 +669,7 @@ export default class CameraMain extends React.Component {
               </div>
             </div>
 
+            {/* sidebar */}
             <div
               className={styles.sidebar}
               style={{
@@ -723,7 +725,7 @@ export default class CameraMain extends React.Component {
                 </Button>
               ) : ( '' )}
               <div className={`${styles.sidebarSection} ${styles.create}`}>
-                <button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create Programs</button>
+                <Button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create Programs</Button>
                 <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
                   Open Code Editor <br></br>
                   for this Space
@@ -734,7 +736,7 @@ export default class CameraMain extends React.Component {
                 <div>
                   <div>
                     <label htmlFor='spaces'>Select a Space:</label>
-                    <select
+                    <Form.Select
                       name='spaces'
                       id='spaces'
                       value={this.state.selectedSpaceName}
@@ -751,7 +753,7 @@ export default class CameraMain extends React.Component {
                           {option}
                         </option>;
                       } )}
-                    </select>
+                    </Form.Select>
                   </div>
                   <div>
                     {this.state.isAddingNewSpace ? (
@@ -779,12 +781,12 @@ export default class CameraMain extends React.Component {
                       </div>
                     ) : (
                        <div>
-                         <button onClick={() => {
+                         <Button onClick={() => {
                            this.setState( { isAddingNewSpace: true } );
                            this.setState( { newSpaceName: '' } );
                          }}>
                            Add New Space
-                         </button>
+                         </Button>
                        </div>
                      )}
                   </div>
@@ -878,7 +880,7 @@ export default class CameraMain extends React.Component {
                 <p>Click the print icon next to the program name to print.</p>
                 <div className={styles.sidebarSubSection}>
                   <span>Paper Size: </span>
-                  <select
+                  <Form.Select
                     value={this.props.config.paperSize}
                     onChange={event => {
                       const paperSize = event.target.value;
@@ -903,10 +905,10 @@ export default class CameraMain extends React.Component {
                         );
                       } )}
                     </optgroup>
-                  </select>
+                  </Form.Select>
                 </div>
                 <div>
-                  <button onClick={this._printCalibration}>Print Calibration Page</button>
+                  <Button onClick={this._printCalibration}>Print Calibration Page</Button>
                   {' '}
                 </div>
               </div>
