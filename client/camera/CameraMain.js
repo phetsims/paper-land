@@ -573,6 +573,8 @@ export default class CameraMain extends React.Component {
               className={styles.videoAndEditorContainer}
               style={{ width: this.state.pageWidth - padding * 3 - sidebarWidth }}
             >
+
+              {/* video */}
               <div
                 className={styles.containerWithBackground}
                 style={{ marginBottom: '15px' }}
@@ -618,37 +620,35 @@ export default class CameraMain extends React.Component {
                 </div>
               </div>
 
+              {/* editor with title/control bar */}
               <div className={styles.containerWithBackground}>
                 <div className={styles.editorTitleBar}>
                   <p>{this._getEditorLabelText()}</p>
-                  {
-                    okayToEditSelectedProgram &&
-                    (
-                      <>
-                        <Button
-                          onClick={this._saveProgram.bind( this )}
-                          disabled={!this._isCodeChanged()}
-                        >
-                          <span className={styles.iconButtonSpan}>
-                            <img src={'media/images/upload.svg'} alt={'Save icon'}/>
-                          Save to DB
-                          </span>
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
-                              this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
-                            }
-                          }}
-                        >
-                          <span className={styles.iconButtonSpan}>
-                            <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
-                          Delete
-                          </span>
-                        </Button>
-                      </>
-                    )
-                  }
+                  <>
+                    <Button
+                      className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
+                      disabled={!this._isCodeChanged()}
+                      onClick={this._saveProgram.bind( this )}
+                    >
+                      <span className={styles.iconButtonSpan}>
+                        <img src={'media/images/upload.svg'} alt={'Save icon'}/>
+                        Save to DB
+                      </span>
+                    </Button>
+                    <Button
+                      className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
+                      onClick={() => {
+                        if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
+                          this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
+                        }
+                      }}
+                    >
+                      <span className={styles.iconButtonSpan}>
+                        <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
+                        Delete
+                      </span>
+                    </Button>
+                  </>
                 </div>
 
                 <div className={styles.editor}>
