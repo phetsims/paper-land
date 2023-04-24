@@ -41,7 +41,7 @@ export default class CameraMain extends React.Component {
       programListFilterString: '',
       copyProgramListFilterString: '',
       showCreateProgramDialog: false,
-      sidebarOpen: false,
+      sidebarOpen: true,
       showSaveModal: false,
       saveSuccess: false,
 
