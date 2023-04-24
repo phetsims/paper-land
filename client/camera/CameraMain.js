@@ -921,6 +921,9 @@ export default class CameraMain extends React.Component {
                       colorIndex={colorIndex}
                       color={color}
                       key={colorIndex}
+                      onClick={indexOfColor => this.setState(
+                        { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
+                      )}
                     ></ColorListItem>
                   ) )}
                 </div>
