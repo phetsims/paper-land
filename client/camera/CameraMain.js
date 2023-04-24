@@ -908,7 +908,7 @@ export default class CameraMain extends React.Component {
                   </Form.Select>
                 </div>
                 <div>
-                  <Button onClick={this._printCalibration}>Print Calibration Page</Button>
+                  <Button onClick={this._printCalibration.bind( this )}>Print Calibration Page</Button>
                   {' '}
                 </div>
               </div>
@@ -922,7 +922,6 @@ export default class CameraMain extends React.Component {
                       color={color}
                       key={colorIndex}
                     ></ColorListItem>
-
                   ) )}
                 </div>
               </div>
