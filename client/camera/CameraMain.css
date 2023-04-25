@@ -254,6 +254,36 @@
   box-shadow: 0 0 0 3px white, 0 0 0 25px rgba(255, 255, 255, 0.3) inset;
 }
 
+:local(.calibrationColorList) {
+  margin: 10px 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+:local(.markerList) {
+  display: flex;
+  flex-direction: column;
+}
+
+:local(.markerListItem) {
+  margin: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+:local(.markerPreviewIcon) {
+  padding: 8px;
+  margin-left: 10px;
+  margin-right: 3px;
+  text-align: center;
+}
+
+:local(.markerPreviewIcon):hover {
+  background: #444;
+}
+
 :local(.spaceUrl) {
   margin-bottom: calc(cameraMainPadding / 4);
   font-size: 0.9em;

@@ -21,6 +21,7 @@ export default class ColorListItem extends React.Component {
     const colorIndex = this.props.colorIndex;
     const color = this.props.color;
     const selected = this.props.selected;
+    const onClick = this.props.onClick || _.noop;
 
     // optional larger size, otherwise falls back to styles sheet
     const size = this.props.size || null;
@@ -37,7 +38,7 @@ export default class ColorListItem extends React.Component {
           borderRadius: `${size}px`,
           lineHeight: `${size}px`
         }}
-        onClick={() => this.props.onClick( colorIndex )}
+        onClick={onClick}
       ><b>{clientConstants.colorNames[ colorIndex ]}</b>
       </div>
     );

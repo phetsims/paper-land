@@ -868,16 +868,22 @@ export default class CameraMain extends React.Component {
                 <Accordion.Item eventKey='1'>
                   <Accordion.Header>Preview Markers</Accordion.Header>
                   <Accordion.Body>
-                    Click on the marker representations below to add instances to the camera view.
-                    <div className={styles.sidebarSection}>
+                    Click on the preview icon next to the markers below to add virtual markers to the camera view.
+                    <div className={styles.markerList}>
                       {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
-                        <ColorListItem
-                          key={colorIndex}
-                          colorIndex={colorIndex}
-                          color={color}
-                          size={50}
-                          onClick={this._createDebugMarker.bind( this )}
-                        ></ColorListItem>
+                        <span key={colorIndex} className={styles.markerListItem}>
+                          <ColorListItem
+                            colorIndex={colorIndex}
+                            color={color}
+                            size={50}
+                          />
+                          <img
+                            className={styles.markerPreviewIcon}
+                            src={'media/images/eye.svg'}
+                            alt={'Preview icon'}
+                            onClick={this._createDebugMarker.bind( this, colorIndex )}
+                          />
+                        </span>
                       ) )}
                     </div>
                   </Accordion.Body>
@@ -886,13 +892,10 @@ export default class CameraMain extends React.Component {
                 <Accordion.Item eventKey='2'>
                   <Accordion.Header>Calibration</Accordion.Header>
                   <Accordion.Body>
-                    Click on a colored circle below, then click on a circle of that color in a printed paper program in
+                    Click on a colored circle below, then click on a circle of that color on a printed paper program in
                     the camera view. Repeat for all colors to complete the calibration.
                     <div className={styles.sidebarSection}>
-                      <div
-                        className={styles.sidebarSubSection}
-                        style={{ marginTop: '10px', marginLeft: '20px' }}
-                      >
+                      <div className={styles.calibrationColorList}>
                         {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
                           <ColorListItem
                             colorIndex={colorIndex}
@@ -902,7 +905,7 @@ export default class CameraMain extends React.Component {
                             onClick={indexOfColor => this.setState(
                               { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
                             )}
-                          ></ColorListItem>
+                          />
                         ) )}
                       </div>
                     </div>
