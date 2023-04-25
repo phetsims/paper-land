@@ -20,12 +20,16 @@ export default class ColorListItem extends React.Component {
   render() {
     const colorIndex = this.props.colorIndex;
     const color = this.props.color;
+    const selected = this.props.selected;
 
     // optional larger size, otherwise falls back to styles sheet
     const size = this.props.size || null;
     return (
       <div
-        className={styles.colorListItem}
+        className={[
+          styles.colorListItem,
+          selected && styles.colorListItemSelected
+        ].join( ' ' )}
         style={{
           background: colorDataToCSS( color ),
           width: `${size}px`,

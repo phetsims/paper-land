@@ -889,13 +889,16 @@ export default class CameraMain extends React.Component {
                     Click on a colored circle below, then click on a circle of that color in a printed paper program in
                     the camera view. Repeat for all colors to complete the calibration.
                     <div className={styles.sidebarSection}>
-                      <h3>Calibration</h3>
-                      <div className={styles.sidebarSubSection}>
+                      <div
+                        className={styles.sidebarSubSection}
+                        style={{ marginTop: '10px', marginLeft: '20px' }}
+                      >
                         {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
                           <ColorListItem
                             colorIndex={colorIndex}
                             color={color}
                             key={colorIndex}
+                            selected={colorIndex === this.state.selectedColorIndex}
                             onClick={indexOfColor => this.setState(
                               { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
                             )}
