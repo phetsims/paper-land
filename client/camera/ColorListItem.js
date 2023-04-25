@@ -1,6 +1,6 @@
 /**
- * React component that shows a colored circle or marker representing one of the colors
- * that can be detected by the camera.
+ * React component that shows a colored circle or marker representing one of the colors that can be detected by the
+ * camera.
  *
  * Currently used to display markers and calibration icons.
  *

@@ -233,17 +233,17 @@
   display: inline-block;
   width: 20px;
   height: 20px;
-  border-radius: 20px;
-  margin-right: 5px;
+  border-radius: 25px;
+  margin-right: 10px;
   color: white;
   font-size: 14px;
   text-align: center;
-  line-height: 20px;
+  line-height: 22px;
   cursor: pointer;
 }
 
 :local(.colorListItem):hover {
-  box-shadow: 0 0 0 20px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0 0 0 25px rgba(255, 255, 255, 0.3) inset;
 }
 
 :local(.colorListItemSelected) {
@@ -251,7 +251,7 @@
 }
 
 :local(.colorListItemSelected):hover {
-  box-shadow: 0 0 0 3px white, 0 0 0 20px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0 0 0 3px white, 0 0 0 25px rgba(255, 255, 255, 0.3) inset;
 }
 
 :local(.spaceUrl) {
