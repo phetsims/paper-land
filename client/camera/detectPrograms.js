@@ -497,6 +497,12 @@ export default function detectPrograms( {
     // find out on which paper the marker is
     const matchingProgram = findProgramContainingMarker( markerPosition, programsToRender );
 
+    // draw the marker to the camera video
+    if ( displayMat ) {
+      const color = config.colorsRGB[ colorIndex ];
+      cv.circle( displayMat, pt, size / 2 + 3, color, cv.FILLED );
+    }
+
     return {
       positionOnPaper:
         matchingProgram && projectPoint( markerPosition, matchingProgram.projectionMatrix ),
