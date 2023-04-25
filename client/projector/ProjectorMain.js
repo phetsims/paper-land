@@ -1,8 +1,8 @@
 import React from 'react';
-
-import { mult, forwardProjectionMatrixForPoints } from '../utils';
-import Program from './Program';
 import clientConstants from '../clientConstants';
+
+import { colorDataToCSS, forwardProjectionMatrixForPoints, mult } from '../utils';
+import Program from './Program.js';
 
 function projectorSize() {
   const width = document.body.clientWidth;
@@ -80,6 +80,10 @@ export default class ProjectorMain extends React.Component {
       position: mult( data.position, multPoint )
     } ) );
 
+    // used for unique IDs for this render - have to do this because markers are not
+    // uniquely identifiable
+    const thisTime = new Date().getTime();
+
     return (
       <div>
         {this.props.programsToRender.map( program => (
@@ -106,6 +110,32 @@ export default class ProjectorMain extends React.Component {
               );
             }}
           />
+        ) )}
+        {markers.map( ( marker, index ) => (
+          <div
+            key={`${index}-${thisTime}`}
+            style={{
+              position: 'absolute',
+              left: `${marker.position.x}px`,
+              top: `${marker.position.y}px`,
+              width: `${200}px`,
+              height: `${200}%px`,
+
+              // positioned relative to left top, this puts marker position at center of div
+              transform: 'translate(-50%, -50%)',
+
+              // so that the SVG is centered within
+              display: 'flex',
+              justifyContent: 'center'
+            }}
+          >
+            <svg viewBox='-50 -50 100 100'>
+              <circle
+                r='10%'
+                fill={colorDataToCSS( marker.color )}
+              />
+            </svg>
+          </div>
         ) )}
       </div>
     );
