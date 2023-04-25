@@ -320,11 +320,15 @@
   padding: .1rem 2.25rem .1rem .5rem;
 }
 
+.accordion{
+  --bs-accordion-border-width: 0
+}
+
 .accordion-body{
   padding: 5px;
 }
 
 .accordion-item{
-  color: whitesmoke;
+  color: white;
   background-color: #405B72;
 }
