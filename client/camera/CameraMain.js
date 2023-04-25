@@ -12,6 +12,7 @@ import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
+import Accordion from 'react-bootstrap/Accordion';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
@@ -724,321 +725,348 @@ export default class CameraMain extends React.Component {
                   Test Button
                 </Button>
               ) : ( '' )}
-              <div className={`${styles.sidebarSection} ${styles.create}`}>
-                <Button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create Programs</Button>
-                <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
-                  Open Code Editor <br></br>
-                  for this Space
-                </a>
-              </div>
-              <div className={styles.sidebarSection}>
-                <h3 className={styles.sidebarSubSection}>Space</h3>
-                <div>
-                  <div>
-                    <label htmlFor='spaces'>Select a Space:</label>
-                    <Form.Select
-                      name='spaces'
-                      id='spaces'
-                      value={this.state.selectedSpaceName}
-                      onChange={event => {
-                        this.setState( { selectedSpaceName: event.target.value } );
-                        this.props.onConfigChange( {
-                          ...this.props.config,
-                          selectedSpaceName: event.target.value
-                        } );
-                      }}
-                    >
-                      {this.state.availableSpaces.map( ( option, index ) => {
-                        return <option key={index}>
-                          {option}
-                        </option>;
-                      } )}
-                    </Form.Select>
-                  </div>
-                  <div>
-                    {this.state.isAddingNewSpace ? (
+
+              <Accordion flush defaultActiveKey='0'>
+                <Accordion.Item eventKey='0'>
+                  <Accordion.Header className={`${styles.accordionHeader}`}>Spaces & Programs</Accordion.Header>
+                  <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
+                    <div>
                       <div>
-                        <form onSubmit={event => {
-                          if ( this._handleNewSpaceNameSubmit( event ) ) {
-                            this.setState( { isAddingNewSpace: false } );
-                          }
-                        }}>
-                          <label>
-                            Name:&nbsp;
-                            <input
-                              type='text'
-                              onChange={this._handleNewSpaceNameChange.bind( this )}
-                            />
-                          </label>
-                          <br/>
-                          <button type='submit'>
-                            Confirm
-                          </button>
-                          <button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
-                            Cancel
-                          </button>
-                        </form>
-                      </div>
-                    ) : (
-                       <div>
-                         <Button onClick={() => {
-                           this.setState( { isAddingNewSpace: true } );
-                           this.setState( { newSpaceName: '' } );
-                         }}>
-                           Add New Space
-                         </Button>
-                       </div>
-                     )}
-                  </div>
-                </div>
-              </div>
-              <div className={styles.sidebarSection}>
-                <h3>Programs</h3>
-                <label>Filter on:
-                  <input
-                    name='filterProgramsOn'
-                    style={{ marginBottom: '10px' }}
-                    onChange={e => this.setState( { programListFilterString: e.target.value } )}
-                  />
-                </label>
-                <div className={`${styles.sidebarSubSection} ${styles.programList}`}>
-                  <div>
-                    {this.state.spaceData.programs
-                      .filter( program => programMatchesFilterString( program.currentCode, this.state.programListFilterString ) )
-                      .sort( ( programA, programB ) => programA.number - programB.number )
-                      .map( program => (
-                        <div
-                          key={program.number}
-                          className={[
-                            this.state.programInEditor && program.number === this.state.programInEditor.number ?
-                            styles.selectedProgramListItem :
-                            styles.programListItem
-                          ].join( ' ' )}
+                        <label htmlFor='spaces'>Select a Space:</label>
+                        <Form.Select
+                          name='spaces'
+                          id='spaces'
+                          value={this.state.selectedSpaceName}
+                          onChange={event => {
+                            this.setState( { selectedSpaceName: event.target.value } );
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              selectedSpaceName: event.target.value
+                            } );
+                          }}
                         >
-                          <span
-                            className={styles.programListItemContent}
-                            onClick={event => {
-                              event.stopPropagation();
-                              this.setState( {
-                                programInEditor: program,
-                                codeInEditor: program.currentCode.slice()
-                              } );
-                            }}
-                          >
-                            <span
-                              className={styles.programListItemName}
+                          {this.state.availableSpaces.map( ( option, index ) => {
+                            return <option key={index}>
+                              {option}
+                            </option>;
+                          } )}
+                        </Form.Select>
+                      </div>
+                      <div>
+                        {this.state.isAddingNewSpace ? (
+                          <div>
+                            <Form onSubmit={event => {
+                              if ( this._handleNewSpaceNameSubmit( event ) ) {
+                                this.setState( { isAddingNewSpace: false } );
+                              }
+                            }}>
+                              <label>
+                                Name:&nbsp;
+                                <input
+                                  type='text'
+                                  onChange={this._handleNewSpaceNameChange.bind( this )}
+                                />
+                              </label>
+                              <br/>
+                              <Button type='submit'>
+                                Confirm
+                              </Button>
+                              <Button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
+                                Cancel
+                              </Button>
+                            </Form>
+                          </div>
+                        ) : (
+                           <div>
+                             <Button onClick={() => {
+                               this.setState( { isAddingNewSpace: true } );
+                               this.setState( { newSpaceName: '' } );
+                             }}>
+                               Add New Space
+                             </Button>
+                           </div>
+                         )}
+                      </div>
+                    </div>
+                    <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
+                      Open Code Editor <br></br>
+                      for this Space
+                    </a>
+
+                    <br/>
+                    Select/Create Programs
+
+                    <label>Filter on:
+                      <input
+                        name='filterProgramsOn'
+                        style={{ marginBottom: '10px' }}
+                        onChange={e => this.setState( { programListFilterString: e.target.value } )}
+                      />
+                    </label>
+                    <div className={`${styles.programList}`}>
+                      <div>
+                        {this.state.spaceData.programs
+                          .filter( program => programMatchesFilterString( program.currentCode, this.state.programListFilterString ) )
+                          .sort( ( programA, programB ) => programA.number - programB.number )
+                          .map( program => (
+                            <div
+                              key={program.number}
+                              className={[
+                                this.state.programInEditor && program.number === this.state.programInEditor.number ?
+                                styles.selectedProgramListItem :
+                                styles.programListItem
+                              ].join( ' ' )}
                             >
-                              <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
-                            </span>
-                          </span>
-                          <span
-                            className={styles.programListIcon}
-                            onClick={event => {
-                              event.stopPropagation();
-                              this._print( program );
-                            }}
-                          >
-                            <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
-                          </span>
-                          {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
-                            <span
-                              className={styles.programListIcon}
-                              onClick={event => {
-                                event.stopPropagation();
-                                this._createDebugProgram( program.number, codeToName( program.currentCode ) );
-                              }}
-                            >
-                              <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
-                            </span>
-                          ) : (
-                             ''
-                           )}
-                        </div>
+                              <span
+                                className={styles.programListItemContent}
+                                onClick={event => {
+                                  event.stopPropagation();
+                                  this.setState( {
+                                    programInEditor: program,
+                                    codeInEditor: program.currentCode.slice()
+                                  } );
+                                }}
+                              >
+                                <span
+                                  className={styles.programListItemName}
+                                >
+                                  <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
+                                </span>
+                              </span>
+                              <span
+                                className={styles.programListIcon}
+                                onClick={event => {
+                                  event.stopPropagation();
+                                  this._print( program );
+                                }}
+                              >
+                                <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                              </span>
+                              {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
+                                <span
+                                  className={styles.programListIcon}
+                                  onClick={event => {
+                                    event.stopPropagation();
+                                    this._createDebugProgram( program.number, codeToName( program.currentCode ) );
+                                  }}
+                                >
+                                  <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
+                                </span>
+                              ) : (
+                                 ''
+                               )}
+                            </div>
+                          ) )}
+                      </div>
+                    </div>
+
+                    <Button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create New Program(s)</Button>
+
+                  </Accordion.Body>
+                </Accordion.Item>
+
+                <Accordion.Item eventKey='1'>
+                  <Accordion.Header>Preview Markers</Accordion.Header>
+                  <Accordion.Body>
+                    Click on the marker representations below to add instances to the camera view.
+                    <div className={styles.sidebarSection}>
+                      {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                        <ColorListItem
+                          key={colorIndex}
+                          colorIndex={colorIndex}
+                          color={color}
+                          size={50}
+                          onClick={this._createDebugMarker.bind( this )}
+                        ></ColorListItem>
                       ) )}
-                  </div>
-                </div>
-              </div>
-              <div className={styles.sidebarSection}>
-                <h3>Markers</h3>
-                <div
-                  className={styles.sidebarSubSection}
-                >
-                  {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
-                    <ColorListItem
-                      key={colorIndex}
-                      colorIndex={colorIndex}
-                      color={color}
-                      size={50}
-                      onClick={this._createDebugMarker.bind( this )}
-                    ></ColorListItem>
-                  ) )}
-                </div>
-              </div>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-              <div className={styles.sidebarSection}>
-                <h3>Printing</h3>
-                <p>Click the print icon next to the program name to print.</p>
-                <div className={styles.sidebarSubSection}>
-                  <span>Paper Size: </span>
-                  <Form.Select
-                    value={this.props.config.paperSize}
-                    onChange={event => {
-                      const paperSize = event.target.value;
-                      this.props.onConfigChange( { ...this.props.config, paperSize } );
-                    }}
-                  >
-                    <optgroup label='Common'>
-                      {clientConstants.commonPaperSizeNames.map( name => {
-                        return (
-                          <option key={name} value={name}>
-                            {name}
-                          </option>
-                        );
-                      } )}
-                    </optgroup>
-                    <optgroup label='Other'>
-                      {clientConstants.otherPaperSizeNames.map( name => {
-                        return (
-                          <option key={name} value={name}>
-                            {name}
-                          </option>
-                        );
-                      } )}
-                    </optgroup>
-                  </Form.Select>
-                </div>
-                <div>
-                  <Button onClick={this._printCalibration.bind( this )}>Print Calibration Page</Button>
-                  {' '}
-                </div>
-              </div>
+                <Accordion.Item eventKey='2'>
+                  <Accordion.Header>Calibration</Accordion.Header>
+                  <Accordion.Body>
+                    Click on a colored circle below, then click on a circle of that color in a printed paper program in
+                    the camera view. Repeat for all colors to complete the calibration.
+                    <div className={styles.sidebarSection}>
+                      <h3>Calibration</h3>
+                      <div className={styles.sidebarSubSection}>
+                        {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                          <ColorListItem
+                            colorIndex={colorIndex}
+                            color={color}
+                            key={colorIndex}
+                            onClick={indexOfColor => this.setState(
+                              { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
+                            )}
+                          ></ColorListItem>
+                        ) )}
+                      </div>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-              <div className={styles.sidebarSection}>
-                <h3>Calibration</h3>
-                <div className={styles.sidebarSubSection}>
-                  {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
-                    <ColorListItem
-                      colorIndex={colorIndex}
-                      color={color}
-                      key={colorIndex}
-                      onClick={indexOfColor => this.setState(
-                        { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
-                      )}
-                    ></ColorListItem>
-                  ) )}
-                </div>
-              </div>
+                <Accordion.Item eventKey='3'>
+                  <Accordion.Header>Printing</Accordion.Header>
+                  <Accordion.Body>
+                    <div className={styles.sidebarSection}>
+                      To print a program, click the print icon next to that program in the "Spaces & Programs" area.
+                      <br/><br/>
+                      <div className={styles.sidebarSubSection}>
+                        <span>Paper Size: </span>
+                        <Form.Select
+                          value={this.props.config.paperSize}
+                          onChange={event => {
+                            const paperSize = event.target.value;
+                            this.props.onConfigChange( { ...this.props.config, paperSize } );
+                          }}
+                        >
+                          <optgroup label='Common'>
+                            {clientConstants.commonPaperSizeNames.map( name => {
+                              return (
+                                <option key={name} value={name}>
+                                  {name}
+                                </option>
+                              );
+                            } )}
+                          </optgroup>
+                          <optgroup label='Other'>
+                            {clientConstants.otherPaperSizeNames.map( name => {
+                              return (
+                                <option key={name} value={name}>
+                                  {name}
+                                </option>
+                              );
+                            } )}
+                          </optgroup>
+                        </Form.Select>
+                      </div>
+                      <div>
+                        <Button onClick={this._printCalibration.bind( this )}>Print Calibration Page</Button>
+                        {' '}
+                      </div>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
 
-              <div className={styles.sidebarSection}>
-                <h3 className={styles.headerWithOption}>Detection</h3>
-                <div className={styles.optionWithHeader}>
-                  <input
-                    type='checkbox'
-                    name='freezeDetection'
-                    checked={this.props.config.freezeDetection}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        freezeDetection: !this.props.config.freezeDetection
-                      } )
-                    }
-                  />
-                  <label htmlFor='freezeDetection'>pause</label>
-                </div>
+                <Accordion.Item eventKey='4'>
+                  <Accordion.Header>Detection</Accordion.Header>
+                  <Accordion.Body>
+                    <div className={styles.sidebarSection}>
+                      <h3 className={styles.headerWithOption}>Detection</h3>
+                      <div className={styles.optionWithHeader}>
+                        <input
+                          type='checkbox'
+                          name='freezeDetection'
+                          checked={this.props.config.freezeDetection}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              freezeDetection: !this.props.config.freezeDetection
+                            } )
+                          }
+                        />
+                        <label htmlFor='freezeDetection'>pause</label>
+                      </div>
 
-                <div className={styles.sidebarSubSection}>
-                  <span>Accuracy</span>
-                  <input
-                    name='scaleFactor'
-                    type='range'
-                    min='1'
-                    max='10'
-                    step='1'
-                    value={this.props.config.scaleFactor}
-                    onChange={event => {
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        scaleFactor: event.target.valueAsNumber
-                      } );
-                    }}
-                  />
-                  <span>Performance</span>
-                </div>
-                <div className={styles.sidebarSubSection}>
-                  Framerate <strong>{this.state.framerate}</strong>
-                </div>
+                      <div className={styles.sidebarSubSection}>
+                        <span>Accuracy</span>
+                        <input
+                          name='scaleFactor'
+                          type='range'
+                          min='1'
+                          max='10'
+                          step='1'
+                          value={this.props.config.scaleFactor}
+                          onChange={event => {
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              scaleFactor: event.target.valueAsNumber
+                            } );
+                          }}
+                        />
+                        <span>Performance</span>
+                      </div>
+                      <div className={styles.sidebarSubSection}>
+                        Framerate <strong>{this.state.framerate}</strong>
+                      </div>
 
-                <h4>Overlays</h4>
-                <div className={styles.sidebarSubSection}>
-                  <input
-                    type='checkbox'
-                    checked={this.props.config.showOverlayKeyPointCircles}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        showOverlayKeyPointCircles: !this.props.config.showOverlayKeyPointCircles
-                      } )
-                    }
-                  />{' '}
-                  keypoint circles
-                </div>
+                      <h4>Overlays</h4>
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showOverlayKeyPointCircles}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showOverlayKeyPointCircles: !this.props.config.showOverlayKeyPointCircles
+                            } )
+                          }
+                        />{' '}
+                        keypoint circles
+                      </div>
 
-                <div className={styles.sidebarSubSection}>
-                  <input
-                    type='checkbox'
-                    checked={this.props.config.showOverlayKeyPointText}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        showOverlayKeyPointText: !this.props.config.showOverlayKeyPointText
-                      } )
-                    }
-                  />{' '}
-                  keypoint text
-                </div>
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showOverlayKeyPointText}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showOverlayKeyPointText: !this.props.config.showOverlayKeyPointText
+                            } )
+                          }
+                        />{' '}
+                        keypoint text
+                      </div>
 
-                <div className={styles.sidebarSubSection}>
-                  <input
-                    type='checkbox'
-                    checked={this.props.config.showOverlayComponentLines}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        showOverlayComponentLines: !this.props.config.showOverlayComponentLines
-                      } )
-                    }
-                  />{' '}
-                  component lines
-                </div>
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showOverlayComponentLines}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showOverlayComponentLines: !this.props.config.showOverlayComponentLines
+                            } )
+                          }
+                        />{' '}
+                        component lines
+                      </div>
 
-                <div className={styles.sidebarSubSection}>
-                  <input
-                    type='checkbox'
-                    checked={this.props.config.showOverlayShapeId}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        showOverlayShapeId: !this.props.config.showOverlayShapeId
-                      } )
-                    }
-                  />{' '}
-                  shape ids
-                </div>
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showOverlayShapeId}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showOverlayShapeId: !this.props.config.showOverlayShapeId
+                            } )
+                          }
+                        />{' '}
+                        shape ids
+                      </div>
 
-                <div className={styles.sidebarSubSection}>
-                  <input
-                    type='checkbox'
-                    checked={this.props.config.showOverlayProgram}
-                    onChange={() =>
-                      this.props.onConfigChange( {
-                        ...this.props.config,
-                        showOverlayProgram: !this.props.config.showOverlayProgram
-                      } )
-                    }
-                  />{' '}
-                  programs
-                </div>
-              </div>
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showOverlayProgram}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showOverlayProgram: !this.props.config.showOverlayProgram
+                            } )
+                          }
+                        />{' '}
+                        programs
+                      </div>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+
+              </Accordion>
+
             </div>
           </div>
         </div>
