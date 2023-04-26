@@ -270,6 +270,7 @@ export default class CameraMain extends React.Component {
       // further from the origin so it is easier to grab initially
       position: { x: 0.3, y: 0.3 },
       color: colorsRGB[ colorIndex ],
+      colorData: colorsRGB[ colorIndex ],
       colorName: clientConstants.englishColorNames[ colorIndex ],
       count: markerCount
     };

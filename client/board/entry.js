@@ -231,7 +231,7 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
     }
 
     // Handle any changing markers - addition/removal/or position change
-    const currentMarkersForProgram = _.filter( currentMarkersInfo, marker => marker.paperNumber === paperProgramNumber );
+    const currentMarkersForProgram = _.filter( currentMarkersInfo, marker => parseInt( marker.paperNumber, 10 ) === paperProgramNumber );
     const previousMarkersForProgram = mapOfPaperProgramNumbersToPreviousMarkers.get( paperProgramNumber ) || [];
     let markersMoved = false;
 

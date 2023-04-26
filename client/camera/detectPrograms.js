@@ -520,7 +520,7 @@ export default function detectPrograms( {
     const markerPosition = projectPointToUnitSquare( absPoint, videoMat, config.knobPoints );
 
     const colorName = debugMarker.colorName;
-    const colorData = debugMarker.colorData;
+    const colorData = debugMarker.color;
 
     const containingProgram = findProgramContainingMarker( markerPosition, programsToRender );
 
