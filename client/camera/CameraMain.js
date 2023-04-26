@@ -727,7 +727,7 @@ export default class CameraMain extends React.Component {
                 </Button>
               ) : ( '' )}
 
-              <Accordion flush defaultActiveKey='0'>
+              <Accordion defaultActiveKey='0'>
                 <Accordion.Item eventKey='0'>
                   <Accordion.Header className={`${styles.accordionHeader}`}>Spaces & Programs</Accordion.Header>
                   <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
