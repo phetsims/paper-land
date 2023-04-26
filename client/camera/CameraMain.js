@@ -931,7 +931,9 @@ export default class CameraMain extends React.Component {
                   <Accordion.Header>Printing</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
-                      To print a program, click the print icon next to that program in the "Spaces & Programs" area.
+                      To print a program, click the print icon (
+                      <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                      ) next to that program in the "Spaces & Programs" area.
                       <br/><br/>
                       <div className={styles.sidebarSubSection}>
                         <span>Paper Size: </span>
