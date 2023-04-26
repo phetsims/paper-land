@@ -1,7 +1,7 @@
 import React from 'react';
 import clientConstants from '../clientConstants';
 
-import { colorDataToCSS, forwardProjectionMatrixForPoints, mult } from '../utils';
+import { forwardProjectionMatrixForPoints, mult } from '../utils';
 import Program from './Program.js';
 
 function projectorSize() {
@@ -79,6 +79,7 @@ export default class ProjectorMain extends React.Component {
       ...data,
       position: mult( data.position, multPoint )
     } ) );
+    console.log( markers[ 0 ].colorName );
 
     // used for unique IDs for this render - have to do this because markers are not
     // uniquely identifiable
@@ -132,7 +133,8 @@ export default class ProjectorMain extends React.Component {
             <svg viewBox='-50 -50 100 100'>
               <circle
                 r='10%'
-                fill={colorDataToCSS( marker.color )}
+                fill={marker.colorName}
+                stroke={'white'}
               />
             </svg>
           </div>
