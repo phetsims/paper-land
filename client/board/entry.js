@@ -147,6 +147,22 @@ if ( !createAndLoadWrappedAudioBuffer ) {
   console.warn( 'createAndLoadWrappedAudioBuffer not defined' );
 }
 
+/**
+ * Attempts to use eval on a program function with the provided arguments. If there is some error in the function,
+ * that will be reported to the board console.
+ * @param functionString - the function to run as a string for eval
+ * @param {[*]} args - Array of args to pass to the function.
+ * @param {string} functionName - name of the function, just for printing to the board console.
+ */
+const evalProgramFunction = ( functionString, args, functionName ) => {
+  try {
+    eval( functionString )( ...args );
+  }
+  catch( error ) {
+    boardConsole.error( `Error while running ${functionName}`, error );
+  }
+};
+
 // Update the sim design board based on changes to the paper programs.
 const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
@@ -185,11 +201,11 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
         // of the program.
         const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
         if ( eventHandlers.onProgramRemoved ) {
-          eval( eventHandlers.onProgramRemoved )(
+          evalProgramFunction( eventHandlers.onProgramRemoved, [
             paperProgramNumber,
             mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
             sharedData
-          );
+          ], 'onProgramRemoved' );
         }
       }
 
@@ -202,11 +218,11 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       // Run this program's "added" handler, if present (and generally it should be).
       const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
       if ( eventHandlers.onProgramAdded ) {
-        eval( eventHandlers.onProgramAdded )(
+        evalProgramFunction( eventHandlers.onProgramAdded, [
           paperProgramNumber,
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData
-        );
+        ], 'onProgramAdded' );
 
         // Make sure that the position change handler gets called.
         paperProgramHasMoved = true;
@@ -216,12 +232,12 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
     // If the paper has moved and there is a move handler, call it.
     const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
     if ( paperProgramHasMoved && eventHandlers && eventHandlers.onProgramChangedPosition ) {
-      eval( eventHandlers.onProgramChangedPosition )(
+      evalProgramFunction( eventHandlers.onProgramChangedPosition, [
         paperProgramNumber,
         currentPaperProgramPoints,
         mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
         sharedData
-      );
+      ], 'onProgramChangedPosition' );
     }
 
     // Update the paper program points for the next time through this loop. Only saved if there is sufficient
@@ -238,13 +254,13 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
     if ( currentMarkersForProgram.length > previousMarkersForProgram.length ) {
       boardConsole.log( `Marker added to program: ${paperProgramNumber}` );
       if ( eventHandlers && eventHandlers.onProgramMarkersAdded ) {
-        eval( eventHandlers.onProgramMarkersAdded )(
+        evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
           paperProgramNumber,
           currentPaperProgramPoints,
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData,
           currentMarkersForProgram
-        );
+        ], 'onProgramMarkersAdded' );
       }
 
       // a marker was just added, we want to eagerly call the markers moved callback (if it exists)
@@ -253,13 +269,13 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
     else if ( currentMarkersForProgram.length < previousMarkersForProgram.length ) {
       boardConsole.log( `Marker removed from program: ${paperProgramNumber}` );
       if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-        eval( eventHandlers.onProgramMarkersRemoved )(
+        evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
           paperProgramNumber,
           currentPaperProgramPoints,
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData,
           currentMarkersForProgram
-        );
+        ], 'onProgramMarkersRemoved' );
       }
 
       // A marker was just removed, update the map ()
@@ -294,13 +310,13 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
       // At least one marker moved! Use program callback and save markers for next comparison.
       if ( eventHandlers && eventHandlers.onProgramMarkersChangedPosition ) {
-        eval( eventHandlers.onProgramMarkersChangedPosition )(
+        evalProgramFunction( eventHandlers.onProgramMarkersChangedPosition, [
           paperProgramNumber,
           currentPaperProgramPoints,
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData,
           currentMarkersForProgram
-        );
+        ], 'onProgramMarkersChangedPosition' );
       }
       mapOfPaperProgramNumbersToPreviousMarkers.set( paperProgramNumber, currentMarkersForProgram );
     }
@@ -315,22 +331,22 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       // This paper program has disappeared.  Run its removal method and clear its data. Markers have
       // also been removed from this program.
       if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-        eval( eventHandlers.onProgramMarkersRemoved )(
+        evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
           paperProgramNumber,
           mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData,
           [] // empty markers - none since paper is being removed
-        );
+        ], 'onProgramMarkersRemoved' );
       }
       mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
 
       if ( eventHandlers.onProgramRemoved ) {
-        eval( eventHandlers.onProgramRemoved )(
+        evalProgramFunction( eventHandlers.onProgramRemoved, [
           paperProgramNumber,
           mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
           sharedData
-        );
+        ], 'onProgramRemoved' );
       }
       mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
       mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
