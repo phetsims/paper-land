@@ -734,7 +734,8 @@ export default class CameraMain extends React.Component {
                   <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
                     <div>
                       <div>
-                        <label htmlFor='spaces'>Select a Space:</label>
+                        <h5>Space</h5>
+                        <label htmlFor='spaces'>Select:</label>
                         <Form.Select
                           name='spaces'
                           id='spaces'
@@ -782,24 +783,33 @@ export default class CameraMain extends React.Component {
                             </Form>
                           </div>
                         ) : (
-                           <div>
-                             <Button onClick={() => {
-                               this.setState( { isAddingNewSpace: true } );
-                               this.setState( { newSpaceName: '' } );
-                             }}>
+                           <div
+                             className={styles.horizontalRow}
+                             style={{ marginTop: '15px' }}
+                           >
+                             <Button
+                               style={{ marginRight: '15px' }}
+                               onClick={() => {
+                                 this.setState( { isAddingNewSpace: true } );
+                                 this.setState( { newSpaceName: '' } );
+                               }}
+                             >
                                Add New Space
                              </Button>
+                             <a
+                               href={editorUrl}
+                               target='_blank'
+                               className={styles.editorAnchor}
+                               rel='noreferrer'
+                             >
+                               Open Code Editor<br/>for this Space
+                             </a>
                            </div>
                          )}
                       </div>
                     </div>
-                    <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
-                      Open Code Editor <br></br>
-                      for this Space
-                    </a>
-
                     <br/>
-                    Select/Create Programs
+                    <h5>Programs</h5>
 
                     <label>Filter on:
                       <input
