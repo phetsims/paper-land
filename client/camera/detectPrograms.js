@@ -171,11 +171,9 @@ export default function detectPrograms( {
   const startTime = Date.now();
   const paperDotSizes = config.paperDotSizes;
   const paperDotSizeVariance = // difference min/max size * 2
-    Math.max( 1, Math.max.apply( null, paperDotSizes ) - Math.min.apply( null, paperDotSizes ) ) * 5;
+    Math.max( 1, Math.max.apply( null, paperDotSizes ) - Math.min.apply( null, paperDotSizes ) ) * 2;
   const avgPaperDotSize = paperDotSizes.reduce( ( sum, value ) => sum + value ) / paperDotSizes.length;
   const markerSizeThreshold = avgPaperDotSize + paperDotSizeVariance;
-
-  console.log( avgPaperDotSize, markerSizeThreshold );
 
   const videoMat = new cv.Mat( videoCapture.video.height, videoCapture.video.width, cv.CV_8UC4 );
   videoCapture.read( videoMat );
@@ -313,8 +311,6 @@ export default function detectPrograms( {
   }
   const avgKeyPointSize =
     keyPointSizes.reduce( ( sum, value ) => sum + value, 0 ) / keyPointSizes.length;
-
-  // console.log( avgKeyPointSize );
 
   allPoints.forEach( keyPoint => {
     if ( displayMat ) {

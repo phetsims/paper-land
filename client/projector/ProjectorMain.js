@@ -79,7 +79,6 @@ export default class ProjectorMain extends React.Component {
       ...data,
       position: mult( data.position, multPoint )
     } ) );
-    console.log( markers[ 0 ].colorName );
 
     // used for unique IDs for this render - have to do this because markers are not
     // uniquely identifiable
