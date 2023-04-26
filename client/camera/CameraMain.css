@@ -174,7 +174,7 @@
 }
 
 :local(.programList) {
-  border: 1px black solid;
+  border: 1px whitesmoke solid;
   padding: 5px;
 }
 
@@ -331,6 +331,7 @@
 
 .accordion-button{
   border-radius: 5px;
+  color: white;
   background-color: #6C8EAC;
 }
 
