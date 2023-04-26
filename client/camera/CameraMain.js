@@ -769,7 +769,10 @@ export default class CameraMain extends React.Component {
                                 />
                               </label>
                               <br/>
-                              <Button type='submit'>
+                              <Button
+                                type='submit'
+                                style={{ marginRight: '20px' }}
+                              >
                                 Confirm
                               </Button>
                               <Button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
