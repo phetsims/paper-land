@@ -1,7 +1,17 @@
 site_name: Paper Playground
-site_url: https://phet.colorado.edu/paper-land
+repo_url: https://github.com/phetsims/paper-land
+
+markdown_extensions:
+    - toc:
+        permalink: "#"
+
+theme:
+    name: readthedocs
+    nav_style: dark
+    prev_next_buttons_location: bottom
+
 nav:
-    - Home: index.md
+    - Home: README.md
     - Code Documentation: 
       - Board API: use/implementation-notes.md
       - Paper API: use/api.md
