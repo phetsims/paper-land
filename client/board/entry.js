@@ -15,6 +15,7 @@ import styles from './BoardMain.css';
 import BoardMain from './BoardMain.js';
 import boardModel from './boardModel.js';
 import './boardUtils.js';
+import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
 // constants
 const DISPLAY_SIZE = new phet.dot.Dimension2(
@@ -93,7 +94,21 @@ const mapOfProgramNumbersToScratchpadObjects = new Map();
 const mapOfPaperProgramNumbersToPreviousPoints = new Map();
 
 // {Object[]} - Collection of all Markers detected by the camera
-const markers = [];
+const markers = new Map();
+let nextMarkerId = 0;
+const MAX_MARKER_ID = Number.MAX_SAFE_INTEGER;
+
+markersAddedEmitter.addListener( () => {
+  console.log( 'markers added' );
+} );
+
+markersRemovedEmitter.addListener( () => {
+  console.log( 'markers removed' );
+} );
+
+markersChangedPositionEmitter.addListener( () => {
+  console.log( 'markers changed position' );
+} );
 
 const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 
@@ -102,8 +117,7 @@ const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 const sharedData = {
   model: boardModel,
   scene: scene,
-  displaySize: DISPLAY_SIZE,
-  markers: markers
+  displaySize: DISPLAY_SIZE
 };
 
 // Returns true when both x and y of the provided points are equal within threshold.
@@ -188,8 +202,8 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
       // put all detected markers in the sharedData so that they are available for callbacks (keeping reference to
       // array provided to sharedData)
-      markers.length = 0;
-      currentMarkersInfo.forEach( marker => markers.push( marker ) );
+      // markers.length = 0;
+      // currentMarkersInfo.forEach( marker => markers.push( marker ) );
 
       // If there are no handlers for this program, it means that it just appeared in the detection window.
       const paperProgramJustAppeared = !mapOfProgramNumbersToEventHandlers.has( paperProgramNumber );
@@ -253,6 +267,7 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
     if ( currentMarkersForProgram.length > previousMarkersForProgram.length ) {
       boardConsole.log( `Marker added to program: ${paperProgramNumber}` );
+
       if ( eventHandlers && eventHandlers.onProgramMarkersAdded ) {
         evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
           paperProgramNumber,
@@ -352,6 +367,99 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
     }
   } );
+
+  const markerMatchingInfo = getMarkerMatchingInfo( currentMarkersInfo );
+
+  const addedMarkers = [];
+  const removedMarkers = [];
+  const changedMarkers = [];
+
+  markerMatchingInfo.forEach( info => {
+
+    // NOTE: If these are maps, it might be OK if the indices are undefined (map value will then be undefined)
+    const currentMarker = currentMarkersInfo[ info.currentMarkerIndex ];
+    const previousMarker = markers.get( info.previousMarkerId );
+
+    if ( currentMarker && previousMarker ) {
+
+      // It found that the same marker was detected before/after update -- look for changing positions
+      const newPosition = currentMarkersInfo[ info.currentMarkerIndex ].position;
+      const previousPosition = markers.get( info.previousMarkerId ).position;
+
+      if ( !arePointsEqual( newPosition, previousPosition, boardConfigObject.positionInterval ) ) {
+
+        // update the position of that marker
+        changedMarkers.push( currentMarkersInfo[ info.currentMarkerIndex ] );
+
+        // save the new state to the marker
+        markers.get( info.previousMarkerId ).position = newPosition;
+      }
+    }
+    else if ( currentMarker && !previousMarker ) {
+
+      // a new marker was added
+      addedMarkers.push( currentMarker );
+
+      // Marker was added, add it to the state
+      markers.set( nextMarkerId, currentMarker );
+
+      // NOTE: If you run for a *really* long time, this could make it so markers get overwritten!
+      nextMarkerId = ( nextMarkerId + 1 ) % MAX_MARKER_ID;
+    }
+    else if ( previousMarker && !currentMarker ) {
+      removedMarkers.push( previousMarker );
+      markers.delete( info.previousMarkerId );
+    }
+    else {
+      console.error( 'How can we have a change in markers where there is no addition/removal or change in position?' );
+    }
+  } );
+
+  removedMarkers.length > 0 && markersRemovedEmitter.emit( removedMarkers );
+  addedMarkers.length > 0 && markersAddedEmitter.emit( addedMarkers );
+  changedMarkers.length > 0 && markersChangedPositionEmitter.emit( changedMarkers );
+};
+
+const areMarkersTheSame = ( markerA, markerB ) => {
+  return markerA.colorName === markerB.colorName &&
+         arePointsEqual( markerA.position, markerB.position, 0.2 );
+};
+
+const getMarkerMatchingInfo = currentMarkers => {
+
+  const markerMatchingInfo = [];
+
+  // look for new markers to set the currentMarkerIndex
+  for ( let i = 0; i < currentMarkers.length; i++ ) {
+    const currentMarker = currentMarkers[ i ];
+    const currentMarkerInfo = { currentMarkerIndex: i };
+    markerMatchingInfo.push( currentMarkerInfo );
+
+    // Look for markers that still exist since the last update
+    for ( const [ previousMarkerId, oldMarker ] of markers ) {
+      if ( areMarkersTheSame( oldMarker, currentMarker ) ) {
+        currentMarkerInfo.previousMarkerId = previousMarkerId;
+
+        // we found a match, no need to keep looking
+        break;
+      }
+    }
+  }
+
+  // look for markers that were in our previous state but do not exist now - the nested loop above should
+  // catch all markers are in `currentMarkers` AND `markers`, shouldn't need to check for overlap again.
+  for ( const [ previousMarkerId, oldMarker ] of markers ) {
+
+    // if oldMarker is not the same as any current markers...
+    if ( !currentMarkers.find( currentMarker => areMarkersTheSame( oldMarker, currentMarker ) ) ) {
+
+      // Since this marker is in old markers and not current markers, there is no way we could have
+      // already added an intro to markerMatchingInfo with this previousMarkerId
+      markerMatchingInfo.push( { previousMarkerId: previousMarkerId } );
+    }
+  }
+
+  return markerMatchingInfo;
 };
 
 // Handle changes to local storage.  This is how paper programs communicate with the sim design board.
