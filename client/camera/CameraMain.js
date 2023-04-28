@@ -70,6 +70,7 @@ export default class CameraMain extends React.Component {
     const urlSearchParams = new URLSearchParams( window.location.search );
     const params = Object.fromEntries( urlSearchParams.entries() );
     this.showTestButton = params.showTestButton !== undefined;
+    this.useCamera = params.useCamera === undefined ? 0 : parseInt( params.useCamera, 10 );
   }
 
   componentDidMount() {
@@ -583,6 +584,7 @@ export default class CameraMain extends React.Component {
                 <div className={styles.video}>
                   <CameraVideo
                     width={videoAndEditorWidth}
+                    useCamera={this.useCamera}
                     config={this.props.config}
                     onConfigChange={this.props.onConfigChange}
                     onProcessVideo={( { programsToRender, markers, framerate } ) => {

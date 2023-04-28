@@ -16,12 +16,37 @@ export default class CameraVideo extends React.Component {
     this.state = { keyPoints: [], videoWidth: 1, videoHeight: 1 };
 
     const init = () => {
-      navigator.mediaDevices
-        .getUserMedia( {
-          audio: false,
-          video: clientConstants.cameraVideoConstraints
+
+      // Set up the video stream.
+      navigator.mediaDevices.enumerateDevices()
+        .then( devices => {
+
+          // Find the selected camera.
+          const cameras = devices.filter( device => device.kind === 'videoinput' );
+          let selectedCamera;
+          if ( cameras ) {
+            if ( cameras[ props.useCamera ] ) {
+              selectedCamera = cameras[ props.useCamera ];
+            }
+            else {
+              selectedCamera = cameras[ 0 ];
+            }
+          }
+          if ( selectedCamera ) {
+            const cameraConstraints = {
+              audio: false,
+              video: { deviceId: selectedCamera.deviceId }
+            };
+            return navigator.mediaDevices.getUserMedia( cameraConstraints );
+          }
+          else {
+            alert( 'No cameras found, unable to initialize.' );
+            throw new Error( 'No cameras found' );
+          }
         } )
         .then( stream => {
+
+          // Initialize the video stream.
           const video = this._videoInput;
           video.srcObject = stream;
           video.onloadedmetadata = () => {
@@ -33,6 +58,9 @@ export default class CameraVideo extends React.Component {
             this._dataToRemember = {};
             this._processVideo();
           };
+        } )
+        .catch( error => {
+          console.error( 'Unable to access camera', error );
         } );
     };
 

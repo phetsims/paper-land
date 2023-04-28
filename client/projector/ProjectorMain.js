@@ -1,6 +1,4 @@
 import React from 'react';
-import clientConstants from '../clientConstants';
-
 import { forwardProjectionMatrixForPoints, mult } from '../utils';
 import Program from './Program.js';
 
@@ -11,14 +9,45 @@ function projectorSize() {
 }
 
 export default class ProjectorMain extends React.Component {
+
   componentDidMount() {
-    navigator.mediaDevices
-      .getUserMedia( {
-        audio: false,
-        video: clientConstants.cameraVideoConstraints
+
+    // See if an alternate camera was specified in the query parameters.
+    const urlSearchParams = new URLSearchParams( window.location.search );
+    const params = Object.fromEntries( urlSearchParams.entries() );
+    const useCamera = params.useCamera === undefined ? 0 : parseInt( params.useCamera, 10 );
+
+    navigator.mediaDevices.enumerateDevices()
+      .then( devices => {
+
+        // Find the selected camera.
+        const cameras = devices.filter( device => device.kind === 'videoinput' );
+        let selectedCamera;
+        if ( cameras ) {
+          if ( cameras[ useCamera ] ) {
+            selectedCamera = cameras[ useCamera ];
+          }
+          else {
+            selectedCamera = cameras[ 0 ];
+          }
+        }
+        if ( selectedCamera ) {
+          const cameraConstraints = {
+            audio: false,
+            video: { deviceId: selectedCamera.deviceId }
+          };
+          return navigator.mediaDevices.getUserMedia( cameraConstraints );
+        }
+        else {
+          alert( 'No cameras found, unable to initialize.' );
+          throw new Error( 'No cameras found' );
+        }
       } )
       .then( stream => {
         this._videoCapture = new ImageCapture( stream.getVideoTracks()[ 0 ] );
+      } )
+      .catch( error => {
+        console.error( 'Unable to access camera', error );
       } );
   }
 
