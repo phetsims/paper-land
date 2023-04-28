@@ -12,13 +12,16 @@ theme:
 
 nav:
     - Home: README.md
-    - Code Documentation: 
-      - Board API: use/implementation-notes.md
-      - Paper API: use/api.md
-    - Paper Tutorial:
+    - Tutorial:
       - Camera Setup: tutorial/camera-setup.md
       - Legacy Tutorial: tutorial/tutorial.md
+    - Documentation: 
+      - Board API: use/implementation-notes.md
+      - Paper API: use/api.md
     - Contribution:
-      # - How to Contribute: how to make this a redirect
-      - Feature Wishlist: contribute/wishlist.md
-      # - Community Code of Conduct: how to make this a redirect
+      - How to Contribute: CONTRIBUTING.md
+      - Feature Wishlist: WISHLIST.md
+      - Community Code of Conduct: CODE_OF_CONDUCT.md
+    - About:
+      - Contributors: about.md
+      - Join Us: community.md

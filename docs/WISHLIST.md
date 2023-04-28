@@ -11,6 +11,7 @@
 - Custom dot colors
 - Improve base performance
 - Automatic calibration
+- Aruco Markers \[beholder\](  <ins>https://github.com/project-beholder/beholder-detection</ins>)
 
 ## Camera Control
 - Camera selection (when multiple webcams available)
