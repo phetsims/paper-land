@@ -15,7 +15,8 @@ You are looking for dots to be stably detected and might need to iteratively swi
 2. Select a dot color. The circle should show a white outline when in calibration mode for that color. 
 3. Select the corresponding color in the Camera Viewport to calibrate that color. 
 4. Repeat for all colors.
+5. Decide if you need to make anymore camera parameter changes.
 
 > Note about Markers: This sets the average size in addition to the color of the dot. If using Markers, they will be recognized based on dots three times (3x) the size of the calibrated dot. Markers also use the same color calibration as the corresponding dot color.
 
-6.  Decide if you need to make anymore camera parameter changes.
+
