@@ -93,21 +93,24 @@ const mapOfProgramNumbersToScratchpadObjects = new Map();
 // {Map<number,Object>} - map of paper program numbers that are present in the detection window to their position points
 const mapOfPaperProgramNumbersToPreviousPoints = new Map();
 
-// {Object[]} - Collection of all Markers detected by the camera
-const markers = new Map();
+// {Map<number,MarkerInfo>} - Map of numeric values that act as IDs to marker info objects.
+const markerMap = new Map();
 let nextMarkerId = 0;
 const MAX_MARKER_ID = Number.MAX_SAFE_INTEGER;
+const getIdForMarker = markerInfo => Array.from( markerMap.keys() ).find(
+  id => _.isEqual( markerMap.get( id ), markerInfo )
+);
 
 markersAddedEmitter.addListener( () => {
-  console.log( 'markers added' );
+  console.log( 'marker(s) added' );
 } );
 
 markersRemovedEmitter.addListener( () => {
-  console.log( 'markers removed' );
+  console.log( 'marker(s) removed' );
 } );
 
 markersChangedPositionEmitter.addListener( () => {
-  console.log( 'markers changed position' );
+  console.log( 'marker(s) changed position' );
 } );
 
 const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
@@ -124,6 +127,10 @@ const sharedData = {
 const arePointsEqual = ( firstPoint, secondPoint, threshold ) => {
   return phet.dot.Utils.equalsEpsilon( firstPoint.x, secondPoint.x, threshold ) &&
          phet.dot.Utils.equalsEpsilon( firstPoint.y, secondPoint.y, threshold );
+};
+
+const getInterPointDistance = ( point1, point2 ) => {
+  return Math.sqrt( Math.pow( point1.x - point2.x, 2 ) + Math.pow( point1.y - point2.y, 2 ) );
 };
 
 // Helper function to compare two sets of paper program position points. Points can differ within threshold and
@@ -378,13 +385,13 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
     // NOTE: If these are maps, it might be OK if the indices are undefined (map value will then be undefined)
     const currentMarker = currentMarkersInfo[ info.currentMarkerIndex ];
-    const previousMarker = markers.get( info.previousMarkerId );
+    const previousMarker = markerMap.get( info.previousMarkerId );
 
     if ( currentMarker && previousMarker ) {
 
       // It found that the same marker was detected before/after update -- look for changing positions
       const newPosition = currentMarkersInfo[ info.currentMarkerIndex ].position;
-      const previousPosition = markers.get( info.previousMarkerId ).position;
+      const previousPosition = markerMap.get( info.previousMarkerId ).position;
 
       if ( !arePointsEqual( newPosition, previousPosition, boardConfigObject.positionInterval ) ) {
 
@@ -392,7 +399,7 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
         changedMarkers.push( currentMarkersInfo[ info.currentMarkerIndex ] );
 
         // save the new state to the marker
-        markers.get( info.previousMarkerId ).position = newPosition;
+        markerMap.get( info.previousMarkerId ).position = newPosition;
       }
     }
     else if ( currentMarker && !previousMarker ) {
@@ -401,14 +408,14 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       addedMarkers.push( currentMarker );
 
       // Marker was added, add it to the state
-      markers.set( nextMarkerId, currentMarker );
+      markerMap.set( nextMarkerId, currentMarker );
 
       // NOTE: If you run for a *really* long time, this could make it so markers get overwritten!
       nextMarkerId = ( nextMarkerId + 1 ) % MAX_MARKER_ID;
     }
     else if ( previousMarker && !currentMarker ) {
       removedMarkers.push( previousMarker );
-      markers.delete( info.previousMarkerId );
+      markerMap.delete( info.previousMarkerId );
     }
     else {
       console.error( 'How can we have a change in markers where there is no addition/removal or change in position?' );
@@ -420,46 +427,87 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
   changedMarkers.length > 0 && markersChangedPositionEmitter.emit( changedMarkers );
 };
 
-const areMarkersTheSame = ( markerA, markerB ) => {
-  return markerA.colorName === markerB.colorName &&
-         arePointsEqual( markerA.position, markerB.position, 0.2 );
-};
-
+/**
+ * Helper function that compares the latest marker data to the previously stored information to determine which ones
+ * match up.
+ *
+ * This was created and tested initially in late April 2023.  It could almost certainly be way more efficient than it
+ * is - it was written more for clarity than optimal performance.  Feel free to improve as needed.
+ *
+ * @param {Object[]} currentMarkers - the most recent data represent marker colors, positions, etc.
+ * @returns {{ currentMarkerIndex: Number|null, previousMarkerId: Number|null}[]}}
+ */
 const getMarkerMatchingInfo = currentMarkers => {
 
-  const markerMatchingInfo = [];
+  const markerMatchingInfoArray = [];
 
-  // look for new markers to set the currentMarkerIndex
+  // For each of the markers currently detected by the camera, try to match them to the ones that we have been tracking.
   for ( let i = 0; i < currentMarkers.length; i++ ) {
+
+    // convenience variable
     const currentMarker = currentMarkers[ i ];
-    const currentMarkerInfo = { currentMarkerIndex: i };
-    markerMatchingInfo.push( currentMarkerInfo );
 
-    // Look for markers that still exist since the last update
-    for ( const [ previousMarkerId, oldMarker ] of markers ) {
-      if ( areMarkersTheSame( oldMarker, currentMarker ) ) {
-        currentMarkerInfo.previousMarkerId = previousMarkerId;
+    // Create an instance of an object that maps between current and previous markers.
+    const markerMatchingInfo = { currentMarkerIndex: i, previousMarkerId: null };
+    markerMatchingInfoArray.push( markerMatchingInfo );
 
-        // we found a match, no need to keep looking
+    // Make a list of the previous markers whose color matches that of the current marker.
+    let prevMarkersOfSameColor = Array.from( markerMap.values() ).filter(
+      marker => marker.colorName === currentMarker.colorName
+    );
+
+    // Sort the list of same-color previous markers by proximity to the current marker.
+    prevMarkersOfSameColor = prevMarkersOfSameColor.sort(
+      ( marker1, marker2 ) => getInterPointDistance( currentMarker.position, marker1.position ) -
+                              getInterPointDistance( currentMarker.position, marker2.position )
+    );
+
+    // Match the current marker to the closest previous marker to which NO OTHER CURRENT MARKER IS CLOSER.
+    for ( let i = 0; i < prevMarkersOfSameColor.length; i++ ) {
+      const prevMarkerOfSameColor = prevMarkersOfSameColor[ i ];
+      const distance = getInterPointDistance( currentMarker.position, prevMarkerOfSameColor.position );
+      const smallestDistanceToOtherCurrentMarkers = currentMarkers.reduce(
+        ( smallestDistanceSoFar, marker ) => {
+          if ( marker === currentMarker || marker.colorName !== currentMarker.colorName ) {
+
+            // Skip current marker and ones that don't match the color.
+            return smallestDistanceSoFar;
+          }
+          else {
+            const distanceToPreviousMarker = getInterPointDistance(
+              prevMarkerOfSameColor.position,
+              marker.position
+            );
+            return distanceToPreviousMarker < smallestDistanceSoFar ? distanceToPreviousMarker : smallestDistanceSoFar;
+          }
+        },
+        Number.POSITIVE_INFINITY
+      );
+      if ( distance < smallestDistanceToOtherCurrentMarkers ) {
+
+        // We have a match!  Yay!
+        markerMatchingInfo.previousMarkerId = getIdForMarker( prevMarkerOfSameColor );
         break;
       }
     }
   }
 
-  // look for markers that were in our previous state but do not exist now - the nested loop above should
-  // catch all markers are in `currentMarkers` AND `markers`, shouldn't need to check for overlap again.
-  for ( const [ previousMarkerId, oldMarker ] of markers ) {
+  // For each of the markers that had been previously identified, make sure it was matched to one of the currently
+  // detected ones and, if not, add an entry to the matching info for it.
+  for ( const [ key ] of markerMap ) {
+    const previousMarkerMatched = !!markerMatchingInfoArray.find( match => match.previousMarkerId === key );
+    if ( !previousMarkerMatched ) {
 
-    // if oldMarker is not the same as any current markers...
-    if ( !currentMarkers.find( currentMarker => areMarkersTheSame( oldMarker, currentMarker ) ) ) {
-
-      // Since this marker is in old markers and not current markers, there is no way we could have
-      // already added an intro to markerMatchingInfo with this previousMarkerId
-      markerMatchingInfo.push( { previousMarkerId: previousMarkerId } );
+      // This previously tracked marker was not matched to a currently detected marker.  The mostly likely case for this
+      // is when a marker is removed.  Add an entry to the match list that indicates this.
+      markerMatchingInfoArray.push( {
+        currentMarkerIndex: null,
+        previousMarkerId: key
+      } );
     }
   }
 
-  return markerMatchingInfo;
+  return markerMatchingInfoArray;
 };
 
 // Handle changes to local storage.  This is how paper programs communicate with the sim design board.
