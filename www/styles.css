@@ -17,6 +17,10 @@ h1 {
   margin-bottom: 0;
 }
 
+p.warning {
+  color: lightcoral;
+}
+
 @media (max-width: 460px) {
   h1 {
     font-size: 3.5rem;
