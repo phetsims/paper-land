@@ -17,6 +17,7 @@ function render( callback ) {
 
   ReactDOM.render(
     <ProjectorMain
+      cameraDeviceId={paperProgramsConfig.selectedCameraDeviceId}
       knobPoints={paperProgramsConfig.knobPoints}
       paperRatio={paperRatio}
       programsToRender={JSON.parse( localStorage.paperProgramsProgramsToRender || '[]' )}

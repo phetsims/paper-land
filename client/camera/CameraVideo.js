@@ -11,65 +11,18 @@ import detectPrograms from './detectPrograms';
 import Knob from './Knob';
 
 export default class CameraVideo extends React.Component {
+
   constructor( props ) {
     super( props );
-    this.state = { keyPoints: [], videoWidth: 1, videoHeight: 1 };
-
-    const init = () => {
-
-      // Set up the video stream.
-      navigator.mediaDevices.enumerateDevices()
-        .then( devices => {
-
-          // Find the selected camera.
-          const cameras = devices.filter( device => device.kind === 'videoinput' );
-          let selectedCamera;
-          if ( cameras ) {
-            if ( cameras[ props.useCamera ] ) {
-              selectedCamera = cameras[ props.useCamera ];
-            }
-            else {
-              selectedCamera = cameras[ 0 ];
-            }
-          }
-          if ( selectedCamera ) {
-            const cameraConstraints = {
-              audio: false,
-              video: { deviceId: selectedCamera.deviceId }
-            };
-            return navigator.mediaDevices.getUserMedia( cameraConstraints );
-          }
-          else {
-            alert( 'No cameras found, unable to initialize.' );
-            throw new Error( 'No cameras found' );
-          }
-        } )
-        .then( stream => {
-
-          // Initialize the video stream.
-          const video = this._videoInput;
-          video.srcObject = stream;
-          video.onloadedmetadata = () => {
-            video.play();
-            video.width = video.videoWidth;
-            video.height = video.videoHeight;
-            this.setState( { videoWidth: video.width, videoHeight: video.height } );
-            this._videoCapture = new cv.VideoCapture( video );
-            this._dataToRemember = {};
-            this._processVideo();
-          };
-        } )
-        .catch( error => {
-          console.error( 'Unable to access camera', error );
-        } );
+    this.state = {
+      keyPoints: [],
+      videoWidth: 1,
+      videoHeight: 1,
+      activeCamera: null
     };
 
-    if ( cv.Mat ) {
-      init();
-    }
-    else {
-      cv.onRuntimeInitialized = init;
-    }
+    // {boolean} - flag used to prevent multiple simultaneous attempts to set the camera
+    this.cameraSelectionInProgress = false;
   }
 
   componentDidMount() {
@@ -142,10 +95,86 @@ export default class CameraVideo extends React.Component {
     displayMat.delete();
   };
 
+  /**
+   * Set the active camera based on the provided device ID.  This is generally done at initialization and when switching
+   * between cameras.
+   * @param {string} cameraDeviceId
+   * @private
+   */
+  _setActiveCamera( cameraDeviceId ) {
+
+    // Ignore this if it is a request to set the currently active camera as active.
+    if ( this.state.activeCamera && this.state.activeCamera.deviceId === cameraDeviceId ) {
+      console.warn( `Ignoring attempt to set camera to the one that is already active, id = ${cameraDeviceId}` );
+      return;
+    }
+
+    this.cameraSelectionInProgress = true;
+
+    // Get a list of the available cameras.
+    navigator.mediaDevices.enumerateDevices()
+
+      // Verify that the specified device exists and, if so, request a media stream from it.
+      .then( devices => {
+
+        const matchingCameras = devices.filter(
+          device => device.kind === 'videoinput' && device.deviceId === cameraDeviceId
+        );
+
+        const selectedCamera = matchingCameras[ 0 ];
+
+        if ( !selectedCamera ) {
+          throw new Error( `Specified camera not found, device ID = ${cameraDeviceId}` );
+        }
+
+        this.setState( { activeCamera: selectedCamera } );
+
+        // Request the media stream from the camera.
+        const cameraConstraints = {
+          audio: false,
+          video: { deviceId: selectedCamera.deviceId }
+        };
+        return navigator.mediaDevices.getUserMedia( cameraConstraints );
+      } )
+
+      // Set up the stream so that we can process it.
+      .then( stream => {
+
+        // Initialize the video stream.
+        const video = this._videoInput;
+        video.srcObject = stream;
+        video.onloadedmetadata = () => {
+          video.play();
+          video.width = video.videoWidth;
+          video.height = video.videoHeight;
+          this.setState( { videoWidth: video.width, videoHeight: video.height } );
+          this._videoCapture = new cv.VideoCapture( video );
+          this._dataToRemember = {};
+          this._processVideo();
+        };
+
+        // Clear the flag used for preventing overlapping selection attempts.
+        this.cameraSelectionInProgress = false;
+      } )
+
+      .catch( error => {
+        console.error( `Error setting active camera: ${error}` );
+        this.cameraSelectionInProgress = false;
+      } );
+  }
+
   render() {
     const width = this.props.width;
     const height = width / this.state.videoWidth * this.state.videoHeight;
     const { x, y, k } = this.props.config.zoomTransform;
+    const cameraDeviceId = this.props.cameraDeviceId;
+
+    // If OpenCV is initialized and no camera has been set up yet or the camera selection was switched, set up an active
+    // camera.
+    if ( cv.Mat && !this.cameraSelectionInProgress && cameraDeviceId.length > 0 &&
+         ( !this.state.activeCamera || cameraDeviceId !== this.state.activeCamera.deviceId ) ) {
+      this._setActiveCamera( cameraDeviceId );
+    }
 
     return (
       <div ref={el => ( this._el = el )} style={{ width, height, overflow: 'hidden' }}>

@@ -27,7 +27,8 @@ const defaultConfig = {
   selectedSpaceName,
   freezeDetection: false,
   showPrintedInQueue: false,
-  scaleFactor: 4
+  scaleFactor: 4,
+  selectedCameraDeviceId: ''
 };
 
 function sanitizeConfig( config ) {
