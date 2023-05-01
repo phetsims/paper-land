@@ -53,6 +53,7 @@ importScripts('paper.js');
         }
 
         utterance.alert = voicingContent;
+        phet.paperLand.console.log( voicingContent );
         phet.scenery.voicingUtteranceQueue.addToBack( utterance );
 
         previousDescribedAltitude = newAltitude;

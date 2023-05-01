@@ -19,6 +19,8 @@ importScripts('paper.js');
         `blue: ${colorCounts[ 'blue' ] || 0 }`,
         `black: ${colorCounts[ 'black' ] || 0 }`
       );
+
+      console.log( currentMarkers.length );
     }
   };
 

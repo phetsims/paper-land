@@ -1,5 +1,5 @@
 // Thrust Control - Y
-// Keywords: controller, model, move, position, change
+// Keywords: controller, model, move, position, change, paper
 // =============================== //
 // Program Dependencies: N/A
 // Recommended Programs: N/A

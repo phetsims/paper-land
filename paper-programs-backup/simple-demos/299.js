@@ -19,10 +19,10 @@ importScripts('paper.js');
  
   // ===== //
   // Called when the program is detected. Creates the button, adds it to the scene, and stores it on the "scratchpad"
-  // so that it can be removed later when the program is removed.
+  // so that it can be removed later when the program is removed. 
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
     const voicingNameResponse = 'Push me!';
-    const voicingObjectResponse = 'Hello World.'
+    const voicingObjectResponse = 'Hello World.' 
     const voicingHintResponse = 'Push me to introduce me to the world.';
 
     let pushCounter = 0;
@@ -42,7 +42,7 @@ importScripts('paper.js');
 
       // assign Voicing responses to the button
       voicingNameResponse: voicingNameResponse,
-      voicingObjectResponse: voicingObjectResponse,
+      // voicingObjectResponse: voicingObjectResponse,
       voicingHintResponse: voicingHintResponse
     } );
 

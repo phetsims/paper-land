@@ -16,7 +16,7 @@ importScripts('paper.js');
     //----------------------------------------------------------------------
     const propertyName = 'altitudeProperty';
 
-    const imageWidthInPixels = 50; // Must be positive.
+    const imageWidthInPixels = 100; // Must be positive.
 
     const imageFile = 'girlInAir.png';
     // const imageFile = 'lunarLander.png';

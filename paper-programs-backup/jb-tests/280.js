@@ -1,4 +1,4 @@
-// Add PhET Checkbox - 1
+// Add PhET Checkbox - 1-2-3-4-5-6
 // Keywords: checkbox, view, simple, phet
 // ------------------------------- //
 // Required Programs (dependencies) [none]

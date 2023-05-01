@@ -16,12 +16,17 @@ importScripts('paper.js');
   // Called when the program is detected or changed.
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
 
+    const utterance = new phet.utteranceQueue.Utterance( {
+      announcerOptions: { cancelOther: false }
+    } );
+
     const handleLanderExists = landerVelocityProperty => {
       const voicingStepListener = dt => {
         const velocity = landerVelocityProperty.value;
 
         if ( velocity.magnitude < 1 ) {
-          phet.scenery.voicingUtteranceQueue.addToBack( `Lander not moving.` );  
+          utterance.alert = `Lander not moving.`;
+          phet.scenery.voicingUtteranceQueue.addToBack( utterance );  
         }
         else {
 
@@ -30,7 +35,8 @@ importScripts('paper.js');
           const directionString = phet.sceneryPhet.MovementAlerter.getDirectionDescriptionFromAngle(
             describerVelocity.angle
           );
-          phet.scenery.voicingUtteranceQueue.addToBack( `Lander moving ${directionString}` );
+          utterance.alert = `Lander moving ${directionString}`;
+          phet.scenery.voicingUtteranceQueue.addToBack( utterance );
         }
       };
       scratchpad.intervalListener = phet.axon.stepTimer.setInterval( voicingStepListener, 7000 );

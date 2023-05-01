@@ -18,11 +18,11 @@ importScripts('paper.js');
 
     const imageWidthInPixels = 50; // Must be positive.
 
-    const aboveZeroImageFile = 'girlInAir.png';
+    const aboveZeroImageFile = 'hotairballoon.png';
     // const aboveZeroImageFile = 'lunarLander.png';
     // const aboveZeroImageFile = 'birdInAir.png';
 
-    const belowZeroImageFile = 'submarine.png';
+    const belowZeroImageFile = 'sub.png';
     // const belowZeroImageFile = 'girlInWater.png';
 
     //----------------------------------------------------------------------
