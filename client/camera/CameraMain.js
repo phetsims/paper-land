@@ -1,4 +1,5 @@
 import React from 'react';
+import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
@@ -7,12 +8,12 @@ import clientConstants from '../clientConstants.js';
 import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils';
 import styles from './CameraMain.css';
+import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
-import Accordion from 'react-bootstrap/Accordion';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
@@ -261,7 +262,6 @@ export default class CameraMain extends React.Component {
 
     this._timeOfLastCameraDataUpdate = Date.now();
   }
-
 
   /**
    * Get the label associated with the provided camera device ID.
@@ -1163,11 +1163,10 @@ export default class CameraMain extends React.Component {
                   <Accordion.Item eventKey='5'>
                     <Accordion.Header>Camera</Accordion.Header>
                     <Accordion.Body>
-                      <Form.Select
-                        name='cameras'
-                        id='cameras'
-                        value={this._getCameraLabelFromDeviceId( this.state.selectedCameraDeviceId )}
-                        onChange={event => {
+                      <CameraSelector
+                        selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+                        availableCameras={this.state.availableCameras}
+                        onSelectionChanged={event => {
                           const selectedCamera = this.state.availableCameras.find(
                             cam => cam.label === event.target.value
                           );
@@ -1177,13 +1176,7 @@ export default class CameraMain extends React.Component {
                             selectedCameraDeviceId: selectedCamera.deviceId
                           } );
                         }}
-                      >
-                        {this.state.availableCameras.map( ( option, index ) => {
-                          return <option key={index}>
-                            {option.label}
-                          </option>;
-                        } )}
-                      </Form.Select>
+                      />
                     </Accordion.Body>
                   </Accordion.Item>
                 ) : ( '' )}
