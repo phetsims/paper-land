@@ -1,4 +1,5 @@
 import React from 'react';
+import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
@@ -7,15 +8,16 @@ import clientConstants from '../clientConstants.js';
 import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils';
 import styles from './CameraMain.css';
+import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
-import Accordion from 'react-bootstrap/Accordion';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
+const CAMERA_DATA_POLLING_PERIOD = 2; // in seconds
 const PROGRAM_DELETE_WARNING = 'This will remove the program for all users of the database.\nAre you sure you want to delete this program?';
 const OPEN_SIDEBAR_WIDTH = parseInt( styles.cameraMainSidebarWidth, 10 );
 
@@ -45,6 +47,12 @@ export default class CameraMain extends React.Component {
       showSaveModal: false,
       saveSuccess: false,
 
+      // {InputDeviceInfo[]} - a list of the cameras that are available on the current system
+      availableCameras: [],
+
+      // {string} - the deviceId of the currently selected camera
+      selectedCameraDeviceId: '',
+
       // {Object|null} - The program currently selected and being displayed in the editor, null for none.
       programInEditor: null,
 
@@ -62,6 +70,9 @@ export default class CameraMain extends React.Component {
     // @private {boolean} - whether there is currently an update of the space data in progress
     this._spaceDataUpdateInProgress = false;
 
+    // @private {number} - time of the last update of the available camera information in epoch time
+    this._timeOfLastCameraDataUpdate = Number.NEGATIVE_INFINITY;
+
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
     this.saveAlertTimeout = null;
 
@@ -69,7 +80,6 @@ export default class CameraMain extends React.Component {
     const urlSearchParams = new URLSearchParams( window.location.search );
     const params = Object.fromEntries( urlSearchParams.entries() );
     this.showTestButton = params.showTestButton !== undefined;
-    this.useCamera = params.useCamera === undefined ? 0 : parseInt( params.useCamera, 10 );
   }
 
   componentDidMount() {
@@ -77,12 +87,21 @@ export default class CameraMain extends React.Component {
     this._updatePageWidth();
     this._updateSpacesList();
 
-    // Set up a periodic update of the space data using animation frames.
+    // Set up a periodic update of this component's state using animation frames.
     const animationFrameHandler = () => {
+
+      // Update space data if it is time to do so.
       if ( !this._spaceDataUpdateInProgress &&
            Date.now() > this._timeOfLastSpaceDataUpdate + SPACE_DATA_POLLING_PERIOD * 1000 ) {
         this._updateSpaceData();
       }
+
+      // Update the list of available cameras if it is time to do so.
+      if ( Date.now() > this._timeOfLastCameraDataUpdate + CAMERA_DATA_POLLING_PERIOD * 1000 ) {
+        this._updateAvailableCameraData();
+      }
+
+      // Request the next update.
       requestAnimationFrame( animationFrameHandler );
     };
     requestAnimationFrame( animationFrameHandler );
@@ -203,6 +222,55 @@ export default class CameraMain extends React.Component {
 
   _updatePageWidth() {
     this.setState( { pageWidth: window.innerWidth } );
+  }
+
+  /**
+   * Update the state information with the list of available cameras.  This can be called periodically to detect whether
+   * devices have been added or removed.
+   *
+   * @private
+   */
+  _updateAvailableCameraData() {
+    navigator.mediaDevices.enumerateDevices()
+      .then( devices => {
+
+        // Get a list of just the cameras from the list of all available devices.
+        const availableCameras = devices.filter( device => device.kind === 'videoinput' );
+
+        // Update component state.
+        this.setState( { availableCameras } );
+
+        // If no camera was selected, or if the previously selected camera has disappeared, use the first listed camera
+        // as the selected device.
+        const availableCameraDeviceIds = availableCameras.map( availableCamera => availableCamera.deviceId );
+        if ( availableCameraDeviceIds.length > 0 ) {
+          if ( !availableCameraDeviceIds.includes( this.state.selectedCameraDeviceId ) ) {
+            this.setState( { selectedCameraDeviceId: availableCameraDeviceIds[ 0 ] } );
+
+            // This change must also be stored in the configuration, since the projector needs it.
+            this.props.onConfigChange( {
+              ...this.props.config,
+              selectedCameraDeviceId: availableCameraDeviceIds[ 0 ]
+            } );
+          }
+        }
+        else {
+          console.warn( 'No cameras detected on this system.' );
+        }
+      } );
+
+    this._timeOfLastCameraDataUpdate = Date.now();
+  }
+
+  /**
+   * Get the label associated with the provided camera device ID.
+   * @param {string} cameraDeviceId
+   * @returns {string}
+   * @private
+   */
+  _getCameraLabelFromDeviceId( cameraDeviceId ) {
+    const camera = this.state.availableCameras.find( cameraInfo => cameraInfo.deviceId === cameraDeviceId );
+    return camera ? camera.label : 'Camera not found';
   }
 
   _print( program ) {
@@ -586,7 +654,7 @@ export default class CameraMain extends React.Component {
                 <div className={styles.video}>
                   <CameraVideo
                     width={videoAndEditorWidth}
-                    useCamera={this.useCamera}
+                    cameraDeviceId={this.state.selectedCameraDeviceId}
                     config={this.props.config}
                     onConfigChange={this.props.onConfigChange}
                     onProcessVideo={( { programsToRender, markers, framerate } ) => {
@@ -1057,6 +1125,29 @@ export default class CameraMain extends React.Component {
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
+
+                {/*camera selection section of accordion box, only included if multiple cameras are available*/}
+                {this.state.availableCameras.length > 1 ? (
+                  <Accordion.Item eventKey='5'>
+                    <Accordion.Header>Camera</Accordion.Header>
+                    <Accordion.Body>
+                      <CameraSelector
+                        selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+                        availableCameras={this.state.availableCameras}
+                        onSelectionChanged={event => {
+                          const selectedCamera = this.state.availableCameras.find(
+                            cam => cam.label === event.target.value
+                          );
+                          this.setState( { selectedCameraDeviceId: selectedCamera.deviceId } );
+                          this.props.onConfigChange( {
+                            ...this.props.config,
+                            selectedCameraDeviceId: selectedCamera.deviceId
+                          } );
+                        }}
+                      />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                ) : ( '' )}
 
               </Accordion>
 
