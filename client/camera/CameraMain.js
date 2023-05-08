@@ -32,7 +32,6 @@ export default class CameraMain extends React.Component {
       framerate: 0,
       selectedColorIndex: -1,
       spaceData: { programs: [] },
-      isEditingSpaceUrl: false,
       selectedSpaceName: props.config.selectedSpaceName,
       availableSpaces: [],
       isAddingNewSpace: false,
@@ -538,6 +537,9 @@ export default class CameraMain extends React.Component {
                                       !this.state.programInEditor.editorInfo.readOnly &&
                                       !this.state.programInEditor.editorInfo.claimed;
 
+    // variable for event keys in the accordion box
+    let accordionItemEventKey = 0;
+
     // Update the readOnly state of the editor if necessary.
     if ( this._editor && this._editor.getConfiguration().readOnly !== !okayToEditSelectedProgram ) {
       this._editor.updateOptions( { readOnly: !okayToEditSelectedProgram } );
@@ -681,57 +683,23 @@ export default class CameraMain extends React.Component {
                 opacity: this.state.sidebarOpen ? 1 : 0
               }}
             >
+
+              {/* Test button, used for debugging */}
               {this.showTestButton ? (
                 <Button
                   onClick={() => {
 
-                    // Get a list of the supported constraints for the devices available from this browser.
-                    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-                    console.log( '===== Supported Constraints =====' );
-                    console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );
-
-                    // Get a list of all media devices and log some of the information to the console.
-                    navigator.mediaDevices
-                      .enumerateDevices()
-                      .then( devices => {
-                        console.log( '===== Device List =====' );
-                        devices.forEach( device => {
-                          console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );
-                        } );
-                      } )
-                      .catch( err => {
-                        console.error( `${err.name}: ${err.message}` );
-                      } );
-
-                    // Get the video track.
-                    navigator.mediaDevices.getUserMedia( { video: true } )
-                      .then( mediaStream => {
-                        const track = mediaStream.getVideoTracks()[ 0 ];
-                        if ( track ) {
-
-                          // Log information about the video track to the console.
-                          console.log( `===== found track = ${track.label}, capabilities below =====` );
-                          console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );
-
-                          console.log( '===== track settings =====' );
-                          console.log( `${JSON.stringify( track.getSettings(), null, 1 )}` );
-
-                          console.log( '===== track constraints =====' );
-                          console.log( `${JSON.stringify( track.getConstraints(), null, 1 )}` );
-                        }
-                      } )
-                      .catch( e => {
-                        console.log( `Error getting video track = ${e}` );
-                      } );
-                  }
-                  }
+                    // Put temporary debug code here.
+                    console.log( 'test button clicked' );
+                  }}
                 >
                   Test Button
                 </Button>
               ) : ( '' )}
 
+              {/* Accordion element that comprises most of the sidebar */}
               <Accordion defaultActiveKey='0'>
-                <Accordion.Item eventKey='0'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header className={`${styles.accordionHeader}`}>Spaces & Programs</Accordion.Header>
                   <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
                     <div>
@@ -882,7 +850,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='1'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Preview Markers</Accordion.Header>
                   <Accordion.Body>
                     Click on the preview icon next to the markers below to add virtual markers to the camera view.
@@ -906,7 +874,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='2'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Calibration</Accordion.Header>
                   <Accordion.Body>
                     Click on a colored circle below, then click on a circle of that color on a printed paper program in
@@ -929,7 +897,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='3'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Printing</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
@@ -974,7 +942,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='4'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Detection</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
