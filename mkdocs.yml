@@ -18,12 +18,12 @@ nav:
       - Device Setup: setup/tutorial.md
       - Program Recognition Tips: setup/camera-setup.md
     - Paper Documentation: 
-      - Model-View-Controller Framework: use/mvc.md
       - Board Implementation: use/board-implementation.md
       - Board API: use/board-api.md
       - Legacy Paper API: use/paper-api.md
       - Example Paper Program: use/paper-tutorial.md
-      - Downloads: resources.md
+      - Model-View-Controller Framework: use/mvc.md
+      - Downloads: use/resources.md
     - Community:
       - Contribute: CONTRIBUTING.md
       - Feature Wishlist: WISHLIST.md
