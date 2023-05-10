@@ -12,16 +12,20 @@ theme:
 
 nav:
     - Home: README.md
-    - Tutorial:
-      - Camera Setup: tutorial/camera-setup.md
-      - Legacy Tutorial: tutorial/tutorial.md
-    - Documentation: 
-      - Board API: use/implementation-notes.md
-      - Paper API: use/api.md
-    - Contribution:
-      - How to Contribute: CONTRIBUTING.md
+    - Technical Setup:
+      - Needs & Recommendations: setup/specs.md
+      - Installation: setup/install.md
+      - Device Setup: setup/tutorial.md
+      - Program Recognition Tips: setup/camera-setup.md
+    - Paper Documentation: 
+      - Model-View-Controller Framework: use/mvc.md
+      - Board Implementation: use/board-implementation.md
+      - Board API: use/board-api.md
+      - Legacy Paper API: use/paper-api.md
+      - Example Paper Program: use/paper-tutorial.md
+      - Downloads: resources.md
+    - Community:
+      - Contribute: CONTRIBUTING.md
       - Feature Wishlist: WISHLIST.md
       - Community Code of Conduct: CODE_OF_CONDUCT.md
-    - About:
-      - Contributors: about.md
       - Join Us: community.md
