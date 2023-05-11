@@ -113,6 +113,9 @@ markersChangedPositionEmitter.addListener( () => {
   console.log( 'marker(s) changed position' );
 } );
 
+// Reusable reference to an array containing all collected markers, accessed through sharedData
+const allMarkers = [];
+
 const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 
 // {Object} - This object contains the data that is passed into the handlers for the paper programs and can be used to
@@ -120,7 +123,8 @@ const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 const sharedData = {
   model: boardModel,
   scene: scene,
-  displaySize: DISPLAY_SIZE
+  displaySize: DISPLAY_SIZE,
+  allMarkers: allMarkers
 };
 
 // Returns true when both x and y of the provided points are equal within threshold.
@@ -189,6 +193,11 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
   const dataByProgramNumber = JSON.parse( localStorage.paperProgramsDataByProgramNumber || '{}' );
 
+  // put all detected markers in the sharedData so that they are available for callbacks (keeping reference to
+  // array provided to sharedData)
+  allMarkers.length = 0;
+  currentMarkersInfo.forEach( marker => allMarkers.push( marker ) );
+
   // Process the data associated with each of the paper programs that are currently present in the detection window.
   presentPaperProgramInfo.forEach( paperProgramInstanceInfo => {
 
@@ -206,11 +215,6 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
          programSpecificData.paperPlaygroundData.updateTime > lastUpdateTime ) {
 
       lastUpdateTime = programSpecificData.paperPlaygroundData.updateTime;
-
-      // put all detected markers in the sharedData so that they are available for callbacks (keeping reference to
-      // array provided to sharedData)
-      // markers.length = 0;
-      // currentMarkersInfo.forEach( marker => markers.push( marker ) );
 
       // If there are no handlers for this program, it means that it just appeared in the detection window.
       const paperProgramJustAppeared = !mapOfProgramNumbersToEventHandlers.has( paperProgramNumber );
