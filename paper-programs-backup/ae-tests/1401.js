@@ -41,7 +41,7 @@ importScripts( 'paper.js' );
     const controlDirection = 'vertical';
 
     // range for the value as the program moves.
-    const range = new phet.dot.Range( -1000, 1000 );
+    const range = new phet.dot.Range( -50, 50 );
 
     // If true, Text will be drawn to the board to display the value for debugging
     const showText = true;

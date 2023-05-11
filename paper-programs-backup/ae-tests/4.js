@@ -27,13 +27,18 @@ importScripts('paper.js');
     // NOTE: That would also be more efficient, notice we are creating a new Range every
     //       time the program moves!
     
-    const range = new phet.dot.Range( 1, 1000 ); // this is the altitude range
+    // (AE 05.04.23) This is where to set the altitude value range.
+    //const range = new phet.dot.Range( 1, 10 ); // this is the altitude range
 
     // check to see that the model has the Property we want to control
     if ( sharedData.model.has( 'altitudeProperty' ) ) {
-
+      
       // get a reference to the model Property so we can change it
       const altitudeProperty = sharedData.model.get( 'altitudeProperty' );
+
+      // the range (numerical values for altitude) comes from the Altitude:Model
+      const range = altitudeProperty.range;
+
 
       // this utility function takes the paper points (from Jan's Paper API) and calculates a normalized
       // rotation. 0 means no rotation, 1 means it rotated a full 360 degrees. You can also use

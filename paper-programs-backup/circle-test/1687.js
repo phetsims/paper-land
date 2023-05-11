@@ -25,7 +25,7 @@ importScripts('paper.js');
     ];
 
     // Create and add the sound generator.
-    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( `media/sounds/${availableSoundFiles[ 2 ]}` );
+    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( `media/sounds/${availableSoundFiles[ 4 ]}` );
     const angleSound = new phet.tambo.SoundClip( wrappedAudioBuffer, { 
       loop: true,
       initialOutputLevel: 0.1

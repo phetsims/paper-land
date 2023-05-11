@@ -1,4 +1,4 @@
-// Extreme Lander Voicing
+// PLACEHOLDER FOR PRINTED PAPER
 // Keywords: lander, voicing, view, polling
 // ------------------------------- //
 // Required Programs (dependencies):

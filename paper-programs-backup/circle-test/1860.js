@@ -65,9 +65,9 @@ importScripts('paper.js');
   ctx.font = '20px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgb(255,0,0)';
-  ctx.fillText('Hello', canvas.width / 2, canvas.height / 2 - 10);
+  ctx.fillText('Point', canvas.width / 2, canvas.height / 2 - 10);
   ctx.fillStyle = 'rgb(0,255,0)';
-  ctx.fillText('world', canvas.width / 2, canvas.height / 2 + 20);
+  ctx.fillText('A', canvas.width / 2, canvas.height / 2 + 20);
 
   // Get a "supporter canvas", which is a canvas for the entire
   // projection surface.
