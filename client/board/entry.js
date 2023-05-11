@@ -277,8 +277,6 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
     let markersMoved = false;
 
     if ( currentMarkersForProgram.length > previousMarkersForProgram.length ) {
-      boardConsole.log( `Marker added to program: ${paperProgramNumber}` );
-
       if ( eventHandlers && eventHandlers.onProgramMarkersAdded ) {
         evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
           paperProgramNumber,
@@ -293,7 +291,6 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       markersMoved = true;
     }
     else if ( currentMarkersForProgram.length < previousMarkersForProgram.length ) {
-      boardConsole.log( `Marker removed from program: ${paperProgramNumber}` );
       if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
         evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
           paperProgramNumber,
