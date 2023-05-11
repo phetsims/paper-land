@@ -30,7 +30,7 @@
   display: flex;
   flex-direction: column;
   margin-left: commonMargin;
-  margin-right: commonMargin;
+  margin-right: 0;
 }
 
 :local(.containerWithBackground) {
@@ -49,7 +49,6 @@
 
 :local(.editorTitleBar) {
   margin: commonMargin;
-  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -87,6 +86,7 @@
   font: 16px sans-serif;
   font-weight: 300;
   height: 95vh;
+  padding-left: 10px;
   padding-right: 10px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -175,7 +175,7 @@
 }
 
 :local(.programList) {
-  border: 1px black solid;
+  border: 1px whitesmoke solid;
   padding: 5px;
 }
 
@@ -302,6 +302,11 @@
   border-radius: 3px;
 }
 
+:local(.horizontalRow){
+  display: flex;
+  flex-direction: row;
+}
+
 :local(.saveAlert ) {
   position: fixed;
   top: 50%;
@@ -322,11 +327,13 @@
 }
 
 .accordion{
-  --bs-accordion-border-width: 0
+  --bs-accordion-border-width: 0;
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(100, 200, 255, 0.75);
 }
 
 .accordion-button{
   border-radius: 5px;
+  color: white;
   background-color: #6C8EAC;
 }
 

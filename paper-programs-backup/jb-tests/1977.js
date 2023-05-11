@@ -1,4 +1,4 @@
-// Add Image - Copy
+// Add & Move Image
 // Keywords: view, asset, image, simple
 // ------------------------------- //
 // Required Programs (dependencies) [none]

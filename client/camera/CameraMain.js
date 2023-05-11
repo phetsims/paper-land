@@ -1,4 +1,5 @@
 import React from 'react';
+import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
@@ -7,15 +8,16 @@ import clientConstants from '../clientConstants.js';
 import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils';
 import styles from './CameraMain.css';
+import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
-import Accordion from 'react-bootstrap/Accordion';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
+const CAMERA_DATA_POLLING_PERIOD = 2; // in seconds
 const PROGRAM_DELETE_WARNING = 'This will remove the program for all users of the database.\nAre you sure you want to delete this program?';
 const OPEN_SIDEBAR_WIDTH = parseInt( styles.cameraMainSidebarWidth, 10 );
 
@@ -32,7 +34,6 @@ export default class CameraMain extends React.Component {
       framerate: 0,
       selectedColorIndex: -1,
       spaceData: { programs: [] },
-      isEditingSpaceUrl: false,
       selectedSpaceName: props.config.selectedSpaceName,
       availableSpaces: [],
       isAddingNewSpace: false,
@@ -45,6 +46,12 @@ export default class CameraMain extends React.Component {
       sidebarOpen: true,
       showSaveModal: false,
       saveSuccess: false,
+
+      // {InputDeviceInfo[]} - a list of the cameras that are available on the current system
+      availableCameras: [],
+
+      // {string} - the deviceId of the currently selected camera
+      selectedCameraDeviceId: '',
 
       // {Object|null} - The program currently selected and being displayed in the editor, null for none.
       programInEditor: null,
@@ -63,6 +70,9 @@ export default class CameraMain extends React.Component {
     // @private {boolean} - whether there is currently an update of the space data in progress
     this._spaceDataUpdateInProgress = false;
 
+    // @private {number} - time of the last update of the available camera information in epoch time
+    this._timeOfLastCameraDataUpdate = Number.NEGATIVE_INFINITY;
+
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
     this.saveAlertTimeout = null;
 
@@ -77,12 +87,21 @@ export default class CameraMain extends React.Component {
     this._updatePageWidth();
     this._updateSpacesList();
 
-    // Set up a periodic update of the space data using animation frames.
+    // Set up a periodic update of this component's state using animation frames.
     const animationFrameHandler = () => {
+
+      // Update space data if it is time to do so.
       if ( !this._spaceDataUpdateInProgress &&
            Date.now() > this._timeOfLastSpaceDataUpdate + SPACE_DATA_POLLING_PERIOD * 1000 ) {
         this._updateSpaceData();
       }
+
+      // Update the list of available cameras if it is time to do so.
+      if ( Date.now() > this._timeOfLastCameraDataUpdate + CAMERA_DATA_POLLING_PERIOD * 1000 ) {
+        this._updateAvailableCameraData();
+      }
+
+      // Request the next update.
       requestAnimationFrame( animationFrameHandler );
     };
     requestAnimationFrame( animationFrameHandler );
@@ -203,6 +222,55 @@ export default class CameraMain extends React.Component {
 
   _updatePageWidth() {
     this.setState( { pageWidth: window.innerWidth } );
+  }
+
+  /**
+   * Update the state information with the list of available cameras.  This can be called periodically to detect whether
+   * devices have been added or removed.
+   *
+   * @private
+   */
+  _updateAvailableCameraData() {
+    navigator.mediaDevices.enumerateDevices()
+      .then( devices => {
+
+        // Get a list of just the cameras from the list of all available devices.
+        const availableCameras = devices.filter( device => device.kind === 'videoinput' );
+
+        // Update component state.
+        this.setState( { availableCameras } );
+
+        // If no camera was selected, or if the previously selected camera has disappeared, use the first listed camera
+        // as the selected device.
+        const availableCameraDeviceIds = availableCameras.map( availableCamera => availableCamera.deviceId );
+        if ( availableCameraDeviceIds.length > 0 ) {
+          if ( !availableCameraDeviceIds.includes( this.state.selectedCameraDeviceId ) ) {
+            this.setState( { selectedCameraDeviceId: availableCameraDeviceIds[ 0 ] } );
+
+            // This change must also be stored in the configuration, since the projector needs it.
+            this.props.onConfigChange( {
+              ...this.props.config,
+              selectedCameraDeviceId: availableCameraDeviceIds[ 0 ]
+            } );
+          }
+        }
+        else {
+          console.warn( 'No cameras detected on this system.' );
+        }
+      } );
+
+    this._timeOfLastCameraDataUpdate = Date.now();
+  }
+
+  /**
+   * Get the label associated with the provided camera device ID.
+   * @param {string} cameraDeviceId
+   * @returns {string}
+   * @private
+   */
+  _getCameraLabelFromDeviceId( cameraDeviceId ) {
+    const camera = this.state.availableCameras.find( cameraInfo => cameraInfo.deviceId === cameraDeviceId );
+    return camera ? camera.label : 'Camera not found';
   }
 
   _print( program ) {
@@ -537,6 +605,9 @@ export default class CameraMain extends React.Component {
                                       !this.state.programInEditor.editorInfo.readOnly &&
                                       !this.state.programInEditor.editorInfo.claimed;
 
+    // variable for event keys in the accordion box
+    let accordionItemEventKey = 0;
+
     // Update the readOnly state of the editor if necessary.
     if ( this._editor && this._editor.getConfiguration().readOnly !== !okayToEditSelectedProgram ) {
       this._editor.updateOptions( { readOnly: !okayToEditSelectedProgram } );
@@ -583,6 +654,7 @@ export default class CameraMain extends React.Component {
                 <div className={styles.video}>
                   <CameraVideo
                     width={videoAndEditorWidth}
+                    cameraDeviceId={this.state.selectedCameraDeviceId}
                     config={this.props.config}
                     onConfigChange={this.props.onConfigChange}
                     onProcessVideo={( { programsToRender, markers, framerate } ) => {
@@ -679,62 +751,29 @@ export default class CameraMain extends React.Component {
                 opacity: this.state.sidebarOpen ? 1 : 0
               }}
             >
+
+              {/* Test button, used for debugging */}
               {this.showTestButton ? (
                 <Button
                   onClick={() => {
 
-                    // Get a list of the supported constraints for the devices available from this browser.
-                    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
-                    console.log( '===== Supported Constraints =====' );
-                    console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );
-
-                    // Get a list of all media devices and log some of the information to the console.
-                    navigator.mediaDevices
-                      .enumerateDevices()
-                      .then( devices => {
-                        console.log( '===== Device List =====' );
-                        devices.forEach( device => {
-                          console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );
-                        } );
-                      } )
-                      .catch( err => {
-                        console.error( `${err.name}: ${err.message}` );
-                      } );
-
-                    // Get the video track.
-                    navigator.mediaDevices.getUserMedia( { video: true } )
-                      .then( mediaStream => {
-                        const track = mediaStream.getVideoTracks()[ 0 ];
-                        if ( track ) {
-
-                          // Log information about the video track to the console.
-                          console.log( `===== found track = ${track.label}, capabilities below =====` );
-                          console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );
-
-                          console.log( '===== track settings =====' );
-                          console.log( `${JSON.stringify( track.getSettings(), null, 1 )}` );
-
-                          console.log( '===== track constraints =====' );
-                          console.log( `${JSON.stringify( track.getConstraints(), null, 1 )}` );
-                        }
-                      } )
-                      .catch( e => {
-                        console.log( `Error getting video track = ${e}` );
-                      } );
-                  }
-                  }
+                    // Put temporary debug code here.
+                    console.log( 'test button clicked' );
+                  }}
                 >
                   Test Button
                 </Button>
               ) : ( '' )}
 
+              {/* Accordion element that comprises most of the sidebar */}
               <Accordion defaultActiveKey='0'>
-                <Accordion.Item eventKey='0'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header className={`${styles.accordionHeader}`}>Spaces & Programs</Accordion.Header>
                   <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
                     <div>
                       <div>
-                        <label htmlFor='spaces'>Select a Space:</label>
+                        <h5>Space</h5>
+                        <label htmlFor='spaces'>Select:</label>
                         <Form.Select
                           name='spaces'
                           id='spaces'
@@ -782,24 +821,33 @@ export default class CameraMain extends React.Component {
                             </Form>
                           </div>
                         ) : (
-                           <div>
-                             <Button onClick={() => {
-                               this.setState( { isAddingNewSpace: true } );
-                               this.setState( { newSpaceName: '' } );
-                             }}>
+                           <div
+                             className={styles.horizontalRow}
+                             style={{ marginTop: '15px' }}
+                           >
+                             <Button
+                               style={{ marginRight: '15px' }}
+                               onClick={() => {
+                                 this.setState( { isAddingNewSpace: true } );
+                                 this.setState( { newSpaceName: '' } );
+                               }}
+                             >
                                Add New Space
                              </Button>
+                             <a
+                               href={editorUrl}
+                               target='_blank'
+                               className={styles.editorAnchor}
+                               rel='noreferrer'
+                             >
+                               Open Code Editor<br/>for this Space
+                             </a>
                            </div>
                          )}
                       </div>
                     </div>
-                    <a href={editorUrl} target='_blank' className={styles.editorAnchor} rel='noreferrer'>
-                      Open Code Editor <br></br>
-                      for this Space
-                    </a>
-
                     <br/>
-                    Select/Create Programs
+                    <h5>Programs</h5>
 
                     <label>Filter on:
                       <input
@@ -870,7 +918,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='1'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Preview Markers</Accordion.Header>
                   <Accordion.Body>
                     Click on the preview icon next to the markers below to add virtual markers to the camera view.
@@ -894,7 +942,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='2'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Calibration</Accordion.Header>
                   <Accordion.Body>
                     Click on a colored circle below, then click on a circle of that color on a printed paper program in
@@ -917,11 +965,13 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='3'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Printing</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
-                      To print a program, click the print icon next to that program in the "Spaces & Programs" area.
+                      To print a program, click the print icon (
+                      <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                      ) next to that program in the "Spaces & Programs" area.
                       <br/><br/>
                       <div className={styles.sidebarSubSection}>
                         <span>Paper Size: </span>
@@ -960,7 +1010,7 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey='4'>
+                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
                   <Accordion.Header>Detection</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
@@ -1075,6 +1125,29 @@ export default class CameraMain extends React.Component {
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
+
+                {/*camera selection section of accordion box, only included if multiple cameras are available*/}
+                {this.state.availableCameras.length > 1 ? (
+                  <Accordion.Item eventKey='5'>
+                    <Accordion.Header>Camera</Accordion.Header>
+                    <Accordion.Body>
+                      <CameraSelector
+                        selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+                        availableCameras={this.state.availableCameras}
+                        onSelectionChanged={event => {
+                          const selectedCamera = this.state.availableCameras.find(
+                            cam => cam.label === event.target.value
+                          );
+                          this.setState( { selectedCameraDeviceId: selectedCamera.deviceId } );
+                          this.props.onConfigChange( {
+                            ...this.props.config,
+                            selectedCameraDeviceId: selectedCamera.deviceId
+                          } );
+                        }}
+                      />
+                    </Accordion.Body>
+                  </Accordion.Item>
+                ) : ( '' )}
 
               </Accordion>
 

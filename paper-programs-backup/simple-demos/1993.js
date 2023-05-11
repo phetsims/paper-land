@@ -53,7 +53,7 @@ importScripts('paper.js');
     // you could do anything in this function or put this function in a different program. addModelPropertyLink
     // returns a uniqueID which is saved to the scratchpad so it can be easily unlinked later.
     scratchpad.linkId = phet.paperLand.addModelPropertyLink( 'toggleProperty', value => {
-      phet.paperLand.console.log( `New toggle value: ${value}` );
+      phet.paperLand.console.warn( `New toggle value: ${value}` );
     } );
   };
 

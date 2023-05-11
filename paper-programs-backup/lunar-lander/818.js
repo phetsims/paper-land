@@ -1,5 +1,5 @@
-// Gravity Control
-// Keywords: gravity, model, control, position
+// Gravity Control - Position
+// Keywords: gravity, model, control, position, paper
 
 importScripts( 'paper.js' );
 
@@ -29,6 +29,7 @@ importScripts( 'paper.js' );
       // is at the 'min' of the range
       const gravityValue = normalizedY * scratchpad.gravityRange.min;
       gravityProperty.value = scratchpad.gravityRange.constrainValue( gravityValue );
+      phet.paperLand.console.log( 'Gravity: '+ gravityValue );
     }
   };
 

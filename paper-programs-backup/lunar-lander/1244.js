@@ -21,6 +21,7 @@ importScripts('paper.js');
     scratchpad.shipBody = new p2.Body( {
       mass: 1, // initial mass, to be updated
       position: [ 0, 200 ], // initial position
+      ccdSpeedThreshold: 100, // when moving fast, enable more expensive collision detection
       fixedRotation: true // don't let this physical body rotate
     } );
     scratchpad.shipBody.addShape( shipShape );
@@ -46,7 +47,8 @@ importScripts('paper.js');
     // Create a visualization for the lander itself
     // Create a Scenery image node.
     const imageElement = document.createElement( 'img' );
-    imageElement.setAttribute( 'src', 'media/images/lunarLander.png' );
+    // imageElement.setAttribute( 'src', 'media/images/lunarLander.png' );
+    imageElement.setAttribute( 'src', 'media/images/hotairballoon.png' );    
     scratchpad.imageNode = new phet.scenery.Image( imageElement, {
       minWidth: 75,
       maxWidth: 75

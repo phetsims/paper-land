@@ -1,14 +1,31 @@
 site_name: Paper Playground
-site_url: https://phet.colorado.edu/paper-land
+repo_url: https://github.com/phetsims/paper-land
+
+markdown_extensions:
+    - toc:
+        permalink: "#"
+
+theme:
+    name: readthedocs
+    nav_style: dark
+    prev_next_buttons_location: bottom
+
 nav:
-    - Home: index.md
-    - Code Documentation: 
-      - Board API: use/implementation-notes.md
-      - Paper API: use/api.md
-    - Paper Tutorial:
-      - Camera Setup: tutorial/camera-setup.md
-      - Legacy Tutorial: tutorial/tutorial.md
-    - Contribution:
-      # - How to Contribute: how to make this a redirect
-      - Feature Wishlist: contribute/wishlist.md
-      # - Community Code of Conduct: how to make this a redirect
+    - Home: README.md
+    - Technical Setup:
+      - Needs & Recommendations: setup/specs.md
+      - Installation: setup/install.md
+      - Device Setup: setup/tutorial.md
+      - Program Recognition Tips: setup/camera-setup.md
+    - Paper Documentation: 
+      - Board Implementation: use/board-implementation.md
+      - Board API: use/board-api.md
+      - Legacy Paper API: use/paper-api.md
+      - Example Paper Program: use/paper-tutorial.md
+      - Model-View-Controller Framework: use/mvc.md
+      - Downloads: use/resources.md
+    - Community:
+      - Contribute: CONTRIBUTING.md
+      - Feature Wishlist: WISHLIST.md
+      - Community Code of Conduct: CODE_OF_CONDUCT.md
+      - Join Us: community.md

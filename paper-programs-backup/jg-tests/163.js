@@ -1,4 +1,4 @@
-// empty
+// Physical marker tests
 // Keywords: view
 
 importScripts('paper.js');
@@ -14,13 +14,19 @@ importScripts('paper.js');
 
   // Create view components (graphics, Voicing, sound, anything)
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+    someFunctionWithATypo();
   };
 
-  const onProgramMoved = ( paperProgramNumber, scratchPad, sharedData ) => {
+  const onProgramChangedPosition = ( paperProgramNumber, scratchPad, sharedData ) => {
+    someFunctionWithATypo();
   };
 
   // This is tear down code that removes the programs when phyical papers are removed 
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+  };
+
+  const onProgramMarkersAdded = ( programNumber, points, scratchpad, sharedData, markers ) => {
+    phet.paperLand.console.log( markers );
   };
 
   // Add the state change handler defined above as data for this paper.
@@ -29,8 +35,9 @@ importScripts('paper.js');
       updateTime: Date.now(),
       eventHandlers: {
         onProgramAdded: onProgramAdded.toString(),
-        onProgramMoved: onProgramMoved.toString(),
-        onProgramRemoved: onProgramRemoved.toString()
+        onProgramChangedPosition: onProgramChangedPosition.toString(),
+        onProgramRemoved: onProgramRemoved.toString(),
+        onProgramMarkersAdded: onProgramMarkersAdded.toString()
       }
     }
   } );
@@ -47,9 +54,9 @@ importScripts('paper.js');
   ctx.font = '20px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgb(255,0,0)';
-  ctx.fillText('Create', canvas.width / 2, canvas.height / 2 - 10);
+  ctx.fillText('Physical', canvas.width / 2, canvas.height / 2 - 10);
   ctx.fillStyle = 'rgb(0,255,0)';
-  ctx.fillText('ohmsLawModel', canvas.width / 2, canvas.height / 2 + 20);
+  ctx.fillText('Marker Tests', canvas.width / 2, canvas.height / 2 + 20);
 })();
 
 

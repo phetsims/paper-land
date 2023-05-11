@@ -1,6 +1,4 @@
 import React from 'react';
-import clientConstants from '../clientConstants';
-
 import { forwardProjectionMatrixForPoints, mult } from '../utils';
 import Program from './Program.js';
 
@@ -11,14 +9,63 @@ function projectorSize() {
 }
 
 export default class ProjectorMain extends React.Component {
-  componentDidMount() {
-    navigator.mediaDevices
-      .getUserMedia( {
-        audio: false,
-        video: clientConstants.cameraVideoConstraints
+
+  constructor( props ) {
+    super( props );
+
+    // {string} - device ID of the currently selected camera
+    this.selectedCameraDeviceId = '';
+  }
+
+  /**
+   * Set the active camera based on the provided device ID.  This is generally done at initialization and when switching
+   * between cameras.
+   * @param {string} cameraDeviceId
+   * @private
+   */
+  _setActiveCamera( cameraDeviceId ) {
+
+    // Ignore this if it is a request to set the currently active camera as active.
+    if ( this.selectedCameraDeviceId === cameraDeviceId ) {
+      console.warn( `Ignoring attempt to set camera to the one that is already active, id = ${cameraDeviceId}` );
+      return;
+    }
+
+    this.selectedCameraDeviceId = cameraDeviceId;
+
+    // Get a list of the available cameras.
+    navigator.mediaDevices.enumerateDevices()
+
+      // Verify that the specified device exists and, if so, request a media stream from it.
+      .then( devices => {
+
+        const matchingCameras = devices.filter(
+          device => device.kind === 'videoinput' && device.deviceId === cameraDeviceId
+        );
+
+        const selectedCamera = matchingCameras[ 0 ];
+
+        if ( !selectedCamera ) {
+          throw new Error( `Specified camera not found, device ID = ${cameraDeviceId}` );
+        }
+
+        this.setState( { activeCamera: selectedCamera } );
+
+        // Request the media stream from the camera.
+        const cameraConstraints = {
+          audio: false,
+          video: { deviceId: selectedCamera.deviceId }
+        };
+        return navigator.mediaDevices.getUserMedia( cameraConstraints );
       } )
+
+      // Set up the stream so that we can process it.
       .then( stream => {
         this._videoCapture = new ImageCapture( stream.getVideoTracks()[ 0 ] );
+      } )
+
+      .catch( error => {
+        console.error( `Error setting active camera: ${error}` );
       } );
   }
 
@@ -51,6 +98,11 @@ export default class ProjectorMain extends React.Component {
   render() {
     const { width, height } = projectorSize();
     const multPoint = { x: width, y: height };
+    const cameraDeviceId = this.props.cameraDeviceId;
+
+    if ( this.selectedCameraDeviceId !== cameraDeviceId ) {
+      this._setActiveCamera( cameraDeviceId );
+    }
 
     const papers = {};
     const programsToRenderByNumber = {};

@@ -2,8 +2,8 @@
 
 ## Model-View Separation
 
-Paper Land is set up to support a software design pattern called "model-view separation" in the Program code. This pattern
-is often used when developing user interfaces and is heavily used by PhET libraries. It separates internal
+Paper Land code encourages a software design pattern called "model-view separation". This pattern
+is often used to develop user interfaces, games, and is heavily used by PhET libraries. It separates internal
 data from the way it is presented to the user.
 
 Benefits of model-view separation include:
@@ -38,21 +38,18 @@ need in the model.
 - Type of icing (buttercream, royal, whipped cream, ...)
 - Type of sprinkles (confetti, jimmies, pearls, ...)
 
-Let's create a Paper Land model that represents these attributes! As of 2/20/23, Paper Land Program code looks like this:
+Let's create a Paper Land model that represents these attributes! As of 4/28/23, Paper Land Program code looks like this:
 
 ```js
   const onProgramAdded = ( paperProgramNumber, scratchPad, sharedData ) => {
-  
+
     // (1)
-    const model = sharedData.modelProperty.value;
-    
-    // (2)
-    model.cakeTypeProperty = new phet.axon.Property( "Chocolate" );
-    model.icingTypeProperty = new phet.axon.Property( "Buttercream" );
-    model.sprinklesProperty = new phet.axon.Property( "Confetti" );
+    phet.paperLand.addModelComponent( 'cakeTypeProperty', new phet.axon.Property( "Chocolate" ) );
+    phet.paperLand.addModelComponent( 'icingTypeProperty', new phet.axon.Property( "Buttercream" ) );
+    phet.paperLand.addModelComponent( 'sprinklesProperty', new phet.axon.Property( "Confetti" ) ); 
   };
 
-  // (3)
+  // (2)
   await paper.set('data', {
     paperPlaygroundData: {
       updateTime: Date.now(),
@@ -65,13 +62,14 @@ Let's create a Paper Land model that represents these attributes! As of 2/20/23,
 
 Quickly breaking down the numbered sections of the above Program code:
 
-1) Get the Board model so that we can assign our cupcake model attributes to it and use them later in the view.
-2) Create model attributes for our cupcake. We are using a PhET library component
-   called `axon.Property`. `axon.Property` will later be used to watch for value changes to update the view dynamically.
-3) Boilerplate that tells Paper Land to create these model components when this Program is detected.
+1) `addModelComponent` is used to add new components to the Board model. We provide the name for the component so that 
+   it can be looked up later, and the actual model component. The model component can be any data type. In this example,
+   we are using a PhET library component called `axon.Property`. `axon.Property` has support for sending events
+   whenever the value changes.
+2) Boilerplate that tells Paper Land to create these model components when this Program is detected.
 
-This code demonstrates creating a model but may not be complete for direct use in a Program. We plan to have templates
-available with the full code needed to run a Program.
+NOTE: In a real example, it would be important to remove the model components when the program is removed. See
+program templates and paper land documentation for examples of this.
 
 ### Example Paper Land view
 
@@ -86,7 +84,7 @@ descriptions that will change with the model.
     sharedData.scene.addChild( cupcakeNode );
     
     // (2)
-    sharedData.modelProperty.value.cakeTypeProperty.link( cakeType => {
+    phet.paperLand.addModelPropertyLink( 'cakeTypeProperty', cakeType => {
     
       // (3)
       if ( cakeType === "Chocolate" ) {
@@ -118,18 +116,23 @@ descriptions that will change with the model.
 Quickly breaking down the numbered sections of the above Program code:
 
 1) We create a `CupcakeNode` and add it to the scene. The `CupcakeNode` could use scenery to draw the cake, icing, and
-   sprinkles and add PDOM structure for a screen reader but that is beyond the scope of these notes. The `cupcakeNode` is
+   sprinkles and other structure for a screen reader but that is beyond the scope of these notes. The `cupcakeNode` is
    added as a child to the scene so that it is drawn to the Board.
-2) We get our `cakeTypeProperty` that we created in our model Program and use `link`. With `link`, whenever
-   the `cakeTypeProperty` value changes, the provided code is run. This is what creates dynamic behavior.
+2) We add a link to the `cakeTypeProperty` with `addModelPropertyLink`. The first argument is the name of the Property
+   to observe. The second argument is the work you want to do when the Property value changes. `addModelPropertyLink`
+   will handle listener registration for you so that it works no matter what order the model and view code is introduced
+   to the Board.
 3) This is the logic called whenever the model `cakeTypeProperty` changes. I introduced
-   imaginary `drawChocolate`, `drawCarrot` and `drawLemon` functions. These functions are beyond the scope of these
+   imaginary `drawChocolate`, `drawCarrot` and `drawLemon` functions. Implementing these is beyond the scope of these
    notes, but you could imagine they change images or colors representing the cupcake. They are followed by code
-   that changes how the cupcake is described in the PDOM for a screen reader.
+   that changes how the cupcake is described for a screen reader.
 4) Boilerplate that tells Paper Land to run this view code whenever the Program is detected.
 
-From a single `cakeTypeProperty`, we could support several output modalities. We can imagine many other view
+From a single `cakeTypeProperty`, we support several output modalities. You can imagine many other view
 Programs that could play sounds, trigger vibrations, and many other things from this single model component.
+
+NOTE: In a real example, it would be important to remove the model components when the program is removed. See
+program templates and paper land documentation for examples of this.
 
 ## Board Console
 From program code you can use functions like
