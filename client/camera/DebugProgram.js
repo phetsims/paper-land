@@ -2,6 +2,16 @@ import React from 'react';
 
 import { add, rotateAboutXY } from '../utils';
 import styles from './DebugProgram.css';
+import DebugProgramCorner from './DebugProgramCorner.js';
+
+// Maps corner strings to the index of points in the paper, for easy lookup when controlling points
+// by a single corner
+const cornerStringToPointsIndex = {
+  tl: 0,
+  tr: 1,
+  br: 2,
+  bl: 3
+};
 
 export default class CameraMain extends React.Component {
   constructor( props ) {
@@ -21,12 +31,28 @@ export default class CameraMain extends React.Component {
     this.state = {
       program: props.program,
       grabbed: false,
+      cut: false,
       grabbedOffset: { x: 0, y: 0 },
       resizing: false,
       rotating: false,
       rotation: 0 // in radians
     };
   }
+
+  /**
+   * "Cuts" the program into four pieces, making it each corner its own draggable component of the program.
+   * This lets you debug a program where changing the paper geometry impacts behavior.
+   *
+   * When the program is cut, it can no longer be resized or rotated.
+   */
+  _cutProgram = () => {
+    this.setState( {
+      cut: true,
+
+      // reset rotation after cutting
+      rotation: 0
+    } );
+  };
 
   _onMouseEnter = () => {
     this.props.onMouseEnter();
@@ -73,7 +99,7 @@ export default class CameraMain extends React.Component {
     const rect = this._el.getBoundingClientRect();
 
     // dimensions of the video window
-    const parentRect = this._el.parentElement.getBoundingClientRect();
+    const parentRect = this._parentEl.parentElement.getBoundingClientRect();
     const program = this.state.program;
 
     if ( this.state.grabbed ) {
@@ -137,7 +163,9 @@ export default class CameraMain extends React.Component {
   getRotatedPoints( normalizedPoints, angle ) {
     if ( this._el ) {
       const rect = this._el.getBoundingClientRect();
-      const parentRect = this._el.parentElement.getBoundingClientRect();
+
+      // should be dimensions of the camera view
+      const parentRect = this._parentEl.parentElement.getBoundingClientRect();
 
       const centerX = rect.x + rect.width / 2;
       const centerY = rect.y + rect.height / 2;
@@ -157,40 +185,97 @@ export default class CameraMain extends React.Component {
     }
   }
 
+  updateProgramFromCorner( cornerString, x, y ) {
+    const index = cornerStringToPointsIndex[ cornerString ];
+    this.props.program.points[ index ] = { x, y };
+    this.pointsWithoutRotation[ index ] = { x, y };
+    this.setState( { program: this.state.program } );
+  }
+
   render() {
 
     // normalized positions, axis aligned
     const tl = this.pointsWithoutRotation[ 0 ];
+    const tr = this.pointsWithoutRotation[ 1 ];
     const br = this.pointsWithoutRotation[ 2 ];
+    const bl = this.pointsWithoutRotation[ 3 ];
 
     const width = br.x - tl.x;
     const height = br.y - tl.y;
 
     return (
-      <div
-        ref={el => ( this._el = el )}
-        onMouseDown={this._onMouseDown}
-        onMouseEnter={this._onMouseEnter}
-        onMouseLeave={this._onMouseLeave}
-        onDrag={this._onDrag}
-        className={styles.program}
-        style={{
-          position: 'absolute',
-          left: `${tl.x * 100}%`,
-          top: `${tl.y * 100}%`,
-          width: `${width * 100}%`,
-          height: `${height * 100}%`,
+      <div ref={el => ( this._parentEl = el )}>
+        <div
+          ref={el => ( this._el = el )}
+          onMouseDown={this._onMouseDown}
+          onMouseEnter={this._onMouseEnter}
+          onMouseLeave={this._onMouseLeave}
+          onDrag={this._onDrag}
+          className={styles.program}
 
-          // apply rotation after drawing an axis aligned div
-          transform: `rotate(${this.state.rotation}rad)`
-        }}
-      >
-        <h3 className={styles.programNumber}>#{this.state.program.number}</h3>
-        <p>{this.state.program.programName}</p>
+          // when the program is cut, we will show a representation of the 4 corners instead
+          hidden={this.state.cut}
+          style={{
+            position: 'absolute',
+            left: `${tl.x * 100}%`,
+            top: `${tl.y * 100}%`,
+            width: `${width * 100}%`,
+            height: `${height * 100}%`,
 
-        <div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>
-        <div ref={el => ( this._handleEl = el )} className={styles.resizeHandle}/>
-        <div ref={el => ( this._closeEl = el )} className={styles.closeButton}/>
+            // apply rotation after drawing an axis aligned div
+            transform: `rotate(${this.state.rotation}rad)`
+          }}
+        >
+          <h3 className={styles.programNumber}>#{this.state.program.number}</h3>
+          <p>{this.state.program.programName}</p>
+
+          <div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>
+          <div ref={el => ( this._handleEl = el )} className={styles.resizeHandle}/>
+          <div ref={el => ( this._closeEl = el )} className={styles.closeButton}/>
+          <button onClick={this._cutProgram} className={styles.cutButton}>
+            <img src={'media/images/scissors.svg'} alt={'Cut Program'}/>
+          </button>
+        </div>
+
+        <div hidden={!this.state.cut}>
+          <DebugProgramCorner
+            removeProgram={this.props.remove}
+            programNumber={this.state.program.number}
+            programCorner={'tl'}
+            cornerPosition={{ x: tl.x, y: tl.y }}
+            getCameraWindowElement={() => this._parentEl && this._parentEl.parentElement}
+            updateProgramCornerPosition={( x, y ) => {
+              this.updateProgramFromCorner( 'tl', x, y );
+            }}
+          ></DebugProgramCorner>
+          <DebugProgramCorner
+            programNumber={this.state.program.number}
+            programCorner={'tr'}
+            cornerPosition={{ x: tr.x, y: tr.y }}
+            getCameraWindowElement={() => this._parentEl && this._parentEl.parentElement}
+            updateProgramCornerPosition={( x, y ) => {
+              this.updateProgramFromCorner( 'tr', x, y );
+            }}
+          ></DebugProgramCorner>
+          <DebugProgramCorner
+            programNumber={this.state.program.number}
+            programCorner={'br'}
+            cornerPosition={{ x: br.x, y: br.y }}
+            getCameraWindowElement={() => this._parentEl && this._parentEl.parentElement}
+            updateProgramCornerPosition={( x, y ) => {
+              this.updateProgramFromCorner( 'br', x, y );
+            }}
+          ></DebugProgramCorner>
+          <DebugProgramCorner
+            programNumber={this.state.program.number}
+            programCorner={'bl'}
+            cornerPosition={{ x: bl.x, y: bl.y }}
+            getCameraWindowElement={() => this._parentEl && this._parentEl.parentElement}
+            updateProgramCornerPosition={( x, y ) => {
+              this.updateProgramFromCorner( 'bl', x, y );
+            }}
+          ></DebugProgramCorner>
+        </div>
       </div>
     );
   }

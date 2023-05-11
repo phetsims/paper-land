@@ -24,6 +24,15 @@
   margin-left: 30px;
 }
 
+:local(.programCornerNumber) {
+  font-size: 24px;
+}
+
+:local(.programCornerLabels) {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
 :local(.resizeHandle) {
   position: absolute;
   right: 0px;
@@ -48,4 +57,10 @@
 
 :local(.rotateHandle):hover {
   background: rgb(0, 0, 0);
+}
+
+:local(.cutButton) {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
 }
