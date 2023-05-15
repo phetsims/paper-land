@@ -434,6 +434,8 @@ await paper.set( 'data', {
 } );
 ```
 
+---
+
 ### `phet.paperLand.removeModelComponent( componentName )`
 
 #### Arguments
@@ -457,6 +459,47 @@ await paper.set( 'data', {
     updateTime: Date.now(),
     eventHandlers: {
       onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
+
+---
+
+### `phet.paperLand.getModelComponent( componentName )`
+
+Returns a reference to the model component with the provided name, if it exists.
+
+#### Arguments
+
+- `{string}` `componentName` - Name of the component in the model to get.
+
+#### Returns
+
+- `{Object | undefined}` - The model component, or undefined if it does not exist.
+
+#### Example
+
+```js
+const onProgramChangedPosition = ( paperProgramNumber, paperPoints, scratchpad, sharedData ) => {
+  const gravityProperty = phet.paperLand.getModelComponent( 'gravityProperty' );
+  const maxGravity = 20;
+
+  // If gravity exists in the model...
+  if ( gravityProperty ) {
+  
+    // Use a utility function to get the program rotation from its four points - normalized from zero to one.
+    const rotation = phet.paperLand.utils.getNormalizedProgramRotation( paperPoints );
+    const newGravity =  maxGravity * rotation;
+    gravityProperty.set( newGravity ); 
+  }
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramChangedPosition: onProgramChangedPosition.toString()
     }
   }
 } );

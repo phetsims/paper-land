@@ -53,6 +53,15 @@ paperLand.addModelComponent = ( componentName, componentObject ) => {
 };
 
 /**
+ * Returns the component in the boardModel with the provided name. Undefined if it doesn't exist.
+ * @param {string} componentName
+ * @returns {Object | undefined}
+ */
+paperLand.getModelComponent = componentName => {
+  return boardModel.get( componentName );
+};
+
+/**
  * Remove a component with the provided name from the model. Updates the global modelProperty which is our map
  * of all model components and also emits a separate Emitter.
  * @param {string} componentName
