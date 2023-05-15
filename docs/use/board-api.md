@@ -7,13 +7,15 @@ to add and modify elements on the Board page.
 
 The functions and components described here provide a layer on top of PhET's libraries and the original paperprograms
 API. For more detailed information about the most heavily used PhET libraries, see
+
 - https://github.com/phetsims/scenery
 - https://github.com/phetsims/axon
 - https://github.com/phetsims/sun
 
 Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
 
-Paper Land functions encourage the MVC software design pattern. Please see [mvc.md](https://github.com/phetsims/paper-land/blob/master/docs/use/mvc.md) for more information.
+Paper Land functions encourage the MVC software design pattern. Please
+see [mvc.md](https://github.com/phetsims/paper-land/blob/master/docs/use/mvc.md) for more information.
 
 ---
 
@@ -42,9 +44,11 @@ The function called when your program is detected by the camera.
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 
 #### Example
 
@@ -72,9 +76,11 @@ The function called when your program is no longer detected by the camera.
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 
 #### Example
 
@@ -102,11 +108,14 @@ The function called when your program changes position (move or rotate).
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top, right
+- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top,
+  right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 
 #### Example
 
@@ -136,11 +145,14 @@ The function called when one or more markers are placed inside a program.
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top, right
+- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top,
+  right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -171,11 +183,14 @@ The function called when one or more markers are removed from a program.
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top, right
+- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top,
+  right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -206,11 +221,14 @@ The function called when one or more markers are removed from a program.
 #### Arguments
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
-- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top, right
+- `{{x: number, y: number}[]}` `paperPoints` - Array of points, one for each corner of the paper. Order is left top,
+  right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
+  description}}.
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -238,6 +256,140 @@ await paper.set( 'data', {
 ```
 
 ---
+
+## Marker Event Functions
+
+This sections shows listener functions you can add when a marker is added, removed, or moved in the entire camera space.
+If you are interested events when a marker is added to a specific paper, see the examples in the Paper Event Functions
+section.
+To create a listener, a function is created and assigned to the scratchpad in onProgramAdded. The listener
+is then removed in onProgramRemoved.
+
+---
+
+### ```paperLand.markersAddedEmitter```
+
+Emits an event when a new marker is detected by the camera.
+
+#### Callback Arguments
+
+- `{Object[]}` `addedMarkers` - A list of the added markers.
+  See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
+  on each marker.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // create the listener and add it to the scratchpad so it can be removed later
+  scratchpad.markersAddedListener = markers => {
+    phet.paperLand.console.log( `New markers detected by camera. ${markers.length} markers added.` );
+  }
+  
+  // add the listener to the Emitter
+  phet.paperLand.markersAddedEmitter.addListener( scratchpad.markersAddedListener );
+};
+
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // remove the listener from the Emitter
+  phet.paperLand.markersAddedEmitter.removeListener( scratchpad.markersAddedListener );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString()
+      onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
+
+---
+
+### ```paperLand.markersRemovedEmitter```
+
+Emits an event when new markers are removed from the camera.
+
+#### Callback Arguments
+
+- `{Object[]}` `removedMarkers` - A list of the added markers.
+  See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
+  on each marker.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+  
+  // create the listener, assign it to the scratchpad
+  scratchpad.markersRemovedListener = markers => {
+    phet.paperLand.console.log( `Markers removed from camera. ${markers.length} markers removed.` );
+  }
+  
+  // add the listener to the Emitter
+  phet.paperLand.markersRemovedEmitter.addListener( scratchpad.markersRemovedListener );
+};
+
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // remove the listener from the Emitter
+  phet.paperLand.markersRemovedEmitter.removeListener( scratchpad.markersRemovedListener );
+}
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString(),
+      onProgramRemoved: onProgramRemoved.toString(),
+    }
+  }
+} );
+```
+
+---
+
+### ```paperLand.markersChangedPositionEmitter```
+
+Emits an event when markers change position in the camera view.
+
+#### Callback Arguments
+
+- `{Object[]}` `changedMarkers` - A list of the markers that have changed position.
+  See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
+  on each marker.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+  scratchpad.markersChangedPositionListener = markers => {
+    phet.paperLand.console.log( `Markers moved. ${markers.length} markers changed their position.` );
+  }
+  
+  phet.paperLand.markersChangedPositionEmitter.addListener( scratchpad.markersChangedPositionListener );
+};
+
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+  phet.paperLand.markersChangedPositionEmitter.removeListener( scratchpad.markersChangedPositionListener );
+}
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString(),
+      onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
+
+markersChangedPositionEmitter
 
 ## Model
 
