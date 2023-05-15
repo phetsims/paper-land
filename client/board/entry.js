@@ -101,18 +101,6 @@ const getIdForMarker = markerInfo => Array.from( markerMap.keys() ).find(
   id => _.isEqual( markerMap.get( id ), markerInfo )
 );
 
-markersAddedEmitter.addListener( () => {
-  console.log( 'marker(s) added' );
-} );
-
-markersRemovedEmitter.addListener( () => {
-  console.log( 'marker(s) removed' );
-} );
-
-markersChangedPositionEmitter.addListener( () => {
-  console.log( 'marker(s) changed position' );
-} );
-
 // Reusable reference to an array containing all collected markers, accessed through sharedData
 const allMarkers = [];
 
