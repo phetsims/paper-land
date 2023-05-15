@@ -301,7 +301,7 @@ await paper.set( 'data', {
   paperPlaygroundData: {
     updateTime: Date.now(),
     eventHandlers: {
-      onProgramAdded: onProgramAdded.toString()
+      onProgramAdded: onProgramAdded.toString(),
       onProgramRemoved: onProgramRemoved.toString()
     }
   }
@@ -345,7 +345,7 @@ await paper.set( 'data', {
     updateTime: Date.now(),
     eventHandlers: {
       onProgramAdded: onProgramAdded.toString(),
-      onProgramRemoved: onProgramRemoved.toString(),
+      onProgramRemoved: onProgramRemoved.toString()
     }
   }
 } );
