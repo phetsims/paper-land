@@ -8,9 +8,10 @@ to create and modify elements on the Board page.
 This API is a layer on top of PhET's libraries and the original API from paper programs. For more detailed information
 about the most heavily used PhET libraries, see
 
-- https://github.com/phetsims/scenery (Interactive graphics library)
+- https://github.com/phetsims/scenery (Interactive content library(graphics, speech synthesis, screen reader access))
 - https://github.com/phetsims/axon (Observable component library)
 - https://github.com/phetsims/sun (UI component library)
+- https://github.com/phetsims/tambo (Sound library)
 
 Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
 
@@ -720,8 +721,6 @@ await paper.set( 'data', {
   }
 } );
 ```
-
-## View
 
 ## Utils
 
