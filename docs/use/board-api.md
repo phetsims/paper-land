@@ -3,14 +3,14 @@
 ## Introduction
 
 This API allows you to create PhET library components from paper program code. These components and functions are used
-to add and modify elements on the Board page.
+to create and modify elements on the Board page.
 
-The functions and components described here provide a layer on top of PhET's libraries and the original paperprograms
-API. For more detailed information about the most heavily used PhET libraries, see
+This API is a layer on top of PhET's libraries and the original API from paper programs. For more detailed information
+about the most heavily used PhET libraries, see
 
-- https://github.com/phetsims/scenery
-- https://github.com/phetsims/axon
-- https://github.com/phetsims/sun
+- https://github.com/phetsims/scenery (Interactive graphics library)
+- https://github.com/phetsims/axon (Observable component library)
+- https://github.com/phetsims/sun (UI component library)
 
 Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
 
@@ -21,7 +21,7 @@ see [mvc.md](https://github.com/phetsims/paper-land/blob/master/docs/use/mvc.md)
 
 ## Paper Event Functions
 
-This section shows fundamental programs you add to program code. These functions are event listeners for the events (
+This section is for the most fundamental paper program functions. These functions are event listeners for the events (
 changes) that can happen to a paper. Add and write code inside these functions to do work when an event occurs. Paper
 events include the following:
 
@@ -45,8 +45,7 @@ The function called when your program is detected by the camera.
 
 - `{number}` `paperProgramNumber` - The number of the paper program.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
-  Assign
-  variables to this object to use the same variable in more than one function.
+  Assign variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
   description}}.
 
@@ -257,7 +256,9 @@ await paper.set( 'data', {
 
 ### Shared Data (`sharedData`)
 
-Most Paper event functions have an argument called `sharedData`. It is a JavaScript object with important information that is shared between all programs.
+Most Paper event functions have an argument called `sharedData`. It is a JavaScript object with important information
+that is shared between all programs.
+
 ```js
 sharedData = {
 
@@ -276,6 +277,7 @@ sharedData = {
 ```
 
 #### Example
+
 ```js
 const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
 
