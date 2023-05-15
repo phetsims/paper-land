@@ -7,12 +7,11 @@ to add and modify elements on the Board page.
 
 The functions and components described here provide a layer on top of PhET's libraries and the original paperprograms
 API. For more detailed information about the most heavily used PhET libraries, see
-https://github.com/phetsims/scenery
-https://github.com/phetsims/axon
-https://github.com/phetsims/sun
+- https://github.com/phetsims/scenery
+- https://github.com/phetsims/axon
+- https://github.com/phetsims/sun
 
-Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for a description of the paper programs
-API and components.
+Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
 
 Paper Land functions encourage the MVC software design pattern. Please see {{LINK_TO_MVC_SUMMARY}} for more information.
 
