@@ -316,7 +316,7 @@ Emits an event when new markers are removed from the camera.
 
 #### Callback Arguments
 
-- `{Object[]}` `removedMarkers` - A list of the added markers.
+- `{Object[]}` `removedMarkers` - A list of the removed markers.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
 
@@ -388,8 +388,6 @@ await paper.set( 'data', {
   }
 } );
 ```
-
-markersChangedPositionEmitter
 
 ## Model
 
