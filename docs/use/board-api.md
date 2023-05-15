@@ -659,7 +659,7 @@ in `onProgramRemoved`.
 
 #### Arguments
 
-- `{string}` `componentName` - Name of the observable component in the `boardModel``.
+- `{string}` `componentName` - Name of the observable component in the `boardModel`.
 - `{function}` `handleAttach` - Function that attaches the observer to the observable as soon as the component is added
   with `addModelComponent`.
 - `{function}` `handleDetach` - Function that removes the observer from the observable as soon as the observable
