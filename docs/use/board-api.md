@@ -466,7 +466,7 @@ are any JavaScript object you want to add to the model.
 Adds a component to the `boardModel`. For programs that create model components, this should almost always
 be used in the `onProgramAdded` function.
 
->NOTE :warning:! You almost always want to remove the model component in the `onProgramRemoved` function.
+>:warning: You almost always want to remove the model component in the `onProgramRemoved` function.
 See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#onprogramremoved-paperprogramnumber-scratchpad-shareddata-).
 
 #### Arguments
@@ -577,7 +577,7 @@ with `addModelComponent`.
 When the Property is removed with `removeModelComponent`, the listener will be removed. You almost always want to use
 this in the `onProgramAdded` function.
 
->NOTE :warning:! You almost always want to remove the listener in the `onProgramRemoved` function. See
+>:warning: You almost always want to remove the listener in the `onProgramRemoved` function. See
 [removeModelPropertyLink](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#phetpaperlandremovemodelpropertylink-componentname-linkid-).
 
 #### Arguments
