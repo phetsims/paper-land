@@ -724,6 +724,72 @@ await paper.set( 'data', {
 
 ## Utils
 
+### `phet.paperLand.utils.getProgramRotation( points )`
+
+Returns the rotation of the paper in radians. Rotation is zero when top of program is parallel to top edge of camera
+view.
+
+#### Arguments
+
+- `{{x: number, y: number}[]}` `points` - The four points of a program.
+
+#### Returns
+
+- `{number}` - Rotation of the paper in radians.
+
+#### Example
+
+```js
+const onProgramChangedPosition = ( paperProgramNumber, paperPoints, scratchpad, sharedData ) => {
+  const rotation = phet.paperLand.getProgramRotation( paperPoints );
+  phet.paperLand.console.log( `New rotation value: ${rotation}` );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramChangedPosition: onProgramChangedPosition.toString()
+    }
+  }
+} );
+
+```
+
+---
+
+### `phet.paperLand.utils.getNormalizedProgramRotation( points )`
+
+Returns the rotation of the paper, normalized from 0 to 1. Rotation is 0 when top of program is parallel to top edge of camera
+view. Rotation is 1 when the paper has rotated 360 degrees. Most useful for scaling a model value with paper rotation.
+
+#### Arguments
+
+- `{{x: number, y: number}[]}` `points` - The four points of a program.
+
+#### Returns
+
+- `{number}` - Rotation of the paper, normalized.
+
+#### Example
+
+```js
+const onProgramChangedPosition = ( paperProgramNumber, paperPoints, scratchpad, sharedData ) => {
+  const rotation = phet.paperLand.getNormalizedProgramRotation( paperPoints );
+  phet.paperLand.console.log( `New rotation value: ${rotation}` );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramChangedPosition: onProgramChangedPosition.toString()
+    }
+  }
+} );
+
+```
+
 ## Console
 
 The board page has a console that displays logging and error information. It will notify when something has gone wrong
