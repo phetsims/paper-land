@@ -41,10 +41,10 @@ The function called when your program is detected by the camera.
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
 
 #### Example
 
@@ -71,10 +71,10 @@ The function called when your program is no longer detected by the camera.
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
 
 #### Example
 
@@ -101,12 +101,12 @@ The function called when your program changes position (move or rotate).
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {{x: number, y: number}[]} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`{x: number, y: number}[]`} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
 
 #### Example
 
@@ -135,13 +135,13 @@ The function called when one or more markers are placed inside a program.
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {{x: number, y: number}[]} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`{x: number, y: number}[]`} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
-- {Object[]} markersOnProgram - A list of all the markers on the program.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object[]`} markersOnProgram - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
 
@@ -170,13 +170,13 @@ The function called when one or more markers are removed from a program.
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {{x: number, y: number}[]} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`{x: number, y: number}[]`} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
-- {Object[]} markersOnProgram - A list of all the markers on the program.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object[]`} markersOnProgram - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
 
@@ -205,13 +205,13 @@ The function called when one or more markers are removed from a program.
 
 #### Arguments
 
-- {number} paperProgramNumber - The number of the paper program.
-- {{x: number, y: number}[]} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
+- {`number`} paperProgramNumber - The number of the paper program.
+- {`{x: number, y: number}[]`} paperPoints - Array of points, one for each corner of the paper. Order is left top, right
   top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
-- {Object} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
+- {`Object`} scratchpad - A JavaScript object that is unique to the program but shared between all event listeners. Assign
   variables to this object to use the same variable in more than one function.
-- {Object} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
-- {Object[]} markersOnProgram - A list of all the markers on the program.
+- {`Object`} sharedData - A JavaScript object with global variables of paper-land. See {{Link to sharedData description}}.
+- {`Object[]`} markersOnProgram - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
 
