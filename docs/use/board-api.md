@@ -13,7 +13,7 @@ API. For more detailed information about the most heavily used PhET libraries, s
 
 Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
 
-Paper Land functions encourage the MVC software design pattern. Please see {{LINK_TO_MVC_SUMMARY}} for more information.
+Paper Land functions encourage the MVC software design pattern. Please see [mvc.md](https://github.com/phetsims/paper-land/blob/master/docs/use/mvc.md) for more information.
 
 ---
 
