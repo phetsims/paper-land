@@ -65,7 +65,7 @@ await paper.set( 'data', {
 
 ---
 
-### onProgramRemoved( paperProgramNumber, scratchpad, sharedData )
+### ```onProgramRemoved( paperProgramNumber, scratchpad, sharedData )```
 
 The function called when your program is no longer detected by the camera.
 
@@ -95,7 +95,7 @@ await paper.set( 'data', {
 
 ---
 
-### onProgramChangedPosition( paperProgramNumber, paperPoints, scratchpad, sharedData )
+### ```onProgramChangedPosition( paperProgramNumber, paperPoints, scratchpad, sharedData )```
 
 The function called when your program changes position (move or rotate).
 
@@ -129,7 +129,7 @@ await paper.set( 'data', {
 
 ---
 
-### onProgramMarkersAdded( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )
+### ```onProgramMarkersAdded( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )```
 
 The function called when one or more markers are placed inside a program.
 
@@ -164,7 +164,7 @@ await paper.set( 'data', {
 
 ---
 
-### onProgramMarkersRemoved( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )
+### ```onProgramMarkersRemoved( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )```
 
 The function called when one or more markers are removed from a program.
 
@@ -199,7 +199,7 @@ await paper.set( 'data', {
 
 ---
 
-### onProgramMarkersChangedPosition( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )
+### ```onProgramMarkersChangedPosition( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )```
 
 The function called when one or more markers are removed from a program.
 
@@ -250,7 +250,7 @@ await paper.set( 'data', {
 The board page has a console that displays logging and error information. It will notify when something has gone wrong
 in your program code. The following functions are also available to you to assist with writing programs.
 
-### phet.paperLand.console.log( ...args )
+### ```phet.paperLand.console.log( ...args )```
 
 Prints a message to the console. Takes any number of arguments and prints them all as a string.
 
@@ -261,7 +261,7 @@ const myVariable = 5;
 phet.paperLand.console.log( myVariable );
 ```
 
-### phet.paperLand.console.warn( ...args )
+### ```phet.paperLand.console.warn( ...args )```
 
 Prints a warning message to the console. Takes any number of arguments and prints them all as a string.
 
@@ -271,7 +271,7 @@ Prints a warning message to the console. Takes any number of arguments and print
 phet.paperLand.console.warn( 'Careful! Something is not right' );
 ```
 
-### phet.paperLand.console.error( ...args )
+### ```phet.paperLand.console.error( ...args )```
 
 Prints an error message to the console. Takes any number of arguments and prints them all as a string.
 
