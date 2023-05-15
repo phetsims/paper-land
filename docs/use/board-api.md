@@ -255,6 +255,55 @@ await paper.set( 'data', {
 } );
 ```
 
+### Shared Data (`sharedData`)
+
+Most Paper event functions have an argument called `sharedData`. It is a JavaScript object with important information that is shared between all programs.
+```js
+sharedData = {
+
+  // A reference to the entire model. See {{LINK TO MODEL SECTION}}
+  model: boardModel,
+  
+  // A reference to the root Node of the view. See {{LINK TO VIEW SECTION}}
+  scene: scene,
+  
+  // The size of the Board display, in view coordinates.
+  displaySize: DISPLAY_SIZE,
+  
+  // All markers currently detected by the camera. See https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points
+  allMarkers: allMarkers
+};
+```
+
+#### Example
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // get a reference to a component in the model
+  const gravityProperty = sharedData.model.get( 'gravityProperty' );\
+  phet.paperLand.console.log( `${gravityProperty.value} is the value of gravity.` );
+  
+  // add a circle to the display view, in the center of the display
+  sharedData.addChild( new phet.scenery.Circle( 75, {
+    fill: 'red',
+    centerX: sharedData.displaySize.width / 2,
+    centerY: sharedData.displaySize.height / 2
+  } );
+  
+  // print all the markers detected by the camera
+  phet.paperLand.console.log( `${sharedData.allMarkers.length} markers detected.` );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString(),
+    }
+  }
+} );
+```
+
 ---
 
 ## Marker Event Functions
