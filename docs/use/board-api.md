@@ -216,7 +216,7 @@ await paper.set( 'data', {
 
 ### ```onProgramMarkersChangedPosition( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )```
 
-The function called when one or more markers are removed from a program.
+The function called when one or more markers change their position on this program.
 
 #### Arguments
 
@@ -389,7 +389,243 @@ await paper.set( 'data', {
 } );
 ```
 
-## Model
+## Board Model (`boardModel`)
+
+The `boardModel` is
+a [JavaScript Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map). You can
+create and add components to the `boardModel` in your program code. Map keys are strings - the name of the component.
+The values
+are any JavaScript object you want to add to the model.
+
+---
+
+### `phet.paperLand.addModelComponent( componentName, componentObject )`
+
+Adds a component to the `boardModel`. For programs that create model components, this should almost always
+be used in the `onProgramAdded` function.
+
+NOTE! You almost always want to remove the model component in teh `onProgramRemoved` function.
+See {{LINK_TO_onProgramRemoved}}.
+
+#### Arguments
+
+- `{string}` `componentName` - The name of the component to add.
+- `{Object}` `componentObject` - The JavaScript Object to add to the `boardModel` map.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Add a number to the model with the name 'x'
+  phet.paperLand.addModelComponent( 'x', 5 );
+  
+  // add a PhET Axon Property to the model with the name 'gravityProperty'
+  phet.paperLand.addModelComponent( 'gravityProperty', new phet.axon.Property( -9.8 ) );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString()
+    }
+  }
+} );
+```
+
+### `phet.paperLand.removeModelComponent( componentName )`
+
+#### Arguments
+
+- `{string}` `componentName` - The name of the component to remove.
+
+#### Example
+
+```js
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Add a model component with the name 'x'.
+  phet.paperLand.removeModelComponent( 'x' );
+  
+  // Remove a model component with the name 'gravityProperty'
+  phet.paperLand.removeModelComponent( 'gravityProperty' );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
+
+---
+
+### `phet.paperLand.addModelPropertyLink( componentName, listener )`
+
+Adds a listener to a PhET Axon Property in the model. The listener will be called whenever the value of the Property
+changes. If the Property is not in the model yet, paper-land will add the listener as soon as the Property is added
+with `addModelComponent`.
+When the Property is removed with `removeModelComponent`, the listener will be removed. You almost always want to use
+this in the `onProgramAdded` function.
+
+NOTE! You almost always want to remove the listener in the `onProgramRemoved` function. See
+{{LINK_TO_removeModelPropertyLink}}.
+
+#### Arguments
+
+- `{string}` `componentName` - Name of the PhET Axon Property you will add with `addModelComponent`.
+- `{function}` `listener` - A JavaScript function that will be called when the Axon Property changes. Takes two
+  arguments, the current Property value and the old Property value, in that order.
+
+#### Returns
+
+- `{number}` - A unique ID for the listener. Assign this to the scratchpad to remove the listener when the program is
+  removed.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Add a listener that logs the new gravity value whenever it changes. The return value of addModelPropertyLink
+  // is saved to the scratchpad so that the listener can be removed later in onProgramRemoved.
+  scratchpad.gravityLinkId =  phet.paperLand.addModelPropertyLink( 'gravityProperty', ( newGravity, oldGravity ) => {
+    phet.paperLand.console.log( `Gravity changed value! New value: ${newGravity}, Old value: ${oldGravity}` );
+  } );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString()
+    }
+  }
+} );
+```
+
+---
+
+### `phet.paperLand.removeModelPropertyLink( componentName, linkId )`
+
+Removes a listener from a PhET Axon Property in the `boardModel`. You almost always want to use this in
+the `onProgramRemoved` function.
+
+#### Arguments
+
+- `{string}` `componentName` - Name of the PhET Axon Property you will add with `addModelComponent`.
+- `{number}` `linkId` - The number that was returned from `addModelPropertyLink`. Typically, you will save this on
+  the `scratchpad`.
+
+#### Example
+
+```js
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+  phet.paperLand.removeModelPropertyLink( 'gravityProperty', scratchpad.gravityLinkId );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
+
+---
+
+### `phet.paperLand.addModelObserver( componentName, handleAttach, handleDetach )`
+
+Generally, you should use `addModelPropertyLink`/`removeModelPropertyLink`. Use this for more complicated cases that
+cannot use an Axon Property.
+
+This function lets you add observers to components in the model and components that are expected to be in the model.
+This way,
+you can gracefully add listeners to observable components even before they are added to the model.
+
+This should almost always be used in `onProgramAdded`, and counterpart `removeModelObserver` should be used
+in `onProgramRemoved`.
+
+#### Arguments
+
+- `{string}` `componentName` - Name of the observable component in the `boardModel``.
+- `{function}` `handleAttach` - Function that attaches the observer to the observable as soon as the component is added
+  with `addModelComponent`.
+- `{function}` `handleDetach` - Function that removes the observer from the observable as soon as the observable
+  component is removed with `removeModelComponent`.
+
+#### Returns
+
+- `{number}` - A unique ID to the observer so that listeners can be detached when the program is no longer detected.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Add an observer to a model component called "buttonPressedEmitter". The "buttonPressedEmitter" notifies
+  // listeners whenever a button is pressed. The Emitter implements `addListener` and `removeListener` which
+  // are used in the second and third arguments.
+  scratchpad.observerId =  phet.paperLand.addModelObserver.(
+    'buttonPressedEmitter',
+    ( addedComponent ) => {
+      scratchpad.listener = () => {
+        phet.paperLand.console.log( 'You just pressed a button!' );
+      }
+      addedComponent.addListener( scratchpad.listener );
+    },
+    ( removedComponent ) => {
+      removedComponent.removeListener( scratchpad.listener );
+    }
+  )
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString()
+    }
+  }
+} );
+```
+
+### `phet.paperLand.removeModelObserver( componentName, observerId )`
+
+Generally, you should use `addModelPropertyLink`/`removeModelPropertyLink`. Use this for more complicated cases that
+cannot use an Axon Property.
+
+This function removes observers to components that are (or are expected to be) in the model.
+
+This should almost always be used in `onProgramRemoved`, after an observer was added with `addModelObserver`.
+
+#### Arguments
+
+- `{string}` `componentName` - Name of the observable component in the `boardModel``.
+- `{number}` `observerId` - Unique ID for the observer that was created by `addModelObserver`.
+
+#### Example
+
+```js
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+  phet.paperLand.removeModelObserver( 'buttonPressedEmitter', scratchpad.observerId );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramRemoved: onProgramRemoved.toString()
+    }
+  }
+} );
+```
 
 ## View
 
