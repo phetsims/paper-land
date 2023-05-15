@@ -1,11 +1,11 @@
 # Model-View Separation
 
 Paper Land code encourages a software design pattern called "model-view separation". This pattern
-is often used to develop user interfaces, games, and is heavily used by PhET libraries. It separates internal
-data from the way it is presented to the user.
+is often used to develop user interfaces, games, and is heavily used by PhET libraries.
 
 Benefits of model-view separation include:
 
+- It separates internal data from the way it is presented to the user.
 - You can create multiple output modalities/representations from a single model.
 - Changes to the view do not impact application behavior.
 
@@ -20,14 +20,15 @@ anything!
 
 ## More info
 
-For more info about this pattern and how it can be used for more than just user interface development, please
+For more info about this pattern, please
 see https://github.com/phetsims/phet-info/blob/master/doc/phet-software-design-patterns.md#model-view-controller-mvc
-and https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller.
+and https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller. MVC is pervasive in software design and is used
+for far more than user interface development!
 
 ## Example Paper Land model
 
-Let's pretend we want to represent a cupcake 🧁 in the Paper Land Board. On the Board, we want to display a visual cupcake
-and write strings that describe its properties.
+Let's pretend we want to display a cupcake 🧁 on the Paper Land Board. On the Board, we want to display a visual
+cupcake and write strings that describe its properties.
 
 First, lets consider the important things to draw and describe about the cupcake. That will determine the components we
 need in the model.
@@ -36,7 +37,8 @@ need in the model.
 - Type of icing (buttercream, royal, whipped cream, ...)
 - Type of sprinkles (confetti, jimmies, pearls, ...)
 
-Let's create a Paper Land model that represents these attributes! As of 4/28/23, Paper Land Program code looks like this:
+Let's create a Paper Land model that represents these attributes! As of 4/28/23, Paper Land Program code looks like
+this:
 
 ```js
   const onProgramAdded = ( paperProgramNumber, scratchPad, sharedData ) => {
@@ -60,14 +62,14 @@ Let's create a Paper Land model that represents these attributes! As of 4/28/23,
 
 Quickly breaking down the numbered sections of the above Program code:
 
-1) `addModelComponent` is used to add new components to the Board model. We provide the name for the component so that 
+1) `addModelComponent` is used to add new components to the Board model. We provide the name for the component so that
    it can be looked up later, and the actual model component. The model component can be any data type. In this example,
    we are using a PhET library component called `axon.Property`. `axon.Property` has support for sending events
-   whenever the value changes.
+   whenever the value changes. We will use that later to update cupcake descriptions when values change!
 2) Boilerplate that tells Paper Land to create these model components when this Program is detected.
 
 NOTE: In a real example, it would be important to remove the model components when the program is removed. See
-program templates and paper land documentation for examples of this.
+[Board API](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md).
 
 ## Example Paper Land view
 
@@ -114,8 +116,8 @@ descriptions that will change with the model.
 Quickly breaking down the numbered sections of the above Program code:
 
 1) We create a `CupcakeNode` and add it to the scene. The `CupcakeNode` could use scenery to draw the cake, icing, and
-   sprinkles and other structure for a screen reader but that is beyond the scope of these notes. The `cupcakeNode` is
-   added as a child to the scene so that it is drawn to the Board.
+   sprinkles and have other structure for a screen reader but that is beyond the scope of these notes. The `cupcakeNode`
+   is added as a child to the scene so that it is drawn to the Board.
 2) We add a link to the `cakeTypeProperty` with `addModelPropertyLink`. The first argument is the name of the Property
    to observe. The second argument is the work you want to do when the Property value changes. `addModelPropertyLink`
    will handle listener registration for you so that it works no matter what order the model and view code is introduced
@@ -130,4 +132,4 @@ From a single `cakeTypeProperty`, we support several output modalities. You can 
 Programs that could play sounds, trigger vibrations, and many other things from this single model component.
 
 NOTE: In a real example, it would be important to remove the model components when the program is removed. See
-program templates and paper land documentation for examples of this.
+[Board API](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md).
