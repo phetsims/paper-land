@@ -1,5 +1,14 @@
 # Board API
 
+## At a Glance
+- [Introduction](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#introduction)
+- [Paper Event Functions](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#paper-event-functions)
+- [Shared Data (`sharedData`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata)
+- [Board Model (`boardModel`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-model-boardmodel)
+- [Board View](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-view)
+- [Utils](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#utils)
+- [Console](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#console)
+
 ## Introduction
 
 This API allows you to create PhET library components from paper program code. These components and functions are used
