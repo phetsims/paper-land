@@ -139,7 +139,7 @@ await paper.set( 'data', {
 
 ### ```onProgramMarkersAdded( paperProgramNumber, paperPoints, scratchpad, sharedData, markersOnProgram )```
 
-The function called when one or more markers are placed inside a program.
+The function called when one or more markers are placed inside the program.
 
 #### Arguments
 
