@@ -47,8 +47,7 @@ The function called when your program is detected by the camera.
 - `{number}` `paperProgramNumber` - The number of the paper program.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -79,8 +78,7 @@ The function called when your program is no longer detected by the camera.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata)..
 
 #### Example
 
@@ -114,8 +112,7 @@ The function called when your program changes position (move or rotate).
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -151,8 +148,7 @@ The function called when one or more markers are placed inside the program.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -189,8 +185,7 @@ The function called when one or more markers are removed from a program.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -227,8 +222,7 @@ The function called when one or more markers change their position on this progr
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign
   variables to this object to use the same variable in more than one function.
-- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See {{Link to sharedData
-  description}}.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land. See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -263,10 +257,10 @@ that is shared between all programs.
 ```js
 sharedData = {
 
-  // A reference to the entire model. See {{LINK TO MODEL SECTION}}
+  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-model-boardmodel
   model: boardModel,
   
-  // A reference to the root Node of the view. See {{LINK TO VIEW SECTION}}
+  // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-view
   scene: scene,
   
   // The size of the Board display, in view coordinates.
@@ -457,7 +451,7 @@ Adds a component to the `boardModel`. For programs that create model components,
 be used in the `onProgramAdded` function.
 
 NOTE! You almost always want to remove the model component in teh `onProgramRemoved` function.
-See {{LINK_TO_onProgramRemoved}}.
+See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#onprogramremoved-paperprogramnumber-scratchpad-shareddata-).
 
 #### Arguments
 
@@ -568,7 +562,7 @@ When the Property is removed with `removeModelComponent`, the listener will be r
 this in the `onProgramAdded` function.
 
 NOTE! You almost always want to remove the listener in the `onProgramRemoved` function. See
-{{LINK_TO_removeModelPropertyLink}}.
+[removeModelPropertyLink](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#phetpaperlandremovemodelpropertylink-componentname-linkid-).
 
 #### Arguments
 
