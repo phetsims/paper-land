@@ -287,7 +287,7 @@ const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
   phet.paperLand.console.log( `${gravityProperty.value} is the value of gravity.` );
   
   // add a circle to the display view, in the center of the display
-  sharedData.addChild( new phet.scenery.Circle( 75, {
+  sharedData.scene.addChild( new phet.scenery.Circle( 75, {
     fill: 'red',
     centerX: sharedData.displaySize.width / 2,
     centerY: sharedData.displaySize.height / 2
@@ -722,6 +722,65 @@ await paper.set( 'data', {
 } );
 ```
 
+## Board View
+
+The Board page uses PhET libraries for multimodal output. You have access to every PhET library through the `phet`
+namespace. Each PhET library can be accessed through `phet` like
+
+- `phet.scenery.(...)`
+- `phet.axon.(...)`
+- `phet.sun.(...)`
+- `phet.dot.(...)`
+
+Describing the full API for these libraries is beyond the scope of this document. See the following for more
+information about the most used libraries. There are many others that may be useful to you.
+
+- https://github.com/phetsims/scenery (Interactive content library(graphics, speech synthesis, screen reader access))
+- https://github.com/phetsims/axon (Observable component library)
+- https://github.com/phetsims/sun (UI component library)
+- https://github.com/phetsims/dot (Math library)
+- https://github.com/phetsims/tambo (Sound library)
+
+Here are a few examples to illustrate usages.
+
+#### Examples
+
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // add a Scenery circle to the display view, in the center of the display
+  scratchpad.circle = new phet.scenery.Circle( 75, {
+    fill: 'red',
+    centerX: sharedData.displaySize.width / 2,
+    centerY: sharedData.displaySize.height / 2
+  };
+  sharedData.scene.addChild( scratchpad.circle );
+  
+  // add a Sun button to the display view, in the top left of the display
+  sharedData.scene.addChild( new phet.sun.TextPushButton( 'Push me!', {
+    leftTop: new phet.dot.Vector2( 0, 0 )
+  }) );
+  
+  // Speak something with scenery speech synthesis
+  phet.scenery.voicingUtteranceQueue.addToBack( 'I can talk!' );
+  
+  // make the circle above discoverable to a screen reader, and focusable
+  scratchpad.circle.tagName = 'div';
+  scratchpad.circle.focusable = true;
+  scratchpad.circle.innerContent = 'I am a red circle, you can focus me!';
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdded: onProgramAdded.toString()
+    }
+  }
+} );
+```
+
 ## Utils
 
 ### `phet.paperLand.utils.getProgramRotation( points )`
@@ -760,7 +819,8 @@ await paper.set( 'data', {
 
 ### `phet.paperLand.utils.getNormalizedProgramRotation( points )`
 
-Returns the rotation of the paper, normalized from 0 to 1. Rotation is 0 when top of program is parallel to top edge of camera
+Returns the rotation of the paper, normalized from 0 to 1. Rotation is 0 when top of program is parallel to top edge of
+camera
 view. Rotation is 1 when the paper has rotated 360 degrees. Most useful for scaling a model value with paper rotation.
 
 #### Arguments
