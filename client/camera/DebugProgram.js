@@ -229,8 +229,6 @@ export default class CameraMain extends React.Component {
     const br = this.pointsWithoutRotation[ 2 ];
     const bl = this.pointsWithoutRotation[ 3 ];
 
-    console.log( tl );
-
     const width = br.x - tl.x;
     const height = br.y - tl.y;
 
