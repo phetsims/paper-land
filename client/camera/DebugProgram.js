@@ -40,14 +40,43 @@ export default class CameraMain extends React.Component {
   }
 
   /**
-   * "Cuts" the program into four pieces, making it each corner its own draggable component of the program.
-   * This lets you debug a program where changing the paper geometry impacts behavior.
+   * Sets the cut state the program. When cut, it is split into four pieces making it each corner its own draggable
+   * component of the program. This lets you debug a program where changing the paper geometry impacts behavior.
    *
    * When the program is cut, it can no longer be resized or rotated.
+   * @param {boolean} programCut
    */
-  _cutProgram = () => {
+  _setCutState = programCut => {
+
+    const program = this.state.program;
+
+    // Reset points relative to the top left corner after the operation so that corners match the debug program
+    const tl = program.points[ 0 ];
+    const tr = program.points[ 1 ];
+    const br = program.points[ 2 ];
+    const bl = program.points[ 3 ];
+
+    const width = 0.2;
+    const videoRatio = this.props.videoWidth / this.props.videoHeight;
+
+    tr.x = tl.x + width;
+    tr.y = tl.y;
+
+    br.x = tr.x;
+    br.y = tr.y + width * videoRatio;
+
+    bl.x = tl.x;
+    bl.y = tl.y + width * videoRatio;
+
+    this.pointsWithoutRotation[ 0 ] = tl;
+    this.pointsWithoutRotation[ 1 ] = tr;
+    this.pointsWithoutRotation[ 2 ] = br;
+    this.pointsWithoutRotation[ 3 ] = bl;
+
     this.setState( {
-      cut: true,
+      cut: programCut,
+
+      // program: program,
 
       // reset rotation after cutting
       rotation: 0
@@ -200,6 +229,8 @@ export default class CameraMain extends React.Component {
     const br = this.pointsWithoutRotation[ 2 ];
     const bl = this.pointsWithoutRotation[ 3 ];
 
+    console.log( tl );
+
     const width = br.x - tl.x;
     const height = br.y - tl.y;
 
@@ -232,7 +263,7 @@ export default class CameraMain extends React.Component {
           <div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>
           <div ref={el => ( this._handleEl = el )} className={styles.resizeHandle}/>
           <div ref={el => ( this._closeEl = el )} className={styles.closeButton}/>
-          <button onClick={this._cutProgram} className={styles.cutButton}>
+          <button onClick={() => this._setCutState( true )} className={styles.cutButton}>
             <img src={'media/images/scissors.svg'} alt={'Cut Program'}/>
           </button>
         </div>
@@ -268,6 +299,7 @@ export default class CameraMain extends React.Component {
           ></DebugProgramCorner>
           <DebugProgramCorner
             programNumber={this.state.program.number}
+            collapseProgram={() => this._setCutState( false )}
             programCorner={'bl'}
             cornerPosition={{ x: bl.x, y: bl.y }}
             getCameraWindowElement={() => this._parentEl && this._parentEl.parentElement}

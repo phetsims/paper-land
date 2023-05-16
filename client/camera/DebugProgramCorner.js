@@ -16,6 +16,10 @@ export default class DebugProgramCorner extends React.Component {
     // fully removes the program
     this.removeProgram = props.removeProgram;
 
+    // {function|null} - if provided, a button will be included on this corner that
+    // will recombine the program into one
+    this.collapseProgram = props.collapseProgram;
+
     // {number} - the number of this program
     this.programNumber = props.programNumber;
 
@@ -134,6 +138,11 @@ export default class DebugProgramCorner extends React.Component {
 
         {this.removeProgram ? (
           <div ref={el => ( this._closeEl = el )} className={styles.closeButton}/>
+        ) : ( '' )}
+        {this.collapseProgram ? (
+          <button onClick={() => this.collapseProgram() } className={styles.cutButton}>
+            <img src={'media/images/collapse.svg'} alt={'Combine Program'}/>
+          </button>
         ) : ( '' )}
       </div>
     );
