@@ -38,18 +38,20 @@ theme:
     - search.suggest
     - toc.follow
     # - toc.integrate
-  favicon: favicon-16x16.png
-  logo: favicon-32x32.png
+  favicon: paper-land-icon-3.svg
+  logo: paper-land-icon-3.svg
   name: material
   palette:
   - media: '(prefers-color-scheme: light)'
     primary: teal
+    accent: deep purple
     scheme: default
     toggle:
       icon: material/brightness-7
       name: Switch to dark mode
   - media: '(prefers-color-scheme: dark)'
-    primary: green
+    primary: teal
+    accent: deep purple
     scheme: slate
     toggle:
       icon: material/brightness-4
@@ -71,7 +73,7 @@ extra:
     json: [.s2]
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/phetsims
+      link: https://github.com/phetsims/paper-land
 
 # Extensions
 markdown_extensions:
@@ -116,13 +118,13 @@ markdown_extensions:
   - pymdownx.tilde
 
 nav:
-    - Home: README.md
-    - Technical Setup:
-      - Needs & Recommendations: setup/specs.md
+    - Home: index.md
+    - Setup:
+      - Technical Recommendations: setup/specs.md
       - Installation: setup/install.md
       - Device Setup: setup/tutorial.md
       - Program Recognition Tips: setup/camera-setup.md
-    - Paper Documentation: 
+    - Documentation: 
       - Board Implementation: use/board-implementation.md
       - Board API: use/board-api.md
       - Legacy Paper API: use/paper-api.md
@@ -130,7 +132,7 @@ nav:
       - Model-View-Controller Framework: use/mvc.md
       - Downloads: use/resources.md
     - Community:
+      - Join Us: community.md 
       - Contribute: CONTRIBUTING.md
       - Feature Wishlist: WISHLIST.md
       - Community Code of Conduct: CODE_OF_CONDUCT.md
-      - Join Us: community.md
