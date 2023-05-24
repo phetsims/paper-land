@@ -1,8 +1,7 @@
 # Paper Playground - Augmented JavaScript Interaction Design 
 
-``` 
-! This documentation is currently under construction and is incomplete - More details coming soon !
-```
+:warning: This documentation is currently under construction - More details coming soon! :warning:
+
 ## Description
 
 Paper Playground is a tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space! It is based on the [Paper Programs](https://paperprograms.org) open source project. It has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/), which provides libraries to explore the rich, multimodal web interactions you can create when weaving visuals, sounds, spoken description and other inputs and displays. 
