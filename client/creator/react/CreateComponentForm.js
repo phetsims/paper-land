@@ -23,7 +23,7 @@ export default function CreateComponentForm( props ) {
         justify
       >
         <Tab eventKey='model' title='Model' tabClassName={styles.tab}>
-          <CreateModelComponentForm componentName={componentName}></CreateModelComponentForm>
+          <CreateModelComponentForm componentName={componentName} activeProgram={props.activeProgram}></CreateModelComponentForm>
         </Tab>
         <Tab eventKey='view' title='View' tabClassName={styles.tab}>
           Tab content for View
