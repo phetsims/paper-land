@@ -11,7 +11,6 @@ export default function CreateNumberForm( props ) {
     const allDefined = [ valueRef, minRef, maxRef ].every( ref => ref.current !== '' );
     const numbers = [ minRef, valueRef, maxRef ].map( ref => parseInt( ref.current, 10 ) );
     const inRange = numbers[ 0 ] < numbers[ 1 ] && numbers[ 1 ] < numbers[ 2 ];
-    console.log( allDefined, inRange );
     props.isFormValid( allDefined && inRange );
   };
 
