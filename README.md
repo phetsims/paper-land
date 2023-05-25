@@ -1,64 +1,104 @@
-# Paper Playground - Augmented JavaScript Interaction Design 
+# Paper Playground 
 
-:warning: This documentation is currently under construction - More details coming soon! :warning:
+> :warning: **This documentation is currently under construction - More details coming soon!** :warning:
 
-## Description
+<figure markdown>
+  ![Hand placing colored dots on paper](assets/hand-with-dots.png){ width=300 }
+  <figcaption></figcaption>
+</figure>
 
-Paper Playground is a tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space! It is based on the [Paper Programs](https://paperprograms.org) open source project. It has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/), which provides libraries to explore the rich, multimodal web interactions you can create when weaving visuals, sounds, spoken description and other inputs and displays. 
+## Augmented Reality Meets Multimodal Web Design
 
-*Our goal is to make it easy and fun to create (and co-create) inclusive and joyful web experiences!*
+Paper Playground is an open-source tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space. It is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/). The tool focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
+
+The primary purpose of Paper Playground is to enable expert developers and designers to rapidly iterate on stakeholder's ideas, especially when co-designing with non-technical stakeholders who have valuable feedback but no expertise to implement their ideas in real-time. By using Paper Playground, developers and designers can create inclusive and joyful web experiences by seamlessly weaving visuals, sounds, spoken descriptions, and other inputs and displays.
 
 ## What can you do with it?
 
-:star: We are in heavy development and documentation is still being updated :star:
+> :star: **We are in heavy development, and documentation is still being updated.** :star:
 
-See [Paper Playground Docs](https://phetsims.github.io/paper-land/) for complete information on how to set up Paper Playground and begin creating and prototyping multimodal, interactive web experiences!
+For complete information on how to set up Paper Playground and begin creating and prototyping multimodal, interactive web experiences, please refer to the [Paper Playground Docs](https://phetsims.github.io/paper-land/).
 
-<!-- (also available in the [docs directory of paper-land](https://github.com/phetsims/paper-land/blob/master/docs/)). -->
-
-This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation for legacy features, see the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/)
+This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation regarding legacy features, refer to the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/).
 
 ## Installation
 
-Paper Playground client is run locally, though it can use a remote database to collaborate over sets of paper programs. You may also use a local PostgreSQL database. At this time, running the client requires a command line interface and a few other pieces of software:
+The Paper Playground client runs locally and can utilize a remote database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
 
-1. Install [Node.js/npm](https://nodejs.org/en/) and [Git](https://git-scm.com/) and a command line interface (e.g., Bash, Terminal, Command Prompt, etc). 
-   :red_circle: *Note:* Some users have reported issues installing newer Node.js/npm versions on older MacOS versions. Verify the last supported Node.js/npm version for your OS.
-2. Clone the repository: e.g., `git clone https://github.com/phetsims/paper-land.git`
-3. Install dependencies: `npm install`
-4. Set up database (see below for Remote or Local database)
+1. Install [Node.js/npm](https://nodejs.org/en/), [Git](https://git-scm.com/), and a command-line interface (e.g., Bash, Terminal, Command Prompt, etc.).
+   > :red_circle: **Note:** Some users have reported issues installing newer versions of Node.js/npm on older macOS versions. Verify the last supported Node.js/npm version for your operating system.
+2. Clone the repository using the following command: `git clone https://github.com/phetsims/paper-land.git`
+3. Install the dependencies: `npm install`
+4. Set up the database (see instructions below for Remote or Local database).
 5. Start the tool: `npm start`
 6. Open [localhost:3000](http://localhost:3000/) in your browser and follow the links on the landing page.
 
 ### Remote Database
 
--  If you are using a remote program database, create a `.env` file in the root of paper-land and provide the address for the database under `DATABASE_URL`
-   - e.g., `DATABASE_URL=postgres://someDatabaseAddressFromSomeHostingService`
- - Working with us? Send brett dot fiedler at colorado dot edu an e-mail for access to our database of programs!
+- If you are using a remote program database, create a `.env` file in the root of paper-land and provide the database address under `DATABASE_URL`.
+  - Example: `DATABASE_URL=postgres://someDatabaseAddressFromSomeHostingService`
+- Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
 
 ### Local Database
 
--  You will need to install [PostgreSQL](https://www.postgresql.org/download/) and set up a local database. 
--  See the [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally) for more details and commands
--  When you have a local database set up, you can find a copy of all paper programs in the maintainer's remote database in root/paper-programs-backup, complete with several fully functional examples such as **altitude-demo**, **lunar-lander**, **density-demo**, **simple-demos**, and more! 
-:warn: Some spaces represent individual's test programs or works-in-progress and may not have functional paper programs.
+- You need to install [PostgreSQL](https://www.postgresql.org/download/) and set up a local database.
+- Refer to the [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms
+
+/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally) for detailed instructions and commands.
+- Once you have set up a local database, you can find a copy of all paper programs, including functional examples like **altitude-demo**, **lunar-lander**, **density-demo**, **simple-demos**, and more, in the maintainer's remote database located at `root/paper-programs-backup`. Please note that some spaces contain individual test programs or works-in-progress and may not have functional paper programs.
 
 ### Recommended Start Up
-At this time, Paper Playground must be run from the command line. If you're following along with the development of Paper Playground, you should run the following regularly:
+
+Currently, Paper Playground must be run from the command line. If you're following the development of Paper Playground, it is recommended to regularly execute the following commands:
 
 1. `git pull`
 2. `npm update`
 3. `npm start`
 
-### How do I make Programs, detect Programs, set up my camera and space, and make things happen?
+### What do I do now? How do I create programs, detect programs, set up my camera and space, and make things happen?
 
-See our [documentation site](https://phetsims.github.io/paper-land) for more details on these questions and more helpful information on creating your papers and creating delightful multimodal web experiences!
+For detailed answers to these questions and more helpful information on creating papers and delightful multimodal web experiences, please refer to our [Paper Playground Docs](https://phetsims.github.io/paper-land).
+
+## Join our Community! 
+
+- Make a post in the [Discussions tab](https://github.com/phetsims/paper-land/discussions/)
+<!-- - Join us on our [Matrix Space](https://matrix.to/#/#interactive-paper-programming:matrix.org) -->
+- [Contribute to the project](https://phetsims.github.io/paper-land/CONTRIBUTING/) (code, ideas, documentation, paper program examples, anything!)
+<!-- - Join our open design meetings (Tuesdays from 12:00-13:00 Eastern Time). Find the zoom link in our Matrix Design channel. -->
+- Have a great idea for how you or your community might connect to Paper Playground? Reach out to brett dot fiedler at colorado dot edu to discuss opportunities!
 
 ## Coming soon
-- Updated tutorial!
 
-## Want to chat?
-- Make a post in the [Discussions tab](https://github.com/phetsims/paper-land/discussions/) of the paper-land repository!
+### Docs
+:books: Updated setup and tutorial!
+
+:camera: Pictures and demos of Paper Playground in action!
+
+:construction: A better Roadmap than this!
+
+### Tool
+:page_with_curl: More examples in the hosted database highlighting the power of multimodal design!
+
+:computer: A GUI for creating basic Papers without deep JavaScript knowledge!
 
 ## License
-This software is licensed under the MIT license. See the [LICENSE here](https://github.com/phetsims/paper-land/blob/master/LICENSE).
+
+This software is licensed under the MIT license. For more information, see the [LICENSE](https://github.com/phetsims/paper-land/blob/master/LICENSE) file.
+
+<!-- Features
+If Paper Playground has specific features that set it apart or provide unique functionality, you can include a section that highlights these features. For example, if it supports real-time collaboration or has a comprehensive library of pre-built components, you can describe those features in this section.
+
+Demo or Screenshots
+Including a section with a demo or screenshots can provide visual context and help users understand the capabilities of Paper Playground. You can showcase examples of paper prototypes created using the tool or provide screenshots of the user interface.
+
+Roadmap
+If you have a roadmap for the future development of Paper Playground, it can be useful to share it with users and contributors. This section can outline upcoming features, improvements, or bug fixes that you plan to work on.
+
+Dependencies
+If there are specific dependencies or external libraries that Paper Playground relies on, it can be helpful to list them in a dedicated section. Provide instructions on how to install or set up these dependencies if necessary.
+
+API Documentation
+If Paper Playground has an API that developers can utilize, you may consider providing API documentation. This can include details about available endpoints, request/response examples, and authentication mechanisms.
+
+Troubleshooting or FAQs
+Including a section with common troubleshooting tips or frequently asked questions can assist users in resolving common issues. Provide solutions to known problems or direct users to relevant resources such as forums or support channels. -->

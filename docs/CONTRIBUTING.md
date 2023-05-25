@@ -1,6 +1,6 @@
 # Contributing to paper-land and Paper Playground
 
-[[!!This document is incomplete and will be continually updated!!]]
+:warning: This document is incomplete and will be continually updated :warning:
 
 First of all, thank you for checking out our project and considering contributing.
 

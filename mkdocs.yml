@@ -38,8 +38,8 @@ theme:
     - search.suggest
     - toc.follow
     # - toc.integrate
-  favicon: paper-land-icon-3.svg
-  logo: paper-land-icon-3.svg
+  favicon: assets/paper-land-icon-3.svg
+  logo: assets/paper-land-icon-3.svg
   name: material
   palette:
   - media: '(prefers-color-scheme: light)'
