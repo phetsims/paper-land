@@ -50,11 +50,8 @@
   border-style: solid;
   color: #bdcbda;
   padding: 10px;
-}
-
-:local(.scrollable) {
-  overflow-y: auto;
-  height: 80vh;
+  height: 100vh;
+  overflow: auto;
 }
 
 :local(.controlElement) {
@@ -100,6 +97,10 @@
 .nav.nav-pill .nav-link:hover {
   background-color: rgb(122, 125, 126);
   color: rgb(189, 203, 218);
+}
+
+:local(.inlineBlock) {
+  display: inline-block;
 }
 
 /*Custom button styling for this app */

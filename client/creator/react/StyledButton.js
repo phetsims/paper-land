@@ -5,11 +5,11 @@ import styles from './../CreatorMain.css';
 export default function StyledButton( props ) {
   const disabled = props.disabled === true;
   return (
-    <div className={styles.controlElement}>
+    <div className={`${styles.controlElement} ${styles.inlineBlock}`}>
       <Button
         onClick={props.onClick}
         disabled={disabled}
-        className={styles.customButton}
+        className={`${styles.customButton}`}
       >{props.name}</Button>
     </div>
   );

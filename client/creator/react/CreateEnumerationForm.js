@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -52,16 +50,8 @@ export default function CreateEnumerationForm( props ) {
   return (
     <>
       <div>
-        <Row>
-          <Col>
-            <StyledButton name={'Create Value'} onClick={handleClick}></StyledButton>
-          </Col>
-          <Col>
-            <div className={'float-end'}>
-              <StyledButton name={'Remove Value'} onClick={handleDelete}></StyledButton>
-            </div>
-          </Col>
-        </Row>
+        <StyledButton name={'Create Value'} onClick={handleClick}></StyledButton>
+        <StyledButton name={'Remove Value'} onClick={handleDelete}></StyledButton>
         {
           values.map( ( value, index ) =>
             <div key={`${value}-${index}`}>
