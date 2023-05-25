@@ -8,7 +8,8 @@ module.exports = {
     editor: [ './client/editor/entry.js' ],
     paper: [ './client/paper/entry.js' ],
     board: [ './client/board/entry.js' ],
-    tests: [ './client/tests/entry.js' ]
+    tests: [ './client/tests/entry.js' ],
+    creator: [ './client/creator/entry.js' ]
   },
   output: {
     path: path.join( __dirname, 'www' ),
