@@ -20,17 +20,31 @@ export default function CreateModelComponentForm( props ) {
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
   const [ booleanFormValid, setBooleanFormValid ] = useState( true );
   const [ numberFormValid, setNumberFormValid ] = useState( false );
+  const [ positionFormValid, setPositionFormValid ] = useState( true );
   const [ enumerationFormValid, setEnumerationFormValid ] = useState( false );
 
   const getIsBooleanFormValid = isValid => setBooleanFormValid( isValid );
   const getIsNumberFormValid = isValid => setNumberFormValid( isValid );
   const getIsEnumerationFormValid = isValid => setEnumerationFormValid( isValid );
+  const getIsPositionFormValid = isValid => setPositionFormValid( isValid );
 
-  // An object with { defaultValue: boolean } - the values from the form to create an actual BooleanProperty
+  // An object with { defaultValue: 'true' | 'false' }
   const booleanDataRef = useRef( {} );
 
+  // An object with { { x: number, y: number} }
+  const positionDataRef = useRef( {} );
+
+  // An object with { min: number, max: number, default: number }
+  const numberDataRef = useRef( {} );
+
+  // An object with { values: [] }
+  const enumerationDataRef = useRef( {} );
+
   // to be called every change so that we can use this data to create
+  const getDataForNumber = data => { numberDataRef.current = data; };
+  const getDataForEnumeration = data => { enumerationDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
+  const getDataForPosition = data => { positionDataRef.current = data; };
 
   useEffect( () => {
     if ( selectedTab === 'boolean' ) {
@@ -41,6 +55,9 @@ export default function CreateModelComponentForm( props ) {
     }
     else if ( selectedTab === 'enumeration' ) {
       setSelectedTabFormValid( enumerationFormValid && componentName.length > 0 );
+    }
+    else if ( selectedTab === 'position' ) {
+      setSelectedTabFormValid( positionFormValid && componentName.length > 0 );
     }
     else {
       setSelectedTabFormValid( false );
@@ -55,8 +72,16 @@ export default function CreateModelComponentForm( props ) {
       activeProgram.modelContainer.addBooleanProperty( componentName, booleanDataRef.current.defaultValue === 'true' );
     }
     else if ( selectedTab === 'number' ) {
+      const numberData = numberDataRef.current;
+      activeProgram.modelContainer.addNumberProperty( componentName, numberData.min, numberData.max, numberData.default );
+
     }
     else if ( selectedTab === 'enumeration' ) {
+      activeProgram.modelContainer.addEnumerationProperty( componentName, enumerationDataRef.current.values );
+    }
+    else if ( selectedTab === 'position' ) {
+      const positionData = positionDataRef.current;
+      activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
     }
     else {
       throw new Error( 'Cannot create component for selected tab.' );
@@ -75,13 +100,13 @@ export default function CreateModelComponentForm( props ) {
         justify
       >
         <Tab eventKey='number' title='Number' tabClassName={styles.tab}>
-          <CreateNumberForm isFormValid={getIsNumberFormValid}></CreateNumberForm>
+          <CreateNumberForm isFormValid={getIsNumberFormValid} getFormData={getDataForNumber}></CreateNumberForm>
         </Tab>
         <Tab eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
-          <CreateEnumerationForm isFormValid={getIsEnumerationFormValid}></CreateEnumerationForm>
+          <CreateEnumerationForm isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
         </Tab>
         <Tab eventKey='position' title='Position' tabClassName={styles.tab}>
-          <CreatePositionForm></CreatePositionForm>
+          <CreatePositionForm isFormValid={getIsPositionFormValid} getFormData={getDataForPosition}></CreatePositionForm>
         </Tab>
         <Tab eventKey='boolean' title='Boolean' tabClassName={styles.tab}>
           <CreateBooleanForm isFormValid={getIsBooleanFormValid} getFormData={getDataForBoolean}></CreateBooleanForm>

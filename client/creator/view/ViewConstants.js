@@ -27,6 +27,15 @@ const TEXT_BUTTON_OPTIONS = {
   disabledColor: BUTTON_DISABLED_COLOR
 };
 
+const RECTANGULAR_BUTTON_OPTIONS = {
+  stroke: BUTTON_STROKE_COLOR,
+  buttonAppearanceStrategy: BUTTON_APPEARANCE_STRATEGY,
+  baseColor: BUTTON_FILL_COLOR,
+  disabledColor: BUTTON_DISABLED_COLOR,
+  xMargin: 3,
+  yMargin: 3
+};
+
 const ViewConstants = {
 
   PROGRAM_FONT: PROGRAM_FONT,
@@ -50,6 +59,7 @@ const ViewConstants = {
   },
 
   TEXT_BUTTON_OPTIONS: TEXT_BUTTON_OPTIONS,
+  RECTANGULAR_BUTTON_OPTIONS: RECTANGULAR_BUTTON_OPTIONS,
 
   // background for the toolbar
   toolbarBackgroundColor: new phet.scenery.Color( 60, 63, 65 ),
