@@ -1,5 +1,8 @@
+!!! warning "Under Construction" 
+      
+      We are working on updating our documentation - more details coming soon!
 
-## Camera Parameters optimization: 
+# Camera Parameters optimization: 
 
 You are looking for dots to be stably detected and might need to iteratively switch between this and calibration.
 

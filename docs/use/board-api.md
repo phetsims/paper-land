@@ -1,5 +1,9 @@
 # Board API
 
+!!! warning "Under Construction" 
+      
+      We are working on updating our documentation - more details coming soon!
+
 ## At a Glance
 
 - [Introduction](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#introduction)

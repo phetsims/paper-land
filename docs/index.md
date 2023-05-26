@@ -1,7 +1,11 @@
 # Paper Playground 
 
-> :warning: **This documentation is currently under construction - More details coming soon!** :warning:
+<!-- https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types -->
+!!! warning "Under Construction" 
+      
+    We are working on updating our documentation - more details coming soon!
 
+<!-- Uses md_in_html markdown extension -->
 <figure markdown>
   ![Hand placing colored dots on paper](assets/hand-with-dots.png){ width=300 }
   <figcaption></figcaption>
@@ -13,47 +17,16 @@ Paper Playground is an open-source tool for collaboratively designing multimodal
 
 The primary purpose of Paper Playground is to enable expert developers and designers to rapidly iterate on stakeholder's ideas, especially when co-designing with non-technical stakeholders who have valuable feedback but no expertise to implement their ideas in real-time. By using Paper Playground, developers and designers can create inclusive and joyful web experiences by seamlessly weaving visuals, sounds, spoken descriptions, and other inputs and displays.
 
+<figure markdown>
+  ![Paper Playground setup detecting paper programs that create a moon lander and control vertical thrust](assets/table-setup.png){ width=400 }
+  <figcaption></figcaption>
+</figure>
+
 ## What can you do with it?
 
-> :star: **We are in heavy development, and documentation is still being updated.** :star:
+This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation regarding legacy features (*including writing code for output to Projector*), refer to the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/).
 
-For complete information on how to set up Paper Playground and begin creating and prototyping multimodal, interactive web experiences, please refer to the [Paper Playground Docs](https://phetsims.github.io/paper-land/).
 
-This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation regarding legacy features, refer to the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/).
-
-## Installation
-
-The Paper Playground client runs locally and can utilize a remote database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
-
-1. Install [Node.js/npm](https://nodejs.org/en/), [Git](https://git-scm.com/), and a command-line interface (e.g., Bash, Terminal, Command Prompt, etc.).
-   > :red_circle: **Note:** Some users have reported issues installing newer versions of Node.js/npm on older macOS versions. Verify the last supported Node.js/npm version for your operating system.
-2. Clone the repository using the following command: `git clone https://github.com/phetsims/paper-land.git`
-3. Install the dependencies: `npm install`
-4. Set up the database (see instructions below for Remote or Local database).
-5. Start the tool: `npm start`
-6. Open [localhost:3000](http://localhost:3000/) in your browser and follow the links on the landing page.
-
-### Remote Database
-
-- If you are using a remote program database, create a `.env` file in the root of paper-land and provide the database address under `DATABASE_URL`.
-  - Example: `DATABASE_URL=postgres://someDatabaseAddressFromSomeHostingService`
-- Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
-
-### Local Database
-
-- You need to install [PostgreSQL](https://www.postgresql.org/download/) and set up a local database.
-- Refer to the [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms
-
-/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally) for detailed instructions and commands.
-- Once you have set up a local database, you can find a copy of all paper programs, including functional examples like **altitude-demo**, **lunar-lander**, **density-demo**, **simple-demos**, and more, in the maintainer's remote database located at `root/paper-programs-backup`. Please note that some spaces contain individual test programs or works-in-progress and may not have functional paper programs.
-
-### Recommended Start Up
-
-Currently, Paper Playground must be run from the command line. If you're following the development of Paper Playground, it is recommended to regularly execute the following commands:
-
-1. `git pull`
-2. `npm update`
-3. `npm start`
 
 ### What do I do now? How do I create programs, detect programs, set up my camera and space, and make things happen?
 

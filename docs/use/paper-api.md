@@ -1,5 +1,13 @@
 # Paper Programs API
 
+!!! warning "Under Construction" 
+      
+      We are working on updating our documentation - more details coming soon!
+
+!!! Danger "Legacy Documentation" 
+      
+      This documentation reflects the API for the original [Paper Programs](https://paperprograms.org/) project and may not be accurate for the current version of the tool.
+
 Welcome to Paper Programs! Here's what you can do:
 
 ## Quickref

@@ -1,3 +1,11 @@
+!!! warning "Under Construction" 
+      
+      We are working on updating our documentation - more details coming soon!
+
+!!! Danger "Legacy Documentation" 
+      
+      This documentation reflects the setup for the original [Paper Programs](https://paperprograms.org/) project and may not be accurate for the current version of the tool.
+
 # Getting Started with Paper Programs
 
 This tutorial will cover what you'll need to get a Paper Programs space up and running.
