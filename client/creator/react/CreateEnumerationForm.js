@@ -25,6 +25,8 @@ export default function CreateEnumerationForm( props ) {
     const allUnique = new Set( valuesRef.current ).size === valuesRef.current.length;
     const valid = nullableEvent !== null && valuesRef.current.every( value => value.length > 0 ) && allUnique;
     props.isFormValid( valid );
+
+    props.getFormData( { values: valuesRef.current } );
   };
 
   const handleClick = event => {

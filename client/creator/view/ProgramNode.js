@@ -1,11 +1,14 @@
 import ActiveEdit from '../model/ActiveEdit.js';
 import EditType from '../model/EditType.js';
+import ComponentListItemNode from './ComponentListItemNode.js';
 import ViewConstants from './ViewConstants.js';
 
 // margins for UI components within the program
 const MARGIN = 2;
 
+// default dimensions of a paper, though it may change as components are added
 const WIDTH = 70;
+const DEFAULT_HEIGHT = 90;
 
 const BUTTON_OPTIONS = _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
   font: ViewConstants.PROGRAM_FONT,
@@ -28,7 +31,7 @@ export default class ProgramNode extends phet.scenery.Node {
   constructor( model, deleteAreaGlobalBounds, activeEditProperty ) {
     super();
 
-    this.background = new phet.scenery.Rectangle( 0, 0, WIDTH, 90, {
+    this.background = new phet.scenery.Rectangle( 0, 0, WIDTH, DEFAULT_HEIGHT, {
       fill: 'white',
       stroke: 'black'
     } );
@@ -41,7 +44,9 @@ export default class ProgramNode extends phet.scenery.Node {
     } );
 
     // Displays all of the model components of this program
-    this.modelComponentList = new phet.scenery.VBox();
+    this.modelComponentList = new phet.scenery.VBox( {
+      spacing: MARGIN
+    } );
 
     // Creates a new "component"
     this.createComponentButton = new phet.sun.TextPushButton( 'Create Component', _.merge( {}, BUTTON_OPTIONS, {
@@ -100,20 +105,49 @@ export default class ProgramNode extends phet.scenery.Node {
     // to the delete area.
     dragListener.setCreatePanTargetBounds( () => { return null; } );
 
+    model.modelContainer.allComponents.elementAddedEmitter.addListener( addedNamedProperty => {
+      const newItemNode = new ComponentListItemNode( addedNamedProperty, WIDTH );
+      this.modelComponentList.addChild( newItemNode );
 
-    model.modelContainer.namedBooleanProperties.elementAddedEmitter.addListener( () => {
-      console.log( 'added!' );
+      // remove and dispose of the view component when it is removed
+      const removalListener = removedNamedProperty => {
+        if ( addedNamedProperty === removedNamedProperty ) {
+          this.modelComponentList.removeChild( newItemNode );
+          newItemNode.dispose();
+
+          model.modelContainer.allComponents.elementRemovedEmitter.removeListener( removalListener );
+
+          this.layout();
+        }
+      };
+      model.modelContainer.allComponents.elementRemovedEmitter.addListener( removalListener );
+
+      this.layout();
     } );
+
+    // collection of components that will contribute to layout bounds
+    this.allComponents = [ this.programNumber, this.titleText, this.modelComponentList, this.createListenerButton, this.createComponentButton ];
 
     // initial layout
     this.layout();
   }
 
+  /**
+   * Layout for components that appear in the page.
+   */
   layout() {
 
-    // layout
+    // Make sure the retangle is big enough for everything.
+    const totalHeight = this.allComponents.reduce( ( accumulator, component ) => {
+      const componentHeight = Math.max( 0, component.height );
+      return accumulator + componentHeight + ( MARGIN * 2 );
+    }, 0 );
+    const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
+    this.background.setRectHeight( backgroundHeight );
+
     this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
+    this.modelComponentList.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
     this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -MARGIN );
     this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
   }

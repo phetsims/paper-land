@@ -10,8 +10,13 @@ export default function CreateNumberForm( props ) {
   const handleChange = () => {
     const allDefined = [ valueRef, minRef, maxRef ].every( ref => ref.current !== '' );
     const numbers = [ minRef, valueRef, maxRef ].map( ref => parseInt( ref.current, 10 ) );
-    const inRange = numbers[ 0 ] < numbers[ 1 ] && numbers[ 1 ] < numbers[ 2 ];
+
+    const minNumber = numbers[ 0 ];
+    const defaultNumber = numbers[ 1 ];
+    const maxNumber = numbers[ 2 ];
+    const inRange = minNumber < defaultNumber && defaultNumber < maxNumber;
     props.isFormValid( allDefined && inRange );
+    props.getFormData( { min: minRef.current, max: maxNumber, default: defaultNumber } );
   };
 
   return (

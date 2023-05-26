@@ -16,6 +16,14 @@ class NamedProperty {
     // emits an event when it is time for this NamedProperty to be deleted
     this.deleteEmitter = new phet.axon.Emitter();
   }
+
+  /**
+   * Make eligible for garbage collection.
+   * @public
+   */
+  dispose() {
+    this.deleteEmitter.dispose();
+  }
 }
 
 export default NamedProperty;

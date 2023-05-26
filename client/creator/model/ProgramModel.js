@@ -28,8 +28,7 @@ export default class ProgramModel {
    * TODO: Remove any other connections with other programs.
    */
   dispose() {
-    this.modelPropertyAddedEmitter.dispose();
-    this.modelPropertyRemovedEmitter.dispose();
+    this.modelContainer.dispose();
     this.positionProperty.dispose();
     this.deleteEmitter.dispose();
   }
