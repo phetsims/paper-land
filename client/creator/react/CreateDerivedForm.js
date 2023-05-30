@@ -3,7 +3,7 @@
  * and create a derivation function that defines the Propery's value.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -24,10 +24,14 @@ const getComponentDocumentation = namedProperty => {
     usabilityDocumentation = 'This is a number.';
   }
   else if ( type === 'BooleanProperty' ) {
-    usabilityDocumentation = 'This is a boolean value. `true` or `false`';
+    usabilityDocumentation = 'This is a boolean value `true` or `false`';
   }
   else if ( type === 'DerivedProperty' ) {
     usabilityDocumentation = 'This could be any type, depending on how you created your DerivedProperty.';
+  }
+  else if ( type === 'StringProperty' ) {
+    const valuesList = namedProperty.property.validValues.join( ', ' );
+    usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
   }
 
   return `${namedProperty.name} - ${usabilityDocumentation}`;
@@ -36,7 +40,11 @@ const getComponentDocumentation = namedProperty => {
 export default function CreateDerivedForm( props ) {
   const allModelComponents = props.allModelComponents;
 
+  // Components selected for the dependencies
   const [ selectedComponents, setSelectedComponents ] = useState( [] );
+
+  // Current string value of the monaco editor
+  const codeString = useRef( '' );
 
   const handleCheckboxChange = ( event, namedProperty ) => {
     if ( event.target.checked ) {
@@ -49,6 +57,22 @@ export default function CreateDerivedForm( props ) {
       copy.splice( selectedComponents.indexOf( namedProperty ), 1 );
       setSelectedComponents( copy );
     }
+  };
+
+  // Handles changes to the Monaco editor, saving the code value and passing to parent whenever there is an edit.
+  const handleCodeChange = ( newValue, event ) => {
+    codeString.current = newValue;
+  };
+
+  // Validate and send data to parent forms whenever there is any sort of change
+  const handleAnyChange = () => {
+    const valid = selectedComponents.length > 0 && codeString.current.length > 0;
+    props.isFormValid( valid );
+
+    props.getFormData( {
+      dependencies: selectedComponents,
+      derivation: codeString
+    } );
   };
 
   useEffect( () => {
@@ -84,6 +108,7 @@ export default function CreateDerivedForm( props ) {
                                label={innerComponent.name}
                                onChange={event => {
                                  handleCheckboxChange( event, innerComponent );
+                                 handleAnyChange();
                                }}
                              /> : ''
                             }
@@ -120,6 +145,10 @@ export default function CreateDerivedForm( props ) {
           <MonacoEditor
             language='javascript'
             theme='vs-dark'
+            onChange={( newValue, event ) => {
+              handleCodeChange( newValue, event );
+              handleAnyChange();
+            }}
             options={{
               tabSize: 2,
               fontSize: '16px',

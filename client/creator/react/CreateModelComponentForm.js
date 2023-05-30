@@ -26,11 +26,13 @@ export default function CreateModelComponentForm( props ) {
   const [ numberFormValid, setNumberFormValid ] = useState( false );
   const [ positionFormValid, setPositionFormValid ] = useState( true );
   const [ enumerationFormValid, setEnumerationFormValid ] = useState( false );
+  const [ derivedFormValid, setDerivedFormValid ] = useState( false );
 
   const getIsBooleanFormValid = isValid => setBooleanFormValid( isValid );
   const getIsNumberFormValid = isValid => setNumberFormValid( isValid );
   const getIsEnumerationFormValid = isValid => setEnumerationFormValid( isValid );
   const getIsPositionFormValid = isValid => setPositionFormValid( isValid );
+  const getIsDerivedFormValid = isValid => setDerivedFormValid( isValid );
 
   // An object with { defaultValue: 'true' | 'false' }
   const booleanDataRef = useRef( {} );
@@ -44,11 +46,15 @@ export default function CreateModelComponentForm( props ) {
   // An object with { values: [] }
   const enumerationDataRef = useRef( {} );
 
+  // An object with { dependencies: NamedProperty[], derivation: string }
+  const derivedDataRef = useRef( {} );
+
   // to be called every change so that we can use this data to create
   const getDataForNumber = data => { numberDataRef.current = data; };
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
   const getDataForPosition = data => { positionDataRef.current = data; };
+  const getDataForDerived = data => { derivedDataRef.current = data; };
 
   useEffect( () => {
     if ( selectedTab === 'boolean' ) {
@@ -62,6 +68,9 @@ export default function CreateModelComponentForm( props ) {
     }
     else if ( selectedTab === 'position' ) {
       setSelectedTabFormValid( positionFormValid && componentName.length > 0 );
+    }
+    else if ( selectedTab === 'derived' ) {
+      setSelectedTabFormValid( derivedFormValid && componentName.length > 0 );
     }
     else {
       setSelectedTabFormValid( false );
@@ -88,7 +97,9 @@ export default function CreateModelComponentForm( props ) {
       activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
     }
     else if ( selectedTab === 'derived' ) {
-
+      const dependencies = derivedDataRef.current.dependencies;
+      const derivation = derivedDataRef.current.derivation;
+      activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );
     }
     else {
       throw new Error( 'Cannot create component for selected tab.' );
@@ -119,7 +130,7 @@ export default function CreateModelComponentForm( props ) {
           <CreateEnumerationForm isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
         </Tab>
         <Tab eventKey='derived' title='Derived' tabClassName={styles.tab}>
-          <CreateDerivedForm allModelComponents={allModelComponents}></CreateDerivedForm>
+          <CreateDerivedForm allModelComponents={allModelComponents} isFormValid={getIsDerivedFormValid} getFormData={getDataForDerived}></CreateDerivedForm>
         </Tab>
       </Tabs>
       <StyledButton disabled={!selectedTabFormValid} name={'Create Component'} onClick={createComponent}></StyledButton>

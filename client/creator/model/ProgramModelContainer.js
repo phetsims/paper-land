@@ -11,6 +11,7 @@ export default class ProgramModelContainer {
     this.namedVector2Properties = phet.axon.createObservableArray();
     this.namedNumberProperties = phet.axon.createObservableArray();
     this.namedEnumerationProperties = phet.axon.createObservableArray();
+    this.namedDerivedProperties = phet.axon.createObservableArray();
 
     // {ObservableArray<NamedProperty> - the collection of ALL NamedProperties in this container
     // so we can easily operate on all of them at once.
@@ -121,6 +122,37 @@ export default class ProgramModelContainer {
     const index = this.namedEnumerationProperties.indexOf( namedProperty );
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedEnumerationProperties.splice( index, 1 );
+    this.removeFromAllComponents( namedProperty );
+  }
+
+  /**
+   * Add a DerivedProperty to this model container.
+   * @param {string} name
+   * @param {NamedProperty[]} dependencies
+   * @param {string} derivation - a string form of the code to run when any of the dependencies change
+   */
+  addDerivedProperty( name, dependencies, derivation ) {
+    const dependencyProperties = dependencies.map( namedProperty => namedProperty.property );
+
+    // TODO: We either need to wire up the actual derivation function or just save it as data somehow for program code generation
+    const tempDerivationFunction = () => console.log( derivation );
+    const newNamedProperty = new NamedProperty(
+      name,
+      new phet.axon.DerivedProperty( dependencyProperties, tempDerivationFunction )
+    );
+    this.namedDerivedProperties.push( newNamedProperty );
+    this.allComponents.push( newNamedProperty );
+
+    this.registerDeleteListener( newNamedProperty, this.removeDerivedProperty.bind( this ) );
+  }
+
+  /**
+   * Removes the provided NamedProperty with a DerivedProperty from this container.
+   */
+  removeDerivedProperty( namedProperty ) {
+    const index = this.namedDerivedProperties.indexOf( namedProperty );
+    assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
+    this.namedDerivedProperties.splice( index, 1 );
     this.removeFromAllComponents( namedProperty );
   }
 
