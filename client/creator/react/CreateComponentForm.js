@@ -9,6 +9,7 @@ import styles from './../CreatorMain.css';
 import ComponentNameControl from './ComponentNameControl.js';
 import CreateModelControllerForm from './controller/CreateModelControllerForm.js';
 import CreateModelComponentForm from './CreateModelComponentForm.js';
+import CreateViewComponentForm from './CreateViewComponentForm.js';
 
 export default function CreateComponentForm( props ) {
 
@@ -39,7 +40,7 @@ export default function CreateComponentForm( props ) {
           ></CreateModelComponentForm>
         </Tab>
         <Tab eventKey='view' title='View' tabClassName={styles.tab}>
-          Tab content for View
+          <CreateViewComponentForm></CreateViewComponentForm>
         </Tab>
         <Tab eventKey='controller' title='Controller' tabClassName={styles.tab}>
           <CreateModelControllerForm

@@ -75,7 +75,7 @@ export default function CreateModelComponentForm( props ) {
     else {
       setSelectedTabFormValid( false );
     }
-  }, [ props.componentName, selectedTab, booleanFormValid, numberFormValid, enumerationFormValid ] );
+  }, [ props.componentName, selectedTab, booleanFormValid, numberFormValid, enumerationFormValid, derivedFormValid ] );
 
   const createComponent = () => {
 
