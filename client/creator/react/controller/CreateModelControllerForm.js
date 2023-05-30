@@ -84,10 +84,11 @@ export default function CreateModelControllerForm( props ) {
 
     const allComponentsListener = componentsLength => {
 
-      // React requires a new array reference to update correctly
-      const arrayCopy = props.allModelComponents.getArrayCopy();
-      setAllComponents( arrayCopy );
-      setSelectedComponent( arrayCopy[ 0 ] || null );
+      // Gets all model components that are not DerivedProperties - DerivedProperties cannot be externally controlled.
+      // React requires a new array reference to update correctly. Filter does that for us.
+      const withoutDerivedProperties = props.allModelComponents.filter( element => element.propertyType !== 'DerivedProperty' );
+      setAllComponents( withoutDerivedProperties );
+      setSelectedComponent( withoutDerivedProperties[ 0 ] || null );
     };
 
     // Linked lazily because we do not want to trigger a re-render immediately in this render (infinite loop)
