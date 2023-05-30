@@ -35,4 +35,20 @@ export default class ProgramModel {
     this.positionProperty.dispose();
     this.deleteEmitter.dispose();
   }
+
+  save() {
+    return {
+      number: this.number,
+      title: this.titleProperty.value,
+      keywords: this.keywordsProperty.value,
+      description: this.descriptionProperty.value,
+
+      // A built-in function available because of phet-io
+      positionProperty: this.positionProperty.value.toStateObject(),
+
+      modelContainer: this.modelContainer.save(),
+      controllerContainer: this.controllerContainer.save(),
+      viewContainer: this.viewContainer.save()
+    };
+  }
 }

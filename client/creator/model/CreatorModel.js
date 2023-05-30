@@ -63,4 +63,25 @@ export default class CreatorModel {
 
     program.dispose();
   }
+
+  /**
+   * Save this model as JSON for serialization.
+   * @return {Object} json
+   *
+   * @public
+   */
+  save() {
+    return {
+      programs: this.programs.map( program => program.save() )
+    };
+  }
+
+  /**
+   * Load a state for the model as described by the provided JSON.
+   * @param {Object} json
+   *
+   * @public
+   */
+  load( json ) {
+  }
 }
