@@ -9,6 +9,11 @@
 
 @value focusHighlightColor: #6C8EAC;
 
+/*background color for the page*/
+@value backgroundColor: #2E4152;
+
+@value textColor: #bdcbda;
+
 
 /* The flex parent for the three columns of the board page */
 :local(.rowContainer) {
@@ -48,10 +53,14 @@
 :local(.panelClass) {
   border-color: #6C8EAC;
   border-style: solid;
-  color: #bdcbda;
+  color: textColor;
   padding: 10px;
   height: 100vh;
   overflow: auto;
+}
+
+:local(.editor) {
+  height: 400px;
 }
 
 :local(.controlElement) {
@@ -152,4 +161,9 @@
 
 :local(.deleteButtonIcon ) {
   scale: 2;
+}
+
+:local(.listGroupItem ) {
+  background-color: backgroundColor;
+  color: textColor;
 }

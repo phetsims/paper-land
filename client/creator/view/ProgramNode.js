@@ -3,12 +3,14 @@ import EditType from '../model/EditType.js';
 import ComponentListItemNode from './ComponentListItemNode.js';
 import ViewConstants from './ViewConstants.js';
 
-// margins for UI components within the program
-const MARGIN = 2;
-
 // default dimensions of a paper, though it may change as components are added
 const WIDTH = 70;
 const DEFAULT_HEIGHT = 90;
+
+// margins for UI components within the program
+const MARGIN = 2;
+const BACKGROUND_LINE_WIDTH = 1;
+const SEPARATOR_LINE_WIDTH = WIDTH - MARGIN - BACKGROUND_LINE_WIDTH;
 
 const BUTTON_OPTIONS = _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
   font: ViewConstants.PROGRAM_FONT,
@@ -32,6 +34,7 @@ export default class ProgramNode extends phet.scenery.Node {
     super();
 
     this.background = new phet.scenery.Rectangle( 0, 0, WIDTH, DEFAULT_HEIGHT, {
+      lineWidth: BACKGROUND_LINE_WIDTH,
       fill: 'white',
       stroke: 'black'
     } );
@@ -45,6 +48,27 @@ export default class ProgramNode extends phet.scenery.Node {
 
     // Displays all of the model components of this program
     this.modelComponentList = new phet.scenery.VBox( {
+      align: 'left',
+      spacing: MARGIN
+    } );
+
+    // A separator after the model components
+    this.modelSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
+      stroke: 'rgb(100,100,100)'
+    } );
+
+    this.controllerComponentList = new phet.scenery.VBox( {
+      align: 'left',
+      spacing: MARGIN
+    } );
+
+    // A separator after the controller components
+    this.controllerSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
+      stroke: 'rgb(100,100,100)'
+    } );
+
+    this.viewComponentList = new phet.scenery.VBox( {
+      align: 'left',
       spacing: MARGIN
     } );
 
@@ -62,11 +86,23 @@ export default class ProgramNode extends phet.scenery.Node {
       }
     } ) );
 
+    this.allComponentsVBox = new phet.scenery.VBox( {
+      spacing: MARGIN * 2,
+      align: 'left',
+      children: [
+        this.modelComponentList,
+        this.modelSeparator,
+        this.controllerComponentList,
+        this.controllerSeparator,
+        this.viewComponentList
+      ]
+    } );
+
     // rendering order
     this.addChild( this.background );
     this.addChild( this.programNumber );
     this.addChild( this.titleText );
-    this.addChild( this.modelComponentList );
+    this.addChild( this.allComponentsVBox );
     this.addChild( this.createComponentButton );
     this.addChild( this.createListenerButton );
 
@@ -105,28 +141,39 @@ export default class ProgramNode extends phet.scenery.Node {
     // to the delete area.
     dragListener.setCreatePanTargetBounds( () => { return null; } );
 
-    model.modelContainer.allComponents.elementAddedEmitter.addListener( addedNamedProperty => {
-      const newItemNode = new ComponentListItemNode( addedNamedProperty, WIDTH );
-      this.modelComponentList.addChild( newItemNode );
+    const registerComponentListListener = ( observableArray, parentNode ) => {
+      observableArray.elementAddedEmitter.addListener( addedComponent => {
+        const newItemNode = new ComponentListItemNode( addedComponent, WIDTH );
+        parentNode.addChild( newItemNode );
 
-      // remove and dispose of the view component when it is removed
-      const removalListener = removedNamedProperty => {
-        if ( addedNamedProperty === removedNamedProperty ) {
-          this.modelComponentList.removeChild( newItemNode );
-          newItemNode.dispose();
+        // remove and dispose of the view component when the model component is removed
+        const removalListener = removedComponent => {
+          if ( addedComponent === removedComponent ) {
+            parentNode.removeChild( newItemNode );
+            newItemNode.dispose();
 
-          model.modelContainer.allComponents.elementRemovedEmitter.removeListener( removalListener );
+            observableArray.elementRemovedEmitter.removeListener( removalListener );
 
-          this.layout();
-        }
-      };
-      model.modelContainer.allComponents.elementRemovedEmitter.addListener( removalListener );
+            this.layout();
+          }
+        };
+        observableArray.elementRemovedEmitter.addListener( removalListener );
 
-      this.layout();
-    } );
+        this.layout();
+      } );
+    };
 
-    // collection of components that will contribute to layout bounds
-    this.allComponents = [ this.programNumber, this.titleText, this.modelComponentList, this.createListenerButton, this.createComponentButton ];
+    registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
+    registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
+
+    // collection of components that will contribute to layout bounds, to easily calculate height
+    this.allComponents = [
+      this.programNumber,
+      this.titleText,
+      this.allComponentsVBox,
+      this.createListenerButton,
+      this.createComponentButton
+    ];
 
     // initial layout
     this.layout();
@@ -145,9 +192,13 @@ export default class ProgramNode extends phet.scenery.Node {
     const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
     this.background.setRectHeight( backgroundHeight );
 
+    // Visibility of lists toggles visibility of separators (scenery dynamic layout feature)
+    this.modelSeparator.visible = this.controllerComponentList.children.length > 0 || this.viewComponentList.children.length > 0;
+    this.controllerSeparator.visible = this.viewComponentList.children.length > 0 && this.controllerComponentList.children.length === 0;
+
     this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
-    this.modelComponentList.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
+    this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
     this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -MARGIN );
     this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
   }

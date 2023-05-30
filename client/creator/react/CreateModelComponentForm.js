@@ -3,6 +3,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import styles from './../CreatorMain.css';
 import CreateBooleanForm from './CreateBooleanForm.js';
+import CreateDerivedForm from './CreateDerivedForm.js';
 import CreateEnumerationForm from './CreateEnumerationForm.js';
 import CreateNumberForm from './CreateNumberForm.js';
 import CreatePositionForm from './CreatePositionForm.js';
@@ -16,7 +17,10 @@ export default function CreateModelComponentForm( props ) {
   // {ProgramModel>}
   const activeProgram = props.activeProgram;
 
-  const [ selectedTab, setSelectedTab ] = useState( 'number' );
+  // {ObservableArray<NamedProperty>}
+  const allModelComponents = props.allModelComponents;
+
+  const [ selectedTab, setSelectedTab ] = useState( 'boolean' );
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
   const [ booleanFormValid, setBooleanFormValid ] = useState( true );
   const [ numberFormValid, setNumberFormValid ] = useState( false );
@@ -83,6 +87,9 @@ export default function CreateModelComponentForm( props ) {
       const positionData = positionDataRef.current;
       activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
     }
+    else if ( selectedTab === 'derived' ) {
+
+    }
     else {
       throw new Error( 'Cannot create component for selected tab.' );
     }
@@ -99,17 +106,20 @@ export default function CreateModelComponentForm( props ) {
         }}
         justify
       >
+        <Tab eventKey='boolean' title='Boolean' tabClassName={styles.tab}>
+          <CreateBooleanForm isFormValid={getIsBooleanFormValid} getFormData={getDataForBoolean}></CreateBooleanForm>
+        </Tab>
         <Tab eventKey='number' title='Number' tabClassName={styles.tab}>
           <CreateNumberForm isFormValid={getIsNumberFormValid} getFormData={getDataForNumber}></CreateNumberForm>
-        </Tab>
-        <Tab eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
-          <CreateEnumerationForm isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
         </Tab>
         <Tab eventKey='position' title='Position' tabClassName={styles.tab}>
           <CreatePositionForm isFormValid={getIsPositionFormValid} getFormData={getDataForPosition}></CreatePositionForm>
         </Tab>
-        <Tab eventKey='boolean' title='Boolean' tabClassName={styles.tab}>
-          <CreateBooleanForm isFormValid={getIsBooleanFormValid} getFormData={getDataForBoolean}></CreateBooleanForm>
+        <Tab eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
+          <CreateEnumerationForm isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
+        </Tab>
+        <Tab eventKey='derived' title='Derived' tabClassName={styles.tab}>
+          <CreateDerivedForm allModelComponents={allModelComponents}></CreateDerivedForm>
         </Tab>
       </Tabs>
       <StyledButton disabled={!selectedTabFormValid} name={'Create Component'} onClick={createComponent}></StyledButton>

@@ -12,6 +12,7 @@ export default function ComponentNameControl( props ) {
         <Form.Label>Component Name</Form.Label>
         <Form.Control
           type='text'
+          value={props.componentName}
           onChange={event => {
             setComponentName( event.target.value );
           }}

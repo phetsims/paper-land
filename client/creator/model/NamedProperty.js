@@ -13,6 +13,9 @@ class NamedProperty {
     this.name = name;
     this.property = property;
 
+    // @public (read-only) {string} - A name for the type of Property this is, to categorize UI controls
+    this.propertyType = property.constructor.name;
+
     // emits an event when it is time for this NamedProperty to be deleted
     this.deleteEmitter = new phet.axon.Emitter();
   }

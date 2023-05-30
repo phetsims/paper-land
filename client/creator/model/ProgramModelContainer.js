@@ -160,6 +160,9 @@ export default class ProgramModelContainer {
     } );
 
     this.namedBooleanProperties.dispose();
+    this.namedVector2Properties.dispose();
+    this.namedNumberProperties.dispose();
+    this.namedEnumerationProperties.dispose();
     this.allComponents.dispose();
   }
 }

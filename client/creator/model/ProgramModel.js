@@ -1,3 +1,4 @@
+import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 
 export default class ProgramModel {
@@ -16,6 +17,8 @@ export default class ProgramModel {
 
     // @public - responsible for all 'model' components of this program
     this.modelContainer = new ProgramModelContainer();
+
+    this.controllerContainer = new ProgramControllerContainer();
 
     // @public - the position of this program in the editor
     this.positionProperty = new phet.dot.Vector2Property( initialPosition );

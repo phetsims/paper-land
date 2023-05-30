@@ -40,6 +40,7 @@ export default function CreatorControls( props ) {
       {activeEdit && activeEdit.editType === EditType.COMPONENT ?
        <CreateComponentForm
          activeProgram={activeEdit.program}
+         allModelComponents={model.allModelComponents}
        ></CreateComponentForm> : ''}
     </div>
   );
