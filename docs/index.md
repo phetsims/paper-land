@@ -24,13 +24,20 @@ The primary purpose of Paper Playground is to enable expert developers and desig
 
 ## What can you do with it?
 
+You'll write JavaScript programs. Every program you write is associated with a sequence of colored (black, red, green, and blue) dots that you will put (or print) on the corners of a piece of paper. We'll refer to the linked papers and code as Papers from here on out!
+
+!!! failure "CONTENT INCOMPLETE"
+
+    Content is currently missing for this section. Check back soon!
+
 This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation regarding legacy features (*including writing code for output to Projector*), refer to the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/).
-
-
 
 ### What do I do now? How do I create programs, detect programs, set up my camera and space, and make things happen?
 
-For detailed answers to these questions and more helpful information on creating papers and delightful multimodal web experiences, please refer to our [Paper Playground Docs](https://phetsims.github.io/paper-land).
+!!! failure "CONTENT INCOMPLETE"
+
+    Content is currently missing for this section. Check back soon!
+
 
 ## Join our Community! 
 
@@ -43,16 +50,16 @@ For detailed answers to these questions and more helpful information on creating
 ## Coming soon
 
 ### Docs
-:books: Updated setup and tutorial!
+:books:  Updated setup and tutorial!
 
-:camera: Pictures and demos of Paper Playground in action!
+:camera:  Pictures and demos of Paper Playground in action!
 
-:construction: A better Roadmap than this!
+:construction:  A better Roadmap than this!
 
 ### Tool
-:page_with_curl: More examples in the hosted database highlighting the power of multimodal design!
+:page_with_curl:  More examples in the hosted database highlighting the power of multimodal design!
 
-:computer: A GUI for creating basic Papers without deep JavaScript knowledge!
+:computer:  A GUI for creating basic Papers without deep JavaScript knowledge!
 
 ## License
 
