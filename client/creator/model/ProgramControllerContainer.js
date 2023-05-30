@@ -11,19 +11,11 @@ export default class ProgramControllerContainer {
     // {ObservableArray<BooleanPropertyController}
     this.booleanPropertyControllers = phet.axon.createObservableArray();
 
-    // {
-    //   namedProperty: NamedProperty
-    //   controlType: linear, exponential, inverse
-    //   controlDirection: horizontal, vertical
-    // }
+    // {ObservableArray<NumberPropertyController>}
     this.numberPropertyControllers = phet.axon.createObservableArray();
 
-    // {
-    //   namedProperty: NamedProperty
-    //   controlType: markers, rotation
-    // }
+    // {ObservableArray<EnumerationPropertyController>
     this.enumerationPropertyControllers = phet.axon.createObservableArray();
-
 
     this.allComponents = phet.axon.createObservableArray();
   }
@@ -86,6 +78,26 @@ export default class ProgramControllerContainer {
   removeNumberPropertyController( numberPropertyController ) {
     this.numberPropertyControllers.remove( numberPropertyController );
     this.allComponents.remove( numberPropertyController );
+  }
+
+  /**
+   * Adds a controller for an EnumerationProperty.
+   * @param {EnumerationPropertyController} enumerationPropertyController
+   */
+  addEnumerationPropertyController( enumerationPropertyController ) {
+    this.enumerationPropertyControllers.push( enumerationPropertyController );
+    this.allComponents.push( enumerationPropertyController );
+
+    this.registerDeleteListener( enumerationPropertyController, this.removeEnumerationPropertyController.bind( this ) );
+  }
+
+  /**
+   * Removes a controller for an EnumerationProperty from this container.
+   * @param {EnumerationPropertyController} enumerationPropertyController
+   */
+  removeEnumerationPropertyController( enumerationPropertyController ) {
+    this.enumerationPropertyControllers.remove( enumerationPropertyController );
+    this.allComponents.remove( enumerationPropertyController );
   }
 
   /**

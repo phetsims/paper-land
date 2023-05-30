@@ -2,11 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from '../../CreatorMain.css';
 import BooleanPropertyController from '../../model/controllers/BooleanPropertyController.js';
+import EnumerationPropertyController from '../../model/controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
 import Vector2PropertyController from '../../model/controllers/Vector2PropertyController.js';
 import Utils from '../../Utils.js';
 import StyledButton from '../StyledButton.js';
 import CreateBooleanControllerForm from './CreateBooleanControllerForm.js';
+import CreateEnumerationControllerForm from './CreateEnumerationControllerForm.js';
 import CreateNumberControllerForm from './CreateNumberControllerForm.js';
 import CreateVector2ControllerForm from './CreateVector2ControllerForm.js';
 
@@ -31,15 +33,18 @@ export default function CreateModelControllerForm( props ) {
   const [ positionFormValid, setPositionFormValid ] = useState( false );
   const [ booleanFormValid, setBooleanFormValid ] = useState( false );
   const [ numberFormValid, setNumberFormValid ] = useState( false );
+  const [ enumerationFormValid, setEnumerationFormValid ] = useState( false );
 
   // forwarded to each form for a controller type to make sure that entries are reasonable
   const getIsPositionFormValid = isValid => setPositionFormValid( isValid );
   const getIsBooleanFormValid = isValid => setBooleanFormValid( isValid );
   const getIsNumberFormValid = isValid => setNumberFormValid( isValid );
+  const getIsEnumerationFormValid = isValid => setEnumerationFormValid( isValid );
 
   // An object with { { controlType: Vector2PropertyController.ControlType } }
   const positionDataRef = useRef( {} );
   const booleanDataRef = useRef( {} );
+  const enumerationDataRef = useRef( {} );
 
   // An object with {
   //  directionControlType: NumberPropertyController.DirectionControlType,
@@ -50,7 +55,8 @@ export default function CreateModelControllerForm( props ) {
   // To be called on form changes to receive the data to create controllers
   const getDataForPosition = data => { positionDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
-  const getDataFormNumber = data => {numberDataRef.current = data; };
+  const getDataFormNumber = data => { numberDataRef.current = data; };
+  const getDataForEnumeration = data => { enumerationDataRef.current = data; };
 
   const createComponent = () => {
     if ( selectedComponentType === 'Vector2Property' ) {
@@ -64,6 +70,10 @@ export default function CreateModelControllerForm( props ) {
     else if ( selectedComponentType === 'NumberProperty' ) {
       const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType )
       activeProgram.controllerContainer.addNumberPropertyController( numberController );
+    }
+    else if ( selectedComponentType === 'StringProperty' ) {
+      const enumerationController = new EnumerationPropertyController( componentName, selectedComponent, enumerationDataRef.current.controlType );
+      activeProgram.controllerContainer.addEnumerationPropertyController( enumerationController );
     }
   };
 
@@ -100,6 +110,9 @@ export default function CreateModelControllerForm( props ) {
     else if ( selectedComponentType === 'NumberProperty' ) {
       setComponentFormValid( numberFormValid && componentName.length > 0 );
     }
+    else if ( selectedComponentType === 'StringProperty' ) {
+      setComponentFormValid( enumerationFormValid && componentName.length > 0 );
+    }
     else {
       setComponentFormValid( false );
     }
@@ -122,7 +135,7 @@ export default function CreateModelControllerForm( props ) {
           </Form.Select>
         </div>
         {selectedComponentType === 'Vector2Property' ? <CreateVector2ControllerForm getFormData={getDataForPosition} isFormValid={getIsPositionFormValid}></CreateVector2ControllerForm> :
-         selectedComponentType === 'StringProperty' ? <p>Controls for Enumeration</p> :
+         selectedComponentType === 'StringProperty' ? <CreateEnumerationControllerForm getFormData={getDataForEnumeration} isFormValid={getIsEnumerationFormValid}></CreateEnumerationControllerForm> :
          selectedComponentType === 'NumberProperty' ? <CreateNumberControllerForm getFormData={getDataFormNumber} isFormValid={getIsNumberFormValid}></CreateNumberControllerForm> :
          selectedComponentType === 'BooleanProperty' ? <CreateBooleanControllerForm getFormData={getDataForBoolean} isFormValid={getIsBooleanFormValid}></CreateBooleanControllerForm> :
          <p className={styles.controlElement}>Create a Model Component to control.</p>
