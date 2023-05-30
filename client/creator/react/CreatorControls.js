@@ -3,13 +3,14 @@
  * or component data.
  */
 
-import React, { useEffect, useState } from 'react';
-import EditType from '../model/EditType.js';
+import React, { useEffect, useState, forwardRef } from 'react';
 import styles from '../CreatorMain.css';
+import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
 
-export default function CreatorControls( props ) {
+// eslint-disable-next-line react/display-name
+const CreatorControls = forwardRef( ( props, ref ) => {
   const model = props.creatorModel;
 
   // state variables
@@ -30,7 +31,7 @@ export default function CreatorControls( props ) {
   } );
 
   return (
-    <div className={styles.scrollable}>
+    <div className={styles.scrollable} ref={ref}>
       <h1>{'{{Space Name}}'}</h1>
       <h3>{activeEdit ? activeEdit.program.number : ''}</h3>
       {activeEdit && activeEdit.editType === EditType.METADATA ?
@@ -44,4 +45,6 @@ export default function CreatorControls( props ) {
        ></CreateComponentForm> : ''}
     </div>
   );
-}
+} );
+
+export default CreatorControls;

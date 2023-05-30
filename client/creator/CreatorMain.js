@@ -2,7 +2,7 @@
  * Main react component for the Board page.
  */
 
-import React from 'react';
+import React, { useRef } from 'react';
 import SceneryDisplay from '../common/SceneryDisplay.js';
 import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
@@ -17,6 +17,10 @@ export default function CreatorMain( props ) {
   const creatorModel = new CreatorModel();
 
   let creatorView = null;
+
+  // A ref to the parent element of the React side of controls, so that we can detect when input
+  // is going to those components and prevent pan/zoom unless interacting with the scenery display.
+  const reactParentRef = useRef( null );
 
   // Sets the Display size and layout the view when the window size changes.
   const updateDisplaySize = ( display, width, height ) => {
@@ -74,6 +78,13 @@ export default function CreatorMain( props ) {
     // TODO: Why do you have to set the scaleGestureTargetPosition first?
     phet.scenery.animatedPanZoomSingleton.listener.scaleGestureTargetPosition = new phet.dot.Vector2( 0, 0 );
     phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 3 );
+
+    // Prevent the scenery display from panning/zooming while interacting with the react form controls.
+    window.addEventListener( 'keydown', event => {
+      if ( reactParentRef.current && reactParentRef.current.contains( event.target ) ) {
+        event.stopImmediatePropagation();
+      }
+    }, true );
   };
 
   // custom focus highlight colors for this display
@@ -97,6 +108,7 @@ export default function CreatorMain( props ) {
         </div>
         <div className={`${styles.rowSpacer} ${styles.panelClass}`}>
           <CreatorControls
+            ref={reactParentRef}
             creatorModel={creatorModel}
           ></CreatorControls>
         </div>
