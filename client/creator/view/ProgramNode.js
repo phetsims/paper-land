@@ -1,7 +1,7 @@
 import ActiveEdit from '../model/ActiveEdit.js';
 import EditType from '../model/EditType.js';
 import ComponentListItemNode from './ComponentListItemNode.js';
-import ViewConstants from './ViewConstants.js';
+import ViewConstants from '../../common/ViewConstants.js';
 
 // default dimensions of a paper, though it may change as components are added
 const WIDTH = 70;

@@ -6,7 +6,7 @@
 
 import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
-import ViewConstants from './ViewConstants.js';
+import ViewConstants from '../../common/ViewConstants.js';
 
 export default class CreatorView extends phet.scenery.Node {
 

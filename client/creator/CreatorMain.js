@@ -8,7 +8,6 @@ import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
 import CreatorControls from './react/CreatorControls.js';
 import CreatorView from './view/CreatorView.js';
-import ViewConstants from './view/ViewConstants.js';
 
 export default function CreatorMain( props ) {
   const scene = props.scene;
@@ -86,12 +85,6 @@ export default function CreatorMain( props ) {
       }
     }, true );
   };
-
-  // custom focus highlight colors for this display
-  phet.scenery.HighlightOverlay.setInnerHighlightColor( ViewConstants.focusHighlightColor );
-  phet.scenery.HighlightOverlay.setOuterHilightColor( ViewConstants.focusHighlightColor );
-  phet.scenery.HighlightOverlay.setInnerGroupHighlightColor( ViewConstants.focusHighlightColor );
-  phet.scenery.HighlightOverlay.setOuterGroupHighlightColor( ViewConstants.focusHighlightColor );
 
   return (
     <div>

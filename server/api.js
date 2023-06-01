@@ -1,10 +1,11 @@
 const express = require( 'express' );
 const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
+const { Configuration, OpenAIApi } = require( 'openai' );
 
-const router = express.Router();
-router.use( express.json() );
-router.use( require( 'nocache' )() );
+const paperLandRouter = express.Router();
+paperLandRouter.use( express.json() );
+paperLandRouter.use( require( 'nocache' )() );
 
 const knex = require( 'knex' )( require( '../knexfile' )[ process.env.NODE_ENV || 'development' ] );
 
@@ -17,7 +18,7 @@ const editorHandleDuration = 1500;
 /**
  * Get the current code for the specified space name and program number.
  */
-router.get( '/program.:spaceName.:number.js', ( req, res ) => {
+paperLandRouter.get( '/program.:spaceName.:number.js', ( req, res ) => {
   const { spaceName, number } = req.params;
   knex
     .select( 'currentCode' )
@@ -49,7 +50,7 @@ router.get( '/program.:spaceName.:number.js', ( req, res ) => {
  *
  * @param spacesList - A comma separated list of the space names to query, or '*' for all spaces.
  */
-router.get( '/api/program-summary-list/:spacesList', ( req, res ) => {
+paperLandRouter.get( '/api/program-summary-list/:spacesList', ( req, res ) => {
   const { spacesList } = req.params;
   let summaryQuery = knex.select( [ 'currentCode', 'number', 'spaceName' ] ).from( 'programs' );
 
@@ -71,7 +72,7 @@ router.get( '/api/program-summary-list/:spacesList', ( req, res ) => {
 } );
 
 // Get a list of all the spaces available in the DB.
-router.get( '/api/spaces-list', ( req, res ) => {
+paperLandRouter.get( '/api/spaces-list', ( req, res ) => {
   knex
     .distinct()
     .from( 'programs' )
@@ -85,7 +86,7 @@ router.get( '/api/spaces-list', ( req, res ) => {
 } );
 
 // Add a new space to the DB.
-router.get( '/api/add-space/:newSpaceName', ( req, res ) => {
+paperLandRouter.get( '/api/add-space/:newSpaceName', ( req, res ) => {
   console.log( `req.params.newSpaceName = ${req.params.newSpaceName}` );
   res.json( req.params );
 } );
@@ -122,7 +123,7 @@ function getSpaceData( req, callback ) {
     } );
 }
 
-router.get( '/api/spaces/:spaceName', ( req, res ) => {
+paperLandRouter.get( '/api/spaces/:spaceName', ( req, res ) => {
   getSpaceData( req, spaceData => {
     res.json( spaceData );
   } );
@@ -134,7 +135,7 @@ router.get( '/api/spaces/:spaceName', ( req, res ) => {
  * @param spaceName - The space to save the program to.
  */
 const maxNumber = 8400 / 4;
-router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
+paperLandRouter.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
   const { spaceName } = req.params;
 
   // extract code from the request
@@ -174,7 +175,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
 
 // Create a new snippet
 const maxSnippets = 500;
-router.post( '/api/snippets', ( req, res ) => {
+paperLandRouter.post( '/api/snippets', ( req, res ) => {
   const { snippetCode } = req.body;
   if ( !snippetCode ) {
     res.status( 400 ).send( 'Missing "code"' );
@@ -198,7 +199,7 @@ router.post( '/api/snippets', ( req, res ) => {
 } );
 
 // Save the program with the provided number to the provided space.
-router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
+paperLandRouter.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
   const { spaceName, number } = req.params;
   const { code } = req.body;
   if ( !code ) {
@@ -214,7 +215,7 @@ router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
 } );
 
 // Get all code snippets in the database
-router.get( '/api/snippets', ( req, res ) => {
+paperLandRouter.get( '/api/snippets', ( req, res ) => {
   knex
     .select( [ 'code', 'number' ] )
     .from( 'snippets' )
@@ -224,7 +225,7 @@ router.get( '/api/snippets', ( req, res ) => {
 } );
 
 // Save the snippet of the provided number
-router.put( '/api/snippets/:number', ( req, res ) => {
+paperLandRouter.put( '/api/snippets/:number', ( req, res ) => {
 
   const { number } = req.params;
   const { snippetCode } = req.body;
@@ -240,7 +241,7 @@ router.put( '/api/snippets/:number', ( req, res ) => {
     } );
 } );
 
-router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res ) => {
+paperLandRouter.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res ) => {
   const { spaceName, number } = req.params;
   const { printed } = req.body;
   if ( printed === undefined ) {
@@ -260,7 +261,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res )
 /**
  * Delete the specified program from the specified space.
  */
-router.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
+paperLandRouter.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
   const { spaceName, programNumber } = req.params;
   knex( 'programs' )
     .where( { spaceName, number: programNumber } )
@@ -270,7 +271,7 @@ router.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
     } );
 } );
 
-router.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) => {
+paperLandRouter.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) => {
   const { spaceName, number } = req.params;
 
   knex( 'programs' )
@@ -281,7 +282,7 @@ router.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) =>
     } );
 } );
 
-router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
+paperLandRouter.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
   const { spaceName, number } = req.params;
 
   knex
@@ -315,4 +316,58 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
     } );
 } );
 
-module.exports = router;
+//----------------------------------------------------------------------
+// Routes for the OpenAI requests
+//----------------------------------------------------------------------
+const openAIRouter = express.Router();
+openAIRouter.use( express.json() );
+openAIRouter.use( require( 'nocache' )() );
+
+// OpenAI configuration for requests
+const configuration = new Configuration( {
+  organization: process.env.OPENAI_ORGANIZATION,
+  apiKey: process.env.OPENAI_API_KEY
+} );
+const openai = new OpenAIApi( configuration );
+
+
+// Make a post to the openAI router. Recall that the path through this router
+// is /openai
+openAIRouter.post( '/', async ( req, res ) => {
+
+  try {
+
+    // To test responses
+    // res.json( {
+    //   choices: [ { text: 'This is a response' } ]
+    // } );
+
+    const prompt = req.body.prompt;
+    console.log( prompt );
+
+    const response = await openai.createCompletion( {
+      model: 'text-davinci-003',
+      prompt: prompt,
+      // max_tokens: 7,
+      // temperature: 0
+    } );
+
+    res.json( response.data );
+  }
+  catch( error ) {
+    if ( error.response ) {
+      res.json( error.response.data );
+    }
+    else {
+      res.json( {
+        data: {
+          error: {
+            message: error.message
+          }
+        }
+      } );
+    }
+  }
+} );
+
+module.exports = { paperLandRouter, openAIRouter };

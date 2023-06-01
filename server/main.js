@@ -1,6 +1,6 @@
-const api = require( './api' );
 const express = require( 'express' );
 const path = require( 'path' );
+const { paperLandRouter, openAIRouter } = require( './api.js' );
 
 express.static.mime.types.wasm = 'application/wasm';
 
@@ -12,13 +12,18 @@ const app = express();
 app.use( require( 'morgan' )( 'short' ) );
 app.use( require( 'heroku-ssl-redirect' )( [ 'production' ] ) );
 app.use( express.static( path.join( __dirname, '..', 'www' ) ) );
-app.use( api );
+app.use( '/', paperLandRouter );
+app.use( '/openai', openAIRouter );
 
 if ( process.env.NODE_ENV !== 'production' ) {
   const compiler = require( 'webpack' )( require( '../webpack.config.js' ) );
   app.use( require( 'webpack-dev-middleware' )( compiler ) );
 }
 
- 
+
 const port = process.env.PORT || 3000;
 app.listen( port, () => console.log( `Listening on port ${port}!` ) );
+
+if ( process.env.OPENAI_API_KEY && process.env.OPENAI_ORGANIZATION ) {
+  console.log( 'Key detected-----------------------------' );
+}

@@ -9,7 +9,8 @@ module.exports = {
     paper: [ './client/paper/entry.js' ],
     board: [ './client/board/entry.js' ],
     tests: [ './client/tests/entry.js' ],
-    creator: [ './client/creator/entry.js' ]
+    creator: [ './client/creator/entry.js' ],
+    creatorai: [ './client/creator-ai/entry.js' ]
   },
   output: {
     path: path.join( __dirname, 'www' ),

@@ -1,4 +1,4 @@
-import CustomButtonAppearanceStrategy from './CustomButtonAppearanceStrategy.js';
+import CustomButtonAppearanceStrategy from '../creator/view/CustomButtonAppearanceStrategy.js';
 
 const TEXT_FONT = new phet.scenery.Font( { size: 16 } );
 const TEXT_FILL_COLOR = new phet.scenery.Color( 189, 203, 218 );

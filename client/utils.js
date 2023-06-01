@@ -1,5 +1,10 @@
 import Matrix from 'node-matrices';
 
+// A function that takes a list of class name strings and combines them into a single string.
+export function combineClasses( ...classes ) {
+  return classes.join( ' ' );
+}
+
 export function norm( vector ) {
   if ( vector.x !== undefined ) {
     return norm( [ vector.x, vector.y ] );

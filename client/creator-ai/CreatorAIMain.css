@@ -1,0 +1,93 @@
+@value baseButtonColor: rgb(89, 93, 94);
+
+@value pressedButtonColor: rgb(54,56,57);
+
+@value buttonBorderColor: transparent;
+
+@value focusHighlightColor: #6C8EAC;
+
+/*background color for the page*/
+@value backgroundColor: #2E4152;
+
+@value textColor: #bdcbda;
+
+@value padding: 10px;
+
+:local(.container ) {
+  display: flex;
+  flex-direction: column;
+  row-gap: 20px;
+  height: 100vh;
+}
+
+:local(.row) {
+  display: flex;
+  flex-direction: column;
+  column-gap: 20px;
+  flex: 1;
+}
+
+/*applied to many panels in the board page*/
+:local(.panelClass) {
+  border-color: #6C8EAC;
+  border-style: solid;
+  color: textColor;
+  padding: 10px;
+  height: 100vh;
+  overflow: auto;
+}
+
+:local(.inputElement ) {
+  padding-top: padding;
+}
+
+/* Container for chat components, aligning them in a column and taking up full space (regardless of contents) */
+:local(.chatForm) {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Set the height of the parent container */
+}
+
+/* So that the chat input is at the bottom of the chat form */
+:local(.chatInput) {
+  margin-top: auto;
+}
+
+/* So that the chat output is above with a scrollbar */
+:local(.chatOutput) {
+  height: 85%;
+  overflow: auto;
+}
+
+/* Custom styling for list group items */
+:local(.listGroupItem ) {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+:local(.meChatItem) {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+:local(.botChatItem) {
+  background-color: #212f3a;
+  color: textColor;
+}
+
+/* Apply colors to the bootstrap icons */
+:local(.chatIcon ) {
+  scale: 1.5;
+  padding: padding;
+}
+
+:local(.chatMessage) {
+}
+
+:local(.iconWithMessage ) {
+  display: flex;
+  justify-content: flex-start;
+  /*align-content: flex-end;*/
+  gap: padding;
+}
+

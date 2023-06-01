@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect } from 'react';
+import ViewConstants from './ViewConstants.js';
 
 const SceneryDisplay = props => {
 
@@ -78,6 +79,12 @@ const SceneryDisplay = props => {
     phet.utteranceQueue.responseCollector.objectResponsesEnabledProperty.value = true;
     phet.utteranceQueue.responseCollector.contextResponsesEnabledProperty.value = true;
     phet.utteranceQueue.responseCollector.hintResponsesEnabledProperty.value = true;
+
+    // custom focus highlight colors for this display
+    phet.scenery.HighlightOverlay.setInnerHighlightColor( ViewConstants.focusHighlightColor );
+    phet.scenery.HighlightOverlay.setOuterHilightColor( ViewConstants.focusHighlightColor );
+    phet.scenery.HighlightOverlay.setInnerGroupHighlightColor( ViewConstants.focusHighlightColor );
+    phet.scenery.HighlightOverlay.setOuterGroupHighlightColor( ViewConstants.focusHighlightColor );
   }, [] );
 
   return <div id='scenery-display'></div>;

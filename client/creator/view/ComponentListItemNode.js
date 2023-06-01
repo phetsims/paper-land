@@ -1,5 +1,5 @@
 import ImageLoader from './ImageLoader.js';
-import ViewConstants from './ViewConstants.js';
+import ViewConstants from '../../common/ViewConstants.js';
 
 export default class ComponentListItemNode extends phet.scenery.Node {
   constructor( namedProperty, programWidth ) {
