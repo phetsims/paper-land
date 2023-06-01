@@ -11,11 +11,11 @@
   <figcaption></figcaption>
 </figure>
 
-## Augmented Reality Meets Multimodal Web Design
+## Interactive Play Meets Multimodal Web Development
 
-Paper Playground is an open-source tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space. It is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/). The tool focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
+Paper Playground is an open-source tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating the code in your **physical space**. It is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the library stack used by [PhET Interactive Simulations](https://www.github.com/phetsims/). The tool focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
 
-The primary purpose of Paper Playground is to enable expert developers and designers to rapidly iterate on stakeholder's ideas, especially when co-designing with non-technical stakeholders who have valuable feedback but no expertise to implement their ideas in real-time. By using Paper Playground, developers and designers can create inclusive and joyful web experiences by seamlessly weaving visuals, sounds, spoken descriptions, and other inputs and displays.
+The primary purpose of Paper Playground is to enable expert developers and designers to rapidly iterate on stakeholder's ideas, especially when co-designing with non-technical stakeholders who have valuable feedback but no expertise to implement their ideas, all while engaging in your physical space in real-time. By using Paper Playground, developers and designers can create inclusive and joyful web experiences by seamlessly weaving visuals, sounds, spoken descriptions, and other inputs and displays.
 
 <figure markdown>
   ![Paper Playground setup detecting paper programs that create a moon lander and control vertical thrust](assets/table-setup.png){ width=400 }

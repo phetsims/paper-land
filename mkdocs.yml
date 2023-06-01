@@ -120,17 +120,18 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Setup:
-      - Technical Recommendations: setup/specs.md
+      - Technical Recommendations: setup/reqs.md
       - Installation: setup/install.md
-      - Device Setup: setup/tutorial.md
-      - Program Recognition Tips: setup/camera-setup.md
+      - Device Setup: setup/legacy-tutorial.md
+      - Program Recognition Tips: setup/camera-tips.md
     - Documentation: 
-      - Board Implementation: use/board-implementation.md
+      - Tutorial: use/tutorial.md
       - Board API: use/board-api.md
-      - Legacy Paper API: use/paper-api.md
-      - Example Paper Program: use/paper-tutorial.md
+      - Example Paper Program: use/example-program.md
       - Model-View-Controller Framework: use/mvc.md
       - Downloads: use/resources.md
+      - Adding Libraries: use/extensions.md
+      - Legacy Paper API: use/paper-api.md
     - Community:
       - Join Us: community.md 
       - Contribute: CONTRIBUTING.md

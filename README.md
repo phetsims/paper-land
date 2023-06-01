@@ -1,21 +1,33 @@
-# Paper Playground 
+# Paper Playground - Interactive Paper Programming 
 
 > :warning: **This documentation is currently under construction - More details coming soon!** :warning:
 
-<figure markdown>
-  ![Hand placing colored dots on paper](assets/hand-with-dots.png){ width=300 }
-  <figcaption></figcaption>
-</figure>
+## Interactive Play Meets Multimodal Web Design
 
-## Augmented Reality Meets Multimodal Web Design
-
-Paper Playground is an open-source tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space. It is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/). The tool focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
+Paper Playground is an open-source tool for collaboratively designing multimodal web interactions by mapping JavaScript code to real pieces of paper and manipulating them in your physical space. It extends the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the API used by [PhET Interactive Simulations](https://www.github.com/phetsims/). The tool focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
 
 The primary purpose of Paper Playground is to enable expert developers and designers to rapidly iterate on stakeholder's ideas, especially when co-designing with non-technical stakeholders who have valuable feedback but no expertise to implement their ideas in real-time. By using Paper Playground, developers and designers can create inclusive and joyful web experiences by seamlessly weaving visuals, sounds, spoken descriptions, and other inputs and displays.
 
 ## What can you do with it?
+- Create {virtual experiences} that are responsive to the changes you make to real sheets of paper!
+- Create brand new interactive experiences that map real life movements to virtual displays and controls.
+- Take an existing idea and rapidly prototype enhancements by layering dynamic multimodal output inside of Paper Playground
+- Harness the features of the [PhET Library Stack](https://www.github.com/phetsims/community) including accessible interface components and streamlined multimodal integration.
 
-> :star: **We are in heavy development, and documentation is still being updated.** :star:
+Your goal is your own - Paper Playground extends paperprograms.org, which enables you to 
+write JavaScript code for any number of Programs that is linked to a physical piece of paper through detectable color dot sequences
+
+An API supports data and event sharing across papers and makes spatial information about each physical paper (position, size, overlap, and more) available to use in your code 
+
+Interactively play with your programs in real physical spaces, harnessing the spatial mapping between papers and code to change how your programs behave.
+
+Paper Playground scaffolds the addition and mapping of browser-friendly multimodal inputs and outputs (think sounds, text-to-speech, vibration, connection to other devices, and potentially more!) to the code you create.
+
+1. Design your interactive experience (game, simulation, virtual art piece, etc.)
+2. Create the data objects for your design (what parts of it change when someone interacts with it?)
+3. Share that data between different paper programs and set up events that trigger changes in your code when you make changes to the real papers in front of you.
+4. Easily add additional programs to control the data objects or multimodal display for your data objects (sounds, sonifications, music, speech) that is as dynamic as the code you create!
+
 
 For complete information on how to set up Paper Playground and begin creating and prototyping multimodal, interactive web experiences, please refer to the [Paper Playground Docs](https://phetsims.github.io/paper-land/).
 
