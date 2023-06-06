@@ -35,7 +35,7 @@
     "bootstrap": "^5.2.3",
     "bootstrap-switch-button-react": "^1.2.0",
     "brfs": "^2.0.2",
-    "color-diff": "^1.1.0",
+    "color-diff": "~1.1.0",
     "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
     "d3": "^5.0.0",

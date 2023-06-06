@@ -34,8 +34,7 @@ Every program you write is associated with a sequence of colored (black, red, gr
 
 ### What do I do now? How do I create programs, detect programs, set up my camera and space, and make things happen?
 
-#### Setup
-installation and device setup instruction.
+See Setup section for installation and device setup instruction. See Documentation section for information on creating and using paper programs.
 
 | Setup      | Documentation |
 | ----------- | ----------- |
@@ -44,9 +43,6 @@ installation and device setup instruction.
 | [Device Recommendations](./setup/reqs.md)   | [Example Paper Programs](./use/example-program.md) |
 | [Camera Setup Tips](./setup/camera-tips.md) | [Model-View-Controller Framework](./use/mvc.md)    |
 |                                             | [Resources and Downloads](./use/resources.md)      |
-
-#### Documentation
-information on creating paper programs.
 
 ## Join our Community! 
 
