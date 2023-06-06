@@ -28,14 +28,13 @@ Paper Playground scaffolds the addition and mapping of browser-friendly multimod
 3. Share that data between different paper programs and set up events that trigger changes in your code when you make changes to the real papers in front of you.
 4. Easily add additional programs to control the data objects or multimodal display for your data objects (sounds, sonifications, music, speech) that is as dynamic as the code you create!
 
-
 For complete information on how to set up Paper Playground and begin creating and prototyping multimodal, interactive web experiences, please refer to the [Paper Playground Docs](https://phetsims.github.io/paper-land/).
 
 This repository is dedicated to retaining the features of [Paper Programs](https://paperprograms.org). For the most accurate documentation regarding legacy features, refer to the [wonderful Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/).
 
 ## Installation
 
-The Paper Playground client runs locally and can utilize a remote database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
+The Paper Playground client runs locally, but can utilize a remote database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
 
 1. Install [Node.js/npm](https://nodejs.org/en/), [Git](https://git-scm.com/), and a command-line interface (e.g., Bash, Terminal, Command Prompt, etc.).
    > :red_circle: **Note:** Some users have reported issues installing newer versions of Node.js/npm on older macOS versions. Verify the last supported Node.js/npm version for your operating system.
@@ -54,9 +53,7 @@ The Paper Playground client runs locally and can utilize a remote database for c
 ### Local Database
 
 - You need to install [PostgreSQL](https://www.postgresql.org/download/) and set up a local database.
-- Refer to the [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms
-
-/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally) for detailed instructions and commands.
+- Refer to the [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally) for detailed instructions and commands.
 - Once you have set up a local database, you can find a copy of all paper programs, including functional examples like **altitude-demo**, **lunar-lander**, **density-demo**, **simple-demos**, and more, in the maintainer's remote database located at `root/paper-programs-backup`. Please note that some spaces contain individual test programs or works-in-progress and may not have functional paper programs.
 
 ### Recommended Start Up
@@ -91,7 +88,7 @@ For detailed answers to these questions and more helpful information on creating
 ### Tool
 :page_with_curl: More examples in the hosted database highlighting the power of multimodal design!
 
-:computer: A GUI for creating basic Papers without deep JavaScript knowledge!
+:computer: An interface for creating basic Papers without deep JavaScript knowledge!
 
 ## License
 

@@ -122,7 +122,7 @@ nav:
     - Setup:
       - Technical Recommendations: setup/reqs.md
       - Installation: setup/install.md
-      - Device Setup: setup/legacy-tutorial.md
+      - Device Setup: setup/device-setup.md
       - Program Recognition Tips: setup/camera-tips.md
     - Documentation: 
       - Tutorial: use/tutorial.md
@@ -130,8 +130,8 @@ nav:
       - Example Paper Program: use/example-program.md
       - Model-View-Controller Framework: use/mvc.md
       - Downloads: use/resources.md
-      - Adding Libraries: use/extensions.md
-      - Legacy Paper API: use/paper-api.md
+      # - Adding Libraries: use/extensions.md
+      # - Legacy Paper API: use/paper-api.md
     - Community:
       - Join Us: community.md 
       - Contribute: CONTRIBUTING.md

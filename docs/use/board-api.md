@@ -27,10 +27,10 @@ about the most heavily used PhET libraries, see
 - https://github.com/phetsims/sun (UI component library)
 - https://github.com/phetsims/tambo (Sound library)
 
-Please see https://github.com/janpaul123/paperprograms/blob/master/docs/api.md for the paper programs API.
+!!! info
+     Please see [Paper Programs API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md) for documentation on using paper data in the Projector display.
 
-Paper Land functions encourage the MVC software design pattern. Please
-see [mvc.md](https://github.com/phetsims/paper-land/blob/master/docs/use/mvc.md) for more information.
+Paper Playground Board functions encourage the [MVC software design pattern](./mvc.md).
 
 ---
 
