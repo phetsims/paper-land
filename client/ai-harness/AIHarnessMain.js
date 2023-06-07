@@ -40,6 +40,9 @@ export default function AIHarnessMain( props ) {
   // state for chunk overlap
   const [ chunkOverlap, setChunkOverlap ] = useState( 25 );
 
+  // state for whether we are using contextual compression
+  const [ useContextualCompression, setUseContextualCompression ] = useState( true );
+
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
     {
@@ -176,6 +179,7 @@ export default function AIHarnessMain( props ) {
     } );
 
     const data = await response.json();
+    console.log( data );
 
     if ( data.text ) {
       await setChatLog( [ ...newChatLog, { user: 'ai', message: data.text, type: 'chat' } ] );
@@ -238,6 +242,7 @@ export default function AIHarnessMain( props ) {
               <Form.Select
                 value={selectedEngine}
                 onChange={event => setSelectedEngine( event.target.value )}
+                disabled={!useContextualCompression}
               >
                 {
                   engines.map( ( engine, index ) => <option key={`${engine}-${index}`}>{engine}</option> )
@@ -264,6 +269,24 @@ export default function AIHarnessMain( props ) {
                   multiple={true}
                   onChange={uploadTrainingDocuments}/>
               </Form.Group>
+            </div>
+            <div>
+              <Form.Check
+                type={'checkbox'}
+                checked={useContextualCompression}
+                onChange={
+                  event => {
+                    setUseContextualCompression( event.target.checked );
+
+                    // if not using contextual compression, gpt-3.5-turbo is the only model we can use
+                    if ( !event.target.checked ) {
+                      setSelectedEngine( 'gpt-3.5-turbo' );
+                    }
+                  }
+                }
+                id={'use-contextual-compression'}
+                label={'Use Contextual Compression'}
+              />
             </div>
             <div>
               <Form.Label>{`Chunk Size: ${chunkSize}`}</Form.Label>

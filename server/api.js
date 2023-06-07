@@ -364,7 +364,8 @@ if ( process.env.OPENAI_API_KEY ) {
         temperature: req.body.temperature,
         modelName: req.body.modelName,
         splitterChunkSize: req.body.splitterChunkSize,
-        splitterChunkOverlap: req.body.splitterChunkOverlap
+        splitterChunkOverlap: req.body.splitterChunkOverlap,
+        useContextualCompression: req.body.useContextualCompression
       } );
       res.json( response );
     }

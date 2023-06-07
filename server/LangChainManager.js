@@ -1,6 +1,5 @@
 const { HumanChatMessage, SystemChatMessage } = require( 'langchain/schema' );
-const { ChatOpenAI } = require( 'langchain/chat_models/openai' );
-const { OpenAI } = require( 'langchain/llms/openai' );
+const { ChatOpenAI, OpenAI } = require( 'langchain/chat_models/openai' );
 const { RetrievalQAChain } = require( 'langchain/chains' );
 const { SupportedTextSplitterLanguages, RecursiveCharacterTextSplitter } = require( 'langchain/text_splitter' );
 const { OpenAIEmbeddings } = require( 'langchain/embeddings/openai' );
@@ -20,14 +19,6 @@ const configuration = new Configuration( {
   apiKey: process.env.OPENAI_API_KEY
 } );
 const openai = new OpenAIApi( configuration );
-
-// const chatModel = new ChatOpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.0 } );
-// const model = new OpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.0 } );
-
-// console.log( SupportedTextSplitterLanguages ); // Array of supported languages
-
-// const sceneryDoc = fs.readFileSync( './server/training-files/scenery-doc.md', 'utf8' );
-// const paperLandDoc = fs.readFileSync( './docs/use/board-api.md', 'utf8' );
 
 // Traning documents will be read when uploaded and stored in this array.
 const trainingDocuments = [];
@@ -93,9 +84,9 @@ class LangChainManager {
       temperature: 0.0,
       modelName: 'gpt-3.5-turbo',
       splitterChunkSize: 128,
-      splitterChunkOverlap: 25
+      splitterChunkOverlap: 25,
+      useContextualCompression: false
     }, options );
-
 
     // Temperature needs to be within 0 and 1 and a number
     const temperature = Math.min( Math.max( parseInt( options.temperature, 10 ), 0.0 ), 1.0 );
@@ -103,14 +94,6 @@ class LangChainManager {
     // enforce numbers
     const splitterChunkSize = parseInt( options.splitterChunkSize, 10 );
     const splitterChunkOverlap = parseInt( options.splitterChunkOverlap, 10 );
-
-    const chatModel = new OpenAI( {
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      temperature: temperature,
-      modelName: options.modelName
-    } );
-
-    const baseCompressor = LLMChainExtractor.fromLLM( chatModel );
 
     const splitter = RecursiveCharacterTextSplitter.fromLanguage( 'markdown', {
       chunkSize: splitterChunkSize,
@@ -123,25 +106,56 @@ class LangChainManager {
     }
     const documents = await splitter.createDocuments( trainingDocuments );
 
-    // Create a vector store from the documents.
-    const vectorStore = await HNSWLib.fromDocuments( documents, new OpenAIEmbeddings() );
+    if ( options.useContextualCompression ) {
 
-    // Set up a retreiver that will only include the relevant portions of the documentation to include
-    // in the query.
-    const retriever = new ContextualCompressionRetriever( {
-      baseCompressor,
-      baseRetriever: vectorStore.asRetriever()
-    } );
-    const chain = RetrievalQAChain.fromLLM( chatModel, retriever );
+      const chatModel = new OpenAI( {
+        openAIApiKey: process.env.OPENAI_API_KEY,
+        temperature: temperature,
+        modelName: options.modelName
+      } );
 
-    // const relevantDocuments = retriever.getRelevantDocuments( 'What code should I write to draw a circle using scenery?' );
-    // console.log( relevantDocuments );
+      // Create a vector store from the documents.
+      const vectorStore = await HNSWLib.fromDocuments( documents, new OpenAIEmbeddings() );
 
-    // Returns an object with { text: string }
-    const res = await chain.call( {
-      query: prompt
-    } );
-    return res;
+      const baseCompressor = LLMChainExtractor.fromLLM( chatModel );
+
+      // Set up a retreiver that will only include the relevant portions of the documentation to include
+      // in the query.
+      const retriever = new ContextualCompressionRetriever( {
+        baseCompressor,
+        baseRetriever: vectorStore.asRetriever()
+      } );
+      const chain = RetrievalQAChain.fromLLM( chatModel, retriever );
+
+      // const relevantDocuments = retriever.getRelevantDocuments( 'What code should I write to draw a circle using scenery?' );
+      // console.log( relevantDocuments );
+
+      // Returns an object with { text: string }
+      const res = await chain.call( {
+        query: prompt
+      } );
+      return res;
+    }
+    else {
+
+      // A chat model is the only model that lets us submit many messages for a response. We must use
+      // gpt-3.5-turbo for this.
+      const chatModel = new ChatOpenAI( {
+        openAIApiKey: process.env.OPENAI_API_KEY,
+        temperature: temperature
+      } );
+
+      // Just feed every document into the AI with a series of messages and then the prompt.
+      const messages = documents.map( doc => new SystemChatMessage( doc.pageContent ) );
+      messages.push( new HumanChatMessage( prompt ) );
+
+      // Returns an AIChatMessage with structure { type: 'ai', content: string } when converted to JSON, so
+      // we just return the text.
+      const response = await chatModel.call( messages );
+      return {
+        text: response.text
+      };
+    }
   }
 
   /**
