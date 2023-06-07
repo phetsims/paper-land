@@ -11,6 +11,8 @@ const fs = require( 'fs' );
 const _ = require( 'lodash' );
 const { Configuration, OpenAIApi } = require( 'openai' );
 
+const DEBUG_RESPONSES = false;
+
 // Basic set up directly to OpenAI API (not through LangChain) - so we can request
 // available engines and other data
 const configuration = new Configuration( {
@@ -22,10 +24,13 @@ const openai = new OpenAIApi( configuration );
 // const chatModel = new ChatOpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.0 } );
 // const model = new OpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.0 } );
 
-console.log( SupportedTextSplitterLanguages ); // Array of supported languages
+// console.log( SupportedTextSplitterLanguages ); // Array of supported languages
 
-const sceneryDoc = fs.readFileSync( './server/training-files/scenery-doc.md', 'utf8' );
-const paperLandDoc = fs.readFileSync( './docs/use/board-api.md', 'utf8' );
+// const sceneryDoc = fs.readFileSync( './server/training-files/scenery-doc.md', 'utf8' );
+// const paperLandDoc = fs.readFileSync( './docs/use/board-api.md', 'utf8' );
+
+// Traning documents will be read when uploaded and stored in this array.
+const trainingDocuments = [];
 
 class LangChainManager {
   constructor() {}
@@ -35,13 +40,24 @@ class LangChainManager {
    * @return {Promise<*>}
    */
   static async connect() {
-    const chatModel = new ChatOpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.5 } );
-    const response = await chatModel.call( [
-      new SystemChatMessage(
-        'Checking OpenAI connection...'
-      )
-    ] );
-    return response;
+    if ( DEBUG_RESPONSES ) {
+      return {
+        text: 'Connection successful! (Test mode)'
+      };
+    }
+    else {
+      const chatModel = new ChatOpenAI( { openAIApiKey: process.env.OPENAI_API_KEY, temperature: 0.5 } );
+      const response = await chatModel.call( [
+        new SystemChatMessage(
+          'Checking OpenAI connection...'
+        )
+      ] );
+
+      // Provide the format of chain.call, so client code uses the same API
+      return {
+        text: response.text
+      };
+    }
   }
 
   /**
@@ -50,10 +66,15 @@ class LangChainManager {
    * @return {Promise<string[]>}
    */
   static async getEngines() {
-    const response = await openai.listEngines();
-    const engines = response.data.data;
-    const engineNames = engines.map( engine => engine.id );
-    return engineNames;
+    if ( DEBUG_RESPONSES ) {
+      return [ 'gpt-3.5-turbo', 'curie', 'babbage', 'ada' ];
+    }
+    else {
+      const response = await openai.listEngines();
+      const engines = response.data.data;
+      const engineNames = engines.map( engine => engine.id );
+      return engineNames;
+    }
   }
 
   /**
@@ -62,6 +83,11 @@ class LangChainManager {
    * @return {Promise<*>}
    */
   static async testQuery( prompt, options ) {
+    if ( DEBUG_RESPONSES ) {
+      return {
+        text: 'This is a test response from the server.'
+      };
+    }
 
     options = _.merge( {
       temperature: 0.0,
@@ -71,7 +97,7 @@ class LangChainManager {
     // Temperature needs to be within 0 and 1
     const temperature = Math.min( Math.max( options.temperature, 0.0 ), 1.0 );
 
-    console.log( 'teemperature', temperature );
+    console.log( 'temperature', temperature );
     console.log( 'modelName', options.modelName );
 
     const chatModel = new OpenAI( {
@@ -90,7 +116,8 @@ class LangChainManager {
       chunkOverlap: 25
     } );
 
-    const documents = await splitter.createDocuments( [ sceneryDoc ] );
+    // Create documents from the training documents.
+    const documents = await splitter.createDocuments( trainingDocuments );
 
     // Create a vector store from the documents.
     const vectorStore = await HNSWLib.fromDocuments( documents, new OpenAIEmbeddings() );
@@ -110,6 +137,30 @@ class LangChainManager {
       query: prompt
     } );
     return res;
+  }
+
+  /**
+   * Upload training documents for the model to use.
+   * @param files
+   * @return {Promise<void>}
+   */
+  static async uploadTrainingDocuments( files ) {
+
+    console.log( files );
+
+    // clear documents on a new upload
+    trainingDocuments.length = 0;
+
+    // Process the uploaded files
+    files.forEach( file => {
+      const fileContents = fs.readFileSync( file.path, 'utf-8' );
+      trainingDocuments.push( fileContents );
+    } );
+
+    // delete the uploaded files after reading contents
+    files.forEach( file => {
+      fs.unlinkSync( file.path );
+    } );
   }
 }
 

@@ -3,6 +3,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import Alert from 'react-bootstrap/Alert';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -27,6 +28,12 @@ export default function AIHarnessMain( props ) {
   // add react state for input an chatLog
   const [ input, setInput ] = useState( '' );
 
+  // state for the alert content
+  const [ alertContent, setAlertContent ] = useState( '' );
+
+  // state for whether the alert should be shown
+  const [ showAlert, setShowAlert ] = useState( false );
+
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
     {
@@ -45,6 +52,15 @@ export default function AIHarnessMain( props ) {
 
   // A ref to the last chat item, so we can scroll it into view
   const lastItemRef = useRef( null );
+
+  const showAlertPopup = ( contentString ) => {
+    setAlertContent( contentString );
+    setShowAlert( true );
+
+    setTimeout( () => {
+      setShowAlert( false );
+    }, 2000 );
+  };
 
   // Whenever an item is added to the chat log, scroll it into view
   useEffect( () => {
@@ -73,7 +89,7 @@ export default function AIHarnessMain( props ) {
           }
         } );
         const jsonData = await connectionResponse.json();
-        await addChatMessage( jsonData.data.content, 'ai', 'chat' );
+        await addChatMessage( jsonData.text, 'ai', 'chat' );
 
         // If connection is successful, get the list of available engines
         const engineResponse = await fetch( 'http://localhost:3000/openai/engines', {
@@ -99,6 +115,29 @@ export default function AIHarnessMain( props ) {
 
     checkConnection();
   }, [] );
+
+  const uploadTrainingDocuments = async event => {
+    const files = [ ...event.target.files ];
+
+    const formData = new FormData();
+    files.forEach( file => {
+      formData.append( 'files', file );
+    } );
+
+    const response = await fetch( 'http://localhost:3000/openai/uploadDocuments', {
+      method: 'POST',
+      body: formData
+    } );
+
+    const responseData = await response.json();
+
+    if ( responseData.success ) {
+      showAlertPopup( `Upload success - ${responseData.numberOfFiles} files` );
+    }
+    else {
+      showAlertPopup( 'Upload failure' );
+    }
+  };
 
   const handleSubmit = async event => {
 
@@ -142,62 +181,86 @@ export default function AIHarnessMain( props ) {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={combineClasses( styles.row, styles.panelClass, styles.chatRow )}>
-        <div className={styles.chatForm}>
-          <div className={styles.chatOutput}>
-            <ListGroup variant='flush'>
-              {
-                chatLog.map( ( logItem, index ) => (
-                  <span key={index} ref={index === chatLog.length - 1 ? lastItemRef : null}>
+    <div>
+      <div className={styles.alert}>
+        <Alert
+          show={showAlert}
+          variant={'secondary'}
+          style={{
+
+            // makes the alert only as big as its contents
+            display: 'inline-block'
+          }}
+        >
+          <Alert.Heading>{alertContent}</Alert.Heading>
+        </Alert>
+      </div>
+      <div className={styles.container}>
+        <div className={combineClasses( styles.row, styles.panelClass, styles.chatRow )}>
+          <div className={styles.chatForm}>
+            <div className={styles.chatOutput}>
+              <ListGroup variant='flush'>
+                {
+                  chatLog.map( ( logItem, index ) => (
+                    <span key={index} ref={index === chatLog.length - 1 ? lastItemRef : null}>
                     <ChatItem user={logItem.user} message={logItem.message} type={logItem.type}/>
                   </span>
-                ) )
-              }
-            </ListGroup>
-          </div>
-          <div className={styles.chatInput}>
-            <form onSubmit={handleSubmit}>
-              <Form.Control
-                type='text'
-                rows={3}
-                disabled={waiting}
-                placeholder={waiting ? 'Waiting for response...' : 'Enter a prompt...'}
-                value={input}
-                onChange={event => setInput( event.target.value )}
-              />
-            </form>
-          </div>
-        </div>
-      </div>
-      <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}>
-        <div className={styles.controlsColumn}>
-          <div>
-            <Form.Label>Engine</Form.Label>
-            <Form.Select
-              value={selectedEngine}
-              onChange={event => setSelectedEngine( event.target.value )}
-            >
-              {
-                engines.map( ( engine, index ) => <option key={`${engine}-${index}`}>{engine}</option> )
-              }
-            </Form.Select>
-          </div>
-          <div>
-            <Form.Label>Temperature</Form.Label>
-            <Form.Range
-              value={temperature}
-              min={0}
-              max={1}
-              step={0.01}
-              onChange={event => setTemperature( event.target.value )}/>
+                  ) )
+                }
+              </ListGroup>
+            </div>
+            <div className={styles.chatInput}>
+              <form onSubmit={handleSubmit}>
+                <Form.Control
+                  type='text'
+                  rows={3}
+                  disabled={waiting}
+                  placeholder={waiting ? 'Waiting for response...' : 'Enter a prompt...'}
+                  value={input}
+                  onChange={event => setInput( event.target.value )}
+                />
+              </form>
+            </div>
           </div>
         </div>
-        <div className={styles.controlsColumn}>
+        <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}>
+          <div className={styles.controlsColumn}>
+            <div>
+              <Form.Label>Engine</Form.Label>
+              <Form.Select
+                value={selectedEngine}
+                onChange={event => setSelectedEngine( event.target.value )}
+              >
+                {
+                  engines.map( ( engine, index ) => <option key={`${engine}-${index}`}>{engine}</option> )
+                }
+              </Form.Select>
+            </div>
+            <div>
+              <Form.Label>{`Temperature: ${temperature}`}</Form.Label>
+              <Form.Range
+                value={temperature}
+                min={0}
+                max={1}
+                step={0.01}
+                onChange={event => setTemperature( event.target.value )}/>
+            </div>
+          </div>
+          <div className={styles.controlsColumn}>
+            <div>
+              <Form.Group>
+                <Form.Label>Training documents</Form.Label>
+                <Form.Control
+                  type='file'
+                  accept='.md, .js'
+                  multiple={true}
+                  onChange={uploadTrainingDocuments}/>
+              </Form.Group>
+            </div>
+          </div>
+          <div className={styles.controlsColumn}>
 
-        </div>
-        <div className={styles.controlsColumn}>
-
+          </div>
         </div>
       </div>
     </div>

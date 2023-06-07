@@ -325,6 +325,10 @@ openAIRouter.use( require( 'nocache' )() );
 if ( process.env.OPENAI_API_KEY ) {
   const LangChainManager = require( './LangChainManager.js' );
 
+  // to support uploading training documents, multer saves files to a destination
+  const multer = require( 'multer' );
+  const upload = multer( { dest: 'uploads/' } );
+
   openAIRouter.post( '/connect', async ( req, res ) => {
     try {
       const response = await LangChainManager.connect();
@@ -383,6 +387,27 @@ if ( process.env.OPENAI_API_KEY ) {
     }
     catch( error ) {
       res.json( error );
+    }
+  } );
+
+  /**
+   * /openai/uploadDocuments will upload the provided training documents to an 'uploads' folder
+   * so they an be read by the LangChainManager and used for training.
+   *
+   * req.body should be FormData with each File appended to the 'files' key. Currently, 10 files
+   * can be uploaded at a time (max).
+   */
+  openAIRouter.post( '/uploadDocuments', upload.array( 'files', 10 ), async ( req, res ) => {
+    try {
+
+      const files = req.files;
+      await LangChainManager.uploadTrainingDocuments( files );
+
+      // Send a response back to the client
+      res.json( { success: true, numberOfFiles: files.length } );
+    }
+    catch( error ) {
+      console.log( { success: false } );
     }
   } );
 }
