@@ -1,5 +1,6 @@
 const { HumanChatMessage, SystemChatMessage } = require( 'langchain/schema' );
-const { ChatOpenAI, OpenAI } = require( 'langchain/chat_models/openai' );
+const { ChatOpenAI } = require( 'langchain/chat_models/openai' );
+const { OpenAI } = require( 'langchain/llms/openai' );
 const { RetrievalQAChain } = require( 'langchain/chains' );
 const { SupportedTextSplitterLanguages, RecursiveCharacterTextSplitter } = require( 'langchain/text_splitter' );
 const { OpenAIEmbeddings } = require( 'langchain/embeddings/openai' );
@@ -21,7 +22,7 @@ const configuration = new Configuration( {
 const openai = new OpenAIApi( configuration );
 
 // Traning documents will be read when uploaded and stored in this array.
-const trainingDocuments = [];
+const trainingDocumentPaths = [];
 
 class LangChainManager {
   constructor() {}
@@ -101,11 +102,19 @@ class LangChainManager {
     } );
 
     // Create documents from the training documents.
-    if ( trainingDocuments.length === 0 ) {
+    if ( trainingDocumentPaths.length === 0 ) {
       throw new Error( 'No training documents have been uploaded yet.' );
     }
-    const documents = await splitter.createDocuments( trainingDocuments );
 
+    // We have to re-read the document each time because the user is likely editing these files
+    const documentContents = [];
+    trainingDocumentPaths.forEach( filePath => {
+      const fileContents = fs.readFileSync( filePath, 'utf-8' );
+      documentContents.push( fileContents );
+    } );
+    const documents = await splitter.createDocuments( documentContents );
+
+    console.log( 'COMPRESSION', options.useContextualCompression );
     if ( options.useContextualCompression ) {
 
       const chatModel = new OpenAI( {
@@ -147,6 +156,7 @@ class LangChainManager {
 
       // Just feed every document into the AI with a series of messages and then the prompt.
       const messages = documents.map( doc => new SystemChatMessage( doc.pageContent ) );
+      messages.push( new HumanChatMessage( 'Please do your best to provide code samples for the following request. If you are unsure of your response DO NOT generate any code.' ) );
       messages.push( new HumanChatMessage( prompt ) );
 
       // Returns an AIChatMessage with structure { type: 'ai', content: string } when converted to JSON, so
@@ -166,18 +176,17 @@ class LangChainManager {
   static async uploadTrainingDocuments( files ) {
 
     // clear documents on a new upload
-    trainingDocuments.length = 0;
+    trainingDocumentPaths.length = 0;
 
     // Process the uploaded files
     files.forEach( file => {
-      const fileContents = fs.readFileSync( file.path, 'utf-8' );
-      trainingDocuments.push( fileContents );
+      trainingDocumentPaths.push( file.path );
     } );
 
     // delete the uploaded files after reading contents
-    files.forEach( file => {
-      fs.unlinkSync( file.path );
-    } );
+    // files.forEach( file => {
+    //   fs.unlinkSync( file.path );
+    // } );
   }
 }
 

@@ -74,7 +74,7 @@ export default function AIHarnessMain( props ) {
   // Whenever an item is added to the chat log, scroll it into view
   useEffect( () => {
     if ( lastItemRef.current ) {
-      lastItemRef.current.scrollTop = lastItemRef.current.scrollHeight;
+      lastItemRef.current.scrollIntoView();
     }
   }, [ chatLog ] );
 
@@ -173,7 +173,8 @@ export default function AIHarnessMain( props ) {
         temperature: temperature,
         modelName: selectedEngine,
         splitterChunkSize: chunkSize,
-        splitterChunkOverlap: chunkOverlap
+        splitterChunkOverlap: chunkOverlap,
+        useContextualCompression: useContextualCompression
       } )
       // body: JSON.stringify( { prompt: allMessages } )
     } );
