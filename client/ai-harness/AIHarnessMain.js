@@ -2,9 +2,11 @@
  * Main react component for the AI Harness page.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { combineClasses } from '../utils.js';
 import styles from './AIHarnessMain.css';
 
@@ -28,6 +30,16 @@ export default function AIHarnessMain( props ) {
       type: 'chat'
     }
   ] );
+
+  // A ref to the last chat item, so we can scroll it into view
+  const lastItemRef = useRef( null );
+
+  // Whenever an item is added to the chat log, scroll it into view
+  useEffect( () => {
+    if ( lastItemRef.current ) {
+      lastItemRef.current.scrollIntoView();
+    }
+  }, [ chatLog ] );
 
   const addChatMessage = async ( message, user, type ) => {
     const newChatLog = [ ...chatLog, { user: user, message: message, type: type } ];
@@ -80,7 +92,6 @@ export default function AIHarnessMain( props ) {
     } );
 
     const data = await response.json();
-    console.log( data );
 
     if ( data.text ) {
       await setChatLog( [ ...newChatLog, { user: 'ai', message: data.text, type: 'chat' } ] );
@@ -99,7 +110,9 @@ export default function AIHarnessMain( props ) {
             <ListGroup variant='flush'>
               {
                 chatLog.map( ( logItem, index ) => (
-                  <ChatItem key={index} user={logItem.user} message={logItem.message} type={logItem.type}/>
+                  <span key={index} ref={index === chatLog.length - 1 ? lastItemRef : null}>
+                    <ChatItem user={logItem.user} message={logItem.message} type={logItem.type}/>
+                  </span>
                 ) )
               }
             </ListGroup>
@@ -122,7 +135,24 @@ export default function AIHarnessMain( props ) {
   );
 }
 
+function splitCodeSnippets( inputString ) {
+
+  // Define the regular expression pattern
+  const pattern = /(```[\s\S]*?```|\n\n)/;
+
+  // Split the string using the pattern
+  const substrings = inputString.split( pattern );
+
+  // Remove empty substrings
+  const filteredStrings = substrings.filter( substring => substring.trim() !== '' );
+
+  return filteredStrings;
+}
+
 function ChatItem( props ) {
+
+  const subStrings = splitCodeSnippets( props.message );
+
   return (
     <ListGroup.Item className={props.user === 'me' ? styles.meChatItem : styles.botChatItem}>
       <div className={styles.iconWithMessage}>
@@ -133,7 +163,23 @@ function ChatItem( props ) {
             <img className={styles.chatIcon} src={'./media/images/ai-icon.svg'}></img>
           }
         </div>
-        <span className={styles.chatMessage}>{props.message}</span>
+        <div>
+          {
+            subStrings.map( ( subString, index ) => {
+              if ( subString.includes( '```' ) ) {
+                const withoutTicks = subString.replaceAll( '```js', '' ).replaceAll( '```', '' ).trim();
+                return ( <div key={index}>
+                  <SyntaxHighlighter language='javascript' style={darcula}>
+                    {withoutTicks}
+                  </SyntaxHighlighter>
+                </div> );
+              }
+              else {
+                return subString;
+              }
+            } )
+          }
+        </div>
       </div>
     </ListGroup.Item>
   );
