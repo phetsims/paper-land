@@ -10,7 +10,7 @@ module.exports = {
     board: [ './client/board/entry.js' ],
     tests: [ './client/tests/entry.js' ],
     creator: [ './client/creator/entry.js' ],
-    creatorai: [ './client/creator-ai/entry.js' ]
+    aiharness: [ './client/ai-harness/entry.js' ]
   },
   output: {
     path: path.join( __dirname, 'www' ),

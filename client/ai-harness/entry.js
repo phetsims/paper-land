@@ -8,7 +8,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CreatorAIMain from './CreatorAIMain.js';
+import AIHarnessMain from './AIHarnessMain.js';
 
 // Create the root element for React.
 const simDisplayDiv = document.getElementById( 'creator-root-element' );
@@ -18,6 +18,6 @@ document.body.appendChild( simDisplayDiv );
 const scene = new phet.scenery.Node();
 
 ReactDOM.render(
-  <CreatorAIMain scene={scene}></CreatorAIMain>,
+  <AIHarnessMain scene={scene}></AIHarnessMain>,
   simDisplayDiv
 );

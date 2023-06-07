@@ -27,6 +27,14 @@
   flex: 1;
 }
 
+:local( .chatRow ) {
+  flex: 3;
+}
+
+:local(.controlsRow ){
+  flex: 1;
+}
+
 /*applied to many panels in the board page*/
 :local(.panelClass) {
   border-color: #6C8EAC;

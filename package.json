@@ -42,8 +42,10 @@
     "dotenv": "^4.0.0",
     "express": "^4.16.2",
     "heroku-ssl-redirect": "0.0.4",
+    "hnswlib-node": "^1.4.2",
     "json-loader": "^0.5.7",
     "knex": "^0.21.1",
+    "langchain": "^0.0.91",
     "lodash": "^4.17.5",
     "morgan": "^1.9.0",
     "nocache": "^2.0.0",
@@ -67,8 +69,8 @@
     "@babel/eslint-parser": "~7.19.1",
     "eslint": "~8.28.0",
     "eslint-plugin-react": "^7.31.11",
-    "qunit": "~2.19.4",
     "nodemon": "^1.17.1",
+    "qunit": "~2.19.4",
     "webpack-dev-middleware": "^6.0.1",
     "webpack-dev-server": "^4.11.1"
   }

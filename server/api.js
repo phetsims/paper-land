@@ -1,7 +1,6 @@
 const express = require( 'express' );
 const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
-const { Configuration, OpenAIApi } = require( 'openai' );
 
 const paperLandRouter = express.Router();
 paperLandRouter.use( express.json() );
@@ -317,57 +316,53 @@ paperLandRouter.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, re
 } );
 
 //----------------------------------------------------------------------
-// Routes for the OpenAI requests
+// Routes for the OpenAI requests - ALL ROUTES HERE GO THROUGH /openai
 //----------------------------------------------------------------------
 const openAIRouter = express.Router();
 openAIRouter.use( express.json() );
 openAIRouter.use( require( 'nocache' )() );
 
-// OpenAI configuration for requests
-const configuration = new Configuration( {
-  organization: process.env.OPENAI_ORGANIZATION,
-  apiKey: process.env.OPENAI_API_KEY
-} );
-const openai = new OpenAIApi( configuration );
+if ( process.env.OPENAI_API_KEY ) {
+  const LangChainManager = require( './LangChainManager.js' );
 
-
-// Make a post to the openAI router. Recall that the path through this router
-// is /openai
-openAIRouter.post( '/', async ( req, res ) => {
-
-  try {
-
-    // To test responses
-    // res.json( {
-    //   choices: [ { text: 'This is a response' } ]
-    // } );
-
-    const prompt = req.body.prompt;
-    console.log( prompt );
-
-    const response = await openai.createCompletion( {
-      model: 'text-davinci-003',
-      prompt: prompt,
-      // max_tokens: 7,
-      // temperature: 0
-    } );
-
-    res.json( response.data );
-  }
-  catch( error ) {
-    if ( error.response ) {
-      res.json( error.response.data );
+  openAIRouter.post( '/connect', async ( req, res ) => {
+    try {
+      const response = await LangChainManager.connect();
+      res.json( response );
     }
-    else {
+    catch( error ) {
+      res.json( error );
+    }
+  } );
+
+  /**
+   * Make a query request to the OpenAI API, using LangChain.
+   */
+  openAIRouter.post( '/query', async ( req, res ) => {
+
+    // model
+    // temperature
+    // maxTokens
+    // training documents to include
+    // Use Vector Store and Retriever
+    // Split Chunk Size
+    // Split Chunk Overlap
+    // Verbose in chaining
+
+    try {
+      const prompt = req.body.prompt;
+      const response = await LangChainManager.testQuery( prompt );
+      res.json( response );
+    }
+    catch( error ) {
+      console.log( error );
       res.json( {
-        data: {
-          error: {
-            message: error.message
-          }
+        error: {
+          message: 'ERROR MAKING REQUEST'
         }
       } );
     }
-  }
-} );
+  } );
+}
 
 module.exports = { paperLandRouter, openAIRouter };
