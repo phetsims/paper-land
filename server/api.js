@@ -337,6 +337,11 @@ if ( process.env.OPENAI_API_KEY ) {
 
   /**
    * Make a query request to the OpenAI API, using LangChain.
+   * The following arguments need to be in the request body:
+   *
+   * @param {string} prompt - The prompt to send to the API.
+   * @param {string} [modelName] - The engine to use for the request.
+   * @param {number} [temperature] - The temperature to use for the request.
    */
   openAIRouter.post( '/query', async ( req, res ) => {
 
@@ -351,7 +356,11 @@ if ( process.env.OPENAI_API_KEY ) {
 
     try {
       const prompt = req.body.prompt;
-      const response = await LangChainManager.testQuery( prompt );
+
+      const response = await LangChainManager.testQuery( prompt, {
+        temperature: req.body.temperature,
+        modelName: req.body.modelName
+      } );
       res.json( response );
     }
     catch( error ) {
@@ -361,6 +370,19 @@ if ( process.env.OPENAI_API_KEY ) {
           message: 'ERROR MAKING REQUEST'
         }
       } );
+    }
+  } );
+
+  /**
+   * Ask OpenAI for the available chat engines.
+   */
+  openAIRouter.get( '/engines', async ( req, res ) => {
+    try {
+      const response = await LangChainManager.getEngines();
+      res.json( response );
+    }
+    catch( error ) {
+      res.json( error );
     }
   } );
 }

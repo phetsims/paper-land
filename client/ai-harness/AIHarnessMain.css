@@ -11,6 +11,8 @@
 
 @value textColor: #bdcbda;
 
+@value borderColor: #6C8EAC;
+
 @value padding: 10px;
 
 :local(.container ) {
@@ -31,13 +33,25 @@
   flex: 3;
 }
 
-:local(.controlsRow ){
+:local(.controlsRow ) {
   flex: 1;
+
+  /*because this row will contain columns of controls*/
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+:local(.controlsColumn ) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
 }
 
 /*applied to many panels in the board page*/
 :local(.panelClass) {
-  border-color: #6C8EAC;
+  border-color: borderColor;
   border-style: solid;
   color: textColor;
   padding: 10px;
@@ -97,5 +111,19 @@
   justify-content: flex-start;
   /*align-content: flex-end;*/
   gap: padding;
+}
+
+input[type='range']::-webkit-slider-thumb {
+  background: borderColor !important;
+}
+
+/* All the same stuff for Firefox */
+input[type='range']::-moz-range-thumb {
+  background: borderColor !important;
+}
+
+/* All the same stuff for IE */
+input[type='range']::-ms-thumb {
+  background: borderColor !important;
 }
 

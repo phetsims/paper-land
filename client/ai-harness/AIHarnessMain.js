@@ -12,6 +12,18 @@ import styles from './AIHarnessMain.css';
 
 export default function AIHarnessMain( props ) {
 
+  // State for when we are waiting for a response from OpenAI
+  const [ waiting, setWaiting ] = useState( false );
+
+  // State for the list of available OpenAI engines
+  const [ engines, setEngines ] = useState( [] );
+
+  // state for the selected engine
+  const [ selectedEngine, setSelectedEngine ] = useState( '' );
+
+  // Stage for the temperature of the AI response
+  const [ temperature, setTemperature ] = useState( 0 );
+
   // add react state for input an chatLog
   const [ input, setInput ] = useState( '' );
 
@@ -37,7 +49,7 @@ export default function AIHarnessMain( props ) {
   // Whenever an item is added to the chat log, scroll it into view
   useEffect( () => {
     if ( lastItemRef.current ) {
-      lastItemRef.current.scrollIntoView();
+      lastItemRef.current.scrollTop = lastItemRef.current.scrollHeight;
     }
   }, [ chatLog ] );
 
@@ -51,19 +63,38 @@ export default function AIHarnessMain( props ) {
 
     // Test the connection to OpenAI
     async function checkConnection() {
+      setWaiting( true );
+
       try {
-        const response = await fetch( 'http://localhost:3000/openai/connect', {
+        const connectionResponse = await fetch( 'http://localhost:3000/openai/connect', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           }
         } );
-        const jsonData = await response.json();
+        const jsonData = await connectionResponse.json();
         await addChatMessage( jsonData.data.content, 'ai', 'chat' );
+
+        // If connection is successful, get the list of available engines
+        const engineResponse = await fetch( 'http://localhost:3000/openai/engines', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        } );
+        const engineResponseData = await engineResponse.json();
+        setEngines( engineResponseData );
+
+        // Set the default to the best chat engine
+        if ( engineResponseData.includes( 'gpt-3.5-turbo' ) ) {
+          setSelectedEngine( 'gpt-3.5-turbo' );
+        }
       }
       catch( error ) {
         await addChatMessage( 'Failure to connect.', 'system', 'error' );
       }
+
+      setWaiting( false );
     }
 
     checkConnection();
@@ -73,6 +104,8 @@ export default function AIHarnessMain( props ) {
 
     // no page refresh on submit
     event.preventDefault();
+
+    setWaiting( true );
 
     const newChatLog = [ ...chatLog, { user: 'me', message: input, type: 'chat' } ];
     await setChatLog( newChatLog );
@@ -87,7 +120,11 @@ export default function AIHarnessMain( props ) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify( { prompt: input } )
+      body: JSON.stringify( {
+        prompt: input,
+        temperature: temperature,
+        modelName: selectedEngine
+      } )
       // body: JSON.stringify( { prompt: allMessages } )
     } );
 
@@ -100,6 +137,8 @@ export default function AIHarnessMain( props ) {
       const errorMessage = ( data && data.error && data.error.message ) || 'Unknown error.';
       await setChatLog( [ ...newChatLog, { user: 'system', message: errorMessage, type: 'error' } ] );
     }
+
+    setWaiting( false );
   };
 
   return (
@@ -122,7 +161,8 @@ export default function AIHarnessMain( props ) {
               <Form.Control
                 type='text'
                 rows={3}
-                placeholder='Prompt...'
+                disabled={waiting}
+                placeholder={waiting ? 'Waiting for response...' : 'Enter a prompt...'}
                 value={input}
                 onChange={event => setInput( event.target.value )}
               />
@@ -130,7 +170,36 @@ export default function AIHarnessMain( props ) {
           </div>
         </div>
       </div>
-      <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}> Scenery</div>
+      <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}>
+        <div className={styles.controlsColumn}>
+          <div>
+            <Form.Label>Engine</Form.Label>
+            <Form.Select
+              value={selectedEngine}
+              onChange={event => setSelectedEngine( event.target.value )}
+            >
+              {
+                engines.map( ( engine, index ) => <option key={`${engine}-${index}`}>{engine}</option> )
+              }
+            </Form.Select>
+          </div>
+          <div>
+            <Form.Label>Temperature</Form.Label>
+            <Form.Range
+              value={temperature}
+              min={0}
+              max={1}
+              step={0.01}
+              onChange={event => setTemperature( event.target.value )}/>
+          </div>
+        </div>
+        <div className={styles.controlsColumn}>
+
+        </div>
+        <div className={styles.controlsColumn}>
+
+        </div>
+      </div>
     </div>
   );
 }
