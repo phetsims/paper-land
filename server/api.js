@@ -349,10 +349,7 @@ if ( process.env.OPENAI_API_KEY ) {
    */
   openAIRouter.post( '/query', async ( req, res ) => {
 
-    // model
-    // temperature
     // maxTokens
-    // training documents to include
     // Use Vector Store and Retriever
     // Split Chunk Size
     // Split Chunk Overlap
@@ -371,7 +368,7 @@ if ( process.env.OPENAI_API_KEY ) {
       console.log( error );
       res.json( {
         error: {
-          message: 'ERROR MAKING REQUEST'
+          message: error.message
         }
       } );
     }

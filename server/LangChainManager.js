@@ -97,9 +97,6 @@ class LangChainManager {
     // Temperature needs to be within 0 and 1
     const temperature = Math.min( Math.max( options.temperature, 0.0 ), 1.0 );
 
-    console.log( 'temperature', temperature );
-    console.log( 'modelName', options.modelName );
-
     const chatModel = new OpenAI( {
       openAIApiKey: process.env.OPENAI_API_KEY,
       temperature: temperature,
@@ -108,15 +105,15 @@ class LangChainManager {
 
     const baseCompressor = LLMChainExtractor.fromLLM( chatModel );
 
-    // get the supported text splitter languages
-    console.log( SupportedTextSplitterLanguages ); // Array of supported languages
-
     const splitter = RecursiveCharacterTextSplitter.fromLanguage( 'markdown', {
       chunkSize: 128,
       chunkOverlap: 25
     } );
 
     // Create documents from the training documents.
+    if ( trainingDocuments.length === 0 ) {
+      throw new Error( 'No training documents have been uploaded yet.' );
+    }
     const documents = await splitter.createDocuments( trainingDocuments );
 
     // Create a vector store from the documents.
@@ -133,6 +130,7 @@ class LangChainManager {
     // const relevantDocuments = retriever.getRelevantDocuments( 'What code should I write to draw a circle using scenery?' );
     // console.log( relevantDocuments );
 
+    // Returns an object with { text: string }
     const res = await chain.call( {
       query: prompt
     } );
