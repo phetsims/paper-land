@@ -34,6 +34,12 @@ export default function AIHarnessMain( props ) {
   // state for whether the alert should be shown
   const [ showAlert, setShowAlert ] = useState( false );
 
+  // state for chunk size
+  const [ chunkSize, setChunkSize ] = useState( 128 );
+
+  // state for chunk overlap
+  const [ chunkOverlap, setChunkOverlap ] = useState( 25 );
+
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
     {
@@ -162,7 +168,9 @@ export default function AIHarnessMain( props ) {
       body: JSON.stringify( {
         prompt: input,
         temperature: temperature,
-        modelName: selectedEngine
+        modelName: selectedEngine,
+        splitterChunkSize: chunkSize,
+        splitterChunkOverlap: chunkOverlap
       } )
       // body: JSON.stringify( { prompt: allMessages } )
     } );
@@ -203,8 +211,8 @@ export default function AIHarnessMain( props ) {
                 {
                   chatLog.map( ( logItem, index ) => (
                     <span key={index} ref={index === chatLog.length - 1 ? lastItemRef : null}>
-                    <ChatItem user={logItem.user} message={logItem.message} type={logItem.type}/>
-                  </span>
+                      <ChatItem user={logItem.user} message={logItem.message} type={logItem.type}/>
+                    </span>
                   ) )
                 }
               </ListGroup>
@@ -256,6 +264,24 @@ export default function AIHarnessMain( props ) {
                   multiple={true}
                   onChange={uploadTrainingDocuments}/>
               </Form.Group>
+            </div>
+            <div>
+              <Form.Label>{`Chunk Size: ${chunkSize}`}</Form.Label>
+              <Form.Range
+                value={chunkSize}
+                min={40}
+                max={4000}
+                step={1}
+                onChange={event => setChunkSize( event.target.value )}/>
+            </div>
+            <div>
+              <Form.Label>{`Chunk Overlap: ${chunkOverlap}`}</Form.Label>
+              <Form.Range
+                value={chunkOverlap}
+                min={0}
+                max={1000}
+                step={1}
+                onChange={event => setChunkOverlap( event.target.value )}/>
             </div>
           </div>
           <div className={styles.controlsColumn}>

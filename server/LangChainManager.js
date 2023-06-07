@@ -91,11 +91,18 @@ class LangChainManager {
 
     options = _.merge( {
       temperature: 0.0,
-      modelName: 'gpt-3.5-turbo'
+      modelName: 'gpt-3.5-turbo',
+      splitterChunkSize: 128,
+      splitterChunkOverlap: 25
     }, options );
 
-    // Temperature needs to be within 0 and 1
-    const temperature = Math.min( Math.max( options.temperature, 0.0 ), 1.0 );
+
+    // Temperature needs to be within 0 and 1 and a number
+    const temperature = Math.min( Math.max( parseInt( options.temperature, 10 ), 0.0 ), 1.0 );
+
+    // enforce numbers
+    const splitterChunkSize = parseInt( options.splitterChunkSize, 10 );
+    const splitterChunkOverlap = parseInt( options.splitterChunkOverlap, 10 );
 
     const chatModel = new OpenAI( {
       openAIApiKey: process.env.OPENAI_API_KEY,
@@ -106,8 +113,8 @@ class LangChainManager {
     const baseCompressor = LLMChainExtractor.fromLLM( chatModel );
 
     const splitter = RecursiveCharacterTextSplitter.fromLanguage( 'markdown', {
-      chunkSize: 128,
-      chunkOverlap: 25
+      chunkSize: splitterChunkSize,
+      chunkOverlap: splitterChunkOverlap
     } );
 
     // Create documents from the training documents.
@@ -143,8 +150,6 @@ class LangChainManager {
    * @return {Promise<void>}
    */
   static async uploadTrainingDocuments( files ) {
-
-    console.log( files );
 
     // clear documents on a new upload
     trainingDocuments.length = 0;

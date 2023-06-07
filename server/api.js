@@ -346,6 +346,8 @@ if ( process.env.OPENAI_API_KEY ) {
    * @param {string} prompt - The prompt to send to the API.
    * @param {string} [modelName] - The engine to use for the request.
    * @param {number} [temperature] - The temperature to use for the request.
+   * @param {number} [splitterChunkSize] - The chunk size to use for the request.
+   * @param {number} [splitterChunkOverlap] - The chunk overlap to use for the request.
    */
   openAIRouter.post( '/query', async ( req, res ) => {
 
@@ -360,7 +362,9 @@ if ( process.env.OPENAI_API_KEY ) {
 
       const response = await LangChainManager.testQuery( prompt, {
         temperature: req.body.temperature,
-        modelName: req.body.modelName
+        modelName: req.body.modelName,
+        splitterChunkSize: req.body.splitterChunkSize,
+        splitterChunkOverlap: req.body.splitterChunkOverlap
       } );
       res.json( response );
     }
