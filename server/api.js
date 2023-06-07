@@ -352,10 +352,6 @@ if ( process.env.OPENAI_API_KEY ) {
   openAIRouter.post( '/query', async ( req, res ) => {
 
     // maxTokens
-    // Use Vector Store and Retriever
-    // Split Chunk Size
-    // Split Chunk Overlap
-    // Verbose in chaining
 
     try {
       const prompt = req.body.prompt;
@@ -365,7 +361,9 @@ if ( process.env.OPENAI_API_KEY ) {
         modelName: req.body.modelName,
         splitterChunkSize: req.body.splitterChunkSize,
         splitterChunkOverlap: req.body.splitterChunkOverlap,
-        useContextualCompression: req.body.useContextualCompression
+        useContextualCompression: req.body.useContextualCompression,
+        preTrainMessage: req.body.preTrainMessage,
+        postTrainMessage: req.body.postTrainMessage
       } );
       res.json( response );
     }

@@ -43,3 +43,16 @@ components. Each shape is a subclass of `Node` and can be added to the scene gra
 ```js
   const text = new phet.scenery.Text( 'I am some text!', { font: new phet.scenery.Font( { size: 16} ) } );
 ```
+
+### Path
+Path lets you draw custom shapes.
+```js
+const shape = new phet.kite.Shape()
+  .moveTo( 0, 0 )
+  .lineTo( 100, 0 )
+  .lineTo( 100, 100 )
+  .lineTo( 0, 100 )
+  .close();
+const path = new phet.scenery.Path( shape, { fill: 'orange', stroke: 'black' } );
+```
+

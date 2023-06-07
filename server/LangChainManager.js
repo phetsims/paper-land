@@ -86,7 +86,9 @@ class LangChainManager {
       modelName: 'gpt-3.5-turbo',
       splitterChunkSize: 128,
       splitterChunkOverlap: 25,
-      useContextualCompression: false
+      useContextualCompression: false,
+      preTrainMessage: '',
+      postTrainMessage: ''
     }, options );
 
     // Temperature needs to be within 0 and 1 and a number
@@ -114,7 +116,6 @@ class LangChainManager {
     } );
     const documents = await splitter.createDocuments( documentContents );
 
-    console.log( 'COMPRESSION', options.useContextualCompression );
     if ( options.useContextualCompression ) {
 
       const chatModel = new OpenAI( {
@@ -155,9 +156,13 @@ class LangChainManager {
       } );
 
       // Just feed every document into the AI with a series of messages and then the prompt.
-      const messages = documents.map( doc => new SystemChatMessage( doc.pageContent ) );
-      messages.push( new HumanChatMessage( 'Please do your best to provide code samples for the following request. If you are unsure of your response DO NOT generate any code.' ) );
+      const messages = documents.map( doc => new HumanChatMessage( doc.pageContent ) );
+      messages.unshift( new HumanChatMessage( options.preTrainMessage ) );
+      messages.push( new HumanChatMessage( options.postTrainMessage ) );
       messages.push( new HumanChatMessage( prompt ) );
+
+      console.log( options.preTrainMessage );
+      console.log( options.postTrainMessage );
 
       // Returns an AIChatMessage with structure { type: 'ai', content: string } when converted to JSON, so
       // we just return the text.
@@ -182,11 +187,6 @@ class LangChainManager {
     files.forEach( file => {
       trainingDocumentPaths.push( file.path );
     } );
-
-    // delete the uploaded files after reading contents
-    // files.forEach( file => {
-    //   fs.unlinkSync( file.path );
-    // } );
   }
 }
 

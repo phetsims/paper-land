@@ -40,6 +40,12 @@ export default function AIHarnessMain( props ) {
   // state for chunk overlap
   const [ chunkOverlap, setChunkOverlap ] = useState( 25 );
 
+  // state for a pre-train message
+  const [ preTrainMessage, setPreTrainMessage ] = useState( 'These documents describe a JavaScript library:' );
+
+  // state for a post-train message
+  const [ postTrainMessage, setPostTrainMessage ] = useState( 'DO NOT create code unless you know how.' );
+
   // state for whether we are using contextual compression
   const [ useContextualCompression, setUseContextualCompression ] = useState( true );
 
@@ -62,7 +68,7 @@ export default function AIHarnessMain( props ) {
   // A ref to the last chat item, so we can scroll it into view
   const lastItemRef = useRef( null );
 
-  const showAlertPopup = ( contentString ) => {
+  const showAlertPopup = contentString => {
     setAlertContent( contentString );
     setShowAlert( true );
 
@@ -174,7 +180,9 @@ export default function AIHarnessMain( props ) {
         modelName: selectedEngine,
         splitterChunkSize: chunkSize,
         splitterChunkOverlap: chunkOverlap,
-        useContextualCompression: useContextualCompression
+        useContextualCompression: useContextualCompression,
+        preTrainMessage: preTrainMessage,
+        postTrainMessage: postTrainMessage
       } )
       // body: JSON.stringify( { prompt: allMessages } )
     } );
@@ -239,11 +247,28 @@ export default function AIHarnessMain( props ) {
         <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}>
           <div className={styles.controlsColumn}>
             <div>
+              <Form.Check
+                type={'checkbox'}
+                checked={useContextualCompression}
+                onChange={
+                  event => {
+                    setUseContextualCompression( event.target.checked );
+
+                    // if not using contextual compression, gpt-3.5-turbo is the only model we can use
+                    if ( !event.target.checked ) {
+                      setSelectedEngine( 'gpt-3.5-turbo' );
+                    }
+                  }
+                }
+                id={'use-contextual-compression'}
+                label={'Use Contextual Compression'}
+              />
+            </div>
+            <div hidden={!useContextualCompression}>
               <Form.Label>Engine</Form.Label>
               <Form.Select
                 value={selectedEngine}
                 onChange={event => setSelectedEngine( event.target.value )}
-                disabled={!useContextualCompression}
               >
                 {
                   engines.map( ( engine, index ) => <option key={`${engine}-${index}`}>{engine}</option> )
@@ -272,24 +297,6 @@ export default function AIHarnessMain( props ) {
               </Form.Group>
             </div>
             <div>
-              <Form.Check
-                type={'checkbox'}
-                checked={useContextualCompression}
-                onChange={
-                  event => {
-                    setUseContextualCompression( event.target.checked );
-
-                    // if not using contextual compression, gpt-3.5-turbo is the only model we can use
-                    if ( !event.target.checked ) {
-                      setSelectedEngine( 'gpt-3.5-turbo' );
-                    }
-                  }
-                }
-                id={'use-contextual-compression'}
-                label={'Use Contextual Compression'}
-              />
-            </div>
-            <div>
               <Form.Label>{`Chunk Size: ${chunkSize}`}</Form.Label>
               <Form.Range
                 value={chunkSize}
@@ -308,8 +315,23 @@ export default function AIHarnessMain( props ) {
                 onChange={event => setChunkOverlap( event.target.value )}/>
             </div>
           </div>
-          <div className={styles.controlsColumn}>
-
+          <div className={styles.controlsColumn} hidden={useContextualCompression}>
+            <div>
+              <Form.Label>Pre-train message</Form.Label>
+              <Form.Control
+                as={'textarea'}
+                onChange={event => setPreTrainMessage( event.target.value )}
+                value={preTrainMessage}
+              />
+            </div>
+            <div>
+              <Form.Label>Post-train message</Form.Label>
+              <Form.Control
+                as={'textarea'}
+                onChange={event => setPostTrainMessage( event.target.value )}
+                value={postTrainMessage}
+              />
+            </div>
           </div>
         </div>
       </div>

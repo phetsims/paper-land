@@ -30,11 +30,11 @@
 }
 
 :local( .chatRow ) {
-  flex: 3;
+  flex: 2.8;
 }
 
 :local(.controlsRow ) {
-  flex: 1;
+  flex: 1.2;
 
   /*because this row will contain columns of controls*/
   display: flex;
@@ -127,11 +127,22 @@ input[type='range']::-ms-thumb {
   background: borderColor !important;
 }
 
-
 :local(.alert ) {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
+}
+
+/*Styling for toggles (radio, checkbox, toggle)*/
+.form-check-input:checked {
+  background-color: focusHighlightColor;
+  border-color: focusHighlightColor;
+}
+
+/*Styling for focus of form controls*/
+.form-control:focus {
+  border-color: #6C8EAC;
+  box-shadow: 0 0 0 0.1rem #6C8EAC;
 }
