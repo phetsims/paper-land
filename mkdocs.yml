@@ -127,7 +127,7 @@ nav:
     - Documentation: 
       - Tutorial: use/tutorial.md
       - Board API: use/board-api.md
-      - Example Paper Program: use/example-program.md
+      - Example Paper Programs: use/example-program.md
       - Model-View-Controller Framework: use/mvc.md
       - Downloads: use/resources.md
       # - Adding Libraries: use/extensions.md
@@ -137,3 +137,4 @@ nav:
       - Contribute: CONTRIBUTING.md
       - Feature Wishlist: WISHLIST.md
       - Community Code of Conduct: CODE_OF_CONDUCT.md
+      # - AI Ethics: ai-ethics.md
