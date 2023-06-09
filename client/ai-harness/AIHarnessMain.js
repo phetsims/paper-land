@@ -35,19 +35,19 @@ export default function AIHarnessMain( props ) {
   const [ showAlert, setShowAlert ] = useState( false );
 
   // state for chunk size
-  const [ chunkSize, setChunkSize ] = useState( 128 );
+  const [ chunkSize, setChunkSize ] = useState( 600 );
 
   // state for chunk overlap
-  const [ chunkOverlap, setChunkOverlap ] = useState( 25 );
+  const [ chunkOverlap, setChunkOverlap ] = useState( 20 );
 
   // state for a pre-train message
-  const [ preTrainMessage, setPreTrainMessage ] = useState( 'These documents describe a JavaScript library:' );
+  const [ preTrainMessage, setPreTrainMessage ] = useState( '' );
 
   // state for a post-train message
-  const [ postTrainMessage, setPostTrainMessage ] = useState( 'DO NOT create code unless you know how.' );
+  const [ postTrainMessage, setPostTrainMessage ] = useState( '' );
 
   // state for whether we are using contextual compression
-  const [ useContextualCompression, setUseContextualCompression ] = useState( true );
+  const [ useContextualCompression, setUseContextualCompression ] = useState( false );
 
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
@@ -279,7 +279,7 @@ export default function AIHarnessMain( props ) {
               <Form.Label>{`Temperature: ${temperature}`}</Form.Label>
               <Form.Range
                 value={temperature}
-                min={0}
+                min={0.2}
                 max={1}
                 step={0.01}
                 onChange={event => setTemperature( event.target.value )}/>

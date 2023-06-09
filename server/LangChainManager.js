@@ -11,6 +11,23 @@ const fs = require( 'fs' );
 const _ = require( 'lodash' );
 const { Configuration, OpenAIApi } = require( 'openai' );
 
+// console.log( SupportedTextSplitterLanguages );
+// cpp
+// java
+// php
+// python
+// ruby
+// scala
+// markdown
+// html
+// go
+// js
+// proto
+// rst
+// rust
+// swift
+// latex
+
 const DEBUG_RESPONSES = false;
 
 // Basic set up directly to OpenAI API (not through LangChain) - so we can request
@@ -22,6 +39,7 @@ const configuration = new Configuration( {
 const openai = new OpenAIApi( configuration );
 
 // Traning documents will be read when uploaded and stored in this array.
+// { path: string, name: string }
 const trainingDocumentPaths = [];
 
 class LangChainManager {
@@ -98,22 +116,35 @@ class LangChainManager {
     const splitterChunkSize = parseInt( options.splitterChunkSize, 10 );
     const splitterChunkOverlap = parseInt( options.splitterChunkOverlap, 10 );
 
-    const splitter = RecursiveCharacterTextSplitter.fromLanguage( 'markdown', {
-      chunkSize: splitterChunkSize,
-      chunkOverlap: splitterChunkOverlap
-    } );
-
     // Create documents from the training documents.
     if ( trainingDocumentPaths.length === 0 ) {
       throw new Error( 'No training documents have been uploaded yet.' );
     }
 
+    // training document paths need to have the same file extension
+    const allMarkdown = _.every( trainingDocumentPaths, path => path.name.endsWith( '.md' ) );
+    const allJs = _.every( trainingDocumentPaths, path => path.name.endsWith( '.js' ) );
+    console.log( trainingDocumentPaths[ 0 ] );
+    if ( !allMarkdown && !allJs ) {
+      throw new Error( 'All training documents must have the same file extension.' );
+    }
+
+    // Get the language from the file extension
+    const splitterLanguage = trainingDocumentPaths[ 0 ].name.endsWith( '.md' ) ? 'markdown' : 'js';
+
     // We have to re-read the document each time because the user is likely editing these files
     const documentContents = [];
+
     trainingDocumentPaths.forEach( filePath => {
-      const fileContents = fs.readFileSync( filePath, 'utf-8' );
+      const fileContents = fs.readFileSync( filePath.path, 'utf-8' );
       documentContents.push( fileContents );
     } );
+
+    const splitter = RecursiveCharacterTextSplitter.fromLanguage( splitterLanguage, {
+      chunkSize: splitterChunkSize,
+      chunkOverlap: splitterChunkOverlap
+    } );
+
     const documents = await splitter.createDocuments( documentContents );
 
     if ( options.useContextualCompression ) {
@@ -157,12 +188,9 @@ class LangChainManager {
 
       // Just feed every document into the AI with a series of messages and then the prompt.
       const messages = documents.map( doc => new HumanChatMessage( doc.pageContent ) );
-      messages.unshift( new HumanChatMessage( options.preTrainMessage ) );
-      messages.push( new HumanChatMessage( options.postTrainMessage ) );
+      options.preTrainMessage.length > 0 && messages.unshift( new HumanChatMessage( options.preTrainMessage ) );
+      options.postTrainMessage.length > 0 && messages.push( new HumanChatMessage( options.postTrainMessage ) );
       messages.push( new HumanChatMessage( prompt ) );
-
-      console.log( options.preTrainMessage );
-      console.log( options.postTrainMessage );
 
       // Returns an AIChatMessage with structure { type: 'ai', content: string } when converted to JSON, so
       // we just return the text.
@@ -185,7 +213,8 @@ class LangChainManager {
 
     // Process the uploaded files
     files.forEach( file => {
-      trainingDocumentPaths.push( file.path );
+      console.log( file.originalname );
+      trainingDocumentPaths.push( { path: file.path, name: file.originalname } );
     } );
   }
 }
