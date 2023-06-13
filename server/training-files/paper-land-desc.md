@@ -48,7 +48,7 @@ type DerivedProperty = {
 
 type ViewComponent = {
   name: string;
-  type: 'Circle' | 'Rectangle' | 'Description' | 'Image';
+  type: 'Circle' | 'Rectangle' | 'Description' | 'Image' | 'Checkbox';
 };
 
 type ControllerComponent = {
