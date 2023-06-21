@@ -26,7 +26,6 @@ const boardUtils = {
     return rotationRadians;
   },
 
-
   /**
    * Returns the paper rotation normalized from zero to one. Often rotation will control a value in paper-land and
    * the normalized rotation value will be easier to use when scaling a model value.
@@ -34,6 +33,26 @@ const boardUtils = {
   getNormalizedProgramRotation( points ) {
     const rotationRadians = boardUtils.getProgramRotation( points );
     return rotationRadians / ( 2 * Math.PI );
+  },
+
+  /**
+   * Returns the center of the program in paper coordinates.
+   * @param points - points of the paper, provided by paper programming API.
+   * @return dot.Vector2
+   */
+  getProgramCenter( points ) {
+    const topLeft = points[ 0 ];
+    const bottomRight = points[ 3 ];
+    return new phet.dot.Vector2( ( topLeft.x + bottomRight.x ) / 2, ( topLeft.y + bottomRight.y ) / 2 );
+  },
+
+  /**
+   * Turns a point into a dot.Vector2 instance.
+   * @param point
+   * @return {dot.Vector2}
+   */
+  pointToVector2( point ) {
+    return new phet.dot.Vector2( point.x, point.y );
   }
 };
 

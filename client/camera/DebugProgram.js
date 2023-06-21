@@ -191,17 +191,21 @@ export default class CameraMain extends React.Component {
 
   getRotatedPoints( normalizedPoints, angle ) {
     if ( this._el ) {
-      const rect = this._el.getBoundingClientRect();
 
       // should be dimensions of the camera view
       const parentRect = this._parentEl.parentElement.getBoundingClientRect();
 
-      const centerX = rect.x + rect.width / 2;
-      const centerY = rect.y + rect.height / 2;
+      // center of the program in normalized coordinates
+      const centerX = this.programTl.x + this.programWidth / 2;
+      const centerY = this.programTl.y + this.programHeight / 2;
+
+      // transform to parent DOM coordinate frame
+      const centerXInParentFrame = centerX * parentRect.width;
+      const centerYInParentFrame = centerY * parentRect.height;
 
       return normalizedPoints.map( point => {
         const pointInParentFrame = { x: point.x * parentRect.width, y: point.y * parentRect.height };
-        const rotated = rotateAboutXY( pointInParentFrame, centerX, centerY, angle );
+        const rotated = rotateAboutXY( pointInParentFrame, centerXInParentFrame, centerYInParentFrame, angle );
 
         return {
           x: rotated.x / parentRect.width,
@@ -231,6 +235,11 @@ export default class CameraMain extends React.Component {
 
     const width = br.x - tl.x;
     const height = br.y - tl.y;
+
+    this.programWidth = width;
+    this.programHeight = height;
+
+    this.programTl = tl;
 
     return (
       <div ref={el => ( this._parentEl = el )}>

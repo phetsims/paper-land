@@ -8,20 +8,12 @@ import colorDiff from 'color-diff';
 import partition from 'lodash/partition';
 import sortBy from 'lodash/sortBy';
 import clientConstants from '../clientConstants';
+import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import { code8400 } from '../dotCodes';
-import {
-  add,
-  clamp,
-  cross,
-  diff,
-  div,
-  forwardProjectionMatrixForPoints,
-  mult,
-  norm,
-  projectPoint,
-  shrinkPoints
-} from '../utils';
+import { add, clamp, cross, diff, div, forwardProjectionMatrixForPoints, mult, norm, projectPoint, shrinkPoints } from '../utils';
 import simpleBlobDetector from './simpleBlobDetector';
+
+const WHISKER_COLOR = [ 139, 0, 0, 255 ];
 
 function keyPointToAvgColor( keyPoint, videoMat ) {
   const x = Math.floor( keyPoint.pt.x - keyPoint.size / 2 );
@@ -181,6 +173,25 @@ export default function detectPrograms( {
   const knobPointMatrix = forwardProjectionMatrixForPoints( config.knobPoints );
   const mapToKnobPointMatrix = point => {
     return mult( projectPoint( point, knobPointMatrix ), { x: videoMat.cols, y: videoMat.rows } );
+  };
+
+  // Draws whiskers onto the OpenCV displayMat.
+  const drawWhiskers = ( normalizedPoints, displayMat, programNumber ) => {
+
+    const normalizedWhiskerLines = PaperWhiskerManager.paperWhiskerMap.get( programNumber );
+    if ( normalizedWhiskerLines ) {
+      const whiskerLines = normalizedWhiskerLines.map( line => {
+        return {
+          start: mapToKnobPointMatrix( line.start ),
+          end: mapToKnobPointMatrix( line.end )
+        };
+      } );
+
+      cv.line( displayMat, whiskerLines[ 0 ].start, whiskerLines[ 0 ].end, WHISKER_COLOR );
+      cv.line( displayMat, whiskerLines[ 1 ].start, whiskerLines[ 1 ].end, WHISKER_COLOR );
+      cv.line( displayMat, whiskerLines[ 2 ].start, whiskerLines[ 2 ].end, WHISKER_COLOR );
+      cv.line( displayMat, whiskerLines[ 3 ].start, whiskerLines[ 3 ].end, WHISKER_COLOR );
+    }
   };
 
   if ( displayMat ) {
@@ -417,19 +428,24 @@ export default function detectPrograms( {
       };
       programsToRender.push( programToRender );
 
-      if ( displayMat && config.showOverlayProgram ) {
+      if ( displayMat ) {
         const reprojectedPoints = programToRender.points.map( mapToKnobPointMatrix );
 
-        cv.line( displayMat, reprojectedPoints[ 0 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
-        cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
-        cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 3 ], [ 0, 0, 255, 255 ] );
-        cv.line( displayMat, reprojectedPoints[ 3 ], reprojectedPoints[ 0 ], [ 0, 0, 255, 255 ] );
-        cv.line(
-          displayMat,
-          div( add( reprojectedPoints[ 2 ], reprojectedPoints[ 3 ] ), { x: 2, y: 2 } ),
-          div( add( reprojectedPoints[ 0 ], reprojectedPoints[ 1 ] ), { x: 2, y: 2 } ),
-          [ 0, 0, 255, 255 ]
-        );
+        if ( config.showOverlayProgram ) {
+          cv.line( displayMat, reprojectedPoints[ 0 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
+          cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
+          cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 3 ], [ 0, 0, 255, 255 ] );
+          cv.line( displayMat, reprojectedPoints[ 3 ], reprojectedPoints[ 0 ], [ 0, 0, 255, 255 ] );
+          cv.line(
+            displayMat,
+            div( add( reprojectedPoints[ 2 ], reprojectedPoints[ 3 ] ), { x: 2, y: 2 } ),
+            div( add( reprojectedPoints[ 0 ], reprojectedPoints[ 1 ] ), { x: 2, y: 2 } ),
+            [ 0, 0, 255, 255 ]
+          );
+        }
+        if ( config.showWhiskerLines ) {
+          drawWhiskers( programToRender.points, displayMat, programToRender.number );
+        }
       }
     }
   } );
@@ -447,6 +463,10 @@ export default function detectPrograms( {
       projectionMatrix: forwardProjectionMatrixForPoints( scaledPoints ).adjugate()
     };
     programsToRender.push( debugProgram );
+
+    if ( displayMat && config.showWhiskerLines ) {
+      drawWhiskers( scaledPoints, displayMat, debugProgram.number );
+    }
   } );
 
   /**
