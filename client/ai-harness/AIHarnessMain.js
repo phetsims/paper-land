@@ -11,6 +11,12 @@ import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { combineClasses } from '../utils.js';
 import styles from './AIHarnessMain.css';
 
+// utility function to get the ai connection url at the current origin
+// @param {requestType} string after the /openai/ route
+function getAIConnectionUrl( requestType ) {
+  return new URL( `openai/${requestType}`, window.location.origin ).toString();
+}
+
 export default function AIHarnessMain( props ) {
 
   // State for when we are waiting for a response from OpenAI
@@ -97,7 +103,7 @@ export default function AIHarnessMain( props ) {
       setWaiting( true );
 
       try {
-        const connectionResponse = await fetch( 'http://localhost:3000/openai/connect', {
+        const connectionResponse = await fetch( getAIConnectionUrl( 'connect' ), {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -107,7 +113,7 @@ export default function AIHarnessMain( props ) {
         await addChatMessage( jsonData.text, 'ai', 'chat' );
 
         // If connection is successful, get the list of available engines
-        const engineResponse = await fetch( 'http://localhost:3000/openai/engines', {
+        const engineResponse = await fetch( getAIConnectionUrl( 'engines' ), {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json'
@@ -139,7 +145,8 @@ export default function AIHarnessMain( props ) {
       formData.append( 'files', file );
     } );
 
-    const response = await fetch( 'http://localhost:3000/openai/uploadDocuments', {
+    // use the getAIConnectionUrl function to get the correct url
+    const response = await fetch( getAIConnectionUrl( 'uploadDocuments' ), {
       method: 'POST',
       body: formData
     } );
@@ -169,7 +176,7 @@ export default function AIHarnessMain( props ) {
     // for chat, we feed all previous messages for a new response
     // const allMessages = newChatLog.map( message => message.message ).join( '\n' );
 
-    const response = await fetch( 'http://localhost:3000/openai/query', {
+    const response = await fetch( getAIConnectionUrl( 'query' ), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

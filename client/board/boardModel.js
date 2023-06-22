@@ -101,6 +101,7 @@ paperLand.removeModelComponent = componentName => {
 paperLand.setProgramData = ( programNumber, dataName, dataObject ) => {
   const programData = programDataMap.get( programNumber ) || {};
   programData[ dataName ] = dataObject;
+  programData[ dataName ] = dataObject;
   programDataMap.set( programNumber, programData );
 };
 
