@@ -1122,6 +1122,20 @@ export default class CameraMain extends React.Component {
                         />{' '}
                         programs
                       </div>
+
+                      <div className={styles.sidebarSubSection}>
+                        <input
+                          type='checkbox'
+                          checked={this.props.config.showWhiskerLines}
+                          onChange={() =>
+                            this.props.onConfigChange( {
+                              ...this.props.config,
+                              showWhiskerLines: !this.props.config.showWhiskerLines
+                            } )
+                          }
+                        />{' '}
+                        whisker lines
+                      </div>
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>

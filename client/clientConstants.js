@@ -6,6 +6,9 @@ const clientConstants = {
   colorNames: [ 'R', 'G', 'B', 'D' ],
   englishColorNames: [ 'red', 'green', 'blue', 'black' ],
   cornerNames: [ 'TL', 'TR', 'BR', 'BL' ],
+
+  // default length of paper-land whiskers - normalized relative to the width of the camera view
+  defaultWhiskerLength: 0.08,
   cameraVideoConstraints: {
 
     // specifying "ideal" property with high value doesn't work with some webcams in Chrome

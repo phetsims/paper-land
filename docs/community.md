@@ -2,9 +2,10 @@
 
 ## Join us!
 
-- Reach out to us in the [GitHub Discussions forum](https://github.com/phetsims/paper-land/discussions) in the Paper Playground repository (github.com/phetsims/paper-land)
-- [Join our Matrix server]() to chat (try Element.io)
-- Contribute Programs or new features to the tool!
+- Make a post in the [Discussions tab](https://github.com/phetsims/paper-land/discussions/)
+- Join us on our [Matrix Space](https://matrix.to/#/#interactive-paper-programming:matrix.org)
+- [Contribute to the project](https://phetsims.github.io/paper-land/CONTRIBUTING/) (code, ideas, documentation, paper program examples, anything!)
+<!-- - Join our open design meetings (Tuesdays from 12:00-13:00 Eastern Time). Find the zoom link in our Matrix Design channel. -->
 - Have a great idea for how you or your community might connect to Paper Playground? Reach out to brett dot fiedler at colorado dot edu to discuss opportunities!
 
 We are planning to hold public design meetings in the future. Stay tuned!

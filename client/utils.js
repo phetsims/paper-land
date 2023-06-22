@@ -58,6 +58,14 @@ export function div( v1, v2 ) {
   return v1.map( ( value, index ) => value / v2[ index ] );
 }
 
+export function blendPoints( v1, v2, amount ) {
+  return { x: v1.x + ( v2.x - v1.x ) * amount, y: v1.y + ( v2.y - v1.y ) * amount };
+}
+
+export function averagePoints( v1, v2 ) {
+  return blendPoints( v1, v2, 0.5 );
+}
+
 export function cross( v1, v2 ) {
   if ( v1.x === undefined || v2.x === undefined ) {
     throw new Error( 'Must be points' );
@@ -142,6 +150,7 @@ export function codeToName( code ) {
 
 /**
  * Get a list of the keywords from a paper program.  Keywords are on the 2nd line and should be labeled like this:
+ * Get a list of the keywords from a paper program.  Keywords are on the 2nd line and should be labeled like this:
  *   // Keywords: cool, fun, scary
  * If there are no keywords in the file, an empty array is returned.
  * @param {string} program
@@ -223,4 +232,20 @@ export function programMatchesFilterString( programCode, filterString ) {
  */
 export function colorDataToCSS( colorData ) {
   return `rgba(${colorData[ 0 ]},${colorData[ 1 ]},${colorData[ 2 ]},${colorData[ 3 ]})`;
+}
+
+/**
+ * Get program data from local storage for the provided programNumber.
+ * @param {number} programNumber
+ * @return {*|null} - object describing the paper, according to Paper API.
+ */
+export function getProgramDataFromNumber( programNumber ) {
+  const allProgramsData = JSON.parse( localStorage.paperProgramsDataByProgramNumber );
+
+  if ( allProgramsData && allProgramsData[ programNumber ] ) {
+    return allProgramsData[ programNumber ];
+  }
+  else {
+    return null;
+  }
 }

@@ -10,6 +10,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import boardConsole from './boardConsole.js';
 import styles from './BoardMain.css';
 import BoardMain from './BoardMain.js';
@@ -32,6 +33,9 @@ const scene = new phet.scenery.Node();
 
 // The object in localStorage on page load
 const storedBoardConfig = JSON.parse( localStorage.boardConfig || '{}' );
+
+// The position and length information from localStorage, but parsed and ready for use in this app.
+const localWhiskerMap = new Map();
 
 // Defaults for the board configuration, if values are not saved to local storage
 const defaultBoardConfig = {
@@ -92,6 +96,10 @@ const mapOfProgramNumbersToScratchpadObjects = new Map();
 
 // {Map<number,Object>} - map of paper program numbers that are present in the detection window to their position points
 const mapOfPaperProgramNumbersToPreviousPoints = new Map();
+
+// A map of paper number to the papers that overlap with another paper in a given direction.
+// { paperNumber: { top: number[], right: number[], bottom: number[], left: number[] } }
+const whiskerStateMap = new Map();
 
 // {Map<number,MarkerInfo>} - Map of numeric values that act as IDs to marker info objects.
 const markerMap = new Map();
@@ -213,6 +221,11 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
         // Since pretty much anything could have changed about the program, we treat this as a removal and re-appearance
         // of the program.
         const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
+
+        // first detach any whiskers for this program and others
+        detachWhiskersForProgram( paperProgramNumber );
+
+        // then trigger events for program removal
         if ( eventHandlers.onProgramRemoved ) {
           evalProgramFunction( eventHandlers.onProgramRemoved, [
             paperProgramNumber,
@@ -237,6 +250,9 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
           sharedData
         ], 'onProgramAdded' );
 
+        // DO NOT update adjacent papers here because the position change will be detected right after this
+        // and it will be done there. If we do it here too, adjacent paper callbacks will be called twice
+
         // Make sure that the position change handler gets called.
         paperProgramHasMoved = true;
       }
@@ -251,6 +267,9 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
         mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
         sharedData
       ], 'onProgramChangedPosition' );
+    }
+    if ( paperProgramHasMoved ) {
+      updateWhiskerIntersections( paperProgramInstanceInfo, presentPaperProgramInfo );
     }
 
     // Update the paper program points for the next time through this loop. Only saved if there is sufficient
@@ -351,6 +370,9 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
         ], 'onProgramMarkersRemoved' );
       }
       mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
+
+      // remove any whiskers on this program, and any whiskers connecting this program to others
+      detachWhiskersForProgram( paperProgramNumber );
 
       if ( eventHandlers.onProgramRemoved ) {
         evalProgramFunction( eventHandlers.onProgramRemoved, [
@@ -499,6 +521,183 @@ const getMarkerMatchingInfo = currentMarkers => {
   return markerMatchingInfoArray;
 };
 
+/**
+ * Create a set of "whiskers" for a paper. From the paper center, create a set of lines that extend in the
+ * cardinal directions. These will be used to detect intersections with other papers.
+ *
+ * @param paperNumber - number for this paper
+ * @return {{direction: string, line: kite.Line}[]}
+ */
+const getWhiskerKiteLines = paperNumber => {
+  const whiskerPoints = localWhiskerMap.get( paperNumber );
+
+  if ( whiskerPoints ) {
+
+    // Convert to dot.Vector2 for use with Line
+    const whiskerVectors = whiskerPoints.map( linePoints => {
+      return {
+        start: new phet.dot.Vector2( linePoints.start.x, linePoints.start.y ),
+        end: new phet.dot.Vector2( linePoints.end.x, linePoints.end.y )
+      };
+    } );
+
+    return [
+      { direction: 'top', line: new phet.kite.Line( whiskerVectors[ 0 ].start, whiskerVectors[ 0 ].end ) },
+      { direction: 'right', line: new phet.kite.Line( whiskerVectors[ 1 ].start, whiskerVectors[ 1 ].end ) },
+      { direction: 'bottom', line: new phet.kite.Line( whiskerVectors[ 2 ].start, whiskerVectors[ 2 ].end ) },
+      { direction: 'left', line: new phet.kite.Line( whiskerVectors[ 3 ].start, whiskerVectors[ 3 ].end ) }
+    ];
+  }
+  else {
+
+    // This paper has no whiskers in the map yet, so return an empty array.
+    return [];
+  }
+};
+
+/**
+ * For a given paper, check for intersections of whiskers with another detected paper.
+ * @param paperInfo - data about the current paper (from Jan's Paper API)
+ * @param otherPaperInfo - data about the other paper
+ */
+const checkWhiskersForPaper = ( paperInfo, otherPaperInfo ) => {
+  const paperNumber = paperInfo.number;
+  const currentWhiskerState = whiskerStateMap.get( paperNumber ) || {};
+
+  // Create whisker lines - for new, new lines are created every request.
+  const directedLines = getWhiskerKiteLines( paperNumber, paperInfo.points );
+  const otherPaperShape = phet.kite.Shape.polygon( otherPaperInfo.points.map( point => phet.paperLand.utils.pointToVector2( point ) ) );
+
+  // Look for intersections with the other paper
+  directedLines.forEach( directedLine => {
+    const line = directedLine.line;
+
+    // Get the list of numbers that are currently intersecting at this direction.
+    const intersectingNumbersAtDirection = currentWhiskerState[ directedLine.direction ] || [];
+
+    const intersection = otherPaperShape.interiorIntersectsLineSegment( line.start, line.end );
+    if ( intersection ) {
+      const otherPaperNumber = otherPaperInfo.number;
+
+      // Only do something about the  intersection if it is new
+      if ( !intersectingNumbersAtDirection.includes( otherPaperNumber ) ) {
+        intersectingNumbersAtDirection.push( otherPaperNumber );
+        const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperNumber );
+        if ( eventHandlers && eventHandlers.onProgramAdjacent ) {
+          evalProgramFunction( eventHandlers.onProgramAdjacent, [
+            paperNumber,
+            otherPaperNumber,
+            directedLine.direction,
+            mapOfProgramNumbersToScratchpadObjects.get( paperNumber ),
+            sharedData
+          ], 'onProgramAdjacent' );
+        }
+      }
+    }
+    else {
+
+      // There is no intersection - if there was one previously, then it has been removed and we need to fire the event
+      const otherPaperNumber = otherPaperInfo.number;
+      const index = intersectingNumbersAtDirection.indexOf( otherPaperNumber );
+      if ( index >= 0 ) {
+        intersectingNumbersAtDirection.splice( index, 1 );
+        const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperNumber );
+        if ( eventHandlers && eventHandlers.onProgramSeparated ) {
+          evalProgramFunction( eventHandlers.onProgramSeparated, [
+            paperNumber,
+            otherPaperNumber,
+            directedLine.direction,
+            mapOfProgramNumbersToScratchpadObjects.get( paperNumber ),
+            sharedData
+          ], 'onProgramSeparated' );
+        }
+      }
+    }
+
+    // set the new state of for this direction
+    currentWhiskerState[ directedLine.direction ] = intersectingNumbersAtDirection;
+  } );
+
+  // set the new state for this paper
+  whiskerStateMap.set( paperInfo.number, currentWhiskerState );
+};
+
+/**
+ * Update whisker relationships for a paper. This is called when the paper is moved or added.
+ * @param paperProgramInfo
+ * @param currentPaperProgramsInfo
+ */
+const updateWhiskerIntersections = ( paperProgramInfo, currentPaperProgramsInfo ) => {
+  currentPaperProgramsInfo.forEach( otherProgramInfo => {
+    if ( otherProgramInfo.number !== paperProgramInfo.number ) {
+
+      // check whiskers of this paper against the other paper
+      checkWhiskersForPaper( paperProgramInfo, otherProgramInfo );
+
+      // check whiskers of the other paper against this paper
+      checkWhiskersForPaper( otherProgramInfo, paperProgramInfo );
+    }
+  } );
+};
+
+const detachWhiskersForProgram = paperNumber => {
+
+  // Detach all programs that are attached to whiskers on this program
+  const whiskersOnThisProgram = whiskerStateMap.get( paperNumber ) || {};
+  if ( whiskersOnThisProgram ) {
+    const whiskerDirections = Object.keys( whiskersOnThisProgram );
+    whiskerDirections.forEach( whiskerDirection => {
+      const attachedPapers = whiskersOnThisProgram[ whiskerDirection ] || [];
+      attachedPapers.forEach( attachedPaperNumber => {
+        const listenersForThisPaper = mapOfProgramNumbersToEventHandlers.get( paperNumber );
+        if ( listenersForThisPaper && listenersForThisPaper.onProgramSeparated ) {
+          evalProgramFunction( listenersForThisPaper.onProgramSeparated, [
+            paperNumber,
+            attachedPaperNumber,
+            whiskerDirection,
+            mapOfProgramNumbersToScratchpadObjects.get( paperNumber ),
+            sharedData
+          ], 'onProgramSeparated' );
+        }
+      } );
+
+      // Clear the list of attached papers for this direction
+      whiskersOnThisProgram[ whiskerDirection ] = [];
+    } );
+  }
+
+  // loop through all other programs and detach this program from their whiskers
+  whiskerStateMap.forEach( ( attachedPrograms, otherPaperNumber ) => {
+    const whiskerDirections = Object.keys( attachedPrograms );
+    whiskerDirections.forEach( whiskerDirection => {
+
+      // the programs that were attached
+      const attachedProgramsAtDirection = attachedPrograms[ whiskerDirection ] || [];
+
+      attachedProgramsAtDirection.forEach( attachedProgramNumber => {
+
+        if ( attachedProgramNumber === paperNumber ) {
+
+          // Get the listeners on the paper number watching detachment for the removed program
+          const listenersForAttachedProgram = mapOfProgramNumbersToEventHandlers.get( paperNumber );
+          if ( listenersForAttachedProgram && listenersForAttachedProgram.onProgramSeparated ) {
+            evalProgramFunction( listenersForAttachedProgram.onProgramSeparated, [
+              otherPaperNumber,
+              attachedProgramNumber,
+              whiskerDirection,
+              mapOfProgramNumbersToScratchpadObjects.get( paperNumber ),
+              sharedData
+            ], 'onProgramSeparated' );
+          }
+        }
+      } );
+
+      // Remove this program from the list of attached programs for this direction
+      attachedProgramsAtDirection.splice( attachedProgramsAtDirection.indexOf( paperNumber ), 1 );
+    } );
+  } );
+};
+
 // Handle changes to local storage.  This is how paper programs communicate with the sim design board.
 // Note: Through experimentation, we (PhET devs) found that this is called every second even if nothing changes as long
 // as there is at least one paper program in the detection window.
@@ -526,6 +725,14 @@ addEventListener( 'storage', () => {
 
   // get all info about detected markers
   currentMarkersInfo = JSON.parse( localStorage.paperProgramsMarkers );
+
+  // update state of all whiskers from camera detection
+  const whiskerData = PaperWhiskerManager.loadWhiskerDataFromLocalStorage();
+
+  // clear the whisker state map and copy the storage data into it
+  whiskerData.forEach( ( whiskerState, paperNumber ) => {
+    localWhiskerMap.set( paperNumber, whiskerState );
+  } );
 
   // Update the sim design board.
   updateBoard( currentPaperProgramsInfo, currentMarkersInfo );

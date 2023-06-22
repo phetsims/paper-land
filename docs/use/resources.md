@@ -12,13 +12,6 @@ Don't have a color printer, but do have markers/colored pencils? Use this templa
         
         Try to color in the dots as uniformly as possible to improve detection by your camera.
 
-## Example Paper Programs Printer Template
+[Blank Dot Template (GitHub)](https://github.com/phetsims/paper-land/blob/master/docs/use/resources/draw-dots-paper-template.pdf)
 
-Download example templates
-### SpaceLunar Lander
-
-
-### Altitude Demo
-
-
-### Simple Demo and Quadrilateral Demo
+[Blank Dot Template](./resources/draw-dots-paper-template.pdf)

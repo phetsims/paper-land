@@ -1,4 +1,4 @@
-# Example Paper Program - Altitude Demo
+# Example Paper Programs - Altitude Demo
 
 Below you will find a set of example paper programs that create the abstract idea of controlling and mapping displays to an object hovering above the ground, without implementing any physics. We'll create a `Property` for its "altitude" above the ground and then create a few other programs to get the altitude value and control or display it across multiple modalities.
 

@@ -1,9 +1,9 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import * as d3 from 'd3';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import uuidv4 from 'uuid/v4';
-import * as d3 from 'd3';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
+import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 
 import CameraMain from './CameraMain';
 
@@ -22,6 +22,7 @@ const defaultConfig = {
   showOverlayKeyPointCircles: true,
   showOverlayKeyPointText: true,
   showOverlayComponentLines: true,
+  showWhiskerLines: false,
   showOverlayShapeId: true,
   showOverlayProgram: true,
   selectedSpaceName,
@@ -58,6 +59,10 @@ if ( localStorage.paperProgramsMarkers === undefined ) {
   localStorage.paperProgramsMarkers = JSON.stringify( [] );
 }
 
+if ( localStorage.paperProgramsWhiskers === undefined ) {
+  localStorage.paperProgramsWhiskers = JSON.stringify( [] );
+}
+
 const element = document.createElement( 'div' );
 document.body.appendChild( element );
 
@@ -75,7 +80,13 @@ function render() {
         render();
       }}
       onProgramsChange={programs => {
+
         localStorage.paperProgramsProgramsToRender = JSON.stringify( programs );
+
+        // save state of whiskers before updating programs as we want them accurate before
+        // triggering program change events
+        PaperWhiskerManager.updatePaperWhiskerMap( programs );
+        localStorage.paperProgramsWhiskers = PaperWhiskerManager.getPaperWhiskerMapString();
         render();
       }}
     />,

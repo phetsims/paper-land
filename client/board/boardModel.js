@@ -36,6 +36,12 @@ const idToComponentDetachMap = new Map();
 paperLand.modelComponentAddedEmitter = new window.phet.axon.Emitter();
 paperLand.modelComponentRemovedEmitter = new window.phet.axon.Emitter();
 
+// Maps program number to a JavaScript object that will be used to store data for that program. This is specifically
+// for data related to a particular program number that is not relevant to the model. For example, you may
+// want to do some behavior when a program becomes adjacent to another (specific) program without using model info.
+// Map<number, {Object<string,number}> - keys are program numbers, values are any JavaScript object
+const programDataMap = new Map();
+
 /**
  * Adds a model component to the model Object with the provided name. Emits events so client code can observe
  * changes to the model.
@@ -82,6 +88,47 @@ paperLand.removeModelComponent = componentName => {
 
     // dispose the component when we are done with it, if supported
     componentObject.dispose && componentObject.dispose();
+  }
+};
+
+/**
+ * Set program data for the provided program number at the provided name. Note this lets you override any
+ * previously set data.
+ * @param {number} programNumber
+ * @param {string} dataName
+ * @param {*} dataObject
+ */
+paperLand.setProgramData = ( programNumber, dataName, dataObject ) => {
+  const programData = programDataMap.get( programNumber ) || {};
+  programData[ dataName ] = dataObject;
+  programDataMap.set( programNumber, programData );
+};
+
+/**
+ * Delete program data for the provided program number at the provided name.
+ * @param {number} programNumber
+ * @param {string} dataName
+ */
+paperLand.removeProgramData = ( programNumber, dataName ) => {
+  const programData = programDataMap.get( programNumber );
+  if ( programData ) {
+    delete programData[ dataName ];
+  }
+};
+
+/**
+ * Get program data for the provided program number at the provided name. Returns null if no data exists.
+ * @param {number} programNumber
+ * @param {string} dataName
+ * @return {*|null}
+ */
+paperLand.getProgramData = ( programNumber, dataName ) => {
+  const programData = programDataMap.get( programNumber );
+  if ( programData ) {
+    return programData[ dataName ] || null;
+  }
+  else {
+    return null;
   }
 };
 
