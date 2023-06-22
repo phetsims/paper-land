@@ -41,7 +41,6 @@ paperLand.modelComponentRemovedEmitter = new window.phet.axon.Emitter();
 // want to do some behavior when a program becomes adjacent to another (specific) program without using model info.
 // Map<number, {Object<string,number}> - keys are program numbers, values are any JavaScript object
 const programDataMap = new Map();
-window.programDataMap = programDataMap;
 
 /**
  * Adds a model component to the model Object with the provided name. Emits events so client code can observe

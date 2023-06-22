@@ -1,7 +1,7 @@
 # Board API
 
-!!! warning "Under Construction" 
-      
+!!! warning "Under Construction"
+
       We are working on updating our documentation - more details coming soon!
 
 ## At a Glance
@@ -10,7 +10,9 @@
 - [Paper Event Functions](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#paper-event-functions)
 - [Shared Data (`sharedData`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata)
 - [Board Model (`boardModel`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-model-boardmodel)
+- [Program Data](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#program-data)
 - [Board View](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-view)
+- [Whiskers](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#whiskers)
 - [Utils](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#utils)
 - [Console](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#console)
 
@@ -28,7 +30,8 @@ about the most heavily used PhET libraries, see
 - https://github.com/phetsims/tambo (Sound library)
 
 !!! info
-     Please see [Paper Programs API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md) for documentation on using paper data in the Projector display.
+Please see [Paper Programs API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md) for documentation
+on using paper data in the Projector display.
 
 Paper Playground Board functions encourage the [MVC software design pattern](./mvc.md).
 
@@ -46,6 +49,8 @@ events include the following:
 - paper gained markers
 - paper lost markers
 - paper markers moved
+- paper becomes adjacent to another paper
+- paper is separated from an adjacent paper
 
 To create a listener, a function is created and assigned to a variable. Then, it is passed as a string to the paper
 data. See examples below.
@@ -269,6 +274,70 @@ await paper.set( 'data', {
 } );
 ```
 
+### ```onProgramAdjacent( paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData )```
+
+Called when a program becomes adjacent to another program in one of the cardinal directions. Will fire when a whisker
+is
+
+#### Arguments
+
+- `{number}` `paperProgramNumber` - The number of the paper program.
+- `{number}` `otherPaperNumber` - The number of the other paper program.
+- `{string}` `direction` - The direction of the adjacency. One of `left`, `right`, `up`, `down`.
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign variables to this object to use the same variable in more than one function.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
+  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+
+#### Example
+
+```js
+const onProgramAdjacent = ( paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData ) => {
+  phet.paperLand.console.log( `${otherProgramNumber} ${direction} of ${programNumber}` );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramAdjacent: onProgramAdjacent.toString()
+    }
+  }
+} );
+``` 
+
+### ```onProgramSeparated( paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData )```
+
+Called when a program becomes separated from another program. The program was previously adjacent to another program
+and presumably received an onProgramAdjacent event.
+
+#### Arguments
+
+- `{number}` `paperProgramNumber` - The number of the paper program.
+- `{number}` `otherPaperNumber` - The number of the other paper program.
+- `{string}` `direction` - The direction of the adjacency. One of `left`, `right`, `up`, `down`.
+- `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
+  Assign variables to this object to use the same variable in more than one function.
+- `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
+  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+
+#### Example
+
+```js
+const onProgramSeparated = ( paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData ) => {
+  phet.paperLand.console.log( `${otherProgramNumber} ${direction} of ${programNumber}` );
+};
+
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    eventHandlers: {
+      onProgramSeparated: onProgramAdjacent.toString()
+    }
+  }
+} );
+``` 
+
 ### Shared Data (`sharedData`)
 
 Most Paper event functions have an argument called `sharedData`. It is a JavaScript object with important information
@@ -455,6 +524,74 @@ await paper.set( 'data', {
 } );
 ```
 
+## Program Data
+
+You can set data directly on a paper without going through the model. This is useful for data that is specific
+to a physical paper but that doesn't need to be generalized with a model component. For example, if you want one
+paper to share information with another paper when they become adjacent, that is a good use case for paper data.
+
+### `phet.paperLand.setProgramData( paperProgramNumber, dataName, data )`
+
+Set program data on a paper with a provided name.
+
+#### Arguments
+
+- `{number}` `paperProgramNumber` - The number of the paper to set data on.
+- `{string}` `dataName` - The name of the data to set on this program.
+- `{*}` `data` - Any kind of data you want to store.
+
+#### Example
+
+```js
+const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Set { foo: 'bar' } on this paper called `myData`. Another program can access this with getProgramData.
+  phet.paperLand.setProgramData( paperProgramNumber, 'myData', { foo: 'bar' } );
+};
+```
+
+### `phet.paperLand.getProgramData( paperProgramNumber, dataName )`
+
+Get program data for a specific program number and data name.
+
+#### Arguments
+
+- `{number}` `paperProgramNumber` - The number of the paper to query.
+- `{string}` `dataName` - The name of the data you expect to receive.
+
+#### Example
+
+```js
+const onProgramAdjacent = ( paperProgramNumber, otherProgramNumber, direction, scratchpad, sharedData ) => {
+
+  // Get the data called `myData` from the adjacent paper.
+  const dataFromOtherProgram = phet.paperLand.getProgramData( otherProgramNumber, 'myData' );
+  
+  if ( dataFromOtherProgram ) {
+    phet.paperLand.console.log( `The adjacent paper has data: ${dataFromOtherProgram}` );
+  }
+};
+```
+
+### `phet.paperLand.removeProgramData( paperProgramNumber, dataName )`
+
+Remove program data when you are done with it.
+
+#### Arguments
+- `{number}` `paperProgramNumber` - The number of the paper to remove data from.
+- `{string}` `dataName` - The name of the data you want to remove.
+
+#### Example
+
+```js
+const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+  // Remove the data called `myData` from this paper.
+  phet.paperLand.removeProgramData( paperProgramNumber, 'myData' );
+};
+``` 
+```
+
 ## Board Model (`boardModel`)
 
 The `boardModel` is
@@ -470,7 +607,8 @@ are any JavaScript object you want to add to the model.
 Adds a component to the `boardModel`. For programs that create model components, this should almost always
 be used in the `onProgramAdded` function.
 
->:warning: You almost always want to remove the model component in the `onProgramRemoved` function.
+> :warning: You almost always want to remove the model component in the `onProgramRemoved` function.
+>
 See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#onprogramremoved-paperprogramnumber-scratchpad-shareddata-).
 
 #### Arguments
@@ -581,7 +719,7 @@ with `addModelComponent`.
 When the Property is removed with `removeModelComponent`, the listener will be removed. You almost always want to use
 this in the `onProgramAdded` function.
 
->:warning: You almost always want to remove the listener in the `onProgramRemoved` function. See
+> :warning: You almost always want to remove the listener in the `onProgramRemoved` function. See
 [removeModelPropertyLink](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#phetpaperlandremovemodelpropertylink-componentname-linkid-).
 
 #### Arguments
@@ -789,6 +927,49 @@ await paper.set( 'data', {
     updateTime: Date.now(),
     eventHandlers: {
       onProgramAdded: onProgramAdded.toString()
+    }
+  }
+} );
+```
+
+## Whiskers
+
+'Whiskers' are the mechanism by which papers determine if they are adjacent to another paper. Whiskers are lines
+that extend outward from the center of each paper side. When the line intersects another paper, the
+`onProgramAdjacent` event fires. See the `onProgramAdjacent` and `onProgramSeparated` paper events for more information.
+
+Every paper has whiskers. You can change the whisker lengths with the following options.
+
+### `whiskerLength`
+
+Sets the length of all whiskers. The value is a ratio of the width of the entire camera space.
+
+#### Example
+
+```js
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    whiskerLength: 0.3
+  }
+} );
+```
+
+### `customWhiskerLengths`
+
+Sets the length of each whisker individually. The value is a ratio of the width of the entire camera space.
+
+#### Example
+
+```js
+await paper.set( 'data', {
+  paperPlaygroundData: {
+    updateTime: Date.now(),
+    customWhiskerLengths: {
+      top: 0.3,
+      right: 0.2,
+      bottom: 0.1,
+      left: 0.4
     }
   }
 } );
