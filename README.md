@@ -1,5 +1,7 @@
 # Paper Playground 
 
+![logo](docs/assets/hand-with-dots.png)
+
 ## Interactive Play Meets Multimodal Web Experience
 
 Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping JavaScript* code to real pieces of paper and manipulating the code in your **physical space**.
@@ -20,16 +22,19 @@ The ideas behind Paper Playground are simple, but the possibilities are infinite
 6. Move programs around and trigger the mappings between your papers position in space and your code!
 7. Change your program code, make new papers, and keep the creativity going!
 
-
 ![Paper Playground setup detecting paper programs that create a moon lander and control vertical thrust](/docs/assets/full-interface.png)
 
 ## Installation
 
 See the [Paper Playground Docs website](https://phetsims.github.io/paper-land/setup/install/) for the most up to date installation instructions.
 
+![Paper Playground setup detecting paper programs that create a moon lander and control vertical position](/www/web-assets/lunar-lander-craft.gif)
+
 ## What is coming?
 
-Our team is focused on a few large initiatives for integrating other projects into Paper Playground and for making it more friendly for non-technical, non-JavaScript users and designers. If these projects interest you, please join our community and take part in the development and discussion!
+Our team is focused on a few large initiatives for integrating other projects into Paper Playground and for making it more friendly for non-technical, non-JavaScript users and designers. 
+
+⭐ If these projects interest you, please [join our community](https://phetsims.github.io/paper-land/community/) and take part in the development and discussion!
 
 1. :robot: Using LLMs to support a user answer the question: "How do I turn my idea for a multimodal interactive into data variables, functions, and entire programs?". We are exploring generative models to support user creativity and engage iteratively toward output of the full suite of programs for their project.
 
@@ -37,11 +42,9 @@ Our team is focused on a few large initiatives for integrating other projects in
 
 3. :outbox_tray: Easier API integration for paper programs to control or output to other browser displays (besides our [scenery](https://github.com/phetsims/scenery)-focused Board and the legacy canvas-focused Projector), as well as new inputs such as microcontroller integration via Bluetooth and WebSockets.
 
-However, there are **many other areas** that the project can be expanded (see below for Contributing guidelines and suggestions)!
+However, there are **many other areas** that the project can be expanded (see Community below for Contributing guidelines and suggestions)!
 
-## :earth_asia: :earth_america: :earth_africa: [Join our Community](/docs/community.md) :earth_asia: :earth_america: :earth_africa:
-
-![Paper Playground setup detecting paper programs that create a moon lander and control vertical position](/www/web-assets/lunar-lander-craft.gif)
+## :earth_asia::earth_americas::earth_africa: [Join our Community!](https://phetsims.github.io/paper-land/community/) :earth_asia::earth_americas::earth_africa:
 
 ## :clipboard: Roadmap
 
