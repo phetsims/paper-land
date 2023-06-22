@@ -11,6 +11,7 @@ Before we begin, make sure you have [installed Paper Playground](../setup/instal
 ## Step 1: Open up all pages of the interface
 
 Navigate to localhost:3000 in your browser and either click the links or open in your browser:
+
 1. Camera.html
 2. Projector.html
 3. Board.html
@@ -22,14 +23,22 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 
 ++shift+"Mouse Drag"++
 
+### What is a Space?
+A space is way of organizing your programs. All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well.
+
+
 ## What is the Board screen?
 
 ## What is the Projector screen?
 
+Given the current structure of the client, all of the code detected in the Camera is run through the Projector. However, in the latest iteration, we have focused all development on code outputting to the Board. The Projector must be opened to run the code, but the tab or window does not need to be visible. 
+
+If you would like to use vanilla Web Canvas or make use of the projection overlay feature of the legacy Paper Programs project, then this is the page where the code will output. See [https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md) for more on this.
+
 
 ## Printing your first program
 
-Click the "create hello world program" button, and print the resulting program. Once it has finished printing, click "done" next to its name. Place that program somewhere in the projector's space. If you have all the overlay checkboxes checked, you should see a blue rectangle in the camera view indicating that the program has been detected. If you don't see this, it may mean some of the dots aren't being recognized and you need to try calibrating again (you may also want to adjust the lighting in the room).
+Select the "Create New Program" button. Create a new program from the "Hello World" template. From your  Once it has finished printing, click "done" next to its name. Place that program somewhere in the projector's space. If you have all the overlay checkboxes checked, you should see a blue rectangle in the camera view indicating that the program has been detected. If you don't see this, it may mean some of the dots aren't being recognized and you need to try calibrating again (you may also want to adjust the lighting in the room).
 
 ![The camera recognizing a program]()
 

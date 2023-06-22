@@ -26,6 +26,7 @@ To make any contributions, please open an issue if one does not exist and then o
 ##  Features or bug fixes to the tool
 -  See [WISHLIST.md](/WISHLIST.md) 
 -  Search [open issues by the wishlist label](https://github.com/phetsims/paper-land/labels/wishlist) or [good first issue label](https://github.com/phetsims/paper-land/labels/good%20first%20issue)
+-  Open an issue or [discuss with us](community.md) what you'd like to work on!
 
 1. Please create an issue if one does not exist. 
 2. Fork the project and make any changes.
