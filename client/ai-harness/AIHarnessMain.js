@@ -56,7 +56,7 @@ export default function AIHarnessMain( props ) {
   const [ useContextualCompression, setUseContextualCompression ] = useState( false );
 
   // State for whether we are testing function calling
-  const [ testFunctionCalling, setTestFunctionCalling ] = useState( true );
+  const [ testFunctionCalling, setTestFunctionCalling ] = useState( false );
 
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
