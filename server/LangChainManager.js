@@ -201,6 +201,68 @@ class LangChainManager {
     }
   }
 
+  static async testFunctionCalling( prompt, options ) {
+    if ( DEBUG_RESPONSES ) {
+      return {
+        text: 'This is a test response from the server, with function calling'
+      };
+    }
+
+    options = _.merge( {
+      temperature: 0.0
+    }, options );
+
+    // Temperature needs to be within 0 and 1 and a number
+    const temperature = Math.min( Math.max( parseInt( options.temperature, 10 ), 0.0 ), 1.0 );
+
+    // We have to re-read the document each time because the user is likely editing these files
+    const fileContents = fs.readFileSync( './server/training-files/functions.json', 'utf8' );
+    const json = JSON.parse( fileContents );
+
+    if ( !json.functions ) {
+      throw new Error( 'functions.json must contain a "functions" property with an array of functions.' );
+    }
+
+    // const chatCompletion = await openai.createChatCompletion( {
+    //   model: 'gpt-3.5-turbo-0613',
+    //   messages: [ { role: 'user', content: 'Print the number 5 to the console.' } ],
+    //   functions: [
+    //     {
+    //       'name': 'console_log',
+    //       'description': 'Print something to the console',
+    //       'parameters': {
+    //         'type': 'object',
+    //         'properties': {
+    //           'content': {
+    //             'type': 'string',
+    //             'description': 'The item you want to print'
+    //           },
+    //           'unit': {
+    //             'type': 'string',
+    //             'enum': [ 'celsius', 'fahrenheit' ]
+    //           }
+    //         },
+    //         'required': [ 'content' ]
+    //       }
+    //     }
+    //   ]
+    // } );
+
+    const chatCompletion = await openai.createChatCompletion( {
+      model: 'gpt-3.5-turbo-0613',
+      messages: [ { role: 'user', content: prompt } ],
+      functions: json.functions,
+      temperature: temperature
+    } );
+
+    const messageResponse = chatCompletion.data.choices[ 0 ].message;
+    const functionArguments = messageResponse.function_call.arguments;
+
+    return {
+      text: functionArguments
+    };
+  }
+
   /**
    * Upload training documents for the model to use.
    * @param files

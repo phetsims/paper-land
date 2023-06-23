@@ -377,6 +377,25 @@ if ( process.env.OPENAI_API_KEY ) {
     }
   } );
 
+  openAIRouter.post( '/testFunctionCalling', async ( req, res ) => {
+    try {
+      const prompt = req.body.prompt;
+
+      const response = await LangChainManager.testFunctionCalling( prompt, {
+        temperature: req.body.temperature
+      } );
+      res.json( response );
+    }
+    catch( error ) {
+      console.log( error.response );
+      res.json( {
+        error: {
+          message: error.message
+        }
+      } );
+    }
+  } );
+
   /**
    * Ask OpenAI for the available chat engines.
    */

@@ -1,0 +1,151 @@
+{
+  "functions": [
+    {
+      "name": "createPrograms",
+      "description": "Creates a system of JavaScript programs that implement the requested behavior.",
+      "parameters": {
+        "definitions": {
+          "NumberProperty": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number",
+                "description": "The value of the number property."
+              },
+              "min": {
+                "type": "number",
+                "description": "The minimum value of the number property."
+              },
+              "max": {
+                "type": "number",
+                "description": "The maximum value of the number property."
+              }
+            }
+          },
+          "BooleanProperty": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "boolean",
+                "description": "The value of the boolean property."
+              }
+            }
+          },
+          "EnumerationProperty": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string",
+                "description": "The value of the enumeration property."
+              },
+              "validValues": {
+                "type": "array",
+                "description": "The collection of valid values for the enumeration property.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "type": "object",
+        "properties": {
+          "programs": {
+            "type": "array",
+            "description": "The collection of programs that will be in this system.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name of the program describing what it does."
+                },
+                "modelComponents": {
+                  "type": "array",
+                  "description": "The collection of model components that will be in this program.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the model component describing what it does."
+                      },
+                      "propertyType": {
+                        "type": "object",
+                        "properties": {
+                          "type": {
+                            "oneOf": [
+                              {
+                                "$ref": "#/parameters/definitions/NumberProperty"
+                              },
+                              {
+                                "$ref": "#/parameters/definitions/BooleanProperty"
+                              },
+                              {
+                                "$ref": "#/parameters/definitions/EnumerationProperty"
+                              }
+                            ]
+                          }
+                        },
+                        "description": "The data type that can be used to represent this model component."
+                      }
+                    }
+                  }
+                },
+                "viewComponents": {
+                  "type": "array",
+                  "description": "The collection of view components that will be in this program and represent the model components.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the view component describing what it does."
+                      },
+                      "componentType": {
+                        "type": "string",
+                        "description": "The type of view component that represents the model component.",
+                        "enum": [
+                          "circle",
+                          "rectangle",
+                          "sound",
+                          "checkbox",
+                          "slider",
+                          "speech"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "controllerComponents": {
+                  "type": "array",
+                  "description": "The collection of controller components that will be in this program to interact with papers and control components.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "The name of the controller component describing what it does."
+                      },
+                      "componentType": {
+                        "type": "string",
+                        "description": "The type of controller component that interacts with papers and controls components.",
+                        "enum": [
+                          "matchCenter",
+                          "matchX",
+                          "matchY",
+                          "rotation",
+                          "markers"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

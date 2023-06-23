@@ -55,6 +55,9 @@ export default function AIHarnessMain( props ) {
   // state for whether we are using contextual compression
   const [ useContextualCompression, setUseContextualCompression ] = useState( false );
 
+  // State for whether we are testing function calling
+  const [ testFunctionCalling, setTestFunctionCalling ] = useState( true );
+
   // Items of the log, with values { user: 'me' | 'ai' | 'system', message: String, type: 'chat' | 'error' }
   const [ chatLog, setChatLog ] = useState( [
     {
@@ -176,23 +179,39 @@ export default function AIHarnessMain( props ) {
     // for chat, we feed all previous messages for a new response
     // const allMessages = newChatLog.map( message => message.message ).join( '\n' );
 
-    const response = await fetch( getAIConnectionUrl( 'query' ), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify( {
-        prompt: input,
-        temperature: temperature,
-        modelName: selectedEngine,
-        splitterChunkSize: chunkSize,
-        splitterChunkOverlap: chunkOverlap,
-        useContextualCompression: useContextualCompression,
-        preTrainMessage: preTrainMessage,
-        postTrainMessage: postTrainMessage
-      } )
-      // body: JSON.stringify( { prompt: allMessages } )
-    } );
+    let response;
+    if ( testFunctionCalling ) {
+
+      // unique API for function calling (not through Langchain)
+      response = await fetch( getAIConnectionUrl( 'testFunctionCalling' ), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( {
+          prompt: input,
+          temperature: temperature
+        } )
+      } );
+    }
+    else {
+      response = await fetch( getAIConnectionUrl( 'query' ), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify( {
+          prompt: input,
+          temperature: temperature,
+          modelName: selectedEngine,
+          splitterChunkSize: chunkSize,
+          splitterChunkOverlap: chunkOverlap,
+          useContextualCompression: useContextualCompression,
+          preTrainMessage: preTrainMessage,
+          postTrainMessage: postTrainMessage
+        } )
+      } );
+    }
 
     const data = await response.json();
     console.log( data );
@@ -253,7 +272,9 @@ export default function AIHarnessMain( props ) {
         </div>
         <div className={combineClasses( styles.row, styles.panelClass, styles.controlsRow )}>
           <div className={styles.controlsColumn}>
-            <div>
+            <div
+              hidden={testFunctionCalling}
+            >
               <Form.Check
                 type={'checkbox'}
                 checked={useContextualCompression}
@@ -269,6 +290,26 @@ export default function AIHarnessMain( props ) {
                 }
                 id={'use-contextual-compression'}
                 label={'Use Contextual Compression'}
+              />
+            </div>
+            <div>
+              <Form.Check
+                type={'checkbox'}
+                checked={testFunctionCalling}
+                onChange={
+                  event => {
+                    setTestFunctionCalling( event.target.checked );
+
+                    // if using function calling, we are limited to a single model and fewer controls
+                    if ( event.target.checked ) {
+
+                      // the only model that supports function calling
+                      setSelectedEngine( 'gpt-3.5-turbo-0163' );
+                    }
+                  }
+                }
+                id={'use-function-calling'}
+                label={'Test Function Calling'}
               />
             </div>
             <div hidden={!useContextualCompression}>
@@ -293,17 +334,21 @@ export default function AIHarnessMain( props ) {
             </div>
           </div>
           <div className={styles.controlsColumn}>
-            <div>
+            <div
+              hidden={testFunctionCalling}
+            >
               <Form.Group>
                 <Form.Label>Training documents</Form.Label>
                 <Form.Control
                   type='file'
-                  accept='.md, .js'
+                  accept='.md, .js, .json'
                   multiple={true}
                   onChange={uploadTrainingDocuments}/>
               </Form.Group>
             </div>
-            <div>
+            <div
+              hidden={testFunctionCalling}
+            >
               <Form.Label>{`Chunk Size: ${chunkSize}`}</Form.Label>
               <Form.Range
                 value={chunkSize}
@@ -312,7 +357,9 @@ export default function AIHarnessMain( props ) {
                 step={1}
                 onChange={event => setChunkSize( event.target.value )}/>
             </div>
-            <div>
+            <div
+              hidden={testFunctionCalling}
+            >
               <Form.Label>{`Chunk Overlap: ${chunkOverlap}`}</Form.Label>
               <Form.Range
                 value={chunkOverlap}
@@ -322,7 +369,7 @@ export default function AIHarnessMain( props ) {
                 onChange={event => setChunkOverlap( event.target.value )}/>
             </div>
           </div>
-          <div className={styles.controlsColumn} hidden={useContextualCompression}>
+          <div className={styles.controlsColumn} hidden={useContextualCompression || testFunctionCalling}>
             <div>
               <Form.Label>Pre-train message</Form.Label>
               <Form.Control
@@ -382,6 +429,15 @@ function ChatItem( props ) {
                 return ( <div key={index}>
                   <SyntaxHighlighter language='javascript' style={darcula}>
                     {withoutTicks}
+                  </SyntaxHighlighter>
+                </div> );
+              }
+              else if ( subString.startsWith( '{' ) ) {
+
+                // Hacky assumption that this is JSON format...so we style it accordingly.
+                return ( <div key={index}>
+                  <SyntaxHighlighter language='json' style={darcula}>
+                    {subString}
                   </SyntaxHighlighter>
                 </div> );
               }
