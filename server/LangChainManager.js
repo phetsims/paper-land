@@ -147,18 +147,13 @@ class LangChainManager {
 
       // We have to re-read the document each time because the user is likely editing these files
       const fileContents = fs.readFileSync( './server/training-files/functions.json', 'utf8' );
-      const json = JSON.parse( fileContents );
-
-      if ( !json.functions ) {
-        throw new Error( 'functions.json must contain a "functions" property with an array of functions.' );
-      }
 
       // assemble messages
       const messages = [];
       if ( options.preTrainMessage ) {
         messages.push( { role: 'system', content: options.preTrainMessage } );
       }
-      messages.push( { role: 'system', content: JSON.stringify( json.functions ) } );
+      messages.push( { role: 'system', content: JSON.stringify( fileContents ) } );
       messages.push( { role: 'user', content: prompt } );
       if ( options.postTrainMessage ) {
         messages.push( { role: 'system', content: options.postTrainMessage } );

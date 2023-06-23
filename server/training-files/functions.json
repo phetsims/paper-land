@@ -1,189 +1,178 @@
 {
-  "functions": [
-    {
-      "additionalProperties": false,
-      "name": "createPrograms",
-      "description": "Creates a system of JavaScript programs that implement the requested behavior.",
-      "parameters": {
-        "definitions": {
-          "PositionProperty": {
-            "type:": "object",
-            "description": "A data type for a model component that can represent an x,y position in space.",
+  "additionalProperties": false,
+  "definitions": {
+    "PositionProperty": {
+      "type:": "object",
+      "description": "A data type for a model component that can represent an x,y position in space.",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number",
+              "description": "The x value of this position."
+            },
+            "y": {
+              "type": "number",
+              "description": "The y value of this position."
+            }
+          }
+        }
+      }
+    },
+    "DerivedProperty": {
+      "type": "object",
+      "description": "A data type whose values is calculated from other model components. Contains a list of dependencies and a derivation function.",
+      "properties": {
+        "dependencies": {
+          "type": "array",
+          "description": "The name of model components that are used to calculate the value of this component. The name includes the program the component is assigned to like 'Program 1.Mass'",
+          "items": {
+            "type": "string"
+          }
+        },
+        "derivation": {
+          "type": "string",
+          "description": "The derivation function that will be used to calculate the value of this derived property. Arguments to the function are the values of the dependencies, in that order."
+        }
+      }
+    },
+    "NumberProperty": {
+      "type": "object",
+      "description": "A data type for a model component that can represent a single value. This should not be used for positions.",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "The current value of the number property."
+        },
+        "min": {
+          "type": "number",
+          "description": "The minimum value of the number property."
+        },
+        "max": {
+          "type": "number",
+          "description": "The maximum value of the number property."
+        }
+      }
+    },
+    "BooleanProperty": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "boolean"
+        }
+      }
+    },
+    "EnumerationProperty": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The value of the enumeration property."
+        },
+        "validValues": {
+          "type": "array",
+          "description": "The collection of valid values for the enumeration property.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "programs": {
+    "type": "array",
+    "description": "The collection of programs that will be in this system.",
+    "items": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the program describing what it does."
+        },
+        "modelComponents": {
+          "type": "array",
+          "description": "The collection of model components that will be in this program.",
+          "items": {
+            "type": "object",
             "properties": {
-              "value": {
-                "type": "object",
-                "properties": {
-                  "x": {
-                    "type": "number",
-                    "description": "The x value of this position."
+              "name": {
+                "type": "string",
+                "description": "The name of the model component describing what it does."
+              },
+              "data": {
+                "description": "The data type for the model componenent. For position data, be sure to use PositionProperty.",
+                "oneOf": [
+                  {
+                    "$ref": "#/definitions/NumberProperty"
                   },
-                  "y": {
-                    "type": "number",
-                    "description": "The y value of this position."
+                  {
+                    "$ref": "#/definitions/BooleanProperty"
+                  },
+                  {
+                    "$ref": "#/definitions/EnumerationProperty"
+                  },
+                  {
+                    "$ref": "#/definitions/PositionProperty"
+                  },
+                  {
+                    "$ref": "#/definitions/DerivedProperty"
                   }
-                }
-              }
-            }
-          },
-          "DerivedProperty": {
-            "type": "object",
-            "description": "A data type whose values is calculated from other model components. Contains a list of dependencies and a derivation function.",
-            "properties": {
-              "dependencies": {
-                "type": "array",
-                "description": "The name of model components that are used to calculate the value of this component.",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "derivation": {
-                "type": "string",
-                "description": "The derivation function that will be used to calculate the value of this derived property. Arguments to the function are the values of the dependencies, in that order."
-              }
-            }
-          },
-          "NumberProperty": {
-            "type": "object",
-            "description": "A data type for a model component that can represent a single value. This should not be used for positions.",
-            "properties": {
-              "value": {
-                "type": "number",
-                "description": "The current value of the number property."
-              },
-              "min": {
-                "type": "number",
-                "description": "The minimum value of the number property."
-              },
-              "max": {
-                "type": "number",
-                "description": "The maximum value of the number property."
-              }
-            }
-          },
-          "BooleanProperty": {
-            "type": "object",
-            "properties": {
-              "value": {
-                "type": "boolean"
-              }
-            }
-          },
-          "EnumerationProperty": {
-            "type": "object",
-            "properties": {
-              "value": {
-                "type": "string",
-                "description": "The value of the enumeration property."
-              },
-              "validValues": {
-                "type": "array",
-                "description": "The collection of valid values for the enumeration property.",
-                "items": {
-                  "type": "string"
-                }
+                ]
               }
             }
           }
         },
-        "type": "object",
-        "properties": {
-          "programs": {
-            "type": "array",
-            "description": "The collection of programs that will be in this system.",
-            "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "The name of the program describing what it does."
-                },
-                "modelComponents": {
-                  "type": "array",
-                  "description": "The collection of model components that will be in this program.",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the model component describing what it does."
-                      },
-                      "data": {
-                        "description": "The data type for the model componenent. For position data, be sure to use PositionProperty.",
-                        "oneOf": [
-                          {
-                            "$ref": "#/parameters/definitions/NumberProperty"
-                          },
-                          {
-                            "$ref": "#/parameters/definitions/BooleanProperty"
-                          },
-                          {
-                            "$ref": "#/parameters/definitions/EnumerationProperty"
-                          },
-                          {
-                            "$ref": "#/parameters/definitions/PositionProperty"
-                          },
-                          {
-                            "$ref": "#/parameters/definitions/DerivedProperty"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                },
-                "viewComponents": {
-                  "type": "array",
-                  "description": "The collection of view components that will be in this program and represent the model components.",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the view component describing what it does."
-                      },
-                      "componentType": {
-                        "type": "string",
-                        "description": "The type of view component that represents the model component.",
-                        "enum": [
-                          "circle",
-                          "rectangle",
-                          "sound",
-                          "checkbox",
-                          "slider",
-                          "speech"
-                        ]
-                      }
-                    }
-                  }
-                },
-                "controllerComponents": {
-                  "type": "array",
-                  "description": "The collection of controller components that will be in this program to interact with papers and control components.",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "The name of the controller component describing what it does."
-                      },
-                      "componentType": {
-                        "type": "string",
-                        "description": "The type of controller component that interacts with papers and controls components.",
-                        "enum": [
-                          "matchCenter",
-                          "matchX",
-                          "matchY",
-                          "rotation",
-                          "markers"
-                        ]
-                      }
-                    }
-                  }
-                }
+        "viewComponents": {
+          "type": "array",
+          "description": "The collection of view components that will be in this program and represent the model components.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the view component describing what it does."
+              },
+              "componentType": {
+                "type": "string",
+                "description": "The type of view component that represents the model component.",
+                "enum": [
+                  "circle",
+                  "rectangle",
+                  "sound",
+                  "checkbox",
+                  "slider",
+                  "speech"
+                ]
+              }
+            }
+          }
+        },
+        "controllerComponents": {
+          "type": "array",
+          "description": "The collection of controller components that will be in this program to interact with papers and control components.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the controller component describing what it does."
+              },
+              "componentType": {
+                "type": "string",
+                "description": "The type of controller component that interacts with papers and controls components.",
+                "enum": [
+                  "matchCenter",
+                  "matchX",
+                  "matchY",
+                  "rotation",
+                  "markers"
+                ]
               }
             }
           }
         }
       }
     }
-  ]
+  }
 }
