@@ -167,8 +167,24 @@ class LangChainManager {
 
       const messageResponse = chatCompletion.data.choices[ 0 ].message;
 
+      // now look back on the message and make sure that the output conforms to the expected format
+      const validationMessages = [
+        { role: 'system', content: 'I have the following JSON schema:' },
+        { role: 'system', content: JSON.stringify( fileContents ) },
+        { role: 'system', content: 'Recreate the the following JSON, making sure that the values are valid according to teh schema. If it is correct, just print it again.' },
+        { role: 'system', content: messageResponse.content }
+      ];
+
+      console.log( 'VALIDATING....' );
+      const validateCompletion = await openai.createChatCompletion( {
+        model: 'gpt-3.5-turbo',
+        messages: validationMessages,
+        temperature: temperature
+      } );
+      const validatedResponse = validateCompletion.data.choices[ 0 ].message;
+
       return {
-        text: messageResponse.content
+        text: validatedResponse.content
       };
     }
     else {

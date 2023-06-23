@@ -1,6 +1,6 @@
 {
   "additionalProperties": false,
-  "definitions": {
+  "$defs": {
     "PositionProperty": {
       "type:": "object",
       "description": "A data type for a model component that can represent an x,y position in space.",
@@ -52,7 +52,12 @@
         "max": {
           "type": "number",
           "description": "The maximum value of the number property."
-        }
+        },
+        "required": [
+          "value",
+          "min",
+          "max"
+        ]
       }
     },
     "BooleanProperty": {
@@ -101,22 +106,22 @@
                 "description": "The name of the model component describing what it does."
               },
               "data": {
-                "description": "The data type for the model componenent. For position data, be sure to use PositionProperty.",
+                "description": "The data type for the model component. For position data, be sure to use PositionProperty.",
                 "oneOf": [
                   {
-                    "$ref": "#/definitions/NumberProperty"
+                    "$ref": "#/#$defs/NumberProperty"
                   },
                   {
-                    "$ref": "#/definitions/BooleanProperty"
+                    "$ref": "#/#$defs/BooleanProperty"
                   },
                   {
-                    "$ref": "#/definitions/EnumerationProperty"
+                    "$ref": "#/#$defs/EnumerationProperty"
                   },
                   {
-                    "$ref": "#/definitions/PositionProperty"
+                    "$ref": "#/#$defs/PositionProperty"
                   },
                   {
-                    "$ref": "#/definitions/DerivedProperty"
+                    "$ref": "#/#$defs/DerivedProperty"
                   }
                 ]
               }
@@ -125,7 +130,7 @@
         },
         "viewComponents": {
           "type": "array",
-          "description": "The collection of view components that will be in this program and represent the model components.",
+          "description": "The collection of components that represent model components and display images, sound, or other output to the user.",
           "items": {
             "type": "object",
             "properties": {
@@ -140,35 +145,33 @@
                   "circle",
                   "rectangle",
                   "sound",
-                  "checkbox",
-                  "slider",
                   "speech"
                 ]
               }
             }
           }
         },
-        "controllerComponents": {
-          "type": "array",
-          "description": "The collection of controller components that will be in this program to interact with papers and control components.",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The name of the controller component describing what it does."
-              },
-              "componentType": {
-                "type": "string",
-                "description": "The type of controller component that interacts with papers and controls components.",
-                "enum": [
-                  "matchCenter",
-                  "matchX",
-                  "matchY",
-                  "rotation",
-                  "markers"
-                ]
-              }
+        "controllerComponent": {
+          "type": "object",
+          "description": "A component that describes how this program can be used to control the value of a modelComponent. A DerivedProperty cannot be controlled.",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the component."
+            },
+            "controlledProperty": {
+              "type": "string",
+              "description": "The name of the model component that this controller component will control."
+            },
+            "controllerType": {
+              "type": "string",
+              "enum": [
+                "matchCenter",
+                "matchX",
+                "matchY",
+                "rotation",
+                "markers"
+              ]
             }
           }
         }

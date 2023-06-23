@@ -327,7 +327,7 @@ export default function AIHarnessMain( props ) {
               <Form.Label>{`Temperature: ${temperature}`}</Form.Label>
               <Form.Range
                 value={temperature}
-                min={0.2}
+                min={0.0}
                 max={1}
                 step={0.01}
                 onChange={event => setTemperature( event.target.value )}/>
