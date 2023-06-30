@@ -15,7 +15,12 @@ import boardConsole from './boardConsole.js';
 import styles from './BoardMain.css';
 import BoardMain from './BoardMain.js';
 import boardModel from './boardModel.js';
+
+// Import components so they are available in the namespace
 import './boardUtils.js';
+import './connections/ConnectionElement.js';
+import './connections/SingleChildConnectionElement.js';
+
 import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
 // constants
