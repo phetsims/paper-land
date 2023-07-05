@@ -16,6 +16,7 @@ const SpaceSelectControls = ( props ) => {
   const [ selectedSystemName, setSelectedSystemName ] = useState( '' );
   const [ availableSystems, setAvailableSystems ] = useState( [] );
 
+  // Only called on mount, gets the list of available spaces.
   useEffect( () => {
 
     // Get the list of available programs once
@@ -32,6 +33,7 @@ const SpaceSelectControls = ( props ) => {
     } );
   }, [] );
 
+  // Update state to include the list of available systems.
   const updateSystemNames = () => {
     if ( selectedSpaceName ) {
       const systemsList = new URL( `api/creator/systemNames/${selectedSpaceName}`, window.location.origin ).toString();
@@ -51,6 +53,7 @@ const SpaceSelectControls = ( props ) => {
     }
   };
 
+  // Handle a request to delete a system.
   const handleSystemDelete = () => {
     if ( selectedSpaceName && selectedSpaceName ) {
       xhr.get(
@@ -81,6 +84,7 @@ const SpaceSelectControls = ( props ) => {
       <Container>
         <Row>
           <Col>
+            <h2>Space Name:</h2>
             <Form.Select
               name='spaces'
               id='spaces'
@@ -101,6 +105,7 @@ const SpaceSelectControls = ( props ) => {
           </Col>
           <Col>
             <Col>
+              <h2>System Name:</h2>
               <Form.Select
                 name='spaces'
                 id='spaces'
