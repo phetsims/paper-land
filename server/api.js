@@ -315,4 +315,60 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
     } );
 } );
 
+/**
+ * Get the existing system names for the provided space name.
+ */
+router.get( '/api/creator/systemNames/:spaceName', ( req, res ) => {
+  const { spaceName } = req.params;
+  knex
+    .select( 'systemName' )
+    .from( 'creator-data' )
+    .where( { spaceName } )
+    .then( selectResult => {
+      res.json( { systemNames: selectResult.map( resultObject => resultObject.systemName ) } );
+    } );
+} );
+
+/**
+ * Create a new system name at the provided space name.
+ */
+router.post( '/api/creator/systemNames/:spaceName/:systemName', ( req, res ) => {
+  const { spaceName, systemName } = req.params;
+
+  knex
+    .select( 'systemName' )
+    .from( 'creator-data' )
+    .where( { spaceName } )
+    .then( selectResult => {
+      const existingNames = selectResult.map( result => result.systemName );
+
+      console.log( 'EXISTING NAMES', existingNames );
+      if ( existingNames.includes( systemName ) ) {
+        res.status( 400 ).send( 'Name already exists for this space.' );
+      }
+      else {
+        knex( 'creator-data' )
+          .insert( {
+            spaceName, systemName, systemData: {}, editing: false
+          } )
+          .then( () => {
+            res.json( { systemName: systemName } );
+          } );
+      }
+    } );
+} );
+
+/**
+ * Delete the specified system at the provided space name.
+ */
+router.get( '/api/creator/:spaceName/delete/:systemName', ( req, res ) => {
+  const { spaceName, systemName } = req.params;
+  knex( 'creator-data' )
+    .where( { spaceName, systemName: systemName } )
+    .del()
+    .then( numberOfProgramsDeleted => {
+      res.json( { numberOfProgramsDeleted } );
+    } );
+} );
+
 module.exports = router;

@@ -64,7 +64,8 @@
 }
 
 :local(.controlElement) {
-  padding: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /*Override the default focus highlight styling for bootstrap to match our color scheme*/

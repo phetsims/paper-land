@@ -3,11 +3,12 @@
  * or component data.
  */
 
-import React, { useEffect, useState, forwardRef } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import styles from '../CreatorMain.css';
 import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
+import SpaceSelectControls from './SpaceSelectControls.js';
 
 // eslint-disable-next-line react/display-name
 const CreatorControls = forwardRef( ( props, ref ) => {
@@ -32,7 +33,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
 
   return (
     <div className={styles.scrollable} ref={ref}>
-      <h1>{'{{Space Name}}'}</h1>
+      <SpaceSelectControls></SpaceSelectControls>
       <h3>{activeEdit ? activeEdit.program.number : ''}</h3>
       {activeEdit && activeEdit.editType === EditType.METADATA ?
        <ProgramMetadataForm
