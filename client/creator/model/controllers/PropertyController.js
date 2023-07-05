@@ -27,6 +27,17 @@ export default class PropertyController {
     this.controlType = controlTypeValue;
   }
 
+  /**
+   * Save the data related to this controller so it can be restored to JSON.
+   * @return {{controlType, name: string}}
+   */
+  save() {
+    return {
+      name: this.name,
+      controlType: this.controlType.name
+    };
+  }
+
   static controlTypeStringToValue( enumValue, enumeration ) {
     if ( typeof enumValue === 'string' ) {
       return enumeration.enumeration.getValue( enumValue );

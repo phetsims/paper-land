@@ -17,6 +17,8 @@ export default class CreatorModel {
 
     // {Property.<ActiveEdit|null>} - A reference to the program and type of components/data we are editing for it.
     this.activeEditProperty = new phet.axon.Property( null );
+
+    window.saveFunction = this.save.bind( this );
   }
 
   createProgram( initialPosition ) {

@@ -1,5 +1,6 @@
 /**
- * A Property for the model with a given name.
+ * A Property for the model with a given name. This doesn't actually create the Property, but
+ * represents the data for an observable to be created in Paper Playground.
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)
  */
@@ -7,17 +8,21 @@ class NamedProperty {
 
   /**
    * @param {string} name
-   * @param {Property} property
+   * @param {'BooleanProperty'|'NumberProperty'|'StringProperty'|'Vector2Property'|'DerivedProperty'} propertyType - A name for the type of Property this is, to categorize UI controls
    */
-  constructor( name, property ) {
+  constructor( name, propertyType ) {
     this.name = name;
-    this.property = property;
-
-    // @public (read-only) {string} - A name for the type of Property this is, to categorize UI controls
-    this.propertyType = property.constructor.name;
+    this.propertyType = propertyType;
 
     // emits an event when it is time for this NamedProperty to be deleted
     this.deleteEmitter = new phet.axon.Emitter();
+  }
+
+  /**
+   * Save to a JSON to load state.
+   */
+  save() {
+    throw new Error( 'Subclasses must override' );
   }
 
   /**

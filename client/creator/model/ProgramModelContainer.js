@@ -1,7 +1,12 @@
 /**
  * Collection of model components for a single program, with functions to create them.
  */
+import NamedBooleanProperty from './NamedBooleanProperty.js';
+import NamedDerivedProperty from './NamedDerivedProperty.js';
+import NamedEnumerationProperty from './NamedEnumerationProperty.js';
+import NamedNumberProperty from './NamedNumberProperty.js';
 import NamedProperty from './NamedProperty.js';
+import NamedVector2Property from './NamedVector2Property.js';
 
 export default class ProgramModelContainer {
   constructor() {
@@ -24,7 +29,7 @@ export default class ProgramModelContainer {
    * @param {boolean} defaultValue
    */
   addBooleanProperty( name, defaultValue ) {
-    const newNamedProperty = new NamedProperty( name, new phet.axon.BooleanProperty( defaultValue ) );
+    const newNamedProperty = new NamedBooleanProperty( name, defaultValue );
     this.namedBooleanProperties.push( newNamedProperty );
     this.allComponents.push( newNamedProperty );
 
@@ -46,7 +51,7 @@ export default class ProgramModelContainer {
    * Creates a Vector2Property for the model.
    */
   addVector2Property( name, x, y ) {
-    const newNamedProperty = new NamedProperty( name, new phet.dot.Vector2Property( new phet.dot.Vector2( x, y ) ) );
+    const newNamedProperty = new NamedVector2Property( name, x, y );
     this.namedVector2Properties.push( newNamedProperty );
     this.allComponents.push( newNamedProperty );
 
@@ -72,9 +77,7 @@ export default class ProgramModelContainer {
    * @param {number} value - default value for the Property
    */
   addNumberProperty( name, min, max, value ) {
-    const newNamedProperty = new NamedProperty( name, new phet.axon.NumberProperty( value, {
-      range: new phet.dot.Range( min, max )
-    } ) );
+    const newNamedProperty = new NamedNumberProperty( name, min, max, value );
     this.namedNumberProperties.push( newNamedProperty );
     this.allComponents.push( newNamedProperty );
 
@@ -104,9 +107,7 @@ export default class ProgramModelContainer {
    * @public
    */
   addEnumerationProperty( name, values ) {
-    const newNamedProperty = new NamedProperty( name, new phet.axon.StringProperty( values[ 0 ], {
-      validValues: values
-    } ) );
+    const newNamedProperty = new NamedEnumerationProperty( name, values, values[ 0 ] );
     this.namedEnumerationProperties.push( newNamedProperty );
     this.allComponents.push( newNamedProperty );
 
@@ -132,13 +133,10 @@ export default class ProgramModelContainer {
    * @param {string} derivation - a string form of the code to run when any of the dependencies change
    */
   addDerivedProperty( name, dependencies, derivation ) {
-    const dependencyProperties = dependencies.map( namedProperty => namedProperty.property );
-
-    // TODO: We either need to wire up the actual derivation function or just save it as data somehow for program code generation
-    const tempDerivationFunction = () => console.log( derivation );
-    const newNamedProperty = new NamedProperty(
+    const newNamedProperty = new NamedDerivedProperty(
       name,
-      new phet.axon.DerivedProperty( dependencyProperties, tempDerivationFunction )
+      dependencies,
+      derivation
     );
     this.namedDerivedProperties.push( newNamedProperty );
     this.allComponents.push( newNamedProperty );
@@ -178,6 +176,19 @@ export default class ProgramModelContainer {
       namedProperty.deleteEmitter.removeListener( deleteListener );
     };
     namedProperty.deleteEmitter.addListener( deleteListener );
+  }
+
+  /**
+   * Converts this to a JSON object to save to a database.
+   */
+  save() {
+    return {
+      namedBooleanProperties: this.namedBooleanProperties.map( namedProperty => namedProperty.save() ),
+      namedVector2Properties: this.namedVector2Properties.map( namedProperty => namedProperty.save() ),
+      namedNumberProperties: this.namedNumberProperties.map( namedProperty => namedProperty.save() ),
+      namedEnumerationProperties: this.namedEnumerationProperties.map( namedProperty => namedProperty.save() ),
+      namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() )
+    };
   }
 
   /**

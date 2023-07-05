@@ -47,8 +47,7 @@ export default class ProgramModel {
       positionProperty: this.positionProperty.value.toStateObject(),
 
       modelContainer: this.modelContainer.save(),
-      controllerContainer: this.controllerContainer.save(),
-      viewContainer: this.viewContainer.save()
+      controllerContainer: this.controllerContainer.save()
     };
   }
 }

@@ -71,7 +71,7 @@ export default function CreateDerivedForm( props ) {
 
     props.getFormData( {
       dependencies: selectedComponents,
-      derivation: codeString
+      derivation: codeString.current
     } );
   };
 
