@@ -39,7 +39,7 @@ export default class CreatorView extends phet.scenery.Node {
         // send data to the db
       }
     } ) );
-    this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Paper Land', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+    this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
         console.log( 'send data to paper land to create programs' );
       }
