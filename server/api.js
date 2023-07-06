@@ -359,6 +359,44 @@ router.post( '/api/creator/systemNames/:spaceName/:systemName', ( req, res ) => 
 } );
 
 /**
+ * Save the system data to the provided space and system name.
+ */
+router.put( '/api/creator/:spaceName/:systemName', ( req, res ) => {
+  const { spaceName, systemName } = req.params;
+  const { systemData } = req.body;
+  if ( !systemData ) {
+    res.status( 400 ).send( 'Missing system data' );
+  }
+  else {
+    knex( 'creator-data' )
+      .update( { systemData: systemData } )
+      .where( { spaceName, systemName } )
+      .then( () => {
+        res.json( {} );
+      } );
+  }
+} );
+
+/**
+ * Get the system data at the provided space and system name.
+ */
+router.get( '/api/creator/:spaceName/:systemName', ( req, res ) => {
+  const { spaceName, systemName } = req.params;
+  knex
+    .select( 'systemData' )
+    .from( 'creator-data' )
+    .where( { spaceName, systemName } )
+    .then( selectResult => {
+      if ( selectResult.length === 0 ) {
+        res.status( 404 );
+      }
+      else {
+        res.json( { systemData: selectResult[ 0 ].systemData } );
+      }
+    } );
+} );
+
+/**
  * Delete the specified system at the provided space name.
  */
 router.get( '/api/creator/:spaceName/delete/:systemName', ( req, res ) => {

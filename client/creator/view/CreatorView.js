@@ -4,6 +4,7 @@
  * The main view component for the Creator app. Displays paper programs and their relationships.
  */
 
+import xhr from 'xhr';
 import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
 import ViewConstants from './ViewConstants.js';
@@ -36,7 +37,15 @@ export default class CreatorView extends phet.scenery.Node {
         const json = model.save();
         console.log( json );
 
-        // send data to the db
+        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.systemNameProperty.value}`, window.location.origin ).toString();
+        xhr.put( url, { json: { systemData: json } }, ( error, response ) => {
+          if ( error ) {
+            console.error( error );
+          }
+          else {
+            console.log( 'save successful' );
+          }
+        } );
       }
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
@@ -80,6 +89,32 @@ export default class CreatorView extends phet.scenery.Node {
       };
       model.programRemovedEmitter.addListener( removalListener );
     } );
+
+    // When the space or system names are changed, we try to load the new system. If either are empty,
+    // we clear model programs and disable the save/send buttons.
+    const updateSystem = () => {
+      if ( model.spaceNameProperty.value && model.systemNameProperty.value ) {
+        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.systemNameProperty.value}`, window.location.origin ).toString();
+        xhr.get( url, { json: true }, ( error, response, body ) => {
+          if ( error ) {
+            console.error( error );
+          }
+          else {
+            model.load( body.systemData );
+          }
+        } );
+
+        this.saveSystemButton.enabled = true;
+        this.sendToPaperLandButton.enabled = true;
+      }
+      else {
+        model.clear();
+
+        this.saveSystemButton.enabled = false;
+        this.sendToPaperLandButton.enabled = false;
+      }
+    };
+    phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.systemNameProperty ], updateSystem );
 
     display.addInputListener( {
       down: event => {

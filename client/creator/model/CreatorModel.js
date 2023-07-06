@@ -18,11 +18,23 @@ export default class CreatorModel {
     // {Property.<ActiveEdit|null>} - A reference to the program and type of components/data we are editing for it.
     this.activeEditProperty = new phet.axon.Property( null );
 
+    // {Property.<boolean>} - The Space name that is currently being worked on
+    this.spaceNameProperty = new phet.axon.Property( '' );
+
+    // {Property.<boolean>} - The System name that is currently being worked on
+    this.systemNameProperty = new phet.axon.Property( '' );
+
     window.saveFunction = this.save.bind( this );
   }
 
-  createProgram( initialPosition ) {
-    const newProgram = new ProgramModel( initialPosition );
+  /**
+   * Create a new program, registering important listeners for its removal within this model.
+   * @param {Vector2} initialPosition - initial position for the program
+   * @param {number} [programNumber] - the number of this program, defaults to a random number {number
+   * @return {ProgramModel}
+   */
+  createProgram( initialPosition, programNumber ) {
+    const newProgram = new ProgramModel( initialPosition, programNumber );
     this.programs.push( newProgram );
 
     // Listen for the delete emitter which tells us its time to delete a program
@@ -48,6 +60,8 @@ export default class CreatorModel {
     newProgram.modelContainer.allComponents.elementAddedEmitter.addListener( modelComponentAddedListener );
 
     this.programAddedEmitter.emit( newProgram );
+
+    return newProgram;
   }
 
   deleteProgram( program ) {
@@ -85,5 +99,19 @@ export default class CreatorModel {
    * @public
    */
   load( json ) {
+    this.programs.forEach( program => this.deleteProgram( program ) );
+
+    if ( json.programs ) {
+      json.programs.forEach( programJSON => {
+        const programPosition = phet.dot.Vector2.fromStateObject( programJSON.positionProperty );
+        const programNumber = programJSON.number;
+        const newProgram = this.createProgram( programPosition, programNumber );
+        newProgram.load( programJSON );
+      } );
+    }
+  }
+
+  clear() {
+    this.load( { programs: [] } );
   }
 }

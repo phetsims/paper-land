@@ -5,11 +5,12 @@ export default class ProgramModel {
 
   /**
    * @param {dot.Vector2} initialPosition
+   * @param {number} [initialNumber] - the number of this program
    */
-  constructor( initialPosition ) {
+  constructor( initialPosition, initialNumber ) {
 
     // @public (read-only) - the number of this program
-    this.number = Math.floor( Math.random() * 1000 );
+    this.number = initialNumber === undefined ? Math.floor( Math.random() * 1000 ) : initialNumber;
 
     this.titleProperty = new phet.axon.StringProperty( '' );
     this.keywordsProperty = new phet.axon.StringProperty( '' );
@@ -49,5 +50,18 @@ export default class ProgramModel {
       modelContainer: this.modelContainer.save(),
       controllerContainer: this.controllerContainer.save()
     };
+  }
+
+  load( stateObject ) {
+    this.number = stateObject.number;
+    this.titleProperty.value = stateObject.title;
+    this.keywordsProperty.value = stateObject.keywords;
+    this.descriptionProperty.value = stateObject.description;
+
+    this.positionProperty.value = phet.dot.Vector2.fromStateObject( stateObject.positionProperty );
+
+    // TODO
+    // this.modelContainer.load( stateObject.modelContainer );
+    // this.controllerContainer.load( stateObject.controllerContainer );
   }
 }

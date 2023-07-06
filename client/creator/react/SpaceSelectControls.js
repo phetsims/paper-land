@@ -8,7 +8,9 @@ import { isValidSystemName } from '../../utils.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
-const SpaceSelectControls = ( props ) => {
+const SpaceSelectControls = props => {
+  const model = props.creatorModel;
+
   const [ availableSpaces, setAvailableSpaces ] = useState( [] );
   const [ selectedSpaceName, setSelectedSpaceName ] = useState( '' );
   const [ creatingNewSystem, setCreatingNewSystem ] = useState( false );
@@ -77,7 +79,15 @@ const SpaceSelectControls = ( props ) => {
   // Whenever the selectedSpaceName changes, make a request to the database to get existing systems for that space.
   useEffect( () => {
     updateSystemNames();
+
+    // Notify the scenery side that the space has changed.
+    model.spaceNameProperty.value = selectedSpaceName;
   }, [ selectedSpaceName ] );
+
+  // Whenever the system name changes, notify scenery side that there is a new system.
+  useEffect( () => {
+    model.systemNameProperty.value = selectedSystemName;
+  }, [ selectedSystemName ] );
 
   return (
     <div>
