@@ -60,8 +60,11 @@ export default class ProgramModel {
 
     this.positionProperty.value = phet.dot.Vector2.fromStateObject( stateObject.positionProperty );
 
+    // Load all model components first, since view and controller components are dependent on them
+    this.modelContainer.load( stateObject.modelContainer );
+    this.controllerContainer.load( stateObject.controllerContainer, this.modelContainer.allComponents );
+
     // TODO
-    // this.modelContainer.load( stateObject.modelContainer );
-    // this.controllerContainer.load( stateObject.controllerContainer );
+    // this.viewContainer.load( stateObject.viewContainer, this.modelContainer.allComponents );
   }
 }

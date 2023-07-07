@@ -17,5 +17,22 @@ export default class EnumerationPropertyController extends PropertyController {
     super( name, namedProperty, ControlType, controlTypeValue );
   }
 
+  /**
+   *
+   * @param data
+   * @param namedProperties
+   * @return {EnumerationPropertyController}
+   */
+  static fromData( data, namedProperties ) {
+
+    // Find the NamedProperty that this controller will control
+    const namedProperty = namedProperties.find( namedProperty => namedProperty.name === data.controlledComponentName );
+    if ( !namedProperty ) {
+      throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
+    }
+
+    return new EnumerationPropertyController( data.name, namedProperty, data.controlType );
+  }
+
   static ControlType = ControlType;
 }

@@ -20,5 +20,16 @@ export default class Vector2PropertyController extends PropertyController {
     super( name, namedProperty, ControlType, controlTypeValue );
   }
 
+  static fromData( data, namedProperties ) {
+
+    // Find the NamedProperty that this controller will control
+    const namedProperty = namedProperties.find( namedProperty => namedProperty.name === data.controlledComponentName );
+    if ( !namedProperty ) {
+      throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
+    }
+
+    return new Vector2PropertyController( data.name, namedProperty, data.controlType );
+  }
+
   static ControlType = ControlType;
 }

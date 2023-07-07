@@ -40,6 +40,30 @@ export default class NumberPropertyController extends PropertyController {
     this.relationshipControlType = relationshipControlTypeValue;
   }
 
+  /**
+   * Save the data related to this controller so it can be restored to JSON.
+   * @return {{controlType, name: string}}
+   */
+  save() {
+    return {
+      name: this.name,
+      controlledComponentName: this.namedProperty.name,
+      controlType: this.controlType.name,
+      relationshipControlType: this.relationshipControlType.name
+    };
+  }
+
+  static fromData( data, namedProperties ) {
+
+    // Find the NamedProperty that this controller will control
+    const namedProperty = namedProperties.find( namedProperty => namedProperty.name === data.controlledComponentName );
+    if ( !namedProperty ) {
+      throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
+    }
+
+    return new NumberPropertyController( data.name, namedProperty, data.controlType, data.relationshipControlType );
+  }
+
   static DirectionControlType = DirectionControlType;
   static RelationshipControlType = RelationshipControlType;
 }

@@ -97,7 +97,6 @@ export default function CreateModelComponentForm( props ) {
       activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
     }
     else if ( selectedTab === 'derived' ) {
-      debugger;
       const dependencies = derivedDataRef.current.dependencies;
       const derivation = derivedDataRef.current.derivation;
       activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );

@@ -1,6 +1,10 @@
 /**
  * Collection of all the controller components for a single program, with functions to create them.
  */
+import BooleanPropertyController from './controllers/BooleanPropertyController.js';
+import EnumerationPropertyController from './controllers/EnumerationPropertyController.js';
+import NumberPropertyController from './controllers/NumberPropertyController.js';
+import Vector2PropertyController from './controllers/Vector2PropertyController.js';
 
 export default class ProgramControllerContainer {
   constructor() {
@@ -124,5 +128,28 @@ export default class ProgramControllerContainer {
       numberPropertyControllers: this.numberPropertyControllers.map( controller => controller.save() ),
       enumerationPropertyControllers: this.enumerationPropertyControllers.map( controller => controller.save() )
     };
+  }
+
+  load( savedData, namedProperties ) {
+
+    savedData.vector2PropertyControllers.forEach( controllerData => {
+      const controller = Vector2PropertyController.fromData( controllerData, namedProperties );
+      this.addVector2PropertyController( controller );
+    } );
+
+    savedData.booleanPropertyControllers.forEach( controllerData => {
+      const controller = BooleanPropertyController.fromData( controllerData, namedProperties );
+      this.addBooleanPropertyController( controller );
+    } );
+
+    savedData.numberPropertyControllers.forEach( controllerData => {
+      const controller = NumberPropertyController.fromData( controllerData, namedProperties );
+      this.addNumberPropertyController( controller );
+    } );
+
+    savedData.enumerationPropertyControllers.forEach( controllerData => {
+      const controller = EnumerationPropertyController.fromData( controllerData, namedProperties );
+      this.addEnumerationPropertyController( controller );
+    } );
   }
 }

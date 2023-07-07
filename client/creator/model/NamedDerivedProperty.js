@@ -9,7 +9,7 @@ export default class NamedDerivedProperty extends NamedProperty {
     super( name, 'DerivedProperty' );
 
     // {string[]} - the list of names for the derivations
-    this.dependencyPropertyNames = dependencies.map( dependency => dependency.name );
+    this.dependencyNames = dependencies.map( dependency => dependency.name );
 
     // {string} - the function for the DerivedProperty
     this.derivation = derivation;
@@ -17,13 +17,13 @@ export default class NamedDerivedProperty extends NamedProperty {
 
   /**
    * Save state to JSON for saving to database.
-   * @return {{name: string, propertyType: string, dependencyPropertyNames: string[], derivation: string}}
+   * @return {{name: string, propertyType: string, dependencyNames: string[], derivation: string}}
    */
   save() {
     return {
       name: this.name,
       propertyType: this.propertyType,
-      dependencyPropertyNames: this.dependencyPropertyNames,
+      dependencyNames: this.dependencyNames,
       derivation: this.derivation
     };
   }

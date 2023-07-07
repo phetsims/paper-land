@@ -34,6 +34,7 @@ export default class PropertyController {
   save() {
     return {
       name: this.name,
+      controlledComponentName: this.namedProperty.name,
       controlType: this.controlType.name
     };
   }

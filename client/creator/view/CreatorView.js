@@ -101,17 +101,24 @@ export default class CreatorView extends phet.scenery.Node {
           }
           else {
             model.load( body.systemData );
+
+            // pan to the first program so something is in view
+            if ( programLayerNode.children.length > 0 ) {
+              phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
+            }
           }
         } );
 
         this.saveSystemButton.enabled = true;
         this.sendToPaperLandButton.enabled = true;
+        this.newProgramButton.enabled = true;
       }
       else {
         model.clear();
 
         this.saveSystemButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
+        this.newProgramButton.enabled = false;
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.systemNameProperty ], updateSystem );

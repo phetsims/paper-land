@@ -5,7 +5,6 @@ import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
 import NamedEnumerationProperty from './NamedEnumerationProperty.js';
 import NamedNumberProperty from './NamedNumberProperty.js';
-import NamedProperty from './NamedProperty.js';
 import NamedVector2Property from './NamedVector2Property.js';
 
 export default class ProgramModelContainer {
@@ -23,6 +22,19 @@ export default class ProgramModelContainer {
     this.allComponents = phet.axon.createObservableArray();
   }
 
+  addToAllComponents( namedProperty ) {
+
+    // make sure that allComponents does not have a NamedProperty with the same name
+    const existingComponent = _.find( this.allComponents, component => {
+      return component.name === namedProperty.name;
+    } );
+    if ( existingComponent ) {
+      throw new Error( 'Component with this name already exists. It must be unique.' );
+    }
+
+    this.allComponents.push( namedProperty );
+  }
+
   /**
    * Creates a NamedProperty with the provided name and BooleanProperty for this model.
    * @param {string} name
@@ -31,7 +43,7 @@ export default class ProgramModelContainer {
   addBooleanProperty( name, defaultValue ) {
     const newNamedProperty = new NamedBooleanProperty( name, defaultValue );
     this.namedBooleanProperties.push( newNamedProperty );
-    this.allComponents.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
 
     this.registerDeleteListener( newNamedProperty, this.removeBooleanProperty.bind( this ) );
   }
@@ -53,7 +65,7 @@ export default class ProgramModelContainer {
   addVector2Property( name, x, y ) {
     const newNamedProperty = new NamedVector2Property( name, x, y );
     this.namedVector2Properties.push( newNamedProperty );
-    this.allComponents.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
 
     this.registerDeleteListener( newNamedProperty, this.removeVector2Property.bind( this ) );
   }
@@ -79,7 +91,7 @@ export default class ProgramModelContainer {
   addNumberProperty( name, min, max, value ) {
     const newNamedProperty = new NamedNumberProperty( name, min, max, value );
     this.namedNumberProperties.push( newNamedProperty );
-    this.allComponents.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
 
     this.registerDeleteListener( newNamedProperty, this.removeNumberProperty.bind( this ) );
   }
@@ -109,7 +121,7 @@ export default class ProgramModelContainer {
   addEnumerationProperty( name, values ) {
     const newNamedProperty = new NamedEnumerationProperty( name, values, values[ 0 ] );
     this.namedEnumerationProperties.push( newNamedProperty );
-    this.allComponents.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
 
     this.registerDeleteListener( newNamedProperty, this.removeEnumerationProperty.bind( this ) );
   }
@@ -139,7 +151,7 @@ export default class ProgramModelContainer {
       derivation
     );
     this.namedDerivedProperties.push( newNamedProperty );
-    this.allComponents.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
 
     this.registerDeleteListener( newNamedProperty, this.removeDerivedProperty.bind( this ) );
   }
@@ -189,6 +201,63 @@ export default class ProgramModelContainer {
       namedEnumerationProperties: this.namedEnumerationProperties.map( namedProperty => namedProperty.save() ),
       namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() )
     };
+  }
+
+  /**
+   * Load from a saved JSON state. Uses the `add` functions so that each component adds relevant delete
+   * listeners associated with this container.
+   */
+  load( state ) {
+
+    state.namedBooleanProperties.forEach( namedBooleanPropertyData => {
+      this.addBooleanProperty(
+        namedBooleanPropertyData.name,
+        namedBooleanPropertyData.defaultValue
+      );
+    } );
+
+    state.namedVector2Properties.forEach( namedVector2PropertyData => {
+      this.addVector2Property(
+        namedVector2PropertyData.name,
+        namedVector2PropertyData.x,
+        namedVector2PropertyData.y
+      );
+    } );
+
+    state.namedNumberProperties.forEach( namedNumberPropertyData => {
+      this.addNumberProperty(
+        namedNumberPropertyData.name,
+        namedNumberPropertyData.min,
+        namedNumberPropertyData.max,
+        namedNumberPropertyData.defaultValue
+      );
+    } );
+
+    state.namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
+      this.addEnumerationProperty(
+        namedEnumerationPropertyData.name,
+        namedEnumerationPropertyData.values
+      );
+    } );
+
+    // Add derived properties last, so that they can depend on other properties
+
+    state.namedDerivedProperties.forEach( namedDerivedPropertyData => {
+      const dependencyNames = namedDerivedPropertyData.dependencyNames;
+
+      // Get all the instances of NamedProperty from the saved names
+      const dependencies = [];
+      dependencyNames.forEach( dependencyName => {
+        const foundProperty = this.allComponents.find( namedProperty => namedProperty.name === dependencyName );
+        dependencies.push( foundProperty );
+      } );
+
+      this.addDerivedProperty(
+        namedDerivedPropertyData.name,
+        dependencies,
+        namedDerivedPropertyData.derivation
+      );
+    } );
   }
 
   /**

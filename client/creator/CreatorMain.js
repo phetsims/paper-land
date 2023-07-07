@@ -80,10 +80,8 @@ export default function CreatorMain( props ) {
     phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 3 );
 
     // Prevent the scenery display from panning/zooming while interacting with the react form controls.
-    window.addEventListener( 'keydown', event => {
-      if ( reactParentRef.current && reactParentRef.current.contains( event.target ) ) {
-        event.stopImmediatePropagation();
-      }
+    window.addEventListener( 'click', event => {
+      phet.scenery.globalKeyStateTracker.enabled = !( reactParentRef.current && reactParentRef.current.contains( event.target ) );
     }, true );
   };
 
