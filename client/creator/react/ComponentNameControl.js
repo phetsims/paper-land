@@ -4,6 +4,9 @@ import styles from './../CreatorMain.css';
 
 export default function ComponentNameControl( props ) {
 
+  // {CreatorModel}
+  const model = props.model;
+
   const setComponentName = props.setComponentName || ( () => {} );
 
   return (
@@ -13,10 +16,15 @@ export default function ComponentNameControl( props ) {
         <Form.Control
           type='text'
           value={props.componentName}
+          required
+          isInvalid={!model.isNameAvailable( props.componentName )}
           onChange={event => {
             setComponentName( event.target.value );
           }}
         />
+        <Form.Control.Feedback type='invalid' className={styles.feedbackElement}>
+          That component name is already being used.
+        </Form.Control.Feedback>
       </Form.Group>
     </div>
   );

@@ -22,6 +22,10 @@ export default function CreateModelControllerForm( props ) {
   // {string}
   const componentName = props.componentName;
 
+  if ( !props.onComponentCreated ) {
+    throw new Error( 'CreateModelControllerForm requires an onComponentCreated callback' );
+  }
+
   const [ allComponents, setAllComponents ] = useState( allModelComponents.getArrayCopy() );
   const [ selectedComponent, setSelectedComponent ] = useState( allComponents[ 0 ] || null );
 
@@ -75,6 +79,8 @@ export default function CreateModelControllerForm( props ) {
       const enumerationController = new EnumerationPropertyController( componentName, selectedComponent, enumerationDataRef.current.controlType );
       activeProgram.controllerContainer.addEnumerationPropertyController( enumerationController );
     }
+
+    props.onComponentCreated();
   };
 
   const selectedComponentType = selectedComponent ? selectedComponent.propertyType : null;

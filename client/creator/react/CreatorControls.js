@@ -43,6 +43,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
        <CreateComponentForm
          activeProgram={activeEdit.program}
          allModelComponents={model.allModelComponents}
+         model={model}
        ></CreateComponentForm> : ''}
     </div>
   );

@@ -29,6 +29,18 @@ export default class ProgramModel {
   }
 
   /**
+   * Returns true if the provided name is already taken by some component container.
+   */
+  isNameUsed( name ) {
+
+    // Check if the name is used by any of the model components
+    const usedInModel = this.modelContainer.allComponents.some( component => component.name === name );
+    const usedInController = this.controllerContainer.allComponents.some( component => component.name === name );
+
+    return usedInModel || usedInController;
+  }
+
+  /**
    * TODO: Remove any other connections with other programs.
    */
   dispose() {

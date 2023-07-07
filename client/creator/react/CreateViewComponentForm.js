@@ -5,6 +5,15 @@ import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
 export default function CreateViewComponentForm( props ) {
+
+  if ( !props.onComponentCreated ) {
+    throw new Error( 'The onComponentCreated prop is required.' );
+  }
+
+  const handleCreateComponent = () => {
+    props.onComponentCreated();
+  };
+
   return (
     <>
       <Tabs
@@ -32,6 +41,6 @@ export default function CreateViewComponentForm( props ) {
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.
         </Tab>
       </Tabs>
-      <StyledButton disabled={true} name={'Create Component'}></StyledButton></>
+      <StyledButton disabled={true} name={'Create Component'} onClick={handleCreateComponent}></StyledButton></>
   );
 }

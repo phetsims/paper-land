@@ -11,6 +11,10 @@ import StyledButton from './StyledButton.js';
 
 export default function CreateModelComponentForm( props ) {
 
+  if ( !props.onComponentCreated ) {
+    throw new Error( 'The onComponentCreated property must be specified.' );
+  }
+
   // Name string for the components
   const componentName = props.componentName;
 
@@ -19,6 +23,9 @@ export default function CreateModelComponentForm( props ) {
 
   // {ObservableArray<NamedProperty>}
   const allModelComponents = props.allModelComponents;
+
+  // {CreatorModel}
+  const model = props.model;
 
   const [ selectedTab, setSelectedTab ] = useState( 'boolean' );
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
@@ -56,21 +63,25 @@ export default function CreateModelComponentForm( props ) {
   const getDataForPosition = data => { positionDataRef.current = data; };
   const getDataForDerived = data => { derivedDataRef.current = data; };
 
+  const isComponentNameValid = () => {
+    return componentName.length > 0 && model.isNameAvailable( componentName );
+  };
+
   useEffect( () => {
     if ( selectedTab === 'boolean' ) {
-      setSelectedTabFormValid( booleanFormValid && componentName.length > 0 );
+      setSelectedTabFormValid( booleanFormValid && isComponentNameValid() );
     }
     else if ( selectedTab === 'number' ) {
-      setSelectedTabFormValid( numberFormValid && componentName.length > 0 );
+      setSelectedTabFormValid( numberFormValid && isComponentNameValid() );
     }
     else if ( selectedTab === 'enumeration' ) {
-      setSelectedTabFormValid( enumerationFormValid && componentName.length > 0 );
+      setSelectedTabFormValid( enumerationFormValid && isComponentNameValid() );
     }
     else if ( selectedTab === 'position' ) {
-      setSelectedTabFormValid( positionFormValid && componentName.length > 0 );
+      setSelectedTabFormValid( positionFormValid && isComponentNameValid() );
     }
     else if ( selectedTab === 'derived' ) {
-      setSelectedTabFormValid( derivedFormValid && componentName.length > 0 );
+      setSelectedTabFormValid( derivedFormValid && isComponentNameValid() );
     }
     else {
       setSelectedTabFormValid( false );
@@ -104,6 +115,8 @@ export default function CreateModelComponentForm( props ) {
     else {
       throw new Error( 'Cannot create component for selected tab.' );
     }
+
+    props.onComponentCreated();
   };
 
   return (

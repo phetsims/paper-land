@@ -64,6 +64,16 @@ export default class CreatorModel {
     return newProgram;
   }
 
+  /**
+   * Returns true if the provided Name is not used by any of the component containers.
+   * @param {string} name
+   */
+  isNameAvailable( name ) {
+
+    // Check if the name is used by any of the programs
+    return !this.programs.some( program => program.isNameUsed( name ) );
+  }
+
   deleteProgram( program ) {
     assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
     this.programs.splice( this.programs.indexOf( program ), 1 );
