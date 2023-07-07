@@ -73,6 +73,8 @@ const ViewConstants = {
   // color for all text
   textFillColor: TEXT_FILL_COLOR,
 
+  SAVED_COLOR: 'rgb(209,231,221)',
+
   TEXT_OPTIONS: {
     font: TEXT_FONT,
     fill: TEXT_FILL_COLOR

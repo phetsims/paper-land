@@ -1,8 +1,15 @@
+/**
+ * A scenery-style 'saved' icon that fades in and out when a successful save happens.
+ *
+ * @author Jesse Greenberg
+ */
+
 import ViewConstants from './ViewConstants.js';
 
 export default class SavedRectangle extends phet.scenery.Rectangle {
   constructor() {
-    super( 0, 0, 0, 0, 5, 5, { fill: 'rgb(209,231,221)' } );
+
+    super( 0, 0, 0, 0, 5, 5, { fill: ViewConstants.SAVED_COLOR } );
 
     const savedText = new phet.scenery.Text( 'Saved ✓', {
       font: ViewConstants.TEXT_FONT
@@ -11,6 +18,7 @@ export default class SavedRectangle extends phet.scenery.Rectangle {
     this.addChild( savedText );
     this.setRectBounds( savedText.bounds.dilatedXY( 30, 10 ) );
 
+    // references to active animations so they can be stopped if necessary
     this.inAnimation = null;
     this.outAnimation = null;
 
@@ -24,6 +32,7 @@ export default class SavedRectangle extends phet.scenery.Rectangle {
   showSaved() {
     this.inAnimation && this.inAnimation.stop();
     this.outAnimation && this.outAnimation.stop();
+
     this.inAnimation = new phet.twixt.Animation( {
       property: this.opacityProperty,
       duration: 0.5,
