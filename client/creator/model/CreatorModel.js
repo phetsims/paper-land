@@ -116,6 +116,10 @@ export default class CreatorModel {
         const programPosition = phet.dot.Vector2.fromStateObject( programJSON.positionProperty );
         const programNumber = programJSON.number;
         const newProgram = this.createProgram( programPosition, programNumber );
+
+        // TODO: For next time, we need to do this in passes - first create all model components
+        // then create controller/view components. The model accross all programs needs to be
+        // available before the controller/view components are created.
         newProgram.load( programJSON );
       } );
     }

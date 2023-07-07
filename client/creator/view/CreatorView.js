@@ -39,7 +39,6 @@ export default class CreatorView extends phet.scenery.Node {
     this.saveSystemButton = new phet.sun.TextPushButton( 'Save System', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
         const json = model.save();
-        console.log( json );
 
         const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.systemNameProperty.value}`, window.location.origin ).toString();
         xhr.put( url, { json: { systemData: json } }, ( error, response ) => {
