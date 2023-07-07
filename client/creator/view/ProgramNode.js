@@ -32,6 +32,7 @@ export default class ProgramNode extends phet.scenery.Node {
    */
   constructor( model, deleteAreaGlobalBounds, activeEditProperty ) {
     super();
+    this.model = model;
 
     this.background = new phet.scenery.Rectangle( 0, 0, WIDTH, DEFAULT_HEIGHT, {
       lineWidth: BACKGROUND_LINE_WIDTH,
@@ -146,10 +147,15 @@ export default class ProgramNode extends phet.scenery.Node {
         const newItemNode = new ComponentListItemNode( addedComponent, WIDTH );
         parentNode.addChild( newItemNode );
 
+        // the trashcan icon is loaded asynchronously, so we need to wait for it to load before we can layout
+        const boundLayout = this.layout.bind( this );
+        newItemNode.boundsProperty.lazyLink( boundLayout );
+
         // remove and dispose of the view component when the model component is removed
         const removalListener = removedComponent => {
           if ( addedComponent === removedComponent ) {
             parentNode.removeChild( newItemNode );
+            newItemNode.boundsProperty.unlink( boundLayout );
             newItemNode.dispose();
 
             observableArray.elementRemovedEmitter.removeListener( removalListener );
