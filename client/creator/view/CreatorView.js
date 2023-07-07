@@ -7,6 +7,7 @@
 import xhr from 'xhr';
 import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
+import SavedRectangle from './SavedRectangle.js';
 import ViewConstants from './ViewConstants.js';
 
 export default class CreatorView extends phet.scenery.Node {
@@ -27,6 +28,9 @@ export default class CreatorView extends phet.scenery.Node {
     // @public (reado-only) - All program views will be layered inside of this Node
     const programLayerNode = new phet.scenery.Node();
 
+    // Fades in using twixt when the system is successfully saved to the database
+    this.savedRectangle = new SavedRectangle();
+
     this.newProgramButton = new phet.sun.TextPushButton( 'New Program', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
         model.createProgram( this.applicationLayerNode.globalToLocalPoint( this.newProgramButton.leftBottom ) );
@@ -43,7 +47,7 @@ export default class CreatorView extends phet.scenery.Node {
             console.error( error );
           }
           else {
-            console.log( 'save successful' );
+            this.savedRectangle.showSaved();
           }
         } );
       }
@@ -65,6 +69,7 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.newProgramButton );
     controlLayerNode.addChild( this.saveSystemButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
+    controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.deleteProgramArea );
 
     // Creates a ProgramNode when it is added
@@ -143,5 +148,6 @@ export default class CreatorView extends phet.scenery.Node {
     this.saveSystemButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveSystemButton.rightBottom.plusXY( 0, 5 );
     this.deleteProgramArea.rightBottom = new phet.dot.Vector2( width - 10, height - 10 );
+    this.savedRectangle.rightCenter = this.saveSystemButton.leftCenter.plusXY( -5, 0 );
   }
 }

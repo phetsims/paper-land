@@ -68,7 +68,7 @@ const ViewConstants = {
   toolbarStrokeColor: new phet.scenery.Color( 125, 125, 125 ),
 
   // fonts for buttons and other things
-  font: TEXT_FONT,
+  TEXT_FONT: TEXT_FONT,
 
   // color for all text
   textFillColor: TEXT_FILL_COLOR,
