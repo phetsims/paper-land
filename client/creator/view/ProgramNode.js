@@ -4,7 +4,7 @@ import ComponentListItemNode from './ComponentListItemNode.js';
 import ViewConstants from './ViewConstants.js';
 
 // default dimensions of a paper, though it may change as components are added
-const WIDTH = 70;
+const WIDTH = 90;
 const DEFAULT_HEIGHT = 90;
 
 // margins for UI components within the program
@@ -33,6 +33,9 @@ export default class ProgramNode extends phet.scenery.Node {
   constructor( model, deleteAreaGlobalBounds, activeEditProperty ) {
     super();
     this.model = model;
+
+    // {ComponentListItemNode[]} - Reference to all list item nodes so we can get positioning and connection points
+    this.allListItemNodes = [];
 
     this.background = new phet.scenery.Rectangle( 0, 0, WIDTH, DEFAULT_HEIGHT, {
       lineWidth: BACKGROUND_LINE_WIDTH,
@@ -147,6 +150,8 @@ export default class ProgramNode extends phet.scenery.Node {
         const newItemNode = new ComponentListItemNode( addedComponent, WIDTH );
         parentNode.addChild( newItemNode );
 
+        this.allListItemNodes.push( newItemNode );
+
         // the trashcan icon is loaded asynchronously, so we need to wait for it to load before we can layout
         const boundLayout = this.layout.bind( this );
         newItemNode.boundsProperty.lazyLink( boundLayout );
@@ -155,6 +160,7 @@ export default class ProgramNode extends phet.scenery.Node {
         const removalListener = removedComponent => {
           if ( addedComponent === removedComponent ) {
             parentNode.removeChild( newItemNode );
+            this.allListItemNodes.splice( this.allListItemNodes.indexOf( newItemNode ), 1 );
             newItemNode.boundsProperty.unlink( boundLayout );
             newItemNode.dispose();
 
@@ -183,6 +189,13 @@ export default class ProgramNode extends phet.scenery.Node {
 
     // initial layout
     this.layout();
+  }
+
+  getComponentListItemConnectionPoint( componentName ) {
+    const componentListItemNode = _.find( this.allListItemNodes, componentListItemNode => {
+      return componentListItemNode.componentName === componentName;
+    } );
+    return componentListItemNode ? componentListItemNode.getGlobalConnectionPoint() : null;
   }
 
   /**

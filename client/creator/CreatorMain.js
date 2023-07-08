@@ -85,6 +85,12 @@ export default function CreatorMain( props ) {
     }, true );
   };
 
+  const stepFunction = dt => {
+    if ( creatorView ) {
+      creatorView.step( dt );
+    }
+  };
+
   // custom focus highlight colors for this display
   phet.scenery.HighlightOverlay.setInnerHighlightColor( ViewConstants.focusHighlightColor );
   phet.scenery.HighlightOverlay.setOuterHilightColor( ViewConstants.focusHighlightColor );
@@ -102,6 +108,7 @@ export default function CreatorMain( props ) {
             panelClass={styles.panelClass}
             updateDisplaySize={updateDisplaySize}
             modifyDisplay={modifyDisplay}
+            step={stepFunction}
           />
         </div>
         <div className={`${styles.rowSpacer} ${styles.panelClass}`}>

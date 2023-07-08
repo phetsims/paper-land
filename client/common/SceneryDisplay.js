@@ -48,7 +48,11 @@ const SceneryDisplay = props => {
     document.onselectstart = null;
 
     // set up animation - This takes an optional callback( dt ) if needed at some point
-    sceneryDisplay.updateOnRequestAnimationFrame();
+    sceneryDisplay.updateOnRequestAnimationFrame( dt => {
+      if ( props.step ) {
+        props.step( dt );
+      }
+    } );
 
     // a property that indicates if the browser tab is visible
     const browserTabVisibleProperty = new phet.axon.Property( true );

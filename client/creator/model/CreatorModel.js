@@ -15,6 +15,10 @@ export default class CreatorModel {
     // An obserable array of all model components in all programs
     this.allModelComponents = phet.axon.createObservableArray();
 
+    this.allControllerComponents = phet.axon.createObservableArray();
+
+    this.allViewComponents = phet.axon.createObservableArray();
+
     // {Property.<ActiveEdit|null>} - A reference to the program and type of components/data we are editing for it.
     this.activeEditProperty = new phet.axon.Property( null );
 
@@ -44,24 +48,51 @@ export default class CreatorModel {
     };
     newProgram.deleteEmitter.addListener( deleteListener );
 
-    // Listen for when a program gets a new component so we can add it to the global list
-    const modelComponentAddedListener = addedModelComponent => {
-      this.allModelComponents.push( addedModelComponent );
+    // listen for when the program gets a new model component so we can add it to our global list
+    this.addComponentAddedListener( this.allModelComponents, newProgram.modelContainer.allComponents );
+    this.addComponentAddedListener( this.allControllerComponents, newProgram.controllerContainer.allComponents );
 
-      // listen for its removal
-      const modelComponentRemovedListener = removedModelComponent => {
-        if ( addedModelComponent === removedModelComponent ) {
-          this.allModelComponents.remove( removedModelComponent );
-          newProgram.modelContainer.allComponents.elementRemovedEmitter.removeListener( modelComponentRemovedListener );
-        }
-      };
-      newProgram.modelContainer.allComponents.elementRemovedEmitter.addListener( modelComponentRemovedListener );
-    };
-    newProgram.modelContainer.allComponents.elementAddedEmitter.addListener( modelComponentAddedListener );
+    // // Listen for when a program gets a new component so we can add it to the global list
+    // const modelComponentAddedListener = addedModelComponent => {
+    //   this.allModelComponents.push( addedModelComponent );
+    //
+    //   // listen for its removal
+    //   const modelComponentRemovedListener = removedModelComponent => {
+    //     if ( addedModelComponent === removedModelComponent ) {
+    //       this.allModelComponents.remove( removedModelComponent );
+    //       newProgram.modelContainer.allComponents.elementRemovedEmitter.removeListener( modelComponentRemovedListener );
+    //     }
+    //   };
+    //   newProgram.modelContainer.allComponents.elementRemovedEmitter.addListener( modelComponentRemovedListener );
+    // };
+    // newProgram.modelContainer.allComponents.elementAddedEmitter.addListener( modelComponentAddedListener );
 
     this.programAddedEmitter.emit( newProgram );
 
     return newProgram;
+  }
+
+  /**
+   * Adds a listener to the provided programComponentList that will add the component to a global list in this model.
+   * Also registers removal listeners so that global lists are up to date.
+   *
+   * @param allComponentsList - the observable global list for this model
+   * @param programComponentList - the observable list for a specific program
+   */
+  addComponentAddedListener( allComponentsList, programComponentList ) {
+    const componentAddedListener = addedComponent => {
+      allComponentsList.push( addedComponent );
+
+      // listen for its removal
+      const componentRemovedListener = removedComponent => {
+        if ( addedComponent === removedComponent ) {
+          allComponentsList.remove( removedComponent );
+          programComponentList.elementRemovedEmitter.removeListener( componentRemovedListener );
+        }
+      };
+      programComponentList.elementRemovedEmitter.addListener( componentRemovedListener );
+    };
+    programComponentList.elementAddedEmitter.addListener( componentAddedListener );
   }
 
   /**

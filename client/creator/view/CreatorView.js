@@ -5,6 +5,7 @@
  */
 
 import xhr from 'xhr';
+import ConnectionsCanvasNode from './ConnectionsCanvasNode.js';
 import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
 import SavedRectangle from './SavedRectangle.js';
@@ -30,6 +31,12 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Fades in using twixt when the system is successfully saved to the database
     this.savedRectangle = new SavedRectangle();
+
+    // {ProgramNode[]} - Reference to all program nodes, so we can get positioning and connection points
+    this.allProgramNodes = [];
+
+    // Displays connections between all programs
+    this.connectionsNode = new ConnectionsCanvasNode( model, this.allProgramNodes );
 
     this.newProgramButton = new phet.sun.TextPushButton( 'New Program', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
@@ -64,6 +71,7 @@ export default class CreatorView extends phet.scenery.Node {
     this.addChild( controlLayerNode );
 
     this.applicationLayerNode.addChild( programLayerNode );
+    this.applicationLayerNode.addChild( this.connectionsNode );
 
     controlLayerNode.addChild( this.newProgramButton );
     controlLayerNode.addChild( this.saveSystemButton );
@@ -74,6 +82,7 @@ export default class CreatorView extends phet.scenery.Node {
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
       const newProgramNode = new ProgramNode( newProgram, this.deleteProgramArea.globalBounds, model.activeEditProperty );
+      this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 
       // removes the ProgramNode and related listeners when the program is removed
@@ -85,6 +94,7 @@ export default class CreatorView extends phet.scenery.Node {
 
           // remove view components
           programLayerNode.removeChild( newProgramNode );
+          this.allProgramNodes.splice( this.allProgramNodes.indexOf( newProgramNode ), 1 );
           newProgramNode.dispose();
 
           // remove event listeners
@@ -148,5 +158,11 @@ export default class CreatorView extends phet.scenery.Node {
     this.sendToPaperLandButton.rightTop = this.saveSystemButton.rightBottom.plusXY( 0, 5 );
     this.deleteProgramArea.rightBottom = new phet.dot.Vector2( width - 10, height - 10 );
     this.savedRectangle.rightCenter = this.saveSystemButton.leftCenter.plusXY( -5, 0 );
+
+    this.connectionsNode.layout( width, height );
+  }
+
+  step( dt ) {
+    this.connectionsNode.step( dt );
   }
 }

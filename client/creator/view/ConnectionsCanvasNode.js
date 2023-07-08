@@ -1,0 +1,200 @@
+/**
+ * A CanvasNode that draws connections between components.
+ */
+import ViewConstants from './ViewConstants.js';
+
+class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
+  constructor( model, programNodes ) {
+    super();
+
+    this.model = model;
+    this.programNodes = programNodes;
+
+    // this.connections = [
+    //   { start: { x: 0, y: 0 }, end: { x: 100, y: 100 } }
+    // ];
+
+    this.controllerConnections = [];
+    this.derivedPropertyConnections = [];
+
+    // Whenever a program gets a new component, or moves, get the new connection points
+  }
+
+  /**
+   * Paints the grid lines on the canvas node.
+   * @param {CanvasRenderingContext2D} context
+   */
+  paintCanvas( context ) {
+
+    // Update the connections to draw
+    // TODO: These are really expensive operations, and we should probably only do it when necessary instead of
+    // every paint
+    this.updateControllerConnections();
+    this.updateDerivedPropertyConnections();
+
+    context.save();
+    context.lineCap = 'round';
+
+    // Draw controller connections
+    context.beginPath();
+    context.strokeStyle = ViewConstants.CONTROLLER_WIRE_COLOR;
+    this.controllerConnections.forEach( connection => {
+      this.drawCurve( context, connection.start, connection.end );
+    } );
+    context.stroke();
+
+    // Draw DerivedProperty connections
+    context.beginPath();
+    context.strokeStyle = ViewConstants.DERIVED_WIRE_COLOR;
+    this.derivedPropertyConnections.forEach( connection => {
+      this.drawCurve( context, connection.start, connection.end );
+    } );
+    context.stroke();
+
+    // TODO: View connections
+    // #66C0E0 -a light blue for view connections
+
+    context.restore();
+  }
+
+  /**
+   * Inspect the model for controller components and the components they control. Find their view components
+   * to get the connection points to draw the wires.
+   */
+  updateControllerConnections() {
+    this.controllerConnections = [];
+
+    // draw controller connections
+    this.model.allControllerComponents.forEach( component => {
+      const controllerName = component.name;
+      const controlledName = component.namedProperty.name;
+
+      let startPoint;
+      let endPoint;
+
+      // loop through all programNodes and find the one that has the controller
+      this.programNodes.forEach( programNode => {
+        programNode.model.controllerContainer.allComponents.forEach( controllerComponent => {
+          if ( controllerComponent.name === controllerName ) {
+            startPoint = programNode.getComponentListItemConnectionPoint( controllerName );
+          }
+        } );
+      } );
+
+      // loop through all programNodes and find the one that has the controlled
+      this.programNodes.forEach( programNode => {
+        programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+          if ( modelComponent.name === controlledName ) {
+            endPoint = programNode.getComponentListItemConnectionPoint( controlledName );
+          }
+        } );
+      } );
+
+      if ( startPoint && endPoint ) {
+        this.controllerConnections.push( { start: startPoint, end: endPoint } );
+      }
+    } );
+  }
+
+  /**
+   * Inspect the model and look for derived properties and dependencies. For each that we find, get the connection
+   * point in the view to draw connection wires.
+   */
+  updateDerivedPropertyConnections() {
+    this.derivedPropertyConnections = [];
+
+    this.model.allModelComponents.forEach( component => {
+      if ( component.propertyType === 'DerivedProperty' ) {
+        const componentName = component.name;
+        const dependencyNames = component.dependencyNames;
+
+        let endPoint;
+
+        // loop through all model components and find the dependency derived property start point
+        // loop through all programNodes and find the one that has the controlled
+        this.programNodes.forEach( programNode => {
+          programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+            if ( modelComponent.name === componentName ) {
+              endPoint = programNode.getComponentListItemConnectionPoint( componentName );
+            }
+          } );
+        } );
+
+        // loop through programNodes and find the position for the corresponding Node
+        const startPoints = [];
+        dependencyNames.forEach( dependencyName => {
+          this.programNodes.forEach( programNode => {
+            programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+              if ( modelComponent.name === dependencyName ) {
+                startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
+              }
+            } );
+          } );
+        } );
+
+        startPoints.forEach( startPoint => {
+          if ( startPoint && endPoint ) {
+            this.derivedPropertyConnections.push( { start: startPoint, end: endPoint } );
+          }
+        } );
+      }
+    } );
+  }
+
+  /**
+   * Draws a wire-like curve between two points, using bezier curves.
+   * @param {CanvasRenderingContext2D} context
+   * @param {Vector2} start
+   * @param {Vector2} end
+   */
+  drawCurve( context, start, end ) {
+
+    // draw the curve
+    const dx = Math.abs( end.x - start.x );
+    const horizontalOffset = Math.max( dx * 0.2, 25 ); // Adjust the offset to control the curvature
+
+    const cp1x = start.x - horizontalOffset;
+    const cp1y = start.y;
+    const cp2x = end.x - horizontalOffset;
+    const cp2y = end.y;
+
+    context.moveTo( start.x, start.y );
+    context.bezierCurveTo( cp1x, cp1y, cp2x, cp2y, end.x, end.y );
+
+    // draw the arrow head
+    // Draw arrowhead
+    const arrowSize = 5;
+    const angle = Math.atan2( end.y - cp2y, end.x - cp2x );
+    const angle1 = angle - Math.PI / 6;
+    const angle2 = angle + Math.PI / 6;
+
+    // Calculate arrowhead points
+    const arrowX1 = end.x - arrowSize * Math.cos( angle1 );
+    const arrowY1 = end.y - arrowSize * Math.sin( angle1 );
+    const arrowX2 = end.x - arrowSize * Math.cos( angle2 );
+    const arrowY2 = end.y - arrowSize * Math.sin( angle2 );
+
+    context.moveTo( end.x, end.y );
+    context.lineTo( arrowX1, arrowY1 );
+    context.moveTo( end.x, end.y );
+    context.lineTo( arrowX2, arrowY2 );
+  }
+
+  /**
+   * Set the canvas bounds.
+   * @param {number} width
+   * @param {number} height
+   */
+  layout( width, height ) {
+    this.setCanvasBounds( new phet.dot.Bounds2( 0, 0, width, height ) );
+  }
+
+  /**
+   * Redraw in the animation frame.
+   */
+  step( dt ) {
+    this.invalidatePaint();
+  }
+}
+
+export default ConnectionsCanvasNode;

@@ -75,6 +75,10 @@ const ViewConstants = {
 
   SAVED_COLOR: 'rgb(209,231,221)',
 
+  CONTROLLER_WIRE_COLOR: '#FF4444',
+  DERIVED_WIRE_COLOR: '#FFD700',
+  VIEW_WIRE_COLOR: '#00FF44',
+
   TEXT_OPTIONS: {
     font: TEXT_FONT,
     fill: TEXT_FILL_COLOR
