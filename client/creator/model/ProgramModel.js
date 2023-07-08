@@ -64,19 +64,39 @@ export default class ProgramModel {
     };
   }
 
-  load( stateObject ) {
+  /**
+   * Load the metadata for this program.
+   * @param stateObject
+   */
+  loadMetadata( stateObject ) {
     this.number = stateObject.number;
     this.titleProperty.value = stateObject.title;
     this.keywordsProperty.value = stateObject.keywords;
     this.descriptionProperty.value = stateObject.description;
+  }
 
-    this.positionProperty.value = phet.dot.Vector2.fromStateObject( stateObject.positionProperty );
+  /**
+   * Load the model components that exist on their own, and must be available before any other components are created.
+   */
+  loadDependencyModelComponents( stateObject ) {
+    this.modelContainer.loadDependencyModelComponents( stateObject.modelContainer );
+  }
 
-    // Load all model components first, since view and controller components are dependent on them
-    this.modelContainer.load( stateObject.modelContainer );
-    this.controllerContainer.load( stateObject.controllerContainer, this.modelContainer.allComponents );
+  /**
+   * Load model components that require dependency model components to be created.
+   * @param stateObject
+   * @param allComponents - All model components (from all programs) that have been created so far.
+   */
+  loadDependentModelComponents( stateObject, allComponents ) {
+    this.modelContainer.loadDependentModelComponents( stateObject.modelContainer, allComponents );
+  }
 
-    // TODO
-    // this.viewContainer.load( stateObject.viewContainer, this.modelContainer.allComponents );
+  /**
+   * Load controller components that will control model components.
+   * @param stateObject
+   * @param allComponents - All model components (from all programs) that have been created so far.
+   */
+  loadControllerComponents( stateObject, allComponents ) {
+    this.controllerContainer.load( stateObject.controllerContainer, allComponents );
   }
 }

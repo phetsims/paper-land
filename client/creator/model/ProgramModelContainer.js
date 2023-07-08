@@ -204,27 +204,24 @@ export default class ProgramModelContainer {
   }
 
   /**
-   * Load from a saved JSON state. Uses the `add` functions so that each component adds relevant delete
-   * listeners associated with this container.
+   * Load the model components that are dependencies for other components - they can exist
+   * in isolation and must be available before creating DerivedProperty components.
    */
-  load( state ) {
-
-    state.namedBooleanProperties.forEach( namedBooleanPropertyData => {
+  loadDependencyModelComponents( stateObject ) {
+    stateObject.namedBooleanProperties.forEach( namedBooleanPropertyData => {
       this.addBooleanProperty(
         namedBooleanPropertyData.name,
         namedBooleanPropertyData.defaultValue
       );
     } );
-
-    state.namedVector2Properties.forEach( namedVector2PropertyData => {
+    stateObject.namedVector2Properties.forEach( namedVector2PropertyData => {
       this.addVector2Property(
         namedVector2PropertyData.name,
         namedVector2PropertyData.x,
         namedVector2PropertyData.y
       );
     } );
-
-    state.namedNumberProperties.forEach( namedNumberPropertyData => {
+    stateObject.namedNumberProperties.forEach( namedNumberPropertyData => {
       this.addNumberProperty(
         namedNumberPropertyData.name,
         namedNumberPropertyData.min,
@@ -232,23 +229,29 @@ export default class ProgramModelContainer {
         namedNumberPropertyData.defaultValue
       );
     } );
-
-    state.namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
+    stateObject.namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
       this.addEnumerationProperty(
         namedEnumerationPropertyData.name,
         namedEnumerationPropertyData.values
       );
     } );
+  }
+
+  /**
+   * Load model components that are dependent on other model components that are already created.
+   * @param {Object} state - state object from the database
+   * @param {NamedProperty[]} allComponents - all NamedProperty components (across all programs)
+   */
+  loadDependentModelComponents( state, allComponents ) {
 
     // Add derived properties last, so that they can depend on other properties
-
     state.namedDerivedProperties.forEach( namedDerivedPropertyData => {
       const dependencyNames = namedDerivedPropertyData.dependencyNames;
 
       // Get all the instances of NamedProperty from the saved names
       const dependencies = [];
       dependencyNames.forEach( dependencyName => {
-        const foundProperty = this.allComponents.find( namedProperty => namedProperty.name === dependencyName );
+        const foundProperty = allComponents.find( namedProperty => namedProperty.name === dependencyName );
         dependencies.push( foundProperty );
       } );
 

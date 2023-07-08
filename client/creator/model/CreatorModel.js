@@ -112,15 +112,30 @@ export default class CreatorModel {
     this.programs.forEach( program => this.deleteProgram( program ) );
 
     if ( json.programs ) {
+
+      // first create all programs and load dependency model components
       json.programs.forEach( programJSON => {
         const programPosition = phet.dot.Vector2.fromStateObject( programJSON.positionProperty );
         const programNumber = programJSON.number;
         const newProgram = this.createProgram( programPosition, programNumber );
 
-        // TODO: For next time, we need to do this in passes - first create all model components
-        // then create controller/view components. The model accross all programs needs to be
-        // available before the controller/view components are created.
-        newProgram.load( programJSON );
+        newProgram.loadMetadata( programJSON );
+        newProgram.loadDependencyModelComponents( programJSON );
+      } );
+
+      // then load DerivedProperty components once dependencies are in place
+      json.programs.forEach( programJSON => {
+        const program = this.programs.find( program => program.number === programJSON.number );
+        program.loadDependentModelComponents( programJSON, this.allModelComponents );
+      } );
+
+      // then load controller/view components once model components are in place
+      json.programs.forEach( programJSON => {
+        const program = this.programs.find( program => program.number === programJSON.number );
+        program.loadControllerComponents( programJSON, this.allModelComponents );
+
+        // TODO
+        // program.loadViewComponents( programJSON );
       } );
     }
   }
