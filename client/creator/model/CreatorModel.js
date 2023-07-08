@@ -109,7 +109,9 @@ export default class CreatorModel {
    * @public
    */
   load( json ) {
-    this.programs.forEach( program => this.deleteProgram( program ) );
+
+    // shallow copy as we clear the array
+    this.programs.slice().forEach( program => this.deleteProgram( program ) );
 
     if ( json.programs ) {
 
