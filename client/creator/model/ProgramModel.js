@@ -1,5 +1,6 @@
 import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
+import ProgramViewContainer from './views/ProgramViewContainer.js';
 
 export default class ProgramModel {
 
@@ -19,7 +20,11 @@ export default class ProgramModel {
     // @public - responsible for all 'model' components of this program
     this.modelContainer = new ProgramModelContainer();
 
+    // @public - responsible for all 'controller' components of this program
     this.controllerContainer = new ProgramControllerContainer();
+
+    // @public - responsible for all 'view' components of this program
+    this.viewContainer = new ProgramViewContainer();
 
     // @public - the position of this program in the editor
     this.positionProperty = new phet.dot.Vector2Property( initialPosition );
@@ -36,16 +41,21 @@ export default class ProgramModel {
     // Check if the name is used by any of the model components
     const usedInModel = this.modelContainer.allComponents.some( component => component.name === name );
     const usedInController = this.controllerContainer.allComponents.some( component => component.name === name );
+    const usedInView = this.viewContainer.allComponents.some( component => component.name === name );
 
-    return usedInModel || usedInController;
+    return usedInModel || usedInController || usedInView;
   }
 
   /**
    * TODO: Remove any other connections with other programs.
    */
   dispose() {
-    this.modelContainer.dispose();
     this.positionProperty.dispose();
+
+    this.modelContainer.dispose();
+    this.controllerContainer.dispose();
+    this.viewContainer.dispose();
+
     this.deleteEmitter.dispose();
   }
 
@@ -60,7 +70,8 @@ export default class ProgramModel {
       positionProperty: this.positionProperty.value.toStateObject(),
 
       modelContainer: this.modelContainer.save(),
-      controllerContainer: this.controllerContainer.save()
+      controllerContainer: this.controllerContainer.save(),
+      viewContainer: this.viewContainer.save()
     };
   }
 
@@ -98,5 +109,14 @@ export default class ProgramModel {
    */
   loadControllerComponents( stateObject, allComponents ) {
     this.controllerContainer.load( stateObject.controllerContainer, allComponents );
+  }
+
+  /**
+   * Load view components of this ProgramModel.
+   * @param stateObject
+   * @param allComponents - All components of the model (from all programs).
+   */
+  loadViewComponents( stateObject, allComponents ) {
+    this.viewContainer.load( stateObject.viewContainer, allComponents );
   }
 }

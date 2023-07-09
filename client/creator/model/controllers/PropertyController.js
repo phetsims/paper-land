@@ -39,6 +39,13 @@ export default class PropertyController {
     };
   }
 
+  /**
+   * Free memory for garbage collection.
+   */
+  dispose() {
+    this.deleteEmitter.dispose();
+  }
+
   static controlTypeStringToValue( enumValue, enumeration ) {
     if ( typeof enumValue === 'string' ) {
       return enumeration.enumeration.getValue( enumValue );

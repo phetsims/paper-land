@@ -10,14 +10,9 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     this.model = model;
     this.programNodes = programNodes;
 
-    // this.connections = [
-    //   { start: { x: 0, y: 0 }, end: { x: 100, y: 100 } }
-    // ];
-
     this.controllerConnections = [];
     this.derivedPropertyConnections = [];
-
-    // Whenever a program gets a new component, or moves, get the new connection points
+    this.viewConnections = [];
   }
 
   /**
@@ -31,6 +26,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     // every paint
     this.updateControllerConnections();
     this.updateDerivedPropertyConnections();
+    this.updateViewConnections();
 
     context.save();
     context.lineCap = 'round';
@@ -51,8 +47,12 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     } );
     context.stroke();
 
-    // TODO: View connections
-    // #66C0E0 -a light blue for view connections
+    context.beginPath();
+    context.strokeStyle = ViewConstants.VIEW_WIRE_COLOR;
+    this.viewConnections.forEach( connection => {
+      this.drawCurve( context, connection.start, connection.end );
+    } );
+    context.stroke();
 
     context.restore();
   }
@@ -138,6 +138,47 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           }
         } );
       }
+    } );
+  }
+
+  /**
+   * Inspect the model for view connections.
+   */
+  updateViewConnections() {
+    this.viewConnections = [];
+
+    this.model.allViewComponents.forEach( component => {
+      const componentName = component.name;
+      const dependencyNames = component.modelComponentNames;
+
+      let endPoint;
+
+      // get the location of the view component that we care about
+      this.programNodes.forEach( programNode => {
+        programNode.model.viewContainer.allComponents.forEach( modelComponent => {
+          if ( modelComponent.name === componentName ) {
+            endPoint = programNode.getComponentListItemConnectionPoint( componentName );
+          }
+        } );
+      } );
+
+      // get the location of the model components that the view component is dependent on
+      const startPoints = [];
+      dependencyNames.forEach( dependencyName => {
+        this.programNodes.forEach( programNode => {
+          programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+            if ( modelComponent.name === dependencyName ) {
+              startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
+            }
+          } );
+        } );
+      } );
+
+      startPoints.forEach( startPoint => {
+        if ( startPoint && endPoint ) {
+          this.viewConnections.push( { start: startPoint, end: endPoint } );
+        }
+      } );
     } );
   }
 

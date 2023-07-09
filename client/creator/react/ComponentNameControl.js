@@ -12,7 +12,7 @@ export default function ComponentNameControl( props ) {
   return (
     <div>
       <Form.Group className={styles.controlElement}>
-        <Form.Label>Component Name</Form.Label>
+        <Form.Label>Component Name:</Form.Label>
         <Form.Control
           type='text'
           value={props.componentName}

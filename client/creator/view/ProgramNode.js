@@ -56,6 +56,10 @@ export default class ProgramNode extends phet.scenery.Node {
       spacing: MARGIN
     } );
 
+    this.topSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
+      stroke: 'rgb(100,100,100)'
+    } );
+
     // A separator after the model components
     this.modelSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
       stroke: 'rgb(100,100,100)'
@@ -76,6 +80,10 @@ export default class ProgramNode extends phet.scenery.Node {
       spacing: MARGIN
     } );
 
+    this.viewSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
+      stroke: 'rgb(100,100,100)'
+    } );
+
     // Creates a new "component"
     this.createComponentButton = new phet.sun.TextPushButton( 'Create Component', _.merge( {}, BUTTON_OPTIONS, {
       listener: () => {
@@ -94,11 +102,13 @@ export default class ProgramNode extends phet.scenery.Node {
       spacing: MARGIN * 2,
       align: 'left',
       children: [
+        this.topSeparator,
         this.modelComponentList,
         this.modelSeparator,
         this.controllerComponentList,
         this.controllerSeparator,
-        this.viewComponentList
+        this.viewComponentList,
+        this.viewSeparator
       ]
     } );
 
@@ -177,6 +187,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
     registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
+    registerComponentListListener( model.viewContainer.allComponents, this.viewComponentList );
 
     // collection of components that will contribute to layout bounds, to easily calculate height
     this.allComponents = [
@@ -212,8 +223,9 @@ export default class ProgramNode extends phet.scenery.Node {
     this.background.setRectHeight( backgroundHeight );
 
     // Visibility of lists toggles visibility of separators (scenery dynamic layout feature)
-    this.modelSeparator.visible = this.controllerComponentList.children.length > 0 || this.viewComponentList.children.length > 0;
-    this.controllerSeparator.visible = this.viewComponentList.children.length > 0 && this.controllerComponentList.children.length === 0;
+    this.modelSeparator.visible = this.modelComponentList.children.length > 0;
+    this.controllerSeparator.visible = this.controllerComponentList.children.length > 0;
+    this.viewSeparator.visible = this.viewComponentList.children.length > 0;
 
     this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );

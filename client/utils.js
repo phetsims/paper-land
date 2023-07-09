@@ -277,3 +277,34 @@ export function isValidSystemName( systemName, otherNames, alertError = true ) {
 
   return isValid;
 }
+
+/**
+ * Returns a documentation string for the provided NamedProperty type. This is shown to the user when they are
+ * writing code that will use a component.
+ * @param namedProperty
+ * @return {string}
+ */
+export function getComponentDocumentation( namedProperty ) {
+  const type = namedProperty.propertyType;
+  const name = namedProperty.name;
+
+  let usabilityDocumentation = '';
+  if ( type === 'Vector2Property' ) {
+    usabilityDocumentation = `Access x and y values with \`${name}.x\` and \`${name}.y\``;
+  }
+  else if ( type === 'NumberProperty' ) {
+    usabilityDocumentation = 'This is a number.';
+  }
+  else if ( type === 'BooleanProperty' ) {
+    usabilityDocumentation = 'This is a boolean value `true` or `false`';
+  }
+  else if ( type === 'DerivedProperty' ) {
+    usabilityDocumentation = 'This could be any type, depending on how you created your DerivedProperty.';
+  }
+  else if ( type === 'StringProperty' ) {
+    const valuesList = namedProperty.property.validValues.join( ', ' );
+    usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
+  }
+
+  return `${namedProperty.name} - ${usabilityDocumentation}`;
+};

@@ -27,8 +27,6 @@ export default class CreatorModel {
 
     // {Property.<boolean>} - The System name that is currently being worked on
     this.systemNameProperty = new phet.axon.Property( '' );
-
-    window.saveFunction = this.save.bind( this );
   }
 
   /**
@@ -51,21 +49,7 @@ export default class CreatorModel {
     // listen for when the program gets a new model component so we can add it to our global list
     this.addComponentAddedListener( this.allModelComponents, newProgram.modelContainer.allComponents );
     this.addComponentAddedListener( this.allControllerComponents, newProgram.controllerContainer.allComponents );
-
-    // // Listen for when a program gets a new component so we can add it to the global list
-    // const modelComponentAddedListener = addedModelComponent => {
-    //   this.allModelComponents.push( addedModelComponent );
-    //
-    //   // listen for its removal
-    //   const modelComponentRemovedListener = removedModelComponent => {
-    //     if ( addedModelComponent === removedModelComponent ) {
-    //       this.allModelComponents.remove( removedModelComponent );
-    //       newProgram.modelContainer.allComponents.elementRemovedEmitter.removeListener( modelComponentRemovedListener );
-    //     }
-    //   };
-    //   newProgram.modelContainer.allComponents.elementRemovedEmitter.addListener( modelComponentRemovedListener );
-    // };
-    // newProgram.modelContainer.allComponents.elementAddedEmitter.addListener( modelComponentAddedListener );
+    this.addComponentAddedListener( this.allViewComponents, newProgram.viewContainer.allComponents );
 
     this.programAddedEmitter.emit( newProgram );
 
@@ -166,9 +150,7 @@ export default class CreatorModel {
       json.programs.forEach( programJSON => {
         const program = this.programs.find( program => program.number === programJSON.number );
         program.loadControllerComponents( programJSON, this.allModelComponents );
-
-        // TODO
-        // program.loadViewComponents( programJSON );
+        program.loadViewComponents( programJSON, this.allModelComponents );
       } );
     }
   }

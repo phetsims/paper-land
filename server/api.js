@@ -1,6 +1,7 @@
 const express = require( 'express' );
 const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
+const fs = require( 'fs' );
 
 const router = express.Router();
 router.use( express.json() );
@@ -407,6 +408,22 @@ router.get( '/api/creator/:spaceName/delete/:systemName', ( req, res ) => {
     .then( numberOfProgramsDeleted => {
       res.json( { numberOfProgramsDeleted } );
     } );
+} );
+
+/**
+ * Gets the list of sound files available to use.
+ */
+router.get( '/api/creator/soundFiles', ( req, res ) => {
+
+  // use fs to get the list of files in the www/media/sounds directory
+  fs.readdir( './www/media/sounds', ( err, files ) => {
+    if ( err ) {
+      res.status( 500 ).send( 'Error reading sound files' );
+    }
+    else {
+      res.json( { soundFiles: files } );
+    }
+  } );
 } );
 
 module.exports = router;

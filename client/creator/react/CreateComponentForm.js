@@ -51,7 +51,13 @@ export default function CreateComponentForm( props ) {
           ></CreateModelComponentForm>
         </Tab>
         <Tab eventKey='view' title='View' tabClassName={styles.tab}>
-          <CreateViewComponentForm onComponentCreated={onComponentCreated}></CreateViewComponentForm>
+          <CreateViewComponentForm
+            model={model}
+            componentName={componentName}
+            activeProgram={props.activeProgram}
+            allModelComponents={props.allModelComponents}
+            onComponentCreated={onComponentCreated}>
+          </CreateViewComponentForm>
         </Tab>
         <Tab eventKey='controller' title='Controller' tabClassName={styles.tab}>
           <CreateModelControllerForm

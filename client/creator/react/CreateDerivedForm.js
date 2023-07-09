@@ -10,32 +10,8 @@ import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import MonacoEditor from 'react-monaco-editor';
+import { getComponentDocumentation } from '../../utils.js';
 import styles from './../CreatorMain.css';
-
-const getComponentDocumentation = namedProperty => {
-  const type = namedProperty.propertyType;
-  const name = namedProperty.name;
-
-  let usabilityDocumentation = '';
-  if ( type === 'Vector2Property' ) {
-    usabilityDocumentation = `Access x and y values with \`${name}.x\` and \`${name}.y\``;
-  }
-  else if ( type === 'NumberProperty' ) {
-    usabilityDocumentation = 'This is a number.';
-  }
-  else if ( type === 'BooleanProperty' ) {
-    usabilityDocumentation = 'This is a boolean value `true` or `false`';
-  }
-  else if ( type === 'DerivedProperty' ) {
-    usabilityDocumentation = 'This could be any type, depending on how you created your DerivedProperty.';
-  }
-  else if ( type === 'StringProperty' ) {
-    const valuesList = namedProperty.property.validValues.join( ', ' );
-    usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
-  }
-
-  return `${namedProperty.name} - ${usabilityDocumentation}`;
-};
 
 export default function CreateDerivedForm( props ) {
   const allModelComponents = props.allModelComponents;

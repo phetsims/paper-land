@@ -152,4 +152,13 @@ export default class ProgramControllerContainer {
       this.addEnumerationPropertyController( controller );
     } );
   }
+
+  dispose() {
+    this.allComponents.forEach( component => component.dispose() );
+
+    this.vector2PropertyControllers.dispose();
+    this.booleanPropertyControllers.dispose();
+    this.numberPropertyControllers.dispose();
+    this.enumerationPropertyControllers.dispose();
+  }
 }
