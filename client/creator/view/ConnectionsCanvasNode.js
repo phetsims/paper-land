@@ -191,8 +191,10 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
   drawCurve( context, start, end ) {
 
     // draw the curve
-    const dx = Math.abs( end.x - start.x );
-    const horizontalOffset = Math.max( dx * 0.2, 25 ); // Adjust the offset to control the curvature
+    const dy = Math.abs( end.y - start.y );
+
+    // so that when points are vertically aligned, the curve bows out wider for a more natural look
+    const horizontalOffset = Math.max( dy * 0.5, 25 );
 
     const cp1x = start.x - horizontalOffset;
     const cp1y = start.y;
