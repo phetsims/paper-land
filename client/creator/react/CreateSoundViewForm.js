@@ -68,6 +68,8 @@ export default function CreateSoundViewForm( props ) {
         typeSpecificFunctions={soundFunctions}
         isFormValid={props.isFormValid}
         getFormData={props.getGeneralFormData}
+        functionPrompt={'Use the available functions and variables to control the sound.'}
+        componentsPrompt={'Function is called and sound is played whenever a component changes.'}
       ></ViewComponentControls>
     </div>
   );

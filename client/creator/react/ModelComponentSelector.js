@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -10,23 +10,28 @@ export default function ModelComponentSelector( props ) {
   // A function to be called whenever any checkbox changes.
   const handleChange = props.handleChange || ( () => {} );
 
-  // The selected model components
-  const selectedComponents = useRef( [] );
+  // state for selected components
+  const [ selectedComponents, setSelectedComponents ] = useState( [] );
 
   const handleCheckboxChange = ( event, namedProperty ) => {
     if ( event.target.checked ) {
-      const copy = selectedComponents.current.slice();
+      const copy = selectedComponents.slice();
       copy.push( namedProperty );
-      selectedComponents.current = copy;
+      setSelectedComponents( copy );
     }
     else {
 
       // Remove the unchecked component from the list
-      const copy = selectedComponents.current.slice();
-      copy.splice( selectedComponents.current.indexOf( namedProperty ), 1 );
-      selectedComponents.current = copy;
+      const copy = selectedComponents.slice();
+      copy.splice( selectedComponents.indexOf( namedProperty ), 1 );
+      setSelectedComponents( copy );
     }
   };
+
+  // Call the handleChange function whenever the selected components change
+  useEffect( () => {
+    handleChange( selectedComponents );
+  }, [ selectedComponents ] );
 
   return (
     <Container>
@@ -54,7 +59,6 @@ export default function ModelComponentSelector( props ) {
                            label={innerComponent.name}
                            onChange={event => {
                              handleCheckboxChange( event, innerComponent );
-                             handleChange( selectedComponents.current );
                            }}
                          /> : ''
                         }

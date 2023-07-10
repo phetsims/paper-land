@@ -18,7 +18,7 @@ export default class CreatorVisibilityControls extends phet.sun.Panel {
       },
       {
         property: visibilityModel.derivedConnectionsVisibleProperty,
-        createNode: () => { return new phet.scenery.Text( 'Derived value connections', ViewConstants.TEXT_OPTIONS ); }
+        createNode: () => { return new phet.scenery.Text( 'Derived connections', ViewConstants.TEXT_OPTIONS ); }
       }
     ];
 

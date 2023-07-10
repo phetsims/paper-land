@@ -18,10 +18,20 @@ export default class SoundViewComponent extends ViewComponent {
    */
   save() {
     return {
-      name: this.name,
-      modelComponentNames: this.modelComponentNames,
-      controlFunctionString: this.controlFunctionString,
+      ...super.save(),
       soundFileName: this.soundFileName
     };
+  }
+
+  /**
+   * Given a state object, return a new SoundViewComponent.
+   */
+  static fromStateObject( stateObject ) {
+    return new SoundViewComponent(
+      stateObject.name,
+      stateObject.modelComponentNames,
+      stateObject.controlFunctionString,
+      stateObject.soundFileName
+    );
   }
 }

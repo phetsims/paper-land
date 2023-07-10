@@ -1,6 +1,7 @@
 /**
  * A container for all view related components in a ProgramModel.
  */
+import DescriptionViewComponent from './DescriptionViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
 
 export default class ProgramViewContainer {
@@ -8,6 +9,9 @@ export default class ProgramViewContainer {
 
     // The collection of all sound views in this container
     this.soundViews = phet.axon.createObservableArray();
+
+    // The collection of all description views in this container
+    this.descriptionViews = phet.axon.createObservableArray();
 
     // The collection of all components in this container
     this.allComponents = phet.axon.createObservableArray();
@@ -33,6 +37,25 @@ export default class ProgramViewContainer {
   }
 
   /**
+   * Adds a new description view.
+   */
+  addDescriptionView( descriptionView ) {
+    this.descriptionViews.push( descriptionView );
+    this.allComponents.push( descriptionView );
+    this.registerDeleteListener( descriptionView, this.removeDescriptionView.bind( this ) );
+  }
+
+  /**
+   * Removes a description view.
+   */
+  removeDescriptionView( descriptionView ) {
+    const descriptionViewIndex = this.descriptionViews.indexOf( descriptionView );
+    assert && assert( descriptionViewIndex >= 0, 'DescriptionView not found' );
+    this.descriptionViews.splice( descriptionViewIndex, 1 );
+    this.removeFromAllComponents( descriptionView );
+  }
+
+  /**
    * Adds a listener that will remove the component when it is time to delete it.
    */
   registerDeleteListener( component, removalListener ) {
@@ -55,7 +78,8 @@ export default class ProgramViewContainer {
 
   save() {
     return {
-      soundViews: this.soundViews.map( soundView => soundView.save() )
+      soundViews: this.soundViews.map( soundView => soundView.save() ),
+      descriptionViews: this.descriptionViews.map( descriptionView => descriptionView.save() )
     };
   }
 
@@ -64,18 +88,18 @@ export default class ProgramViewContainer {
    */
   load( json ) {
     json.soundViews.forEach( soundViewJSON => {
-      const soundView = new SoundViewComponent(
-        soundViewJSON.name,
-        soundViewJSON.modelComponentNames,
-        soundViewJSON.controlFunctionString,
-        soundViewJSON.soundFileName
-      );
+      const soundView = SoundViewComponent.fromStateObject( soundViewJSON );
       this.addSoundView( soundView );
+    } );
+    json.descriptionViews.forEach( descriptionViewJSON => {
+      const descriptionView = DescriptionViewComponent.fromStateObject( descriptionViewJSON );
+      this.addDescriptionView( descriptionView );
     } );
   }
 
   dispose() {
     this.soundViews.dispose();
+    this.descriptionViews.dispose();
     this.allComponents.dispose();
   }
 }

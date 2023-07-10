@@ -17,8 +17,15 @@ export default class ViewComponent {
     this.deleteEmitter = new phet.axon.Emitter();
   }
 
+  /**
+   * Saves ViewComponent data for serialization, but to be overridden and extended by subclasses.
+   */
   save() {
-    throw new Error( 'Subclasses must override' );
+    return {
+      name: this.name,
+      modelComponentNames: this.modelComponentNames,
+      controlFunctionString: this.controlFunctionString,
+    };
   }
 
   load() {

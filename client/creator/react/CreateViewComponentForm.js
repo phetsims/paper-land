@@ -1,8 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
+import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
 import StyledButton from './StyledButton.js';
 
@@ -30,6 +32,7 @@ export default function CreateViewComponentForm( props ) {
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
   const [ soundsFormValid, setSoundsFormValid ] = useState( false );
+  const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
 
   // refs to form data
   const generalDataRef = useRef( {} );
@@ -41,6 +44,7 @@ export default function CreateViewComponentForm( props ) {
 
   // functions for subcomponents to set form validity
   const getIsSoundsFormValid = isFormValid => setSoundsFormValid( isFormValid );
+  const getIsDescriptionFormValid = isFormValid => setDescriptionFormValid( isFormValid );
 
   const isComponentNameValid = () => {
     return componentName.length > 0 && model.isNameAvailable( componentName );
@@ -50,8 +54,11 @@ export default function CreateViewComponentForm( props ) {
     if ( selectedTab === 'sounds' ) {
       setSelectedTabFormValid( soundsFormValid && isComponentNameValid() );
     }
+    else if ( selectedTab === 'description' ) {
+      setSelectedTabFormValid( descriptionFormValid && isComponentNameValid() );
+    }
 
-  }, [ props.componentName, selectedTab, soundsFormValid ] );
+  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid ] );
 
   const createComponent = () => {
     const componentName = props.componentName;
@@ -61,6 +68,10 @@ export default function CreateViewComponentForm( props ) {
       const soundFileName = soundsDataRef.current.soundFileName;
       const soundViewComponent = new SoundViewComponent( componentName, modelComponentNames, controlFunctionString, soundFileName );
       activeProgram.viewContainer.addSoundView( soundViewComponent );
+    }
+    else if ( selectedTab === 'description' ) {
+      const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponentNames, controlFunctionString );
+      activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
     }
 
     props.onComponentCreated();
@@ -95,7 +106,12 @@ export default function CreateViewComponentForm( props ) {
           ></CreateSoundViewForm>
         </Tab>
         <Tab eventKey='description' title='Description' tabClassName={styles.tab}>
-          TODO: Select a model component and describe how its values create a description. Select if the description will speak every change.
+          <CreateDescriptionViewForm
+            allModelComponents={props.allModelComponents}
+            isFormValid={getIsDescriptionFormValid}
+            getGeneralFormData={getDataForGeneral}
+          >
+          </CreateDescriptionViewForm>
         </Tab>
         <Tab eventKey='vibration' title='Vibration' tabClassName={styles.tab}>
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.

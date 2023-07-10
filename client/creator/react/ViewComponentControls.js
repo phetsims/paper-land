@@ -7,6 +7,14 @@ import ModelComponentSelector from './ModelComponentSelector.js';
 
 export default function ViewComponentControls( props ) {
 
+  // required props
+  if ( !props.functionPrompt ) {
+    throw new Error( 'ViewComponentControls requires a functionPrompt prop.' );
+  }
+  if ( !props.componentsPrompt ) {
+    throw new Error( 'ViewComponentControls requires a componentsPrompt prop.' );
+  }
+
   // The selected model components
   const [ selectedComponents, setSelectedComponents ] = useState( [] );
 
@@ -28,7 +36,8 @@ export default function ViewComponentControls( props ) {
       {props.typeSpecificControls ? props.typeSpecificControls : ''}
       <hr/>
       <div className={styles.controlElement}>
-        <p>Select dependency model components. The sound will play whenever a dependency model component changes.</p>
+        <h4>Model dependencies</h4>
+        <p className={styles.controlElement}>{props.componentsPrompt}</p>
         <ModelComponentSelector
           allModelComponents={props.allModelComponents}
           handleChange={selectedComponents => {
@@ -39,7 +48,8 @@ export default function ViewComponentControls( props ) {
       </div>
       <hr/>
       <div hidden={props.allModelComponents.length === 0}>
-        <p className={styles.controlElement}>Write the body of a function that can change sound attributes.</p>
+        <h4>Function body</h4>
+        <p className={styles.controlElement}>{props.functionPrompt}</p>
         <p>Available variables:</p>
         <ListGroup>
           {
