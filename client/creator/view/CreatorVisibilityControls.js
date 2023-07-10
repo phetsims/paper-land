@@ -29,7 +29,8 @@ export default class CreatorVisibilityControls extends phet.sun.Panel {
       }
     } );
     super( content, {
-      fill: ViewConstants.BACKGROUND_COLOR
+      fill: ViewConstants.BACKGROUND_COLOR,
+      lineWidth: 4
     } );
   }
 }
