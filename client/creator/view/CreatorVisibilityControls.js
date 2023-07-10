@@ -10,15 +10,15 @@ export default class CreatorVisibilityControls extends phet.sun.Panel {
     const items = [
       {
         property: visibilityModel.viewConnectionsVisibleProperty,
-        createNode: () => { return new phet.scenery.Text( 'View connections', ViewConstants.TEXT_OPTIONS ); }
+        createNode: () => { return new phet.scenery.Text( 'Model-View connections', ViewConstants.TEXT_OPTIONS ); }
       },
       {
         property: visibilityModel.controllerConnectionsVisibleProperty,
-        createNode: () => { return new phet.scenery.Text( 'Controller connections', ViewConstants.TEXT_OPTIONS ); }
+        createNode: () => { return new phet.scenery.Text( 'Controller-Model connections', ViewConstants.TEXT_OPTIONS ); }
       },
       {
         property: visibilityModel.derivedConnectionsVisibleProperty,
-        createNode: () => { return new phet.scenery.Text( 'Derived connections', ViewConstants.TEXT_OPTIONS ); }
+        createNode: () => { return new phet.scenery.Text( 'Derived Value connections', ViewConstants.TEXT_OPTIONS ); }
       }
     ];
 
