@@ -1,3 +1,4 @@
+import CreatorVisibilityModel from './CreatorVisibilityModel.js';
 import ProgramModel from './ProgramModel.js';
 
 export default class CreatorModel {
@@ -27,6 +28,9 @@ export default class CreatorModel {
 
     // {Property.<boolean>} - The System name that is currently being worked on
     this.systemNameProperty = new phet.axon.Property( '' );
+
+    // {CreatorVisibilityModel}
+    this.visibilityModel = new CreatorVisibilityModel();
   }
 
   /**

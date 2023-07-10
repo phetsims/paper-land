@@ -9,6 +9,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     this.model = model;
     this.programNodes = programNodes;
+    this.visibilityModel = model.visibilityModel;
 
     this.controllerConnections = [];
     this.derivedPropertyConnections = [];
@@ -21,38 +22,46 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    */
   paintCanvas( context ) {
 
-    // Update the connections to draw
-    // TODO: These are really expensive operations, and we should probably only do it when necessary instead of
-    // every paint
-    this.updateControllerConnections();
-    this.updateDerivedPropertyConnections();
-    this.updateViewConnections();
+    // TODO: Updating connections data is expensive, do that no events instead of every paint - or only
+    // repaint on certain events
 
     context.save();
     context.lineCap = 'round';
 
-    // Draw controller connections
-    context.beginPath();
-    context.strokeStyle = ViewConstants.CONTROLLER_WIRE_COLOR;
-    this.controllerConnections.forEach( connection => {
-      this.drawCurve( context, connection.start, connection.end );
-    } );
-    context.stroke();
+    if ( this.visibilityModel.controllerConnectionsVisibleProperty.value ) {
+      this.updateControllerConnections();
 
-    // Draw DerivedProperty connections
-    context.beginPath();
-    context.strokeStyle = ViewConstants.DERIVED_WIRE_COLOR;
-    this.derivedPropertyConnections.forEach( connection => {
-      this.drawCurve( context, connection.start, connection.end );
-    } );
-    context.stroke();
+      // Draw controller connections
+      context.beginPath();
+      context.strokeStyle = ViewConstants.CONTROLLER_WIRE_COLOR;
+      this.controllerConnections.forEach( connection => {
+        this.drawCurve( context, connection.start, connection.end );
+      } );
+      context.stroke();
+    }
 
-    context.beginPath();
-    context.strokeStyle = ViewConstants.VIEW_WIRE_COLOR;
-    this.viewConnections.forEach( connection => {
-      this.drawCurve( context, connection.start, connection.end );
-    } );
-    context.stroke();
+    if ( this.visibilityModel.derivedConnectionsVisibleProperty.value ) {
+      this.updateDerivedPropertyConnections();
+
+      // Draw DerivedProperty connections
+      context.beginPath();
+      context.strokeStyle = ViewConstants.DERIVED_WIRE_COLOR;
+      this.derivedPropertyConnections.forEach( connection => {
+        this.drawCurve( context, connection.start, connection.end );
+      } );
+      context.stroke();
+    }
+
+    if ( this.visibilityModel.viewConnectionsVisibleProperty.value ) {
+      this.updateViewConnections();
+
+      context.beginPath();
+      context.strokeStyle = ViewConstants.VIEW_WIRE_COLOR;
+      this.viewConnections.forEach( connection => {
+        this.drawCurve( context, connection.start, connection.end );
+      } );
+      context.stroke();
+    }
 
     context.restore();
   }

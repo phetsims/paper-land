@@ -6,6 +6,7 @@
 
 import xhr from 'xhr';
 import ConnectionsCanvasNode from './ConnectionsCanvasNode.js';
+import CreatorVisibilityControls from './CreatorVisibilityControls.js';
 import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
 import SavedRectangle from './SavedRectangle.js';
@@ -31,6 +32,8 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Fades in using twixt when the system is successfully saved to the database
     this.savedRectangle = new SavedRectangle();
+
+    this.visibilityControls = new CreatorVisibilityControls( model.visibilityModel );
 
     // {ProgramNode[]} - Reference to all program nodes, so we can get positioning and connection points
     this.allProgramNodes = [];
@@ -77,6 +80,7 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.saveSystemButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
+    controlLayerNode.addChild( this.visibilityControls );
     controlLayerNode.addChild( this.deleteProgramArea );
 
     // Creates a ProgramNode when it is added
@@ -158,6 +162,7 @@ export default class CreatorView extends phet.scenery.Node {
     this.sendToPaperLandButton.rightTop = this.saveSystemButton.rightBottom.plusXY( 0, 5 );
     this.deleteProgramArea.rightBottom = new phet.dot.Vector2( width - 10, height - 10 );
     this.savedRectangle.rightCenter = this.saveSystemButton.leftCenter.plusXY( -5, 0 );
+    this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 
     this.connectionsNode.layout( width, height );
   }
