@@ -3,6 +3,9 @@
  */
 import ViewConstants from './ViewConstants.js';
 
+// A value to wrap the lineDashOffset so it doesn't grow forever.
+const MAX_OFFSET = 1000;
+
 class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
   constructor( model, programNodes ) {
     super();
@@ -14,6 +17,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     this.controllerConnections = [];
     this.derivedPropertyConnections = [];
     this.viewConnections = [];
+
+    this.lineDashOffset = 0;
   }
 
   /**
@@ -27,6 +32,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     context.save();
     context.lineCap = 'round';
+    context.lineDashOffset = this.lineDashOffset;
+    context.setLineDash( [ 4, 2 ] );
 
     if ( this.visibilityModel.controllerConnectionsVisibleProperty.value ) {
       this.updateControllerConnections();
@@ -245,6 +252,15 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    * Redraw in the animation frame.
    */
   step( dt ) {
+
+    // Update the line dash offset to show direction flow in the animation frame.
+    if ( Math.abs( this.lineDashOffset ) > MAX_OFFSET ) {
+      this.lineDashOffset = 0;
+    }
+
+    // A negative offset makes it look like the curves are moving from start point to end point.
+    this.lineDashOffset -= dt * 5;
+
     this.invalidatePaint();
   }
 }
