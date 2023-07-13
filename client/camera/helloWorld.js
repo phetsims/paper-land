@@ -4,7 +4,6 @@ const helloWorld = `// Hello World Template
 // Program Dependencies: N/A
 // Recommended Programs: General Template (templates)
 // Program Description: Example program with functioning Board and Projector code!
-// !!!UPDATE ME WITH A BETTER BOARD EXAMPLE!!!
 
 importScripts('paper.js');
 
