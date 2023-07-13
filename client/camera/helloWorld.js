@@ -19,31 +19,24 @@ importScripts('paper.js');
 
   // Called when the program is detected or changed.
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
-    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/loonCall.mp3' );
 
-    const soundClip = new phet.tambo.SoundClip( wrappedAudioBuffer );
-    phet.tambo.soundManager.addSoundGenerator( soundClip );
-    setTimeout( () => {
-      soundClip.play();
-      console.log( 'Just played sound clip, did you hear it?' );
-    }, 1000 );
-    
-    // Assign the sound to the scratchpad so that we can remove it later
-    scratchpad.soundClip = soundClip;
+    // Create and add some scenery Text when the program is added  
+    scratchpad.helloWorldText = new phet.scenery.Text( 'Hello World!' );
+    sharedData.scene.addChild( scratchpad.helloWorldText );
   };
 
   // Called when the paper positions change.
-  // const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchPad, sharedData ) => {
-    
-    // Behavior that changes with paper position here.
-    // Global model for all programs
-    // const model = sharedData.modelProperty.value;
-  // };
+  const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchpad, sharedData ) => {
+  
+    // Move the text with the center of the paper.
+    scratchpad.helloWorldText.center = phet.paperLand.utils.getBoardPositionFromPoints( positionPoints, sharedData.displaySize );
+  };
 
   // Called when the program is changed or no longer detected.
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
-    phet.tambo.soundManager.removeSoundGenerator( scratchpad.soundClip );
-    scratchpad.soundClip = null;
+  
+    sharedData.scene.removeChild( scratchpad.helloWorldText );
+    delete sharedData.helloWorldText;
   };
 
   // Add the state change handler defined above as data for this paper.
@@ -52,7 +45,8 @@ importScripts('paper.js');
       updateTime: Date.now(),
       eventHandlers: {
         onProgramAdded: onProgramAdded.toString(),
-        onProgramRemoved: onProgramRemoved.toString()
+        onProgramRemoved: onProgramRemoved.toString(),
+        onProgramChangedPosition: onProgramChangedPosition.toString()
       }
     }
   } );

@@ -47,6 +47,30 @@ const boardUtils = {
   },
 
   /**
+   * Converts a normalized point in paper coordinates to the same position in board coordinates.
+   * @param {dot.Vector2} paperPoint
+   * @param {number} boardWidth
+   * @param {number} boardHeight
+   * @return {*|Vector2}
+   */
+  paperToBoardCoordinates( paperPoint, boardWidth, boardHeight ) {
+    return new phet.dot.Vector2( paperPoint.x * boardWidth, paperPoint.y * boardHeight );
+  },
+
+  /**
+   * Returns the center of a paper in board coordinates. Useful for controlling the position of a
+   * component from paper center.
+   * @param {{x: number, y: number}[]}points
+   * @param {dot.Dimension2} displaySize
+   * @return {dot.Vector2}
+   */
+  getBoardPositionFromPoints( points, displaySize ) {
+    const width = displaySize.width;
+    const height = displaySize.height;
+    return boardUtils.paperToBoardCoordinates( boardUtils.getProgramCenter( points ), width, height );
+  },
+
+  /**
    * Turns a point into a dot.Vector2 instance.
    * @param point
    * @return {dot.Vector2}
