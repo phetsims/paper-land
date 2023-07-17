@@ -1,8 +1,9 @@
 /**
  * Base class for a type with data to create a component that will control some property.
  */
+import Component from '../Component.js';
 
-export default class PropertyController {
+export default class PropertyController extends Component {
 
   /**
    * @param {string} name
@@ -11,15 +12,10 @@ export default class PropertyController {
    * @param {phet.phetCore.EnumerationValue|string} controlTypeValue
    */
   constructor( name, namedProperty, controlTypeEnumeration, controlTypeValue ) {
-
-    // {string} The name of this controller
-    this.name = name;
+    super( name );
 
     // {NamedProperty} that this will control
     this.namedProperty = namedProperty;
-
-    // {Emitter} emits an event when it is time for this controller to be deleted
-    this.deleteEmitter = new phet.axon.Emitter();
 
     // From React, we might get a string from the EnumerationValue, return to enum first
     controlTypeValue = PropertyController.controlTypeStringToValue( controlTypeValue, controlTypeEnumeration );
@@ -37,13 +33,6 @@ export default class PropertyController {
       controlledComponentName: this.namedProperty.name,
       controlType: this.controlType.name
     };
-  }
-
-  /**
-   * Free memory for garbage collection.
-   */
-  dispose() {
-    this.deleteEmitter.dispose();
   }
 
   static controlTypeStringToValue( enumValue, enumeration ) {

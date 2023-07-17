@@ -1,14 +1,16 @@
 /**
  * Collection of model components for a single program, with functions to create them.
  */
+import ComponentContainer from './ComponentContainer.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
 import NamedEnumerationProperty from './NamedEnumerationProperty.js';
 import NamedNumberProperty from './NamedNumberProperty.js';
 import NamedVector2Property from './NamedVector2Property.js';
 
-export default class ProgramModelContainer {
-  constructor() {
+export default class ProgramModelContainer extends ComponentContainer {
+  constructor( programModel, activeEditProperty ) {
+    super( programModel, activeEditProperty );
 
     // {ObservableArray<NamedProperty>}
     this.namedBooleanProperties = phet.axon.createObservableArray();
@@ -16,23 +18,6 @@ export default class ProgramModelContainer {
     this.namedNumberProperties = phet.axon.createObservableArray();
     this.namedEnumerationProperties = phet.axon.createObservableArray();
     this.namedDerivedProperties = phet.axon.createObservableArray();
-
-    // {ObservableArray<NamedProperty> - the collection of ALL NamedProperties in this container
-    // so we can easily operate on all of them at once.
-    this.allComponents = phet.axon.createObservableArray();
-  }
-
-  addToAllComponents( namedProperty ) {
-
-    // make sure that allComponents does not have a NamedProperty with the same name
-    const existingComponent = _.find( this.allComponents, component => {
-      return component.name === namedProperty.name;
-    } );
-    if ( existingComponent ) {
-      throw new Error( 'Component with this name already exists. It must be unique.' );
-    }
-
-    this.allComponents.push( namedProperty );
   }
 
   /**
@@ -45,7 +30,7 @@ export default class ProgramModelContainer {
     this.namedBooleanProperties.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerDeleteListener( newNamedProperty, this.removeBooleanProperty.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeBooleanProperty.bind( this ) );
   }
 
   /**
@@ -67,7 +52,7 @@ export default class ProgramModelContainer {
     this.namedVector2Properties.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerDeleteListener( newNamedProperty, this.removeVector2Property.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeVector2Property.bind( this ) );
   }
 
   /**
@@ -93,7 +78,7 @@ export default class ProgramModelContainer {
     this.namedNumberProperties.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerDeleteListener( newNamedProperty, this.removeNumberProperty.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeNumberProperty.bind( this ) );
   }
 
   /**
@@ -123,7 +108,7 @@ export default class ProgramModelContainer {
     this.namedEnumerationProperties.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerDeleteListener( newNamedProperty, this.removeEnumerationProperty.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeEnumerationProperty.bind( this ) );
   }
 
   /**
@@ -153,7 +138,7 @@ export default class ProgramModelContainer {
     this.namedDerivedProperties.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerDeleteListener( newNamedProperty, this.removeDerivedProperty.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeDerivedProperty.bind( this ) );
   }
 
   /**
@@ -164,30 +149,6 @@ export default class ProgramModelContainer {
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedDerivedProperties.splice( index, 1 );
     this.removeFromAllComponents( namedProperty );
-  }
-
-  /**
-   * Removes the NamedProperty from the collection of all components.
-   * @private
-   */
-  removeFromAllComponents( namedProperty ) {
-    const allIndex = this.allComponents.indexOf( namedProperty );
-    assert && assert( allIndex > -1, 'Property does not exist and cannot be removed.' );
-    this.allComponents.splice( allIndex, 1 );
-  }
-
-  /**
-   * Registers a listener to the deleteEmitter of the provided NamedProperty so it can
-   * be removed from the model when we receive that event.
-   * @param namedProperty - NamedProperty to remove
-   * @param removalListener - Specific work to remove the provided
-   */
-  registerDeleteListener( namedProperty, removalListener ) {
-    const deleteListener = () => {
-      removalListener( namedProperty );
-      namedProperty.deleteEmitter.removeListener( deleteListener );
-    };
-    namedProperty.deleteEmitter.addListener( deleteListener );
   }
 
   /**
@@ -268,16 +229,11 @@ export default class ProgramModelContainer {
    * and disposing observable arrays.
    */
   dispose() {
-
-    // dispose of all components
-    this.allComponents.forEach( namedProperty => {
-      namedProperty.dispose();
-    } );
-
     this.namedBooleanProperties.dispose();
     this.namedVector2Properties.dispose();
     this.namedNumberProperties.dispose();
     this.namedEnumerationProperties.dispose();
-    this.allComponents.dispose();
+
+    super.dispose();
   }
 }

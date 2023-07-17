@@ -2,11 +2,17 @@ import ImageLoader from './ImageLoader.js';
 import ViewConstants from './ViewConstants.js';
 
 export default class ComponentListItemNode extends phet.scenery.Node {
-  constructor( namedProperty, programWidth ) {
+
+  /**
+   *
+   * @param {Component} component
+   * @param programWidth
+   */
+  constructor( component, programWidth ) {
     super();
 
     // @public (read-only) - to identify this ItemNode
-    this.componentName = namedProperty.name;
+    this.componentName = component.name;
 
     const content = new phet.scenery.HBox( { spacing: 5 } );
     this.addChild( content );
@@ -15,12 +21,15 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       stroke: 'black'
     } );
 
-    const nameText = new phet.scenery.Text( namedProperty.name, {
+    const nameText = new phet.scenery.Text( component.name, {
       font: new phet.scenery.Font( { size: 7 } ),
       maxWidth: programWidth * 0.65
     } );
     const circleWithText = new phet.scenery.HBox( { spacing: 2, children: [ this.connectionCircle, nameText ] } );
-    content.children = [ circleWithText ];
+
+    const itemButtons = new phet.scenery.HBox( {
+      spacing: 5
+    } );
 
     ImageLoader.loadImage( 'media/images/trash3-red.svg', imageElement => {
       const imageNode = new phet.scenery.Image( imageElement, {
@@ -28,11 +37,26 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       } );
       const deleteButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => namedProperty.deleteEmitter.emit()
+        listener: () => component.deleteEmitter.emit()
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
-      content.children = [ circleWithText, deleteButton ];
+      itemButtons.addChild( deleteButton );
     } );
+
+    ImageLoader.loadImage( 'media/images/pencil-white.svg', imageElement => {
+      const imageNode = new phet.scenery.Image( imageElement, {
+        scale: 0.5
+      } );
+
+      const editButton = new phet.sun.RectangularPushButton( _.merge( {}, {
+        content: imageNode,
+        listener: () => component.editEmitter.emit()
+      }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
+
+      itemButtons.addChild( editButton );
+    } );
+
+    content.children = [ circleWithText, itemButtons ];
   }
 
   /**

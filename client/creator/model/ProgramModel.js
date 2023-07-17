@@ -7,24 +7,28 @@ export default class ProgramModel {
   /**
    * @param {dot.Vector2} initialPosition
    * @param {number} [initialNumber] - the number of this program
+   * @param {Property<ActiveEdit|null>} activeEditProperty
    */
-  constructor( initialPosition, initialNumber ) {
+  constructor( initialPosition, initialNumber, activeEditProperty ) {
 
     // @public (read-only) - the number of this program
     this.number = initialNumber === undefined ? Math.floor( Math.random() * 1000 ) : initialNumber;
+
+    // @public (read-only)
+    this.activeEditProperty = activeEditProperty;
 
     this.titleProperty = new phet.axon.StringProperty( '' );
     this.keywordsProperty = new phet.axon.StringProperty( '' );
     this.descriptionProperty = new phet.axon.StringProperty( '' );
 
     // @public - responsible for all 'model' components of this program
-    this.modelContainer = new ProgramModelContainer();
+    this.modelContainer = new ProgramModelContainer( this, activeEditProperty );
 
     // @public - responsible for all 'controller' components of this program
-    this.controllerContainer = new ProgramControllerContainer();
+    this.controllerContainer = new ProgramControllerContainer( this, activeEditProperty );
 
     // @public - responsible for all 'view' components of this program
-    this.viewContainer = new ProgramViewContainer();
+    this.viewContainer = new ProgramViewContainer( this, activeEditProperty );
 
     // @public - the position of this program in the editor
     this.positionProperty = new phet.dot.Vector2Property( initialPosition );

@@ -1,13 +1,17 @@
 /**
  * Collection of all the controller components for a single program, with functions to create them.
  */
+import ActiveEdit from './ActiveEdit.js';
+import ComponentContainer from './ComponentContainer.js';
 import BooleanPropertyController from './controllers/BooleanPropertyController.js';
 import EnumerationPropertyController from './controllers/EnumerationPropertyController.js';
 import NumberPropertyController from './controllers/NumberPropertyController.js';
 import Vector2PropertyController from './controllers/Vector2PropertyController.js';
+import EditType from './EditType.js';
 
-export default class ProgramControllerContainer {
-  constructor() {
+export default class ProgramControllerContainer extends ComponentContainer {
+  constructor( programModel, activeEditProperty ) {
+    super( programModel, activeEditProperty );
 
     // {ObservableArray<Vector2PropertyController}
     this.vector2PropertyControllers = phet.axon.createObservableArray();
@@ -20,8 +24,6 @@ export default class ProgramControllerContainer {
 
     // {ObservableArray<EnumerationPropertyController>
     this.enumerationPropertyControllers = phet.axon.createObservableArray();
-
-    this.allComponents = phet.axon.createObservableArray();
   }
 
   /**
@@ -30,9 +32,9 @@ export default class ProgramControllerContainer {
    */
   addVector2PropertyController( vector2PropertyController ) {
     this.vector2PropertyControllers.push( vector2PropertyController );
-    this.allComponents.push( vector2PropertyController );
+    this.addToAllComponents( vector2PropertyController );
 
-    this.registerDeleteListener( vector2PropertyController, this.removeVector2PropertyController.bind( this ) );
+    this.registerChangeListeners( vector2PropertyController, this.removeVector2PropertyController.bind( this ) );
   }
 
   /**
@@ -41,7 +43,7 @@ export default class ProgramControllerContainer {
    */
   removeVector2PropertyController( vector2PropertyController ) {
     this.vector2PropertyControllers.remove( vector2PropertyController );
-    this.allComponents.remove( vector2PropertyController );
+    this.removeFromAllComponents( vector2PropertyController );
   }
 
   /**
@@ -50,9 +52,9 @@ export default class ProgramControllerContainer {
    */
   addBooleanPropertyController( booleanPropertyController ) {
     this.booleanPropertyControllers.push( booleanPropertyController );
-    this.allComponents.push( booleanPropertyController );
+    this.addToAllComponents( booleanPropertyController );
 
-    this.registerDeleteListener( booleanPropertyController, this.removeBooleanPropertyController.bind( this ) );
+    this.registerChangeListeners( booleanPropertyController, this.removeBooleanPropertyController.bind( this ) );
   }
 
   /**
@@ -61,7 +63,7 @@ export default class ProgramControllerContainer {
    */
   removeBooleanPropertyController( booleanPropertyController ) {
     this.booleanPropertyControllers.remove( booleanPropertyController );
-    this.allComponents.remove( booleanPropertyController );
+    this.removeFromAllComponents( booleanPropertyController );
   }
 
   /**
@@ -70,9 +72,9 @@ export default class ProgramControllerContainer {
    */
   addNumberPropertyController( numberPropertyController ) {
     this.numberPropertyControllers.push( numberPropertyController );
-    this.allComponents.push( numberPropertyController );
+    this.addToAllComponents( numberPropertyController );
 
-    this.registerDeleteListener( numberPropertyController, this.removeNumberPropertyController.bind( this ) );
+    this.registerChangeListeners( numberPropertyController, this.removeNumberPropertyController.bind( this ) );
   }
 
   /**
@@ -81,7 +83,7 @@ export default class ProgramControllerContainer {
    */
   removeNumberPropertyController( numberPropertyController ) {
     this.numberPropertyControllers.remove( numberPropertyController );
-    this.allComponents.remove( numberPropertyController );
+    this.addToAllComponents( numberPropertyController );
   }
 
   /**
@@ -90,9 +92,9 @@ export default class ProgramControllerContainer {
    */
   addEnumerationPropertyController( enumerationPropertyController ) {
     this.enumerationPropertyControllers.push( enumerationPropertyController );
-    this.allComponents.push( enumerationPropertyController );
+    this.addToAllComponents( enumerationPropertyController );
 
-    this.registerDeleteListener( enumerationPropertyController, this.removeEnumerationPropertyController.bind( this ) );
+    this.registerChangeListeners( enumerationPropertyController, this.removeEnumerationPropertyController.bind( this ) );
   }
 
   /**
@@ -101,7 +103,7 @@ export default class ProgramControllerContainer {
    */
   removeEnumerationPropertyController( enumerationPropertyController ) {
     this.enumerationPropertyControllers.remove( enumerationPropertyController );
-    this.allComponents.remove( enumerationPropertyController );
+    this.addToAllComponents( enumerationPropertyController );
   }
 
   /**
@@ -110,8 +112,16 @@ export default class ProgramControllerContainer {
    *
    * @param {PropertyController} propertyController
    * @param {function} removalListener - tear down work for a particular type of PropertyController
+   *
+   * @override
    */
-  registerDeleteListener( propertyController, removalListener ) {
+  registerChangeListeners( propertyController, removalListener ) {
+    const editListener = () => {
+      this.activeEditProperty.value = new ActiveEdit( this.programModel, EditType.COMPONENT, propertyController );
+    };
+    propertyController.editEmitter.addListener( editListener );
+
+
     const deleteListener = () => {
       removalListener( propertyController );
       propertyController.deleteEmitter.removeListener( deleteListener );
@@ -160,5 +170,7 @@ export default class ProgramControllerContainer {
     this.booleanPropertyControllers.dispose();
     this.numberPropertyControllers.dispose();
     this.enumerationPropertyControllers.dispose();
+
+    this.allComponents.dispose();
   }
 }

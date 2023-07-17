@@ -2,8 +2,9 @@
  * Base class for a ViewComponent. A data structure representing some view component in
  * the paper playground framework.
  */
+import Component from '../Component.js';
 
-export default class ViewComponent {
+export default class ViewComponent extends Component {
 
   /**
    * @param {string} name - the name of this component
@@ -11,10 +12,9 @@ export default class ViewComponent {
    * @param {string} controlFunctionString - the function that is called when the model component changes
    */
   constructor( name, modelComponentNames, controlFunctionString ) {
-    this.name = name;
+    super( name );
     this.modelComponentNames = modelComponentNames;
     this.controlFunctionString = controlFunctionString;
-    this.deleteEmitter = new phet.axon.Emitter();
   }
 
   /**
@@ -30,9 +30,5 @@ export default class ViewComponent {
 
   load() {
     throw new Error( 'Subclasses must override' );
-  }
-
-  dispose() {
-    this.deleteEmitter.dispose();
   }
 }

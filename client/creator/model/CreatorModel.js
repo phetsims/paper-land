@@ -40,7 +40,7 @@ export default class CreatorModel {
    * @return {ProgramModel}
    */
   createProgram( initialPosition, programNumber ) {
-    const newProgram = new ProgramModel( initialPosition, programNumber );
+    const newProgram = new ProgramModel( initialPosition, programNumber, this.activeEditProperty );
     this.programs.push( newProgram );
 
     // Listen for the delete emitter which tells us its time to delete a program
@@ -50,7 +50,7 @@ export default class CreatorModel {
     };
     newProgram.deleteEmitter.addListener( deleteListener );
 
-    // listen for when the program gets a new model component so we can add it to our global list
+    // listen for when the program gets new components so we can add it to our global lists
     this.addComponentAddedListener( this.allModelComponents, newProgram.modelContainer.allComponents );
     this.addComponentAddedListener( this.allControllerComponents, newProgram.controllerContainer.allComponents );
     this.addComponentAddedListener( this.allViewComponents, newProgram.viewContainer.allComponents );

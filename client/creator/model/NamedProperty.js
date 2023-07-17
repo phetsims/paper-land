@@ -4,18 +4,18 @@
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)
  */
-class NamedProperty {
+
+import Component from './Component.js';
+
+class NamedProperty extends Component {
 
   /**
    * @param {string} name
    * @param {'BooleanProperty'|'NumberProperty'|'StringProperty'|'Vector2Property'|'DerivedProperty'} propertyType - A name for the type of Property this is, to categorize UI controls
    */
   constructor( name, propertyType ) {
-    this.name = name;
+    super( name );
     this.propertyType = propertyType;
-
-    // emits an event when it is time for this NamedProperty to be deleted
-    this.deleteEmitter = new phet.axon.Emitter();
   }
 
   /**
@@ -23,14 +23,6 @@ class NamedProperty {
    */
   save() {
     throw new Error( 'Subclasses must override' );
-  }
-
-  /**
-   * Make eligible for garbage collection.
-   * @public
-   */
-  dispose() {
-    this.deleteEmitter.dispose();
   }
 }
 

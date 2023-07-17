@@ -1,20 +1,19 @@
 /**
  * A container for all view related components in a ProgramModel.
  */
+import ComponentContainer from '../ComponentContainer.js';
 import DescriptionViewComponent from './DescriptionViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
 
-export default class ProgramViewContainer {
-  constructor() {
+export default class ProgramViewContainer extends ComponentContainer {
+  constructor( programModel, activeEditProperty ) {
+    super( programModel, activeEditProperty );
 
     // The collection of all sound views in this container
     this.soundViews = phet.axon.createObservableArray();
 
     // The collection of all description views in this container
     this.descriptionViews = phet.axon.createObservableArray();
-
-    // The collection of all components in this container
-    this.allComponents = phet.axon.createObservableArray();
   }
 
   /**
@@ -22,8 +21,8 @@ export default class ProgramViewContainer {
    */
   addSoundView( soundView ) {
     this.soundViews.push( soundView );
-    this.allComponents.push( soundView );
-    this.registerDeleteListener( soundView, this.removeSoundView.bind( this ) );
+    this.addToAllComponents( soundView );
+    this.registerChangeListeners( soundView, this.removeSoundView.bind( this ) );
   }
 
   /**
@@ -41,8 +40,8 @@ export default class ProgramViewContainer {
    */
   addDescriptionView( descriptionView ) {
     this.descriptionViews.push( descriptionView );
-    this.allComponents.push( descriptionView );
-    this.registerDeleteListener( descriptionView, this.removeDescriptionView.bind( this ) );
+    this.addToAllComponents( descriptionView );
+    this.registerChangeListeners( descriptionView, this.removeDescriptionView.bind( this ) );
   }
 
   /**
@@ -53,27 +52,6 @@ export default class ProgramViewContainer {
     assert && assert( descriptionViewIndex >= 0, 'DescriptionView not found' );
     this.descriptionViews.splice( descriptionViewIndex, 1 );
     this.removeFromAllComponents( descriptionView );
-  }
-
-  /**
-   * Adds a listener that will remove the component when it is time to delete it.
-   */
-  registerDeleteListener( component, removalListener ) {
-    const deleteListener = () => {
-      removalListener( component );
-      component.deleteEmitter.removeListener( deleteListener );
-    };
-    component.deleteEmitter.addListener( deleteListener );
-  }
-
-  /**
-   * Removes the view component from the collective list of all components.
-   * @param component
-   */
-  removeFromAllComponents( component ) {
-    const componentIndex = this.allComponents.indexOf( component );
-    assert && assert( componentIndex >= 0, 'Component not found' );
-    this.allComponents.splice( componentIndex, 1 );
   }
 
   save() {

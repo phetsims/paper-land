@@ -4,8 +4,8 @@ import ComponentListItemNode from './ComponentListItemNode.js';
 import ViewConstants from './ViewConstants.js';
 
 // default dimensions of a paper, though it may change as components are added
-const WIDTH = 90;
-const DEFAULT_HEIGHT = 90;
+const WIDTH = 120;
+const DEFAULT_HEIGHT = 150;
 
 // margins for UI components within the program
 const MARGIN = 2;
