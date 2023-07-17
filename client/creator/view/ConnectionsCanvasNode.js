@@ -82,8 +82,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     // draw controller connections
     this.model.allControllerComponents.forEach( component => {
-      const controllerName = component.name;
-      const controlledName = component.namedProperty.name;
+      const controllerName = component.nameProperty.value;
+      const controlledName = component.namedProperty.nameProperty.value;
 
       let startPoint;
       let endPoint;
@@ -91,7 +91,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       // loop through all programNodes and find the one that has the controller
       this.programNodes.forEach( programNode => {
         programNode.model.controllerContainer.allComponents.forEach( controllerComponent => {
-          if ( controllerComponent.name === controllerName ) {
+          if ( controllerComponent.nameProperty.value === controllerName ) {
             startPoint = programNode.getComponentListItemConnectionPoint( controllerName );
           }
         } );
@@ -100,7 +100,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       // loop through all programNodes and find the one that has the controlled
       this.programNodes.forEach( programNode => {
         programNode.model.modelContainer.allComponents.forEach( modelComponent => {
-          if ( modelComponent.name === controlledName ) {
+          if ( modelComponent.nameProperty.value === controlledName ) {
             endPoint = programNode.getComponentListItemConnectionPoint( controlledName );
           }
         } );
@@ -121,7 +121,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     this.model.allModelComponents.forEach( component => {
       if ( component.propertyType === 'DerivedProperty' ) {
-        const componentName = component.name;
+        const componentName = component.nameProperty.value;
         const dependencyNames = component.dependencyNames;
 
         let endPoint;
@@ -130,7 +130,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         // loop through all programNodes and find the one that has the controlled
         this.programNodes.forEach( programNode => {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
-            if ( modelComponent.name === componentName ) {
+            if ( modelComponent.nameProperty.value === componentName ) {
               endPoint = programNode.getComponentListItemConnectionPoint( componentName );
             }
           } );
@@ -141,7 +141,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         dependencyNames.forEach( dependencyName => {
           this.programNodes.forEach( programNode => {
             programNode.model.modelContainer.allComponents.forEach( modelComponent => {
-              if ( modelComponent.name === dependencyName ) {
+              if ( modelComponent.nameProperty.value === dependencyName ) {
                 startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
               }
             } );
@@ -164,7 +164,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     this.viewConnections = [];
 
     this.model.allViewComponents.forEach( component => {
-      const componentName = component.name;
+      const componentName = component.nameProperty.value;
       const dependencyNames = component.modelComponentNames;
 
       let endPoint;
@@ -172,7 +172,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       // get the location of the view component that we care about
       this.programNodes.forEach( programNode => {
         programNode.model.viewContainer.allComponents.forEach( modelComponent => {
-          if ( modelComponent.name === componentName ) {
+          if ( modelComponent.nameProperty.value === componentName ) {
             endPoint = programNode.getComponentListItemConnectionPoint( componentName );
           }
         } );
@@ -183,7 +183,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       dependencyNames.forEach( dependencyName => {
         this.programNodes.forEach( programNode => {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
-            if ( modelComponent.name === dependencyName ) {
+            if ( modelComponent.nameProperty.value === dependencyName ) {
               startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
             }
           } );

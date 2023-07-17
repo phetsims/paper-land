@@ -23,7 +23,7 @@ export default class ComponentContainer {
 
     // make sure that allComponents does not have a NamedProperty with the same name
     const componentExists = _.find( this.allComponents, existingComponent => {
-      return existingComponent.name === component.name;
+      return existingComponent.name === component.nameProperty.value;
     } );
     if ( componentExists ) {
       throw new Error( 'Component with this name already exists. It must be unique.' );

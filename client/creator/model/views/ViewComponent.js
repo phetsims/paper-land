@@ -22,7 +22,7 @@ export default class ViewComponent extends Component {
    */
   save() {
     return {
-      name: this.name,
+      name: this.nameProperty.value,
       modelComponentNames: this.modelComponentNames,
       controlFunctionString: this.controlFunctionString,
     };

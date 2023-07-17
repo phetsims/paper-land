@@ -19,7 +19,7 @@ export default class NamedNumberProperty extends NamedProperty {
    */
   save() {
     return {
-      name: this.name,
+      name: this.nameProperty.value,
       propertyType: this.propertyType,
       min: this.min,
       max: this.max,

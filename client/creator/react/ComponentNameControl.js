@@ -12,7 +12,7 @@ export default function ComponentNameControl( props ) {
 
   useEffect( () => {
     if ( props.activeEditObject ) {
-      setComponentName( props.activeEditObject.component.name );
+      setComponentName( props.activeEditObject.component.nameProperty.value );
     }
   }, [ props.activeEditObject ] );
 

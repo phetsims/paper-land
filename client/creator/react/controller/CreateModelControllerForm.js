@@ -137,7 +137,7 @@ export default function CreateModelControllerForm( props ) {
             }}
           >
             {allComponents.map( ( component, index ) => {
-              return <option value={`${component.name}-${index}`} key={`${component.name}-${index}`}>{component.name}</option>;
+              return <option value={`${component.nameProperty.value}-${index}`} key={`${component.nameProperty.value}-${index}`}>{component.nameProperty.value}</option>;
             } )}
           </Form.Select>
         </div>

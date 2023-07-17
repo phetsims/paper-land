@@ -62,7 +62,7 @@ export default function CreateViewComponentForm( props ) {
 
   const createComponent = () => {
     const componentName = props.componentName;
-    const modelComponentNames = generalDataRef.current.dependencies.map( dependency => dependency.name );
+    const modelComponentNames = generalDataRef.current.dependencies.map( dependency => dependency.nameProperty.value );
     const controlFunctionString = generalDataRef.current.code;
     if ( selectedTab === 'sounds' ) {
       const soundFileName = soundsDataRef.current.soundFileName;

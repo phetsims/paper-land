@@ -18,7 +18,7 @@ export default class NamedVector2Property extends NamedProperty {
    */
   save() {
     return {
-      name: this.name,
+      name: this.nameProperty.value,
       propertyType: this.propertyType,
       defaultX: this.defaultX,
       defaultY: this.defaultY

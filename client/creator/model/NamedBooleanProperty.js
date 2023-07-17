@@ -16,7 +16,7 @@ export default class NamedBooleanProperty extends NamedProperty {
    */
   save() {
     return {
-      name: this.name,
+      name: this.nameProperty.value,
       defaultValue: this.defaultValue,
       propertyType: this.propertyType
     };

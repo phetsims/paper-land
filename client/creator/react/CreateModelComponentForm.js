@@ -168,7 +168,7 @@ export default function CreateModelComponentForm( props ) {
   const activeTabKey = ( activeEdit && activeEdit.component ) ? getTabForActiveEdit() : selectedTab;
 
   // If there is an active edit, you cannot change tabs
-  const tabDisabled = activeEdit && activeEdit.component;
+  const tabDisabled = !!( activeEdit && activeEdit.component );
 
   return (
     <>

@@ -43,9 +43,9 @@ export default class ProgramModel {
   isNameUsed( name ) {
 
     // Check if the name is used by any of the model components
-    const usedInModel = this.modelContainer.allComponents.some( component => component.name === name );
-    const usedInController = this.controllerContainer.allComponents.some( component => component.name === name );
-    const usedInView = this.viewContainer.allComponents.some( component => component.name === name );
+    const usedInModel = this.modelContainer.allComponents.some( component => component.nameProperty.value === name );
+    const usedInController = this.controllerContainer.allComponents.some( component => component.nameProperty.value === name );
+    const usedInView = this.viewContainer.allComponents.some( component => component.nameProperty.value === name );
 
     return usedInModel || usedInController || usedInView;
   }

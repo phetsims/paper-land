@@ -29,8 +29,8 @@ export default class PropertyController extends Component {
    */
   save() {
     return {
-      name: this.name,
-      controlledComponentName: this.namedProperty.name,
+      name: this.nameProperty.value,
+      controlledComponentName: this.namedProperty.nameProperty.value,
       controlType: this.controlType.name
     };
   }

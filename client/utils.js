@@ -286,7 +286,7 @@ export function isValidSystemName( systemName, otherNames, alertError = true ) {
  */
 export function getComponentDocumentation( namedProperty ) {
   const type = namedProperty.propertyType;
-  const name = namedProperty.name;
+  const name = namedProperty.nameProperty.value;
 
   let usabilityDocumentation = '';
   if ( type === 'Vector2Property' ) {
@@ -306,7 +306,7 @@ export function getComponentDocumentation( namedProperty ) {
     usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
   }
 
-  return `${namedProperty.name} - ${usabilityDocumentation}`;
+  return `${namedProperty.nameProperty.value} - ${usabilityDocumentation}`;
 }
 
 /**
@@ -321,7 +321,7 @@ export function isNameValid( activeEdit, creatorModel, componentName ) {
 
   // If editing a component, the name is valid if it is unused or if it matches the existing component name.
   // Otherwise, the name is valid if it is unused.
-  const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.name ) :
+  const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.nameProperty.value ) :
          creatorModel.isNameAvailable( componentName );
 
   return hasLength && unique;

@@ -46,8 +46,8 @@ export default class NumberPropertyController extends PropertyController {
    */
   save() {
     return {
-      name: this.name,
-      controlledComponentName: this.namedProperty.name,
+      name: this.nameProperty.value,
+      controlledComponentName: this.namedProperty.nameProperty.value,
       controlType: this.controlType.name,
       relationshipControlType: this.relationshipControlType.name
     };
@@ -56,7 +56,7 @@ export default class NumberPropertyController extends PropertyController {
   static fromData( data, namedProperties ) {
 
     // Find the NamedProperty that this controller will control
-    const namedProperty = namedProperties.find( namedProperty => namedProperty.name === data.controlledComponentName );
+    const namedProperty = namedProperties.find( namedProperty => namedProperty.nameProperty.value === data.controlledComponentName );
     if ( !namedProperty ) {
       throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
     }

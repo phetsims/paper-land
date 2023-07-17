@@ -212,7 +212,7 @@ export default class ProgramModelContainer extends ComponentContainer {
       // Get all the instances of NamedProperty from the saved names
       const dependencies = [];
       dependencyNames.forEach( dependencyName => {
-        const foundProperty = allComponents.find( namedProperty => namedProperty.name === dependencyName );
+        const foundProperty = allComponents.find( namedProperty => namedProperty.nameProperty.value === dependencyName );
         dependencies.push( foundProperty );
       } );
 

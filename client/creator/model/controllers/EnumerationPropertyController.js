@@ -26,7 +26,7 @@ export default class EnumerationPropertyController extends PropertyController {
   static fromData( data, namedProperties ) {
 
     // Find the NamedProperty that this controller will control
-    const namedProperty = namedProperties.find( namedProperty => namedProperty.name === data.controlledComponentName );
+    const namedProperty = namedProperties.find( namedProperty => namedProperty.nameProperty.value === data.controlledComponentName );
     if ( !namedProperty ) {
       throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
     }

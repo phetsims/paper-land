@@ -18,7 +18,7 @@ export default class NamedEnumerationProperty extends NamedProperty {
    */
   save() {
     return {
-      name: this.name,
+      name: this.nameProperty.value,
       propertyType: this.propertyType,
       defaultValue: this.defaultValue,
       values: this.values

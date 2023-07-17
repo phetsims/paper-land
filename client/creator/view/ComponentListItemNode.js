@@ -15,7 +15,7 @@ export default class ComponentListItemNode extends phet.scenery.Node {
     super();
 
     // @public (read-only) - to identify this ItemNode
-    this.componentName = component.name;
+    this.componentName = component.nameProperty.value;
 
     const highlightRectangle = new phet.scenery.Rectangle( 0, 0, 0, 0, {
       fill: 'yellow'
@@ -29,7 +29,7 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       stroke: 'black'
     } );
 
-    const nameText = new phet.scenery.Text( component.name, {
+    const nameText = new phet.scenery.Text( this.componentName, {
       font: new phet.scenery.Font( { size: 7 } ),
       maxWidth: programWidth * 0.65
     } );

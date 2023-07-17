@@ -56,7 +56,7 @@ export default function ModelComponentSelector( props ) {
                          <Form.Check
                            type={'checkbox'}
                            id={`dependency-checkbox-${innerIndex}`}
-                           label={innerComponent.name}
+                           label={innerComponent.nameProperty.value}
                            onChange={event => {
                              handleCheckboxChange( event, innerComponent );
                            }}

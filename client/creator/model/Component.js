@@ -9,7 +9,7 @@ export default class Component {
    */
   constructor( name ) {
 
-    this.name = name;
+    this.nameProperty = new phet.axon.StringProperty( name );
 
     // emits an event when it is time for this NamedProperty to be deleted
     this.deleteEmitter = new phet.axon.Emitter();
