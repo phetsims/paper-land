@@ -1,18 +1,26 @@
+import ActiveEdit from '../model/ActiveEdit.js';
+import EditType from '../model/EditType.js';
 import ImageLoader from './ImageLoader.js';
 import ViewConstants from './ViewConstants.js';
 
 export default class ComponentListItemNode extends phet.scenery.Node {
 
   /**
-   *
+   * @param {ProgramModel} program
    * @param {Component} component
    * @param programWidth
+   * @param {Property<ActiveEdit|null>} activeEditProperty
    */
-  constructor( component, programWidth ) {
+  constructor( program, component, programWidth, activeEditProperty ) {
     super();
 
     // @public (read-only) - to identify this ItemNode
     this.componentName = component.name;
+
+    const highlightRectangle = new phet.scenery.Rectangle( 0, 0, 0, 0, {
+      fill: 'yellow'
+    } );
+    this.addChild( highlightRectangle );
 
     const content = new phet.scenery.HBox( { spacing: 5 } );
     this.addChild( content );
@@ -31,6 +39,10 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       spacing: 5
     } );
 
+    const layout = () => {
+      highlightRectangle.setRect( 0, 0, content.width, content.height );
+    };
+
     ImageLoader.loadImage( 'media/images/trash3-red.svg', imageElement => {
       const imageNode = new phet.scenery.Image( imageElement, {
         scale: 0.5
@@ -41,6 +53,7 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
       itemButtons.addChild( deleteButton );
+      layout();
     } );
 
     ImageLoader.loadImage( 'media/images/pencil-white.svg', imageElement => {
@@ -50,13 +63,25 @@ export default class ComponentListItemNode extends phet.scenery.Node {
 
       const editButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => component.editEmitter.emit()
+        listener: () => {
+          activeEditProperty.value = new ActiveEdit(
+            program,
+            EditType.COMPONENT,
+            component
+          );
+        }
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
       itemButtons.addChild( editButton );
+      layout();
     } );
 
     content.children = [ circleWithText, itemButtons ];
+    layout();
+
+    activeEditProperty.link( activeEdit => {
+      highlightRectangle.visible = activeEdit && activeEdit.component === component;
+    } );
   }
 
   /**

@@ -9,8 +9,8 @@ import NamedNumberProperty from './NamedNumberProperty.js';
 import NamedVector2Property from './NamedVector2Property.js';
 
 export default class ProgramModelContainer extends ComponentContainer {
-  constructor( programModel, activeEditProperty ) {
-    super( programModel, activeEditProperty );
+  constructor() {
+    super();
 
     // {ObservableArray<NamedProperty>}
     this.namedBooleanProperties = phet.axon.createObservableArray();

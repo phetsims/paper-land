@@ -157,7 +157,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     const registerComponentListListener = ( observableArray, parentNode ) => {
       observableArray.elementAddedEmitter.addListener( addedComponent => {
-        const newItemNode = new ComponentListItemNode( addedComponent, WIDTH );
+        const newItemNode = new ComponentListItemNode( model, addedComponent, WIDTH, model.activeEditProperty );
         parentNode.addChild( newItemNode );
 
         this.allListItemNodes.push( newItemNode );

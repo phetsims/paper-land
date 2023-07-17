@@ -4,16 +4,11 @@
  *
  * @author Jesse Greenberg
  */
-import ActiveEdit from './ActiveEdit.js';
-import EditType from './EditType.js';
 
 export default class ComponentContainer {
-  constructor( programModel, activeEditProperty ) {
+  constructor( programModel ) {
 
     this.programModel = programModel;
-
-    // {Property<ActiveEdit|null>} - the program and component being actively edited by the user
-    this.activeEditProperty = activeEditProperty;
 
     // {ObservableArray<Component>} The collection of ALL components in this container. Subclasses will categorize
     // the components as they wish, but every single component should be in this list as well.
@@ -54,14 +49,8 @@ export default class ComponentContainer {
    * @param removalListener - Specific work to remove the provided component
    */
   registerChangeListeners( component, removalListener ) {
-    const editListener = () => {
-      this.activeEditProperty.value = new ActiveEdit( this.programModel, EditType.COMPONENT, component );
-    };
-    component.editEmitter.addListener( editListener );
-
     const deleteListener = () => {
       removalListener( component );
-      component.editEmitter.removeListener( editListener() );
       component.deleteEmitter.removeListener( deleteListener );
     };
     component.deleteEmitter.addListener( deleteListener );

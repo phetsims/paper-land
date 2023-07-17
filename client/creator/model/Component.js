@@ -13,9 +13,6 @@ export default class Component {
 
     // emits an event when it is time for this NamedProperty to be deleted
     this.deleteEmitter = new phet.axon.Emitter();
-
-    // emits an event when this NamedProperty is to be edited
-    this.editEmitter = new phet.axon.Emitter();
   }
 
   /**
@@ -23,6 +20,5 @@ export default class Component {
    */
   dispose() {
     this.deleteEmitter.dispose();
-    this.editEmitter.dispose();
   }
 }

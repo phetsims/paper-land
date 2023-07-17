@@ -10,8 +10,8 @@ import Vector2PropertyController from './controllers/Vector2PropertyController.j
 import EditType from './EditType.js';
 
 export default class ProgramControllerContainer extends ComponentContainer {
-  constructor( programModel, activeEditProperty ) {
-    super( programModel, activeEditProperty );
+  constructor( programModel) {
+    super( programModel );
 
     // {ObservableArray<Vector2PropertyController}
     this.vector2PropertyControllers = phet.axon.createObservableArray();
@@ -116,12 +116,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
    * @override
    */
   registerChangeListeners( propertyController, removalListener ) {
-    const editListener = () => {
-      this.activeEditProperty.value = new ActiveEdit( this.programModel, EditType.COMPONENT, propertyController );
-    };
-    propertyController.editEmitter.addListener( editListener );
-
-
     const deleteListener = () => {
       removalListener( propertyController );
       propertyController.deleteEmitter.removeListener( deleteListener );

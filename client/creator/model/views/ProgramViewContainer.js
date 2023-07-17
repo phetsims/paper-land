@@ -6,8 +6,8 @@ import DescriptionViewComponent from './DescriptionViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
 
 export default class ProgramViewContainer extends ComponentContainer {
-  constructor( programModel, activeEditProperty ) {
-    super( programModel, activeEditProperty );
+  constructor( programModel ) {
+    super( programModel );
 
     // The collection of all sound views in this container
     this.soundViews = phet.axon.createObservableArray();
