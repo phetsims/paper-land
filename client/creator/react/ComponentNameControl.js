@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
+import { isNameValid } from '../../utils.js';
 import styles from './../CreatorMain.css';
 
 export default function ComponentNameControl( props ) {
@@ -10,14 +11,12 @@ export default function ComponentNameControl( props ) {
   const setComponentName = props.setComponentName || ( () => {} );
 
   useEffect( () => {
-    if ( props.activeEditComponent ) {
-      setComponentName( props.activeEditComponent.component.name );
+    if ( props.activeEditObject ) {
+      setComponentName( props.activeEditObject.component.name );
     }
-  }, [ props.activeEditComponent ] );
+  }, [ props.activeEditObject ] );
 
-  // If editing a component, you can use the same name as the component you are editing or any new name
-  const nameValid = props.activeEditComponent ? ( model.isNameAvailable( props.componentName ) || props.componentName === props.activeEditComponent.component.name ) :
-                    model.isNameAvailable( props.componentName );
+  const nameValid = isNameValid( props.activeEditObject, model, props.componentName );
 
   return (
     <div>
@@ -27,7 +26,7 @@ export default function ComponentNameControl( props ) {
           type='text'
           value={props.componentName}
           required
-          isInvalid={!nameValid}
+          isInvalid={!nameValid && props.componentName !== ''}
           onChange={event => {
             setComponentName( event.target.value );
           }}

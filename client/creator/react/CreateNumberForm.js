@@ -1,22 +1,34 @@
-import React, { useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from './../CreatorMain.css';
 
 export default function CreateNumberForm( props ) {
-  const valueRef = useRef( '' );
-  const minRef = useRef( '' );
-  const maxRef = useRef( '' );
+
+  // {ActiveEdit|null}
+  const activeEdit = props.activeEdit;
+
+  const editingComponent = activeEdit.component;
+
+  // value as state - default values come from the editing component
+  const [ value, setValue ] = useState( editingComponent?.defaultValue || '' );
+  const [ min, setMin ] = useState( editingComponent?.min || '' );
+  const [ max, setMax ] = useState( editingComponent?.max || '' );
+
+  // Validate and get data whenever state changes
+  useEffect( () => {
+    handleChange();
+  }, [ value, min, max ] );
 
   const handleChange = () => {
-    const allDefined = [ valueRef, minRef, maxRef ].every( ref => ref.current !== '' );
-    const numbers = [ minRef, valueRef, maxRef ].map( ref => parseInt( ref.current, 10 ) );
+    const allDefined = [ value, min, max ].every( val => val !== '' );
+    const numbers = [ value, min, max ].map( val => parseInt( val, 10 ) );
 
-    const minNumber = numbers[ 0 ];
-    const defaultNumber = numbers[ 1 ];
+    const defaultNumber = numbers[ 0 ];
+    const minNumber = numbers[ 1 ];
     const maxNumber = numbers[ 2 ];
     const inRange = minNumber < defaultNumber && defaultNumber < maxNumber;
     props.isFormValid( allDefined && inRange );
-    props.getFormData( { min: minRef.current, max: maxNumber, default: defaultNumber } );
+    props.getFormData( { min: min, max: max, default: defaultNumber } );
   };
 
   return (
@@ -25,9 +37,9 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Min Value</Form.Label>
         <Form.Control
           type='number'
+          value={min}
           onChange={event => {
-            minRef.current = event.target.value;
-            handleChange();
+            setMin( event.target.value );
           }}
         />
       </Form.Group>
@@ -35,9 +47,9 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Max Value</Form.Label>
         <Form.Control
           type='number'
+          value={max}
           onChange={event => {
-            maxRef.current = event.target.value;
-            handleChange();
+            setMax( event.target.value );
           }}
         />
       </Form.Group>
@@ -45,9 +57,9 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Default Value</Form.Label>
         <Form.Control
           type='number'
+          value={value}
           onChange={event => {
-            valueRef.current = event.target.value;
-            handleChange();
+            setValue( event.target.value );
           }}
         />
       </Form.Group></div>

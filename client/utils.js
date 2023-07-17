@@ -307,4 +307,22 @@ export function getComponentDocumentation( namedProperty ) {
   }
 
   return `${namedProperty.name} - ${usabilityDocumentation}`;
-};
+}
+
+/**
+ * Reusable function that returns true if the provided component name is valid.
+ * @param {ActiveEdit|null} activeEdit - The state for the actively edited component, if any.
+ * @param {CreatorModel} creatorModel - Reference to the CreatorModel to look at existing names.
+ * @param {string} componentName - proposed name
+ * @return {boolean}
+ */
+export function isNameValid( activeEdit, creatorModel, componentName ) {
+  const hasLength = componentName.length > 0;
+
+  // If editing a component, the name is valid if it is unused or if it matches the existing component name.
+  // Otherwise, the name is valid if it is unused.
+  const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.name ) :
+         creatorModel.isNameAvailable( componentName );
+
+  return hasLength && unique;
+}

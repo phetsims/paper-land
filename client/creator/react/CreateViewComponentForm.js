@@ -26,7 +26,7 @@ export default function CreateViewComponentForm( props ) {
   const componentName = props.componentName;
 
   // {ProgramModel}
-  const activeProgram = props.activeProgram;
+  const activeProgram = props.activeEdit.program;
 
   // component state
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );

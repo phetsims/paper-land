@@ -37,11 +37,11 @@ const CreatorControls = forwardRef( ( props, ref ) => {
       <h3>{activeEdit ? activeEdit.program.number : ''}</h3>
       {activeEdit && activeEdit.editType === EditType.METADATA ?
        <ProgramMetadataForm
-         activeProgram={activeEdit.program}
+         activeEdit={activeEdit}
        ></ProgramMetadataForm> : ''}
       {activeEdit && activeEdit.editType === EditType.COMPONENT ?
        <CreateComponentForm
-         activeProgram={activeEdit.program}
+         activeEdit={activeEdit}
          allModelComponents={model.allModelComponents}
          model={model}
        ></CreateComponentForm> : ''}

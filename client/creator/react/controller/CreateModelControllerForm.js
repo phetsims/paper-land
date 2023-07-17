@@ -17,7 +17,7 @@ export default function CreateModelControllerForm( props ) {
   // {phet.axon.ObservableArray<NamedProperty>} - All model components available.
   const allModelComponents = props.allModelComponents;
 
-  const activeProgram = props.activeProgram;
+  const activeProgram = props.activeEdit.program;
 
   // {string}
   const componentName = props.componentName;

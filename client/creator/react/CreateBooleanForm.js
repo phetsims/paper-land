@@ -13,12 +13,14 @@ export default function CreateBooleanForm( props ) {
     props.isFormValid( true );
     props.getFormData( { defaultValue: defaultValue.current } );
   };
+
   return (
     <>
       <div className={styles.controlElement}>
         <Form.Label>Default Value</Form.Label>
         <Form.Check
           type={'radio'}
+          defaultChecked={true}
           value={true}
           label={'True'}
           name={'boolean-radio-group'}

@@ -22,7 +22,7 @@ export default function CreateComponentForm( props ) {
 
   // React state for the ActiveEdit object - when present, the form supports changing and saving
   // the existing data instead of creating a new Component.
-  const [ activeEditComponent, setActiveEditComponent ] = useState( null );
+  const [ activeEditObject, setActiveEditObject ] = useState( null );
 
   // The selected tab is part of state so that the tab pane is re-rendered accurately when it is displayed
   const [ selectedTab, setSelectedTab ] = useState( 'model' );
@@ -35,9 +35,9 @@ export default function CreateComponentForm( props ) {
 
   // see https://legacy.reactjs.org/docs/hooks-effect.html for example of register and cleanup
   useEffect( () => {
-    const selectedProgramListener = activeEditComponent => {
-      if ( activeEditComponent && activeEditComponent.component ) {
-        setActiveEditComponent( activeEditComponent );
+    const selectedProgramListener = newValue => {
+      if ( newValue && newValue.component ) {
+        setActiveEditObject( newValue );
       }
     };
     model.activeEditProperty.link( selectedProgramListener );
@@ -49,51 +49,57 @@ export default function CreateComponentForm( props ) {
   } );
 
   /**
-   * Returns the Tab key from the current state of activeEditComponent
+   * Returns the Tab key from the current state of activeEditComponent.
    */
   const getTabFromActiveEdit = () => {
-    return activeEditComponent.component instanceof NamedProperty ? 'model' :
-           activeEditComponent.component instanceof ViewComponent ? 'view' :
+    return activeEditObject.component instanceof NamedProperty ? 'model' :
+           activeEditObject.component instanceof ViewComponent ? 'view' :
            'controller';
   };
+
+  // If editing a component, you cannot change the fundamental type of the component
+  const activeTabKey = ( activeEditObject && activeEditObject.component ) ? getTabFromActiveEdit() : selectedTab;
+  const tabDisabled = !!( activeEditObject && activeEditObject.component );
 
   return (
     <div>
       <hr/>
-      <ComponentNameControl activeEditComponent={activeEditComponent} componentName={componentName} setComponentName={setComponentName} model={model}></ComponentNameControl>
+      <ComponentNameControl activeEditObject={activeEditObject} componentName={componentName} setComponentName={setComponentName} model={model}></ComponentNameControl>
       <Tabs
-        defaultActiveKey='model'
-        activeKey={activeEditComponent ? getTabFromActiveEdit() : selectedTab}
+        activeKey={activeTabKey}
         className={styles.tabs}
         justify
         onSelect={( eventKey, event ) => {
           setSelectedTab( eventKey );
 
-          // When the component type changes, its most convenient to clear the name
-          setComponentName( '' );
+          // When the component type changes, its most convenient to clear the name unless we are editing an existing
+          // component
+          if ( !activeEditObject ) {
+            setComponentName( '' );
+          }
         }}>
-        <Tab eventKey='model' title='Model' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='model' title='Model' tabClassName={styles.tab}>
           <CreateModelComponentForm
             componentName={componentName}
-            activeProgram={props.activeProgram}
+            activeEdit={props.activeEdit}
             allModelComponents={props.allModelComponents}
             model={model}
             onComponentCreated={onComponentCreated}
           ></CreateModelComponentForm>
         </Tab>
-        <Tab eventKey='view' title='View' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='view' title='View' tabClassName={styles.tab}>
           <CreateViewComponentForm
             model={model}
             componentName={componentName}
-            activeProgram={props.activeProgram}
+            activeEdit={props.activeEdit}
             allModelComponents={props.allModelComponents}
             onComponentCreated={onComponentCreated}>
           </CreateViewComponentForm>
         </Tab>
-        <Tab eventKey='controller' title='Controller' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='controller' title='Controller' tabClassName={styles.tab}>
           <CreateModelControllerForm
             componentName={componentName}
-            activeProgram={props.activeProgram}
+            activeEdit={props.activeEdit}
             allModelComponents={props.allModelComponents}
             onComponentCreated={onComponentCreated}
           >

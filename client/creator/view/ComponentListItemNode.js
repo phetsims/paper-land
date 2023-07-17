@@ -40,7 +40,11 @@ export default class ComponentListItemNode extends phet.scenery.Node {
     } );
 
     const layout = () => {
-      highlightRectangle.setRect( 0, 0, content.width, content.height );
+
+      // May not be finite while images are loading
+      if ( content.bounds.isFinite() ) {
+        highlightRectangle.setRect( 0, 0, content.width, content.height );
+      }
     };
 
     ImageLoader.loadImage( 'media/images/trash3-red.svg', imageElement => {

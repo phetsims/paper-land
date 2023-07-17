@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import { isNameValid } from '../../utils.js';
+import NamedBooleanProperty from '../model/NamedBooleanProperty.js';
+import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
+import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
+import NamedNumberProperty from '../model/NamedNumberProperty.js';
+import NamedProperty from '../model/NamedProperty.js';
+import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
 import CreateBooleanForm from './CreateBooleanForm.js';
 import CreateDerivedForm from './CreateDerivedForm.js';
@@ -19,7 +26,10 @@ export default function CreateModelComponentForm( props ) {
   const componentName = props.componentName;
 
   // {ProgramModel>}
-  const activeProgram = props.activeProgram;
+  const activeProgram = props.activeEdit.program;
+
+  // {ActiveEdit|null} - Reference to the ActiveEdit object for the application.
+  const activeEdit = props.activeEdit;
 
   // {ObservableArray<NamedProperty>}
   const allModelComponents = props.allModelComponents;
@@ -64,7 +74,7 @@ export default function CreateModelComponentForm( props ) {
   const getDataForDerived = data => { derivedDataRef.current = data; };
 
   const isComponentNameValid = () => {
-    return componentName.length > 0 && model.isNameAvailable( componentName );
+    return isNameValid( activeEdit, model, componentName );
   };
 
   useEffect( () => {
@@ -90,60 +100,102 @@ export default function CreateModelComponentForm( props ) {
 
   const createComponent = () => {
 
-    if ( selectedTab === 'boolean' ) {
+    if ( activeEdit && activeEdit.component ) {
 
-      // create a boolean Property (getting a string from the form)
-      activeProgram.modelContainer.addBooleanProperty( componentName, booleanDataRef.current.defaultValue === 'true' );
-    }
-    else if ( selectedTab === 'number' ) {
-      const numberData = numberDataRef.current;
-      activeProgram.modelContainer.addNumberProperty( componentName, numberData.min, numberData.max, numberData.default );
 
-    }
-    else if ( selectedTab === 'enumeration' ) {
-      activeProgram.modelContainer.addEnumerationProperty( componentName, enumerationDataRef.current.values );
-    }
-    else if ( selectedTab === 'position' ) {
-      const positionData = positionDataRef.current;
-      activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
-    }
-    else if ( selectedTab === 'derived' ) {
-      const dependencies = derivedDataRef.current.dependencies;
-      const derivation = derivedDataRef.current.derivation;
-      activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );
+      // I considered do a delete/recreate here instead but I think that will be more complicated because
+      // it requires that we totally reconstruct the relationships for the new component.
+      console.log( 'To be implemented...UPDATE the active component with new data' );
     }
     else {
-      throw new Error( 'Cannot create component for selected tab.' );
+      if ( selectedTab === 'boolean' ) {
+
+        // create a boolean Property (getting a string from the form)
+        activeProgram.modelContainer.addBooleanProperty( componentName, booleanDataRef.current.defaultValue === 'true' );
+      }
+      else if ( selectedTab === 'number' ) {
+        const numberData = numberDataRef.current;
+        activeProgram.modelContainer.addNumberProperty( componentName, numberData.min, numberData.max, numberData.default );
+
+      }
+      else if ( selectedTab === 'enumeration' ) {
+        activeProgram.modelContainer.addEnumerationProperty( componentName, enumerationDataRef.current.values );
+      }
+      else if ( selectedTab === 'position' ) {
+        const positionData = positionDataRef.current;
+        activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
+      }
+      else if ( selectedTab === 'derived' ) {
+        const dependencies = derivedDataRef.current.dependencies;
+        const derivation = derivedDataRef.current.derivation;
+        activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );
+      }
+      else {
+        throw new Error( 'Cannot create component for selected tab.' );
+      }
     }
 
     props.onComponentCreated();
   };
 
+  const getTabForActiveEdit = () => {
+    if ( activeEdit && activeEdit.component instanceof NamedProperty ) {
+      const component = activeEdit.component;
+      if ( component instanceof NamedBooleanProperty ) {
+        return 'boolean';
+      }
+      else if ( component instanceof NamedNumberProperty ) {
+        return 'number';
+      }
+      else if ( component instanceof NamedEnumerationProperty ) {
+        return 'enumeration';
+      }
+      else if ( component instanceof NamedVector2Property ) {
+        return 'position';
+      }
+      else if ( component instanceof NamedDerivedProperty ) {
+        return 'derived';
+      }
+      else {
+        throw new Error( 'Unknown component type.' );
+      }
+    }
+    else {
+      return null;
+    }
+  };
+
+  const activeTabKey = ( activeEdit && activeEdit.component ) ? getTabForActiveEdit() : selectedTab;
+
+  // If there is an active edit, you cannot change tabs
+  const tabDisabled = activeEdit && activeEdit.component;
+
   return (
     <>
       <Tabs
-        defaultActiveKey={selectedTab}
+        activeKey={activeTabKey}
         className={styles.tabs}
         variant={'pill'}
         onSelect={( eventKey, event ) => {
           setSelectedTab( eventKey );
         }}
+
         justify
       >
-        <Tab eventKey='boolean' title='Boolean' tabClassName={styles.tab}>
-          <CreateBooleanForm isFormValid={getIsBooleanFormValid} getFormData={getDataForBoolean}></CreateBooleanForm>
+        <Tab disabled={tabDisabled} eventKey='boolean' title='Boolean' tabClassName={styles.tab}>
+          <CreateBooleanForm activeEdit={activeEdit} isFormValid={getIsBooleanFormValid} getFormData={getDataForBoolean}></CreateBooleanForm>
         </Tab>
-        <Tab eventKey='number' title='Number' tabClassName={styles.tab}>
-          <CreateNumberForm isFormValid={getIsNumberFormValid} getFormData={getDataForNumber}></CreateNumberForm>
+        <Tab disabled={tabDisabled} eventKey='number' title='Number' tabClassName={styles.tab}>
+          <CreateNumberForm activeEdit={activeEdit} isFormValid={getIsNumberFormValid} getFormData={getDataForNumber}></CreateNumberForm>
         </Tab>
-        <Tab eventKey='position' title='Position' tabClassName={styles.tab}>
-          <CreatePositionForm isFormValid={getIsPositionFormValid} getFormData={getDataForPosition}></CreatePositionForm>
+        <Tab disabled={tabDisabled} eventKey='position' title='Position' tabClassName={styles.tab}>
+          <CreatePositionForm activeEdit={activeEdit} isFormValid={getIsPositionFormValid} getFormData={getDataForPosition}></CreatePositionForm>
         </Tab>
-        <Tab eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
-          <CreateEnumerationForm isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
+        <Tab disabled={tabDisabled} eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
+          <CreateEnumerationForm activeEdit={activeEdit} isFormValid={getIsEnumerationFormValid} getFormData={getDataForEnumeration}></CreateEnumerationForm>
         </Tab>
-        <Tab eventKey='derived' title='Derived' tabClassName={styles.tab}>
-          <CreateDerivedForm allModelComponents={allModelComponents} isFormValid={getIsDerivedFormValid} getFormData={getDataForDerived}></CreateDerivedForm>
+        <Tab disabled={tabDisabled} eventKey='derived' title='Derived' tabClassName={styles.tab}>
+          <CreateDerivedForm allModelComponents={allModelComponents} activeEdit={activeEdit} isFormValid={getIsDerivedFormValid} getFormData={getDataForDerived}></CreateDerivedForm>
         </Tab>
       </Tabs>
       <StyledButton disabled={!selectedTabFormValid} name={'Create Component'} onClick={createComponent}></StyledButton>

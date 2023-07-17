@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 
 export default function ProgramMetadataForm( props ) {
-  const program = props.activeProgram;
+  const program = props.activeEdit.program;
   const [ title, setTitle ] = useState( '' );
   const [ keywords, setKeywords ] = useState( '' );
   const [ description, setDescription ] = useState( '' );

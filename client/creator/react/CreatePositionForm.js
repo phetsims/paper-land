@@ -3,7 +3,15 @@ import Form from 'react-bootstrap/Form';
 import styles from './../CreatorMain.css';
 
 export default function CreatePositionForm( props ) {
-  const initialPosition = useRef( { x: 0, y: 0 } );
+
+  // {ActiveEdit|null}
+  const activeEdit = props.activeEdit;
+  const editingComponent = activeEdit.component;
+
+  const initialPosition = useRef( {
+    x: editingComponent?.defaultX || 0,
+    y: editingComponent?.defaultY || 0
+  } );
   props.getFormData( initialPosition.current );
 
   const handleChange = event => {
@@ -19,14 +27,14 @@ export default function CreatePositionForm( props ) {
     <>
       <Form.Group className={styles.controlElement}>
         <Form.Label>Initial X</Form.Label>
-        <Form.Control defaultValue={0} type='number' onChange={ event => {
+        <Form.Control defaultValue={initialPosition.current.x} type='number' onChange={ event => {
           initialPosition.current.x = event.target.value;
           handleChange();
         }}/>
       </Form.Group>
       <Form.Group className={styles.controlElement}>
         <Form.Label>Initial Y</Form.Label>
-        <Form.Control defaultValue={0} type='number' onChange={ event => {
+        <Form.Control defaultValue={initialPosition.current.y} type='number' onChange={ event => {
           initialPosition.current.y = event.target.value;
           handleChange();
         }}/>

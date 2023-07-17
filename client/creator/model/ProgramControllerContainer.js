@@ -83,7 +83,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
    */
   removeNumberPropertyController( numberPropertyController ) {
     this.numberPropertyControllers.remove( numberPropertyController );
-    this.addToAllComponents( numberPropertyController );
+    this.removeFromAllComponents( numberPropertyController );
   }
 
   /**
@@ -103,7 +103,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
    */
   removeEnumerationPropertyController( enumerationPropertyController ) {
     this.enumerationPropertyControllers.remove( enumerationPropertyController );
-    this.addToAllComponents( enumerationPropertyController );
+    this.removeFromAllComponents( enumerationPropertyController );
   }
 
   /**
