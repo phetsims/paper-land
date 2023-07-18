@@ -178,8 +178,8 @@ export default class ProgramModelContainer extends ComponentContainer {
     stateObject.namedVector2Properties.forEach( namedVector2PropertyData => {
       this.addVector2Property(
         namedVector2PropertyData.name,
-        namedVector2PropertyData.x,
-        namedVector2PropertyData.y
+        namedVector2PropertyData.defaultX,
+        namedVector2PropertyData.defaultY
       );
     } );
     stateObject.namedNumberProperties.forEach( namedNumberPropertyData => {

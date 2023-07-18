@@ -1,3 +1,4 @@
+import ProgramCodeGenerator from './code/ProgramCodeGenerator.js';
 import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 import ProgramViewContainer from './views/ProgramViewContainer.js';
@@ -122,5 +123,13 @@ export default class ProgramModel {
    */
   loadViewComponents( stateObject, allComponents ) {
     this.viewContainer.load( stateObject.viewContainer, allComponents );
+  }
+
+  /**
+   * Converts this program to a string of code that will actually be used in the paper-playground
+   * framework.
+   */
+  convertToProgramString() {
+    return ProgramCodeGenerator.convertToCode( this );
   }
 }

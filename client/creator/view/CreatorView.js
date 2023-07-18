@@ -63,7 +63,12 @@ export default class CreatorView extends phet.scenery.Node {
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
-        console.log( 'send data to paper land to create programs' );
+        const programCodeStrings = model.convertToProgramStrings();
+        programCodeStrings.forEach( programCodeString => {
+          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+          console.log( programCodeString );
+          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+        } );
       }
     } ) );
 

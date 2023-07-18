@@ -162,4 +162,16 @@ export default class CreatorModel {
   clear() {
     this.load( { programs: [] } );
   }
+
+  /**
+   * Returns an array of strings for the code of this system. Used to move code to the paper-playground database of
+   * programs.
+   */
+  convertToProgramStrings() {
+    const programStrings = [];
+    this.programs.forEach( program => {
+      programStrings.push( program.convertToProgramString() );
+    } );
+    return programStrings;
+  }
 }
