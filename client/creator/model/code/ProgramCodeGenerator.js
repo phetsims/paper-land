@@ -1,3 +1,5 @@
+import ControllerCodeGenerator from './ControllerCodeGenerator.js';
+import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ModelComponentTemplates from './ModelTemplates.js';
 import programTemplate from './programTemplate.js';
 import ViewComponentTemplates from './ViewComponentTemplates.js';
@@ -8,8 +10,11 @@ export default class ProgramCodeGenerator {
       TITLE: program.titleProperty.value,
       KEYWORDS: program.keywordsProperty.value,
       DESCRIPTION: program.descriptionProperty.value,
+      NUMBER: program.number,
+      NAME: program.titleProperty.value,
       PROGRAM_ADDED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramAdded' ),
       PROGRAM_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramRemoved' ),
+      PROGRAM_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramChangedPosition' )
     };
 
     return ProgramCodeGenerator.fillInTemplate( programTemplate, data );
@@ -30,8 +35,9 @@ export default class ProgramCodeGenerator {
 
     const modelCode = ProgramCodeGenerator.createProgramEventCodeForModelComponent( program, eventName );
     const viewCode = ProgramCodeGenerator.createProgramEventCodeForViewComponent( program, eventName );
+    const controllerCode = ProgramCodeGenerator.createProgramEventCodeForControllerComponent( program, eventName );
 
-    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode ] );
+    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode, controllerCode ] );
   }
 
   static createProgramEventCodeForModelComponent( program, eventName ) {
@@ -47,14 +53,15 @@ export default class ProgramCodeGenerator {
         throw new Error( 'Component type does not exist in templatesObject.' );
       }
       const template = ModelComponentTemplates[ componentType ][ eventName ];
-      if ( !template ) {
-        throw new Error( 'Event name does not exist in ModelComponentTemplates.' );
+      if ( template ) {
+        return ProgramCodeGenerator.fillInTemplate( template, {
+          NAME: componentName,
+          ...componentData
+        } );
       }
-
-      return ProgramCodeGenerator.fillInTemplate( template, {
-        NAME: componentName,
-        ...componentData
-      } );
+      else {
+        return '';
+      }
     } );
 
     return ProgramCodeGenerator.combineCodeList( codeList );
@@ -69,16 +76,49 @@ export default class ProgramCodeGenerator {
         throw new Error( 'Component type does not exist in ViewComponentTemplates.' );
       }
       const template = ViewComponentTemplates[ componentType ][ eventName ];
-      if ( !template ) {
-        throw new Error( 'Event name does not exist in ViewComponentTemplates.' );
+      if ( template ) {
+        const componentData = ProgramCodeGenerator.getViewComponentData( viewComponent );
+
+        return ProgramCodeGenerator.fillInTemplate( template, {
+          NAME: viewComponent.nameProperty.value,
+          DEPENDENCIES: viewComponent.modelComponentNames.map( name => {
+            return `phet.paperLand.getModelComponent( '${name}' )`;
+          } ).join( ', ' ),
+          DEPENDENCY_ARGUMENTS: viewComponent.modelComponentNames.map( name => {
+            return name;
+          } ).join( ', ' ),
+          CONTROL_FUNCTION: viewComponent.controlFunctionString,
+          ...componentData
+        } );
       }
+      else {
+        return '';
+      }
+    } );
 
-      const componentData = ProgramCodeGenerator.getViewComponentData( viewComponent );
+    return ProgramCodeGenerator.combineCodeList( codeList );
+  }
 
-      return ProgramCodeGenerator.fillInTemplate( template, {
-        NAME: viewComponent.nameProperty.value,
-        ...componentData
-      } );
+  static createProgramEventCodeForControllerComponent( program, eventName ) {
+    const codeList = program.controllerContainer.allComponents.map( controllerComponent => {
+      const componentType = controllerComponent.constructor.name;
+
+      if ( !ControllerComponentTemplates[ componentType ] ) {
+        throw new Error( 'Component type does not exist in ControllerComponentTemplates.' );
+      }
+      const template = ControllerComponentTemplates[ componentType ][ eventName ];
+      if ( template ) {
+        const componentData = ProgramCodeGenerator.getControllerComponentData( controllerComponent );
+        return ProgramCodeGenerator.fillInTemplate( template, {
+          NAME: controllerComponent.nameProperty.value,
+          CONTROLLED_NAME: controllerComponent.namedProperty.nameProperty.value,
+          ...componentData
+
+        } );
+      }
+      else {
+        return '';
+      }
     } );
 
     return ProgramCodeGenerator.combineCodeList( codeList );
@@ -128,7 +168,7 @@ export default class ProgramCodeGenerator {
         // Each dependency name, wrapped in the getter that will return a Property instance in
         // a comma separated list - the template will wrap this in array brackets
         DEPENDENCIES: modelComponent.dependencyNames.map( name => {
-          return `phet.paperLand.getModelComponent( ${name} )`;
+          return `phet.paperLand.getModelComponent( '${name}' )`;
         } ).join( ', ' ),
         DEPENDENCY_ARGUMENTS: modelComponent.dependencyNames.map( name => {
           return name;
@@ -148,17 +188,36 @@ export default class ProgramCodeGenerator {
     return data;
   }
 
-  getViewComponentData( viewComponent ) {
+  static getViewComponentData( viewComponent ) {
     const componentType = viewComponent.constructor.name;
     let data = {};
     if ( componentType === 'SoundViewComponent' ) {
       data = {
-        FILE_NAME: viewComponent.soundFileName,
-        CONTROL_FUNCTION: viewComponent.controlFunctionString
+        FILE_NAME: viewComponent.soundFileName
       };
+    }
+    else if ( componentType === 'DescriptionViewComponent' ) {
+
+      // No extra data for description components yet.
+      data = {};
     }
     else {
       throw new Error( 'Could not get data for component type' );
+    }
+
+    return data;
+  }
+
+  static getControllerComponentData( controllerComponent ) {
+    const componentType = controllerComponent.constructor.name;
+    let data = {};
+    if ( componentType === 'NumberPropertyController' ) {
+      data = {
+        GET_CONTROL_VALUE: ControllerCodeGenerator.getNumberControllerValueGetter( controllerComponent.controlType )
+      };
+    }
+    else {
+      throw new Error( 'Could not get data for controller component type' );
     }
 
     return data;

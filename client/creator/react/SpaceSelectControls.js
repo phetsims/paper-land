@@ -30,6 +30,17 @@ const SpaceSelectControls = props => {
       else {
         if ( Array.isArray( response.body ) ) {
           setAvailableSpaces( response.body );
+
+          // FOR DEBUGGING - initialize to jg-tests with system lab
+          if ( window.dev ) {
+            setTimeout( () => {
+              setSelectedSpaceName( 'creator-tests' );
+
+              setTimeout( () => {
+                setSelectedSystemName( 'test-system' );
+              }, 500 );
+            }, 500 );
+          }
         }
       }
     } );

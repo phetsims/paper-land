@@ -66,6 +66,10 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       } );
 
       const editButton = new phet.sun.RectangularPushButton( _.merge( {}, {
+
+        // This button is hidden for now, until it is further supported.
+        visible: false,
+
         content: imageNode,
         listener: () => {
           activeEditProperty.value = new ActiveEdit(

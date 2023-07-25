@@ -13,6 +13,11 @@ import ViewConstants from './view/ViewConstants.js';
 export default function CreatorMain( props ) {
   const scene = props.scene;
 
+  // Handle any query parameters for this application
+  const urlSearchParams = new URLSearchParams( window.location.search );
+  const params = Object.fromEntries( urlSearchParams.entries() );
+  window.dev = params.hasOwnProperty( 'dev' );
+
   // fundamental model and view for the editor
   const creatorModel = new CreatorModel();
 

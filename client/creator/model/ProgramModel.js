@@ -3,6 +3,10 @@ import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 import ProgramViewContainer from './views/ProgramViewContainer.js';
 
+// This value comes from the paper-land API. I am not sure why this value is used. It exists in server files so
+// I am not sure how best to share it.
+const MAX_PROGRAM_NUMBER = 8400 / 4;
+
 export default class ProgramModel {
 
   /**
@@ -13,7 +17,7 @@ export default class ProgramModel {
   constructor( initialPosition, initialNumber, activeEditProperty ) {
 
     // @public (read-only) - the number of this program
-    this.number = initialNumber === undefined ? Math.floor( Math.random() * 1000 ) : initialNumber;
+    this.number = initialNumber === undefined ? Math.floor( Math.random() * MAX_PROGRAM_NUMBER ) : initialNumber;
 
     // @public (read-only)
     this.activeEditProperty = activeEditProperty;

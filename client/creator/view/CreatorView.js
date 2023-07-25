@@ -63,11 +63,29 @@ export default class CreatorView extends phet.scenery.Node {
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
-        const programCodeStrings = model.convertToProgramStrings();
-        programCodeStrings.forEach( programCodeString => {
-          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
-          console.log( programCodeString );
-          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+        const dataForServer = model.convertToProgramData();
+
+        if ( window.dev ) {
+
+          // dataForServer.forEach( programCodeString => {
+          //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+          //   console.log( programCodeString.code );
+          //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+          // } );
+        }
+
+        const url = new URL( `api/spaces/${model.spaceNameProperty.value}/programs/set`, window.location.origin ).toString();
+        xhr.post( url, {
+          json: {
+            programs: dataForServer
+          }
+        }, ( error, response ) => {
+          if ( error ) {
+            console.error( error );
+          }
+          else {
+            console.log( 'System created!' );
+          }
         } );
       }
     } ) );
