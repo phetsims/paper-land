@@ -35,7 +35,7 @@ const ViewComponentTemplates = {
         }
         {{NAME}}StopSoundTimeout = window.setTimeout( () => {
           {{NAME}}SoundClip.stop();
-        }, 1000 );        
+        }, 5000 );        
       } );       
       
       // Assign the sound to the scratchpad so that we can remove it later
