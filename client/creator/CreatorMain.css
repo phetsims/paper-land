@@ -172,3 +172,8 @@
   background-color: backgroundColor;
   color: textColor;
 }
+
+:local(.dialog) {
+  background-color: backgroundColor;
+  color: textColor;
+}

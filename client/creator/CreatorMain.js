@@ -7,6 +7,7 @@ import SceneryDisplay from '../common/SceneryDisplay.js';
 import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
 import CreatorControls from './react/CreatorControls.js';
+import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
 import CreatorView from './view/CreatorView.js';
 import ViewConstants from './view/ViewConstants.js';
 
@@ -104,6 +105,11 @@ export default function CreatorMain( props ) {
 
   return (
     <div>
+      <div>
+        <SaveConfirmationDialog
+          creatorModel={creatorModel}
+        ></SaveConfirmationDialog>
+      </div>
       <div className={styles.rowContainer}>
         <div
           className={styles.displayColumn}>

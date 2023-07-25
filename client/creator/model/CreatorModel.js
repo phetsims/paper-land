@@ -1,3 +1,4 @@
+import xhr from 'xhr';
 import CreatorVisibilityModel from './CreatorVisibilityModel.js';
 import ProgramModel from './ProgramModel.js';
 
@@ -31,6 +32,31 @@ export default class CreatorModel {
 
     // {CreatorVisibilityModel}
     this.visibilityModel = new CreatorVisibilityModel();
+
+    // {Emitter} - Emits an event when the user would like to save the current system as programs
+    // to the selected space. This will clear existing programs in the space, so we first move
+    // to a confirmation dialog to confirm the action.
+    this.sendRequestedEmitter = new phet.axon.Emitter();
+
+    // {Emitter} - Emits an event when the user has confirmed that they want to save the program
+    // to the selected space.
+    this.sendConfirmedEmitter = new phet.axon.Emitter();
+
+
+    this.sendConfirmedEmitter.addListener( async () => {
+      this.sendProgramsToPlayground()
+        .then( () => {
+
+          // Show a success notification if the request succeeds.
+          console.log( 'Success!' );
+
+        } )
+        .catch( error => {
+
+          // Show an error dialog if the request fails.
+          console.error( 'Error saving system to space.' );
+        } );
+    } );
   }
 
   /**
@@ -176,5 +202,35 @@ export default class CreatorModel {
       } );
     } );
     return programStrings;
+  }
+
+  async sendProgramsToPlayground() {
+    const dataForServer = this.convertToProgramData();
+
+    if ( window.dev ) {
+
+      // dataForServer.forEach( programCodeString => {
+      //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+      //   console.log( programCodeString.code );
+      //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+      // } );
+    }
+
+    const url = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/set`, window.location.origin ).toString();
+    return new Promise( ( resolve, reject ) => {
+      xhr.post( url, {
+        json: {
+          programs: dataForServer
+        }
+      }, ( error, response ) => {
+        if ( error ) {
+          reject( error );
+        }
+        else {
+          resolve( 'System Created!' );
+          console.log( 'System created!' );
+        }
+      } );
+    } );
   }
 }
