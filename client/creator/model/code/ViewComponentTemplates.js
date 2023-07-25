@@ -57,8 +57,8 @@ const ViewComponentTemplates = {
       }
       
       scratchpad.{{NAME}}DescriptionMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        const string = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
-        phet.scenery.voicingUtteranceQueue.addToBack( string );
+        const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
+        phet.scenery.voicingUtteranceQueue.addToBack( descriptionString );
       } ); 
     `,
     onProgramRemoved: `

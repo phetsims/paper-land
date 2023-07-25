@@ -19,7 +19,9 @@ class ControllerCodeGenerator {
       return 'phet.paperLand.utils.getProgramCenter( points ).x';
     }
     else if ( directionControlType === NumberPropertyController.DirectionControlType.VERTICAL ) {
-      return 'phet.paperLand.utils.getProgramCenter( points ).y';
+
+      // 0 is at the top in paper coordinates, so we need to invert the y value
+      return '1 - phet.paperLand.utils.getProgramCenter( points ).y';
     }
     else if ( directionControlType === NumberPropertyController.DirectionControlType.ROTATION ) {
       return 'phet.paperLand.utils.getNormalizedProgramRotation( points )';

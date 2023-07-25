@@ -31,6 +31,17 @@ export default class ProgramCodeGenerator {
     } );
   }
 
+  /**
+   * Format the provided string for the Monaco editor. The output of monaco includes `\r\n` for newlines, but
+   * if the \r is included in an INPUT string for a monaco editor, the React component breaks.
+   * TODO: Could also add more prettify here too?
+   *
+   * @param codeString
+   */
+  static formatStringForMonaco( codeString ) {
+    return codeString.replace( /\r\n/g, '\n' );
+  }
+
   static createProgramEventCode( program, eventName ) {
 
     const modelCode = ProgramCodeGenerator.createProgramEventCodeForModelComponent( program, eventName );
@@ -87,7 +98,7 @@ export default class ProgramCodeGenerator {
           DEPENDENCY_ARGUMENTS: viewComponent.modelComponentNames.map( name => {
             return name;
           } ).join( ', ' ),
-          CONTROL_FUNCTION: viewComponent.controlFunctionString,
+          CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( viewComponent.controlFunctionString ),
           ...componentData
         } );
       }
@@ -173,7 +184,7 @@ export default class ProgramCodeGenerator {
         DEPENDENCY_ARGUMENTS: modelComponent.dependencyNames.map( name => {
           return name;
         } ).join( ', ' ),
-        DERIVATION: modelComponent.derivation
+        DERIVATION: ProgramCodeGenerator.formatStringForMonaco( modelComponent.derivation )
       };
     }
     else if ( modelComponent.propertyType === 'Sound' ) {
