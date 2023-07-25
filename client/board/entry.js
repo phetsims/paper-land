@@ -103,7 +103,7 @@ const mapOfProgramNumbersToScratchpadObjects = new Map();
 const mapOfPaperProgramNumbersToPreviousPoints = new Map();
 
 // A map of paper number to the papers that overlap with another paper in a given direction.
-// { paperNumber: { top: number[], right: number[], bottom: number[], left: number[] } }
+// { (paperNumber: number) : { top: number[], right: number[], bottom: number[], left: number[] } }
 const whiskerStateMap = new Map();
 
 // {Map<number,MarkerInfo>} - Map of numeric values that act as IDs to marker info objects.
@@ -530,7 +530,8 @@ const getMarkerMatchingInfo = currentMarkers => {
  * Create a set of "whiskers" for a paper. From the paper center, create a set of lines that extend in the
  * cardinal directions. These will be used to detect intersections with other papers.
  *
- * @param paperNumber - number for this paper
+ * @param {number} paperNumber - number for this paper
+ *
  * @return {{direction: string, line: kite.Line}[]}
  */
 const getWhiskerKiteLines = paperNumber => {
@@ -566,11 +567,13 @@ const getWhiskerKiteLines = paperNumber => {
  * @param otherPaperInfo - data about the other paper
  */
 const checkWhiskersForPaper = ( paperInfo, otherPaperInfo ) => {
-  const paperNumber = paperInfo.number;
+
+  // local storage might bring this in as a string
+  const paperNumber = parseInt( paperInfo.number, 10 );
   const currentWhiskerState = whiskerStateMap.get( paperNumber ) || {};
 
   // Create whisker lines - for new, new lines are created every request.
-  const directedLines = getWhiskerKiteLines( paperNumber, paperInfo.points );
+  const directedLines = getWhiskerKiteLines( paperNumber );
   const otherPaperShape = phet.kite.Shape.polygon( otherPaperInfo.points.map( point => phet.paperLand.utils.pointToVector2( point ) ) );
 
   // Look for intersections with the other paper
@@ -582,7 +585,7 @@ const checkWhiskersForPaper = ( paperInfo, otherPaperInfo ) => {
 
     const intersection = otherPaperShape.interiorIntersectsLineSegment( line.start, line.end );
     if ( intersection ) {
-      const otherPaperNumber = otherPaperInfo.number;
+      const otherPaperNumber = parseInt( otherPaperInfo.number, 10 );
 
       // Only do something about the  intersection if it is new
       if ( !intersectingNumbersAtDirection.includes( otherPaperNumber ) ) {
@@ -602,7 +605,7 @@ const checkWhiskersForPaper = ( paperInfo, otherPaperInfo ) => {
     else {
 
       // There is no intersection - if there was one previously, then it has been removed and we need to fire the event
-      const otherPaperNumber = otherPaperInfo.number;
+      const otherPaperNumber = parseInt( otherPaperInfo.number, 10 );
       const index = intersectingNumbersAtDirection.indexOf( otherPaperNumber );
       if ( index >= 0 ) {
         intersectingNumbersAtDirection.splice( index, 1 );
@@ -624,7 +627,7 @@ const checkWhiskersForPaper = ( paperInfo, otherPaperInfo ) => {
   } );
 
   // set the new state for this paper
-  whiskerStateMap.set( paperInfo.number, currentWhiskerState );
+  whiskerStateMap.set( paperNumber, currentWhiskerState );
 };
 
 /**
@@ -736,7 +739,9 @@ addEventListener( 'storage', () => {
 
   // clear the whisker state map and copy the storage data into it
   whiskerData.forEach( ( whiskerState, paperNumber ) => {
-    localWhiskerMap.set( paperNumber, whiskerState );
+
+    // Ensure that the paper number is a number, it might have been converted to string in local storage
+    localWhiskerMap.set( parseInt( paperNumber, 10 ), whiskerState );
   } );
 
   // Update the sim design board.
