@@ -1,4 +1,50 @@
-html {
+body {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.container {
+  max-width: 960px;
+}
+
+h1 {
+  color: #333;
+  font-size: 2.5em;
+  margin-bottom: 0.5em;
+}
+
+p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+.mt-5 {
+  margin: auto;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  border-radius: 5px;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-body {
+  padding: 2em;
+  text-align: center;
+  min-height: 225px;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+
+
+/* html {
   font-size: 10px;
   color: linen;
   background-color: linen;
@@ -124,4 +170,4 @@ blockquote {
   max-width: 545px;
   margin: 0 auto 50px auto;
   text-align: left;
-}
+} */
