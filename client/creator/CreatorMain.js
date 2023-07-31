@@ -8,6 +8,7 @@ import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
 import CreatorControls from './react/CreatorControls.js';
 import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
+import SaveFailureDialog from './react/SaveFailureDialog.js';
 import CreatorView from './view/CreatorView.js';
 import ViewConstants from './view/ViewConstants.js';
 
@@ -109,6 +110,9 @@ export default function CreatorMain( props ) {
         <SaveConfirmationDialog
           creatorModel={creatorModel}
         ></SaveConfirmationDialog>
+        <SaveFailureDialog
+          creatorModel={creatorModel}
+        ></SaveFailureDialog>
       </div>
       <div className={styles.rowContainer}>
         <div
