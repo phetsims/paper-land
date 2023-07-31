@@ -35,7 +35,9 @@ const ModelComponentTemplates = {
   },
   StringProperty: {
     onProgramAdded: `
-      const {{NAME}} = new phet.axon.StringProperty( '{{DEFAULT_VALUE}}' )
+      const {{NAME}} = new phet.axon.StringProperty( '{{DEFAULT_VALUE}}', {
+        validValues: [ {{VALUES}} ]
+      } );
       phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
     `,
     onProgramRemoved: `

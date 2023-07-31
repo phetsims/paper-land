@@ -172,7 +172,10 @@ export default class ProgramCodeGenerator {
     else if ( modelComponent.propertyType === 'StringProperty' ) {
       data = {
         DEFAULT_VALUE: modelComponent.defaultValue,
-        VALUES: modelComponent.values.join( ', ' )
+
+        // wrap each value individually in quotes before comma separating for the validValues
+        // option
+        VALUES: modelComponent.values.map( value => `'${value}'` ).join( ', ' )
       };
     }
     else if ( modelComponent.propertyType === 'DerivedProperty' ) {
