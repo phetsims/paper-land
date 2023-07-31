@@ -5,8 +5,11 @@ import styles from './../CreatorMain.css';
 export default function StyledButton( props ) {
   const disabled = props.disabled === true;
   const hidden = props.hidden === true;
+
+  // Additional class names you can provide to further style the button
+  const otherClassNames = props.otherClassNames || '';
   return (
-    <div className={`${styles.controlElement} ${styles.inlineBlock}`}>
+    <div className={`${styles.controlElement} ${styles.inlineBlock} ${otherClassNames}`}>
       <Button
         onClick={props.onClick}
         disabled={disabled}

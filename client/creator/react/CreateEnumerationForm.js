@@ -52,8 +52,8 @@ export default function CreateEnumerationForm( props ) {
   return (
     <>
       <div>
-        <StyledButton name={'Create Value'} onClick={handleClick}></StyledButton>
-        <StyledButton name={'Remove Value'} onClick={handleDelete}></StyledButton>
+        <StyledButton name={'Create Value'} onClick={handleClick} otherClassNames={styles.horizontalPadding}></StyledButton>
+        <StyledButton name={'Remove Value'} onClick={handleDelete} otherClassNames={styles.horizontalPadding}></StyledButton>
         {
           values.map( ( value, index ) =>
             <div key={`${value}-${index}`}>
