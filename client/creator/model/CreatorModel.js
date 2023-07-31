@@ -54,7 +54,7 @@ export default class CreatorModel {
         .catch( error => {
 
           // Show an error dialog if the request fails.
-          console.error( 'Error saving system to space.' );
+          console.error( 'ERROR:', error.message );
         } );
     } );
   }
@@ -205,19 +205,21 @@ export default class CreatorModel {
   }
 
   async sendProgramsToPlayground() {
-    const dataForServer = this.convertToProgramData();
-
-    if ( window.dev ) {
-
-      // dataForServer.forEach( programCodeString => {
-      //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
-      //   console.log( programCodeString.code );
-      //   console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
-      // } );
-    }
-
     const url = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/set`, window.location.origin ).toString();
     return new Promise( ( resolve, reject ) => {
+
+      // Convert model to code for the database. If this throws an error for some reason (like an unsupported type),
+      // the promise should reject.
+      const dataForServer = this.convertToProgramData();
+
+      if ( window.dev ) {
+        dataForServer.forEach( programCodeString => {
+          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+          console.log( programCodeString.code );
+          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
+        } );
+      }
+
       xhr.post( url, {
         json: {
           programs: dataForServer

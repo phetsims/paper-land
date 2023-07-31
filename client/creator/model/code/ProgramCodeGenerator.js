@@ -61,7 +61,7 @@ export default class ProgramCodeGenerator {
       const componentData = ProgramCodeGenerator.getModelComponentData( modelComponent );
 
       if ( !ModelComponentTemplates[ componentType ] ) {
-        throw new Error( 'Component type does not exist in templatesObject.' );
+        throw new Error( `${componentType} is not a supported model component for code generation.` );
       }
       const template = ModelComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
@@ -84,7 +84,7 @@ export default class ProgramCodeGenerator {
       const componentType = viewComponent.constructor.name;
 
       if ( !ViewComponentTemplates[ componentType ] ) {
-        throw new Error( 'Component type does not exist in ViewComponentTemplates.' );
+        throw new Error( `${componentType} is not supported yet for code generation` );
       }
       const template = ViewComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
@@ -115,7 +115,7 @@ export default class ProgramCodeGenerator {
       const componentType = controllerComponent.constructor.name;
 
       if ( !ControllerComponentTemplates[ componentType ] ) {
-        throw new Error( 'Component type does not exist in ControllerComponentTemplates.' );
+        throw new Error( `${componentType} is not supported yet for code generation.` );
       }
       const template = ControllerComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
@@ -193,7 +193,7 @@ export default class ProgramCodeGenerator {
       };
     }
     else {
-      throw new Error( 'Could not get data for component propertyType' );
+      throw new Error( `Could not get model data for component ${modelComponent.propertyType} during code generation.` );
     }
 
     return data;
@@ -213,7 +213,7 @@ export default class ProgramCodeGenerator {
       data = {};
     }
     else {
-      throw new Error( 'Could not get data for component type' );
+      throw new Error( `View component ${componentType} is not supported yet for code generation.` );
     }
 
     return data;
@@ -228,7 +228,7 @@ export default class ProgramCodeGenerator {
       };
     }
     else {
-      throw new Error( 'Could not get data for controller component type' );
+      throw new Error( `Error generating code for controller ${componentType}` );
     }
 
     return data;
