@@ -27,7 +27,9 @@ export default class ProgramCodeGenerator {
    */
   static fillInTemplate( template, data ) {
     return template.replace( /\{\{(\w+)\}\}/g, ( match, placeholder ) => {
-      return data[ placeholder ] || '';
+
+      // Use the nullish coalescing operator to check if the value exists and is not null/undefined
+      return data[ placeholder ] ?? '';
     } );
   }
 
