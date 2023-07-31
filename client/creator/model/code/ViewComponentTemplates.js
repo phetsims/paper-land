@@ -19,7 +19,10 @@ const ViewComponentTemplates = {
           {{NAME}}SoundClip.outputLevel = outputLevel;
         };
         const setPlaybackRate = ( rate ) => {
-          {{NAME}}SoundClip.setPlaybackRate( rate );
+        
+          // As a safety measure, the playback rate cannot go below zero.
+          const playbackRate = Math.max( 0, rate );
+          {{NAME}}SoundClip.setPlaybackRate( playbackRate );
         };
       
         {{CONTROL_FUNCTION}}
