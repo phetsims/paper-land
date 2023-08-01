@@ -3,10 +3,12 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
+import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
 import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
+import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
 import StyledButton from './StyledButton.js';
 
@@ -36,19 +38,23 @@ export default function CreateViewComponentForm( props ) {
   const [ soundsFormValid, setSoundsFormValid ] = useState( false );
   const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
   const [ backgroundFormValid, setBackgroundFormValid ] = useState( false );
+  const [ imagesFormValid, setImagesFormValid ] = useState( false );
 
   // refs to form data
   const generalDataRef = useRef( {} );
   const soundsDataRef = useRef( {} );
+  const imagesDataRef = useRef( {} );
 
   // to be called every change so that we can use data to create components
   const getDataForGeneral = data => {generalDataRef.current = data;};
   const getDataForSounds = data => {soundsDataRef.current = data;};
+  const getDataForImages = data => {imagesDataRef.current = data;};
 
   // functions for subcomponents to set form validity
   const getIsSoundsFormValid = isFormValid => setSoundsFormValid( isFormValid );
   const getIsDescriptionFormValid = isFormValid => setDescriptionFormValid( isFormValid );
   const getIsBackgroundFormValid = isFormValid => setBackgroundFormValid( isFormValid );
+  const getIsImagesFormValid = isFormValid => setImagesFormValid( isFormValid );
 
 
   const isComponentNameValid = () => {
@@ -65,8 +71,10 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'background' ) {
       setSelectedTabFormValid( backgroundFormValid && isComponentNameValid() );
     }
-
-  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid ] );
+    else if ( selectedTab === 'images' ) {
+      setSelectedTabFormValid( imagesFormValid && isComponentNameValid() );
+    }
+  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid ] );
 
   const createComponent = () => {
     const componentName = props.componentName;
@@ -84,6 +92,11 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'background' ) {
       const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponentNames, controlFunctionString );
       activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
+    }
+    else if ( selectedTab === 'images' ) {
+      const imageFileName = imagesDataRef.current.imageFileName;
+      const imageViewComponent = new ImageViewComponent( componentName, modelComponentNames, controlFunctionString, imageFileName );
+      activeProgram.viewContainer.addImageView( imageViewComponent );
     }
 
     props.onComponentCreated();
@@ -111,7 +124,12 @@ export default function CreateViewComponentForm( props ) {
           ></CreateBackgroundViewForm>
         </Tab>
         <Tab eventKey='images' title='Images' tabClassName={styles.tab}>
-          TODO: Select a model component and describe how its values change an image (path, scale, position, rotation, etc...).
+          <CreateImageViewForm
+            allModelComponents={props.allModelComponents}
+            isFormValid={getIsImagesFormValid}
+            getImageFormData={getDataForImages}
+            getGeneralFormData={getDataForGeneral}
+          ></CreateImageViewForm>
         </Tab>
         <Tab eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
           <CreateSoundViewForm

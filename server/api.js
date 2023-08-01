@@ -471,4 +471,19 @@ router.get( '/api/creator/soundFiles', ( req, res ) => {
   } );
 } );
 
+/**
+ * Gets the list of image files available to use.
+ */
+router.get( '/api/creator/imageFiles', ( req, res ) => {
+
+  // use fs to get the list of files in the www/media/images directory
+  fs.readdir( './www/media/images', ( err, files ) => {
+    if ( err ) {
+      res.status( 500 ).send( 'Error reading image files' );
+    }
+    else {
+      res.json( { imageFiles: files } );
+    }
+  } );
+} );
 module.exports = router;

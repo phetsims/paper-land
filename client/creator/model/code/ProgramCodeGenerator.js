@@ -225,6 +225,11 @@ export default class ProgramCodeGenerator {
       // No extra data for background components yet.
       data = {};
     }
+    else if ( componentType === 'ImageViewComponent' ) {
+      data = {
+        FILE_NAME: viewComponent.imageFileName
+      };
+    }
     else {
       throw new Error( `View component ${componentType} is not supported yet for code generation.` );
     }

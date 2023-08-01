@@ -4,6 +4,7 @@
 import ComponentContainer from '../ComponentContainer.js';
 import BackgroundViewComponent from './BackgroundViewComponent.js';
 import DescriptionViewComponent from './DescriptionViewComponent.js';
+import ImageViewComponent from './ImageViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
 
 export default class ProgramViewContainer extends ComponentContainer {
@@ -18,6 +19,9 @@ export default class ProgramViewContainer extends ComponentContainer {
 
     // The collection of all background views in this container
     this.backgroundViews = phet.axon.createObservableArray();
+
+    // The collection of all image views in this container
+    this.imageViews = phet.axon.createObservableArray();
   }
 
   /**
@@ -71,11 +75,25 @@ export default class ProgramViewContainer extends ComponentContainer {
     this.removeFromAllComponents( backgroundView );
   }
 
+  addImageView( imageView ) {
+    this.imageViews.push( imageView );
+    this.addToAllComponents( imageView );
+    this.registerChangeListeners( imageView, this.removeImageView.bind( this ) );
+  }
+
+  removeImageView( imageView ) {
+    const imageViewIndex = this.imageViews.indexOf( imageView );
+    assert && assert( imageViewIndex >= 0, 'ImageView not found' );
+    this.imageViews.splice( imageViewIndex, 1 );
+    this.removeFromAllComponents( imageView );
+  }
+
   save() {
     return {
       soundViews: this.soundViews.map( soundView => soundView.save() ),
       descriptionViews: this.descriptionViews.map( descriptionView => descriptionView.save() ),
-      backgroundViews: this.backgroundViews.map( backgroundView => backgroundView.save() )
+      backgroundViews: this.backgroundViews.map( backgroundView => backgroundView.save() ),
+      imageViews: this.imageViews.map( imageView => imageView.save() )
     };
   }
 
@@ -88,6 +106,7 @@ export default class ProgramViewContainer extends ComponentContainer {
     const soundViews = json.soundViews || [];
     const descriptionViews = json.descriptionViews || [];
     const backgroundViews = json.backgroundViews || [];
+    const imageViews = json.imageViews || [];
 
     soundViews.forEach( soundViewJSON => {
       const soundView = SoundViewComponent.fromStateObject( soundViewJSON );
@@ -101,11 +120,17 @@ export default class ProgramViewContainer extends ComponentContainer {
       const backgroundView = BackgroundViewComponent.fromStateObject( backgroundViewJSON );
       this.addBackgroundView( backgroundView );
     } );
+    imageViews.forEach( imageViewJSON => {
+      const imageView = ImageViewComponent.fromStateObject( imageViewJSON );
+      this.addImageView( imageView );
+    } );
   }
 
   dispose() {
     this.soundViews.dispose();
     this.descriptionViews.dispose();
     this.allComponents.dispose();
+    this.backgroundViews.dispose();
+    this.imageViews.dispose();
   }
 }

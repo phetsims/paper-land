@@ -95,6 +95,43 @@ const ViewComponentTemplates = {
       // Remove the background rectangle from the view.
       sharedData.scene.removeChild( scratchpad.{{NAME}}BackgroundRectangle );
       delete scratchpad.{{NAME}}BackgroundRectangle;
+      
+      // Remove the multilink
+      scratchpad.{{NAME}}BackgroundMultilink.dispose();
+      delete scratchpad.{{NAME}}BackgroundMultilink;
+    `
+  },
+  ImageViewComponent: {
+    onProgramAdded: `
+      // Create an image and add it to the view.
+      const {{NAME}}ImageElement = document.createElement( 'img' );
+      {{NAME}}ImageElement.src = 'media/images/{{FILE_NAME}}';
+      const {{NAME}}Image = new phet.scenery.Image( {{NAME}}ImageElement );
+      
+      sharedData.scene.addChild( {{NAME}}Image );
+      scratchpad.{{NAME}}Image = {{NAME}}Image;
+      
+      // Update the image when a dependency changes.
+      scratchpad.{{NAME}}ImageMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        // in a local scope, define the functions that the user can use to manipulate the sound
+        const setCenter = ( position ) => {
+          {{NAME}}Image.center = position;
+        };
+        const setScale = ( scale ) => {
+          {{NAME}}Image.setScaleMagnitude( scale );
+        };
+      
+        {{CONTROL_FUNCTION}}
+      } );
+    `,
+    onProgramRemoved: `
+      // Remove the image from the view.
+      sharedData.scene.removeChild( scratchpad.{{NAME}}Image );
+      delete scratchpad.{{NAME}}Image;
+      
+      // Remove the multilink
+      scratchpad.{{NAME}}ImageMultilink.dispose();
+      delete scratchpad.{{NAME}}ImageMultilink;
     `
   }
 };
