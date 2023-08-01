@@ -14,7 +14,9 @@ export default class ProgramCodeGenerator {
       NAME: program.titleProperty.value,
       PROGRAM_ADDED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramAdded' ),
       PROGRAM_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramRemoved' ),
-      PROGRAM_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramChangedPosition' )
+      PROGRAM_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramChangedPosition' ),
+      PROGRAM_MARKERS_ADDED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersAdded' ),
+      PROGRAM_MARKERS_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersRemoved' )
     };
 
     return ProgramCodeGenerator.fillInTemplate( programTemplate, data );
@@ -126,7 +128,6 @@ export default class ProgramCodeGenerator {
           NAME: controllerComponent.nameProperty.value,
           CONTROLLED_NAME: controllerComponent.namedProperty.nameProperty.value,
           ...componentData
-
         } );
       }
       else {
@@ -143,7 +144,9 @@ export default class ProgramCodeGenerator {
    * @codeList {string[]}
    */
   static combineCodeList( codeList ) {
-    return codeList.join( '\n' );
+
+    // Don't add extra new lines for empty strings
+    return codeList.filter( entry => entry !== '' ).join( '\n' );
   }
 
   /**
@@ -226,10 +229,21 @@ export default class ProgramCodeGenerator {
 
   static getControllerComponentData( controllerComponent ) {
     const componentType = controllerComponent.constructor.name;
+    const controlledName = controllerComponent.namedProperty.nameProperty.value;
     let data = {};
     if ( componentType === 'NumberPropertyController' ) {
       data = {
-        GET_CONTROL_VALUE: ControllerCodeGenerator.getNumberControllerValueGetter( controllerComponent.controlType )
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getNumberControllerChangedPositionCode( controllerComponent.controlType, controlledName )
+      };
+    }
+    else if ( componentType === 'BooleanPropertyController' ) {
+
+      // Different controller types will have different code for setting the value of the component.
+      // Look up the code that should be used for each event for the provided control type.
+      data = {
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getBooleanControllerChangedPositionCode( controllerComponent.controlType, controlledName ),
+        PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersAddedCode( controllerComponent.controlType, controlledName ),
+        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName )
       };
     }
     else {
