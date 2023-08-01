@@ -26,7 +26,14 @@ export default function CreateModelControllerForm( props ) {
     throw new Error( 'CreateModelControllerForm requires an onComponentCreated callback' );
   }
 
-  const [ allComponents, setAllComponents ] = useState( allModelComponents.getArrayCopy() );
+  /**
+   * Get a list of all model components, except for DerivedProperty components. Those cannot be controlled directly.
+   */
+  function getComponentsExcludingDerived() {
+    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' );
+  }
+
+  const [ allComponents, setAllComponents ] = useState( getComponentsExcludingDerived() );
   const [ selectedComponent, setSelectedComponent ] = useState( allComponents[ 0 ] || null );
 
   // State for whether the selected component form is valid for creation.
@@ -72,7 +79,7 @@ export default function CreateModelControllerForm( props ) {
       activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
     }
     else if ( selectedComponentType === 'NumberProperty' ) {
-      const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType )
+      const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType );
       activeProgram.controllerContainer.addNumberPropertyController( numberController );
     }
     else if ( selectedComponentType === 'StringProperty' ) {
@@ -92,7 +99,7 @@ export default function CreateModelControllerForm( props ) {
 
       // Gets all model components that are not DerivedProperties - DerivedProperties cannot be externally controlled.
       // React requires a new array reference to update correctly. Filter does that for us.
-      const withoutDerivedProperties = props.allModelComponents.filter( element => element.propertyType !== 'DerivedProperty' );
+      const withoutDerivedProperties = getComponentsExcludingDerived();
       setAllComponents( withoutDerivedProperties );
       setSelectedComponent( withoutDerivedProperties[ 0 ] || null );
     };
