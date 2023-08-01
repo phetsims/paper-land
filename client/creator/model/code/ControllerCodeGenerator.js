@@ -3,6 +3,7 @@
  * code for the controller sections of code in the program templates.
  */
 import BooleanPropertyController from '../controllers/BooleanPropertyController.js';
+import EnumerationPropertyController from '../controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../controllers/NumberPropertyController.js';
 import Vector2PropertyController from '../controllers/Vector2PropertyController.js';
 
@@ -111,6 +112,35 @@ class ControllerCodeGenerator {
     }
     return '';
   }
+
+  static getEnumerationControllerChangedPositionCode( controlType, controlledName, enumerationValues ) {
+    if ( controlType === EnumerationPropertyController.ControlType.ROTATION ) {
+
+      // Convert the array of values to a string, keeping the array format like "[ 'value1', 'value2' ]"
+      const arrayString = JSON.stringify( enumerationValues );
+
+      const createComputeValueCode = () => {
+        return `phet.paperLand.utils.getEnumerationValueFromProgramRotation( points, ${arrayString} )`;
+      };
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
+    }
+    return '';
+  }
+
+  static getEnumerationControllerMarkersChangedCode( controlType, controlledName, enumerationValues ) {
+    if ( controlType === EnumerationPropertyController.ControlType.MARKERS ) {
+
+      // Convert the array of values to a string, keeping the array format like "[ 'value1', 'value2' ]"
+      const arrayString = JSON.stringify( enumerationValues );
+
+      const createComputeValueCode = () => {
+        return `phet.paperLand.utils.getEnumerationValueFromProgramMarkers( markers, ${arrayString} )`;
+      };
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
+    }
+    return '';
+  }
+
 }
 
 export default ControllerCodeGenerator;

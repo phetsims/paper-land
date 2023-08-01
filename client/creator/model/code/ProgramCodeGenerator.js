@@ -255,6 +255,14 @@ export default class ProgramCodeGenerator {
         PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getVector2ControllerChangedPositionCode( controllerComponent.controlType, controlledName )
       };
     }
+    else if ( componentType === 'EnumerationPropertyController' ) {
+      const enumerationValues = controllerComponent.namedProperty.values;
+      data = {
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getEnumerationControllerChangedPositionCode( controllerComponent.controlType, controlledName, enumerationValues ),
+        PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getEnumerationControllerMarkersChangedCode( controllerComponent.controlType, controlledName, enumerationValues ),
+        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getEnumerationControllerMarkersChangedCode( controllerComponent.controlType, controlledName, enumerationValues )
+      };
+    }
     else {
       throw new Error( `Error generating code for controller ${componentType}` );
     }

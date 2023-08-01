@@ -36,6 +36,31 @@ const boardUtils = {
   },
 
   /**
+   * Returns an enumeration value from the current rotation of the program. The enumeration values are evenly
+   * distributed between 0 and 1 (the range of normalized rotation).
+   */
+  getEnumerationValueFromProgramRotation( points, enumerationValues ) {
+    const normalizedRotation = boardUtils.getNormalizedProgramRotation( points );
+    const index = Math.floor( normalizedRotation * enumerationValues.length );
+    if ( index < 0 || index >= enumerationValues.length ) {
+      throw new Error( `Index ${index} is out of bounds for enumeration values ${enumerationValues}` );
+    }
+    return enumerationValues[ index ];
+  },
+
+  /**
+   * Returns an enumeration value from the number of markers in the program. The values cycle through as
+   * markers are added to the program (and wrap).
+   */
+  getEnumerationValueFromProgramMarkers( programMarkers, enumerationValues ) {
+    const index = programMarkers.length % enumerationValues.length;
+    if ( index < 0 || index >= enumerationValues.length ) {
+      throw new Error( `Index ${index} is out of bounds for enumeration values ${enumerationValues}` );
+    }
+    return enumerationValues[ index ];
+  },
+
+  /**
    * Returns the center of the program in paper coordinates.
    * @param points - points of the paper, provided by paper programming API.
    * @return dot.Vector2

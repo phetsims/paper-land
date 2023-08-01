@@ -9,6 +9,11 @@ const ControllerComponentTemplates = {
   },
   Vector2PropertyController: {
     onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}'
+  },
+  EnumerationPropertyController: {
+    onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}',
+    onProgramMarkersAdded: '{{PROGRAM_MARKERS_ADDED_CODE}}',
+    onProgramMarkersRemoved: '{{PROGRAM_MARKERS_REMOVED_CODE}}'
   }
 };
 
