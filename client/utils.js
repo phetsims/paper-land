@@ -302,8 +302,11 @@ export function getComponentDocumentation( namedProperty ) {
     usabilityDocumentation = 'This could be any type, depending on how you created your DerivedProperty.';
   }
   else if ( type === 'StringProperty' ) {
-    const valuesList = namedProperty.property.validValues.join( ', ' );
+    const valuesList = namedProperty.values.join( ', ' );
     usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
+  }
+  else {
+    throw new Error( `Unhandled property type: ${type}` );
   }
 
   return `${namedProperty.nameProperty.value} - ${usabilityDocumentation}`;
