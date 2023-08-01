@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
+import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
 import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
 import StyledButton from './StyledButton.js';
@@ -33,6 +35,7 @@ export default function CreateViewComponentForm( props ) {
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
   const [ soundsFormValid, setSoundsFormValid ] = useState( false );
   const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
+  const [ backgroundFormValid, setBackgroundFormValid ] = useState( false );
 
   // refs to form data
   const generalDataRef = useRef( {} );
@@ -45,6 +48,8 @@ export default function CreateViewComponentForm( props ) {
   // functions for subcomponents to set form validity
   const getIsSoundsFormValid = isFormValid => setSoundsFormValid( isFormValid );
   const getIsDescriptionFormValid = isFormValid => setDescriptionFormValid( isFormValid );
+  const getIsBackgroundFormValid = isFormValid => setBackgroundFormValid( isFormValid );
+
 
   const isComponentNameValid = () => {
     return componentName.length > 0 && model.isNameAvailable( componentName );
@@ -56,6 +61,9 @@ export default function CreateViewComponentForm( props ) {
     }
     else if ( selectedTab === 'description' ) {
       setSelectedTabFormValid( descriptionFormValid && isComponentNameValid() );
+    }
+    else if ( selectedTab === 'background' ) {
+      setSelectedTabFormValid( backgroundFormValid && isComponentNameValid() );
     }
 
   }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid ] );
@@ -72,6 +80,10 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'description' ) {
       const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponentNames, controlFunctionString );
       activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
+    }
+    else if ( selectedTab === 'background' ) {
+      const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponentNames, controlFunctionString );
+      activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
     }
 
     props.onComponentCreated();
@@ -92,7 +104,11 @@ export default function CreateViewComponentForm( props ) {
           TODO: Select a model component, a shape, and describe how the model component will manipulate it (scale, position, fill, stroke, etc).
         </Tab>
         <Tab eventKey='background' title='Background' tabClassName={styles.tab}>
-          TODO: Select a model component and describe how its values change the background color.
+          <CreateBackgroundViewForm
+            allModelComponents={props.allModelComponents}
+            isFormValid={getIsBackgroundFormValid}
+            getGeneralFormData={getDataForGeneral}
+          ></CreateBackgroundViewForm>
         </Tab>
         <Tab eventKey='images' title='Images' tabClassName={styles.tab}>
           TODO: Select a model component and describe how its values change an image (path, scale, position, rotation, etc...).
