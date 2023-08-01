@@ -4,6 +4,7 @@
  */
 import BooleanPropertyController from '../controllers/BooleanPropertyController.js';
 import NumberPropertyController from '../controllers/NumberPropertyController.js';
+import Vector2PropertyController from '../controllers/Vector2PropertyController.js';
 
 // A unique identifier that we can apply to variables to make sure that generated variables have unique names.
 let uniqueId = 0;
@@ -52,29 +53,15 @@ class ControllerCodeGenerator {
     return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
   }
 
-  /**
-   * Returns a string of code that will get the value of paper information that can be used
-   * to map to a value in model space. For example, if the control type is horizontal, then
-   * it will return the code that gets the center X of the paper (in paper coordinates) so that
-   * the horizontal position of the paper can then be used to map to a model value.
-   * @param {DirectionControlType} directionControlType
-   * @return {string}
-   */
-  static getNumberControllerValueGetter( directionControlType ) {
-    if ( directionControlType === NumberPropertyController.DirectionControlType.HORIZONTAL ) {
-      return 'phet.paperLand.utils.getProgramCenter( points ).x';
-    }
-    else if ( directionControlType === NumberPropertyController.DirectionControlType.VERTICAL ) {
-
-      // 0 is at the top in paper coordinates, so we need to invert the y value
-      return '1 - phet.paperLand.utils.getProgramCenter( points ).y';
-    }
-    else if ( directionControlType === NumberPropertyController.DirectionControlType.ROTATION ) {
-      return 'phet.paperLand.utils.getNormalizedProgramRotation( points )';
-    }
-    else {
-      throw new Error( `Unknown direction control type ${directionControlType}` );
-    }
+  static getVector2ControllerChangedPositionCode( controlType, controlledName ) {
+    const createComputeValueCode = modelPropertyName => {
+      const currentValue = `${modelPropertyName}.value`;
+      return controlType === Vector2PropertyController.ControlType.MATCH_CENTER ? 'phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize )' :
+             controlType === Vector2PropertyController.ControlType.MATCH_X ? `new phet.dot.Vector2( phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize ).x, ${currentValue}.y )` :
+             controlType === Vector2PropertyController.ControlType.MATCH_Y ? `new phet.dot.Vector2( ${currentValue}.x, phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize ).y )` :
+             `throw new Error( 'Unknown Vector2 control type from controller code generator' - ${controlType} )`;
+    };
+    return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
   }
 
   /**

@@ -250,6 +250,11 @@ export default class ProgramCodeGenerator {
         PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName )
       };
     }
+    else if ( componentType === 'Vector2PropertyController' ) {
+      data = {
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getVector2ControllerChangedPositionCode( controllerComponent.controlType, controlledName )
+      };
+    }
     else {
       throw new Error( `Error generating code for controller ${componentType}` );
     }
