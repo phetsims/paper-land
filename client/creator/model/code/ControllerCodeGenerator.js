@@ -13,7 +13,7 @@ class ControllerCodeGenerator {
 
   /**
    * Returns a bit of code that will set a model Property value in controller code, with a check first
-   * that makes sure the code is available. A unique ID is assigned to variables to make sure that
+   * that makes sure the model component is available. A unique ID is assigned to variables to make sure that
    * variable names are unique if this code is used multiple times in the same scope.
    * @param controlledName - name of the component this code will control
    * @param createComputeValueCode - Creates a function, with the generated uniquely identified model component name
@@ -34,10 +34,14 @@ class ControllerCodeGenerator {
     }`;
   }
 
-  static getNumberControllerChangedPositionCode( directionControlType, controlledName ) {
-    const calculateValueCode = directionControlType === NumberPropertyController.DirectionControlType.ROTATION ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
-                               directionControlType === NumberPropertyController.DirectionControlType.VERTICAL ? '1 - phet.paperLand.utils.getProgramCenter( points ).y' :
-                               directionControlType === NumberPropertyController.DirectionControlType.HORIZONTAL ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
+  static getNumberControllerChangedPositionCode( directionControlType, relationshipControlType, controlledName ) {
+    if ( relationshipControlType !== NumberPropertyController.RelationshipControlType.LINEAR ) {
+      throw new Error( `Sorry, only linear relationships are supported at this time. Can't generate code for ${relationshipControlType} control of ${controlledName}.` );
+    }
+
+    const calculateValueCode = directionControlType === NumberPropertyController.DirectionControlType.ROTATION ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
+                               directionControlType === NumberPropertyController.DirectionControlType.VERTICAL ? '( 1 - phet.paperLand.utils.getProgramCenter( points ).y )' :
+                               directionControlType === NumberPropertyController.DirectionControlType.HORIZONTAL ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
                                `throw new Error( 'Unknown direction control type from controller code generator' - ${directionControlType} )`;
 
     // This gives us the normalized value of the control method, between zero and one. Multiplying by the length

@@ -233,7 +233,11 @@ export default class ProgramCodeGenerator {
     let data = {};
     if ( componentType === 'NumberPropertyController' ) {
       data = {
-        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getNumberControllerChangedPositionCode( controllerComponent.controlType, controlledName )
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getNumberControllerChangedPositionCode(
+          controllerComponent.controlType,
+          controllerComponent.relationshipControlType,
+          controlledName
+        )
       };
     }
     else if ( componentType === 'BooleanPropertyController' ) {
