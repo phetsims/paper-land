@@ -21,4 +21,10 @@ export default class Component {
   dispose() {
     this.deleteEmitter.dispose();
   }
+
+  static getInitialState() {
+    return {
+      name: ''
+    };
+  }
 }

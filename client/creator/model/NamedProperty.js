@@ -24,6 +24,13 @@ class NamedProperty extends Component {
   save() {
     throw new Error( 'Subclasses must override' );
   }
+
+  static getInitialState() {
+    return {
+      ...Component.getInitialState(),
+      propertyType: this.propertyType
+    };
+  }
 }
 
 export default NamedProperty;

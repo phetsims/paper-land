@@ -24,4 +24,15 @@ export default class NamedVector2Property extends NamedProperty {
       defaultY: this.defaultY
     };
   }
+
+  /**
+   * Return an initial serialized state for a NamedVector2Property, to validate objects as we work
+   * with data related to this type and to initialize forms.
+   */
+  static getInitialState() {
+    return {
+      defaultX: 0,
+      defaultY: 0
+    };
+  }
 }

@@ -1,18 +1,27 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
+import NamedBooleanProperty from '../model/NamedBooleanProperty.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 
 export default function CreateBooleanForm( props ) {
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getFormData,
+    NamedBooleanProperty
+  );
 
-  // Reference to the current value (not state because we don't need a re-render)
-  const defaultValue = useRef( true );
-
-  // Updates reference to selected value, validates form and sends data to the parent
-  const handleChange = event => {
-    defaultValue.current = event.target.value;
-    props.isFormValid( true );
-    props.getFormData( { defaultValue: defaultValue.current } );
-  };
+  //
+  // // Reference to the current value (not state because we don't need a re-render)
+  // const defaultValue = useRef( true );
+  //
+  // // Updates reference to selected value, validates form and sends data to the parent
+  // const handleChange = event => {
+  //   defaultValue.current = event.target.value;
+  //   props.isFormValid( true );
+  //   props.getFormData( { defaultValue: defaultValue.current } );
+  // };
 
   return (
     <>
