@@ -4,10 +4,6 @@ import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
 
 export default function CreatePositionForm( props ) {
-
-  // {ActiveEdit|null}
-  const activeEdit = props.activeEdit;
-
   const [ xValue, setXValue ] = useState( 0 );
   const [ yValue, setYValue ] = useState( 0 );
 
