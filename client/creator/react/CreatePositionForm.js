@@ -7,15 +7,10 @@ export default function CreatePositionForm( props ) {
 
   // {ActiveEdit|null}
   const activeEdit = props.activeEdit;
-  const editingComponent = activeEdit.component;
 
   const [ xValue, setXValue ] = useState( 0 );
   const [ yValue, setYValue ] = useState( 0 );
 
-  // const initialPosition = useRef( {
-  //   x: editingComponent?.defaultX || 0,
-  //   y: editingComponent?.defaultY || 0
-  // } );
   props.getFormData( { x: xValue, y: yValue } );
 
   // Populate the form with the values of the component that is being edited
