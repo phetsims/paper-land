@@ -1,52 +1,33 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
+import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
+import useEditableForm from './useEditableForm.js';
 
 export default function CreateEnumerationForm( props ) {
-  const [ values, setValues ] = useState( [] );
-
-  const valuesRef = useRef( [] );
-
-  // Content is valid if every input has content
-  const handleChange = nullableEvent => {
-
-    // update entries from the input element
-    if ( nullableEvent ) {
-      const results = nullableEvent.target.id.match( /(\d+)(?!.*\d)/g );
-      if ( results === null || results.length !== 1 ) {
-        throw new Error( 'Something went wrong with the regex/index?' );
-      }
-      const indexOfChange = parseInt( results[ 0 ], 10 );
-      valuesRef.current[ indexOfChange ] = nullableEvent.target.value;
-    }
-
-    // Update valid state of this form for the parent element
-    const allUnique = new Set( valuesRef.current ).size === valuesRef.current.length;
-    const valid = nullableEvent !== null && valuesRef.current.every( value => value.length > 0 ) && allUnique;
-    props.isFormValid( valid );
-
-    props.getFormData( { values: valuesRef.current } );
-  };
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getFormData,
+    NamedEnumerationProperty
+  );
 
   const handleClick = event => {
-    setValues( oldValues => [ ...oldValues, '' ] );
-    valuesRef.current.push( '' );
-
-    // Click means event target is a button - there is no event target with content
-    // to forward to the change validation listener, so pass null and indicate that
-    // form is no longer valid
-    handleChange( null );
+    handleChange( { values: [ ...formData.values, '' ] } );
   };
 
   const handleDelete = event => {
-    valuesRef.current.pop();
+    formData.values.pop();
+    handleChange( { values: formData.values } );
+  };
 
-    setValues( oldValues => {
-      const copy = oldValues.slice();
-      copy.pop();
-      return copy;
-    } );
+  // Handle edit to an individual text input for the enumeration - getting the value of that input and inserting it
+  // into the form data
+  const handleEdit = ( event, index ) => {
+    const newValues = formData.values.slice();
+    newValues[ index ] = event.target.value;
+    handleChange( { values: newValues } );
   };
 
   return (
@@ -55,16 +36,26 @@ export default function CreateEnumerationForm( props ) {
         <StyledButton name={'Create Value'} onClick={handleClick} otherClassNames={styles.horizontalPadding}></StyledButton>
         <StyledButton name={'Remove Value'} onClick={handleDelete} otherClassNames={styles.horizontalPadding}></StyledButton>
         {
-          values.map( ( value, index ) =>
-            <div key={`${value}-${index}`}>
-              <Form.Group className={styles.controlElement}>
-                <Form.Label>Value String</Form.Label>
-                <Form.Control id={`enum-input-${index}`} type='text' onChange={handleChange}/>
-              </Form.Group>
+          formData.values.map( ( value, index ) =>
+            <div key={`${index}-enum-input-parent`}>
+              <TextInput value={value} index={index} handleEdit={handleEdit}/>
             </div>
           )
         }
       </div>
+    </>
+  );
+}
+
+function TextInput( props ) {
+  return (
+    <>
+      <Form.Group className={styles.controlElement}>
+        <Form.Label>Value String</Form.Label>
+        <Form.Control type='text' onChange={event => {
+          props.handleEdit( event, props.index );
+        }} value={props.value}/>
+      </Form.Group>
     </>
   );
 }

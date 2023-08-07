@@ -10,11 +10,11 @@ import NamedProperty from '../model/NamedProperty.js';
 import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
 import CreateBooleanForm from './CreateBooleanForm.js';
+import CreateComponentButton from './CreateComponentButton.js';
 import CreateDerivedForm from './CreateDerivedForm.js';
 import CreateEnumerationForm from './CreateEnumerationForm.js';
 import CreateNumberForm from './CreateNumberForm.js';
 import CreatePositionForm from './CreatePositionForm.js';
-import StyledButton from './StyledButton.js';
 
 export default function CreateModelComponentForm( props ) {
 
@@ -198,7 +198,11 @@ export default function CreateModelComponentForm( props ) {
           <CreateDerivedForm allModelComponents={allModelComponents} activeEdit={activeEdit} isFormValid={getIsDerivedFormValid} getFormData={getDataForDerived}></CreateDerivedForm>
         </Tab>
       </Tabs>
-      <StyledButton disabled={!selectedTabFormValid} name={'Create Component'} onClick={createComponent}></StyledButton>
+      <CreateComponentButton
+        selectedTabFormValid={selectedTabFormValid}
+        createComponent={createComponent}
+        activeEdit={activeEdit}
+      ></CreateComponentButton>
     </>
   );
 }

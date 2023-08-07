@@ -12,36 +12,26 @@ export default function CreateBooleanForm( props ) {
     NamedBooleanProperty
   );
 
-  //
-  // // Reference to the current value (not state because we don't need a re-render)
-  // const defaultValue = useRef( true );
-  //
-  // // Updates reference to selected value, validates form and sends data to the parent
-  // const handleChange = event => {
-  //   defaultValue.current = event.target.value;
-  //   props.isFormValid( true );
-  //   props.getFormData( { defaultValue: defaultValue.current } );
-  // };
-
   return (
     <>
       <div className={styles.controlElement}>
         <Form.Label>Default Value</Form.Label>
         <Form.Check
           type={'radio'}
-          defaultChecked={true}
+          checked={formData.defaultValue}
           value={true}
           label={'True'}
           name={'boolean-radio-group'}
-          onChange={handleChange}
+          onChange={() => handleChange( { defaultValue: true } )}
           id={'boolean-radio-true'}
         />
         <Form.Check
           type={'radio'}
           label={'False'}
+          checked={!formData.defaultValue}
           value={false}
           name={'boolean-radio-group'}
-          onChange={handleChange}
+          onChange={() => handleChange( { defaultValue: false } )}
           id={'boolean-radio-false'}
         />
       </div>

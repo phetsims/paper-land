@@ -1,35 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
+import NamedNumberProperty from '../model/NamedNumberProperty.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 
 export default function CreateNumberForm( props ) {
+  //
+  // // {ActiveEdit|null}
+  // const activeEdit = props.activeEdit;
+  //
+  // const editingComponent = activeEdit.component;
+  //
+  // // value as state - default values come from the editing component
+  // const [ value, setValue ] = useState( editingComponent?.defaultValue || '' );
+  // const [ min, setMin ] = useState( editingComponent?.min || '' );
+  // const [ max, setMax ] = useState( editingComponent?.max || '' );
+  //
+  // // Validate and get data whenever state changes
+  // useEffect( () => {
+  //   handleChange();
+  // }, [ value, min, max ] );
+  //
+  // const handleChange = () => {
+  //   const allDefined = [ value, min, max ].every( val => val !== '' );
+  //   const numbers = [ value, min, max ].map( val => parseInt( val, 10 ) );
+  //
+  //   const defaultNumber = numbers[ 0 ];
+  //   const minNumber = numbers[ 1 ];
+  //   const maxNumber = numbers[ 2 ];
+  //   const inRange = minNumber < defaultNumber && defaultNumber < maxNumber;
+  //   props.isFormValid( allDefined && inRange );
+  //   props.getFormData( { min: min, max: max, default: defaultNumber } );
+  // };
 
-  // {ActiveEdit|null}
-  const activeEdit = props.activeEdit;
-
-  const editingComponent = activeEdit.component;
-
-  // value as state - default values come from the editing component
-  const [ value, setValue ] = useState( editingComponent?.defaultValue || '' );
-  const [ min, setMin ] = useState( editingComponent?.min || '' );
-  const [ max, setMax ] = useState( editingComponent?.max || '' );
-
-  // Validate and get data whenever state changes
-  useEffect( () => {
-    handleChange();
-  }, [ value, min, max ] );
-
-  const handleChange = () => {
-    const allDefined = [ value, min, max ].every( val => val !== '' );
-    const numbers = [ value, min, max ].map( val => parseInt( val, 10 ) );
-
-    const defaultNumber = numbers[ 0 ];
-    const minNumber = numbers[ 1 ];
-    const maxNumber = numbers[ 2 ];
-    const inRange = minNumber < defaultNumber && defaultNumber < maxNumber;
-    props.isFormValid( allDefined && inRange );
-    props.getFormData( { min: min, max: max, default: defaultNumber } );
-  };
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getFormData,
+    NamedNumberProperty
+  );
 
   return (
     <div>
@@ -37,9 +46,11 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Min Value</Form.Label>
         <Form.Control
           type='number'
-          value={min}
+          value={formData.min}
           onChange={event => {
-            setMin( event.target.value );
+            handleChange( {
+              min: event.target.value,
+            } );
           }}
         />
       </Form.Group>
@@ -47,9 +58,11 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Max Value</Form.Label>
         <Form.Control
           type='number'
-          value={max}
+          value={formData.max}
           onChange={event => {
-            setMax( event.target.value );
+            handleChange( {
+              max: event.target.value,
+            } );
           }}
         />
       </Form.Group>
@@ -57,9 +70,11 @@ export default function CreateNumberForm( props ) {
         <Form.Label>Default Value</Form.Label>
         <Form.Control
           type='number'
-          value={value}
+          value={formData.defaultValue}
           onChange={event => {
-            setValue( event.target.value );
+            handleChange( {
+              default: event.target.value
+            } );
           }}
         />
       </Form.Group></div>

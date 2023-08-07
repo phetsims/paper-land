@@ -26,4 +26,12 @@ export default class NamedNumberProperty extends NamedProperty {
       defaultValue: this.defaultValue
     };
   }
+
+  static getInitialState() {
+    return {
+      min: 0,
+      max: 10,
+      defaultValue: 5
+    };
+  }
 }

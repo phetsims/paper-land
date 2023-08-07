@@ -6,7 +6,7 @@ import EnumerationPropertyController from '../../model/controllers/EnumerationPr
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
 import Vector2PropertyController from '../../model/controllers/Vector2PropertyController.js';
 import Utils from '../../Utils.js';
-import StyledButton from '../StyledButton.js';
+import CreateComponentButton from '../CreateComponentButton.js';
 import CreateBooleanControllerForm from './CreateBooleanControllerForm.js';
 import CreateEnumerationControllerForm from './CreateEnumerationControllerForm.js';
 import CreateNumberControllerForm from './CreateNumberControllerForm.js';
@@ -154,7 +154,11 @@ export default function CreateModelControllerForm( props ) {
          selectedComponentType === 'BooleanProperty' ? <CreateBooleanControllerForm getFormData={getDataForBoolean} isFormValid={getIsBooleanFormValid}></CreateBooleanControllerForm> :
          <p className={styles.controlElement}>Create a Model Component to control.</p>
         }
-        <StyledButton disabled={!componentFormValid} name={'Create Component'} onClick={createComponent}></StyledButton>
+        <CreateComponentButton
+          createComponent={createComponent}
+          componentFormValid={componentFormValid}
+          activeEdit={props.activeEdit}
+        ></CreateComponentButton>
       </div>
     </>
   );

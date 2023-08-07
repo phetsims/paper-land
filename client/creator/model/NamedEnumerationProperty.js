@@ -24,4 +24,10 @@ export default class NamedEnumerationProperty extends NamedProperty {
       values: this.values
     };
   }
+
+  static getInitialState() {
+    return {
+      values: []
+    };
+  }
 }

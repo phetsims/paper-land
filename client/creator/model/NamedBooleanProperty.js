@@ -21,4 +21,10 @@ export default class NamedBooleanProperty extends NamedProperty {
       propertyType: this.propertyType
     };
   }
+
+  static getInitialState() {
+    return {
+      defaultValue: true
+    };
+  }
 }

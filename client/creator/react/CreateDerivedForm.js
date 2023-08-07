@@ -3,7 +3,7 @@
  * and create a derivation function that defines the Propery's value.
  */
 
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -11,49 +11,45 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
 import MonacoEditor from 'react-monaco-editor';
 import { getComponentDocumentation } from '../../utils.js';
+import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 
 export default function CreateDerivedForm( props ) {
   const allModelComponents = props.allModelComponents;
 
-  // Components selected for the dependencies
-  const [ selectedComponents, setSelectedComponents ] = useState( [] );
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getFormData,
+    NamedDerivedProperty
+  );
 
-  // Current string value of the monaco editor
-  const codeString = useRef( '' );
+  /**
+   * Finds a component by name from all model components.
+   */
+  const findDependency = name => {
+    const component = allModelComponents.find( component => component.nameProperty.value === name );
+    if ( !component ) {
+      throw new Error( 'Could not find component with name ' + name );
+    }
+    return component;
+  };
 
-  const handleCheckboxChange = ( event, namedProperty ) => {
+  // Update list of selected dependencies
+  const handleCheckboxChange = ( event, componentName ) => {
     if ( event.target.checked ) {
-      setSelectedComponents( oldValues => [ ...oldValues, namedProperty ] );
+      handleChange( { dependencyNames: [ ...formData.dependencyNames, componentName ] } );
     }
     else {
-
-      // Remove the unchecked component from the list
-      const copy = selectedComponents.slice();
-      copy.splice( selectedComponents.indexOf( namedProperty ), 1 );
-      setSelectedComponents( copy );
+      handleChange( { dependencyNames: formData.dependencyNames.filter( name => name !== componentName ) } );
     }
   };
 
-  // Handles changes to the Monaco editor, saving the code value and passing to parent whenever there is an edit.
-  const handleCodeChange = ( newValue, event ) => {
-    codeString.current = newValue;
+  // Handle a change to the code editor, saving state for the form
+  const handleCodeChange = newValue => {
+    handleChange( { derivation: newValue } );
   };
-
-  // Validate and send data to parent forms whenever there is any sort of change
-  const handleAnyChange = () => {
-    const valid = selectedComponents.length > 0 && codeString.current.length > 0;
-    props.isFormValid( valid );
-
-    props.getFormData( {
-      dependencies: selectedComponents,
-      derivation: codeString.current
-    } );
-  };
-
-  useEffect( () => {
-    console.log( 'update' );
-  }, props.allModelComponents );
 
   return (
     <>
@@ -79,12 +75,12 @@ export default function CreateDerivedForm( props ) {
                           <Col key={`inner-row-${innerIndex}`}>
                             {innerComponent ?
                              <Form.Check
+                               checked={formData.dependencyNames.includes( innerComponent.nameProperty.value )}
                                type={'checkbox'}
                                id={`dependency-checkbox-${innerIndex}`}
                                label={innerComponent.nameProperty.value}
                                onChange={event => {
-                                 handleCheckboxChange( event, innerComponent );
-                                 handleAnyChange();
+                                 handleCheckboxChange( event, innerComponent.nameProperty.value );
                                }}
                              /> : ''
                             }
@@ -107,12 +103,12 @@ export default function CreateDerivedForm( props ) {
         <p>Available variables:</p>
         <ListGroup>
           {
-            selectedComponents.map( ( selectedComponent, index ) => {
+            formData.dependencyNames.map( ( dependencyName, index ) => {
               return (
                 <ListGroup.Item
                   key={`component-documentation-${index}`}
                   className={styles.listGroupItem}
-                >{getComponentDocumentation( selectedComponent )}</ListGroup.Item>
+                >{getComponentDocumentation( findDependency( dependencyName ) )}</ListGroup.Item>
               );
             } )
           }
@@ -121,9 +117,9 @@ export default function CreateDerivedForm( props ) {
           <MonacoEditor
             language='javascript'
             theme='vs-dark'
+            value={formData.derivation}
             onChange={( newValue, event ) => {
               handleCodeChange( newValue, event );
-              handleAnyChange();
             }}
             options={{
               tabSize: 2,

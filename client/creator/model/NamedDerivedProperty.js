@@ -27,4 +27,11 @@ export default class NamedDerivedProperty extends NamedProperty {
       derivation: this.derivation
     };
   }
+
+  static getInitialState() {
+    return {
+      dependencyNames: [],
+      derivation: ''
+    };
+  }
 }

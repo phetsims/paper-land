@@ -7,10 +7,10 @@ import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
+import CreateComponentButton from './CreateComponentButton.js';
 import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
-import StyledButton from './StyledButton.js';
 
 export default function CreateViewComponentForm( props ) {
 
@@ -151,6 +151,11 @@ export default function CreateViewComponentForm( props ) {
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.
         </Tab>
       </Tabs>
-      <StyledButton disabled={!selectedTabFormValid} name={'Create Component'} onClick={createComponent}></StyledButton></>
+      <CreateComponentButton
+        selectedTabFormValid={selectedTabFormValid}
+        createComponent={createComponent}
+        activeEdit={props.activeEdit}
+      ></CreateComponentButton>
+    </>
   );
 }
