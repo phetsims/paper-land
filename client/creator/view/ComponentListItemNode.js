@@ -39,6 +39,12 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       spacing: 5
     } );
 
+    // updates when the name changes
+    component.nameProperty.link( name => {
+      nameText.string = name;
+      this.componentName = name;
+    } );
+
     const layout = () => {
 
       // May not be finite while images are loading

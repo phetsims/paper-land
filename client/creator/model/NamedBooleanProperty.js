@@ -22,7 +22,7 @@ export default class NamedBooleanProperty extends NamedProperty {
     };
   }
 
-  static getInitialState() {
+  static getStateSchema() {
     return {
       defaultValue: true
     };

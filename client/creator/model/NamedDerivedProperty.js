@@ -28,7 +28,7 @@ export default class NamedDerivedProperty extends NamedProperty {
     };
   }
 
-  static getInitialState() {
+  static getStateSchema() {
     return {
       dependencyNames: [],
       derivation: ''

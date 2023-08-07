@@ -49,7 +49,7 @@ export default function CreateNumberForm( props ) {
           value={formData.min}
           onChange={event => {
             handleChange( {
-              min: event.target.value,
+              min: event.target.value
             } );
           }}
         />
@@ -61,7 +61,7 @@ export default function CreateNumberForm( props ) {
           value={formData.max}
           onChange={event => {
             handleChange( {
-              max: event.target.value,
+              max: event.target.value
             } );
           }}
         />
@@ -73,7 +73,7 @@ export default function CreateNumberForm( props ) {
           value={formData.defaultValue}
           onChange={event => {
             handleChange( {
-              default: event.target.value
+              defaultValue: event.target.value
             } );
           }}
         />

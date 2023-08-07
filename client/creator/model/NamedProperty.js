@@ -25,7 +25,14 @@ class NamedProperty extends Component {
     throw new Error( 'Subclasses must override' );
   }
 
-  static getInitialState() {
+  /**
+   * Load state from JSON.
+   */
+  load( stateObject ) {
+    this.propertyType = stateObject.propertyType;
+  }
+
+  static getStateSchema() {
     return {
       ...Component.getInitialState(),
       propertyType: this.propertyType

@@ -69,7 +69,10 @@ export default function CreateModelComponentForm( props ) {
   // to be called every change so that we can use this data to create
   const getDataForNumber = data => { numberDataRef.current = data; };
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
-  const getDataForBoolean = data => { booleanDataRef.current = data; };
+  const getDataForBoolean = data => {
+    booleanDataRef.current = data;
+    console.log( booleanDataRef.current )
+  };
   const getDataForPosition = data => { positionDataRef.current = data; };
   const getDataForDerived = data => { derivedDataRef.current = data; };
 
@@ -102,10 +105,33 @@ export default function CreateModelComponentForm( props ) {
 
     if ( activeEdit && activeEdit.component ) {
 
-
       // I considered do a delete/recreate here instead but I think that will be more complicated because
       // it requires that we totally reconstruct the relationships for the new component.
-      console.log( 'To be implemented...UPDATE the active component with new data' );
+      // TODO: This should have a better deserialize method for each component
+      const component = activeEdit.component;
+      component.nameProperty.value = componentName;
+      if ( selectedTab === 'boolean' ) {
+        component.defaultValue = booleanDataRef.current.defaultValue;
+      }
+      else if ( selectedTab === 'number' ) {
+        const numberData = numberDataRef.current;
+        component.min = numberData.min;
+        component.max = numberData.max;
+        component.defaultValue = numberData.defaultValue;
+      }
+      else if ( selectedTab === 'position' ) {
+        const positionData = positionDataRef.current;
+        component.defaultX = positionData.defaultX;
+        component.defaultY = positionData.defaultY;
+      }
+      else if ( selectedTab === 'eumeration' ) {
+        component.values = enumerationDataRef.current.values;
+      }
+      else if ( selectedTab === 'derived' ) {
+        const derivedData = derivedDataRef.current;
+        component.dependencies = derivedData.dependencies;
+        component.derivation = derivedData.derivation;
+      }
     }
     else {
       if ( selectedTab === 'boolean' ) {
@@ -165,7 +191,14 @@ export default function CreateModelComponentForm( props ) {
     }
   };
 
-  const activeTabKey = ( activeEdit && activeEdit.component ) ? getTabForActiveEdit() : selectedTab;
+  // Update the active tab based on the active edit from the model
+  useEffect( () => {
+    if ( activeEdit && activeEdit.component ) {
+      setSelectedTab( getTabForActiveEdit() );
+    }
+  }, [ activeEdit ] );
+
+  // const activeTabKey = ( activeEdit && activeEdit.component ) ? getTabForActiveEdit() : selectedTab;
 
   // If there is an active edit, you cannot change tabs
   const tabDisabled = !!( activeEdit && activeEdit.component );
@@ -173,7 +206,7 @@ export default function CreateModelComponentForm( props ) {
   return (
     <>
       <Tabs
-        activeKey={activeTabKey}
+        activeKey={selectedTab}
         className={styles.tabs}
         variant={'pill'}
         onSelect={( eventKey, event ) => {

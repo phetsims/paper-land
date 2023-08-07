@@ -24,7 +24,7 @@ export default class ViewComponent extends Component {
     return {
       name: this.nameProperty.value,
       modelComponentNames: this.modelComponentNames,
-      controlFunctionString: this.controlFunctionString,
+      controlFunctionString: this.controlFunctionString
     };
   }
 

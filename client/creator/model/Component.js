@@ -22,7 +22,7 @@ export default class Component {
     this.deleteEmitter.dispose();
   }
 
-  static getInitialState() {
+  static getStateSchema() {
     return {
       name: ''
     };

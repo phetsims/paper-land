@@ -25,7 +25,7 @@ export default class NamedEnumerationProperty extends NamedProperty {
     };
   }
 
-  static getInitialState() {
+  static getStateSchema() {
     return {
       values: []
     };

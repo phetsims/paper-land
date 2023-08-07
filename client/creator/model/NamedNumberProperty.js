@@ -27,7 +27,7 @@ export default class NamedNumberProperty extends NamedProperty {
     };
   }
 
-  static getInitialState() {
+  static getStateSchema() {
     return {
       min: 0,
       max: 10,
