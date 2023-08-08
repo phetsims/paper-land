@@ -75,6 +75,11 @@ export default function CreateImageViewForm( props ) {
     </div>
   );
 
+  const getFormData = providedData => {
+    props.getGeneralFormData( providedData );
+    props.getImageFormData( providedData );
+  };
+
   return (
     <div>
       <ViewComponentControls
@@ -82,7 +87,7 @@ export default function CreateImageViewForm( props ) {
         typeSpecificControls={imageFileSelector}
         typeSpecificFunctions={imageFunctions}
         isFormValid={props.isFormValid}
-        getFormData={props.getGeneralFormData}
+        getFormData={getFormData}
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the image.'}

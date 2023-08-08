@@ -72,9 +72,9 @@ export default function CreateSoundViewForm( props ) {
 
   // Get form data from the child and forward it back to the parent form so we have data in one place to
   // create a component.
-  const getFormData = formData => {
-    props.getGeneralFormData( formData );
-    props.getSoundFormData( formData );
+  const getFormData = providedData => {
+    props.getGeneralFormData( providedData );
+    props.getSoundFormData( providedData );
   };
 
   // A list of functions that can be used in the code string by the user.
