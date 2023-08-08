@@ -5,12 +5,38 @@ import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
+import ViewComponent from '../model/views/ViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
 import CreateComponentButton from './CreateComponentButton.js';
 import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
+
+const getTabForActiveEdit = activeEdit => {
+  if ( activeEdit && activeEdit.component instanceof ViewComponent ) {
+    const component = activeEdit.component;
+
+    if ( component instanceof BackgroundViewComponent ) {
+      return 'background';
+    }
+    else if ( component instanceof DescriptionViewComponent ) {
+      return 'description';
+    }
+    else if ( component instanceof ImageViewComponent ) {
+      return 'images';
+    }
+    else if ( component instanceof SoundViewComponent ) {
+      return 'sounds';
+    }
+    else {
+      throw new Error( 'Unknown component view type for tabs' );
+    }
+  }
+  else {
+    return null;
+  }
+};
 
 export default function CreateViewComponentForm( props ) {
 
@@ -31,6 +57,9 @@ export default function CreateViewComponentForm( props ) {
 
   // {ProgramModel}
   const activeProgram = props.activeEdit.program;
+
+  // {ActiveEdit}
+  const activeEdit = props.activeEdit;
 
   // component state
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
@@ -76,6 +105,12 @@ export default function CreateViewComponentForm( props ) {
     }
   }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid ] );
 
+  // Set the selected tab when the active edit changes
+  useEffect( () => {
+    console.log( getTabForActiveEdit( activeEdit ) );
+    setSelectedTab( getTabForActiveEdit( activeEdit ) );
+  }, [ activeEdit ] );
+
   const createComponent = () => {
     const componentName = props.componentName;
     const modelComponents = generalDataRef.current.dependencies;
@@ -104,10 +139,13 @@ export default function CreateViewComponentForm( props ) {
     props.onComponentCreated();
   };
 
+  // If there is an active edit, you cannot change tabs
+  const tabDisabled = !!( activeEdit && activeEdit.component );
+
   return (
     <>
       <Tabs
-        defaultActiveKey={'shapes'}
+        activeKey={selectedTab}
         className={styles.tabs}
         variant={'pill'}
         onSelect={( eventKey, event ) => {
@@ -115,17 +153,17 @@ export default function CreateViewComponentForm( props ) {
         }}
         justify
       >
-        <Tab eventKey='shapes' title='Shapes' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='shapes' title='Shapes' tabClassName={styles.tab}>
           TODO: Select a model component, a shape, and describe how the model component will manipulate it (scale, position, fill, stroke, etc).
         </Tab>
-        <Tab eventKey='background' title='Background' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='background' title='Background' tabClassName={styles.tab}>
           <CreateBackgroundViewForm
             allModelComponents={props.allModelComponents}
             isFormValid={getIsBackgroundFormValid}
             getGeneralFormData={getDataForGeneral}
           ></CreateBackgroundViewForm>
         </Tab>
-        <Tab eventKey='images' title='Images' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='images' title='Images' tabClassName={styles.tab}>
           <CreateImageViewForm
             allModelComponents={props.allModelComponents}
             isFormValid={getIsImagesFormValid}
@@ -133,7 +171,7 @@ export default function CreateViewComponentForm( props ) {
             getGeneralFormData={getDataForGeneral}
           ></CreateImageViewForm>
         </Tab>
-        <Tab eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
           <CreateSoundViewForm
             allModelComponents={props.allModelComponents}
             isFormValid={getIsSoundsFormValid}
@@ -141,7 +179,7 @@ export default function CreateViewComponentForm( props ) {
             getGeneralFormData={getDataForGeneral}
           ></CreateSoundViewForm>
         </Tab>
-        <Tab eventKey='description' title='Description' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='description' title='Description' tabClassName={styles.tab}>
           <CreateDescriptionViewForm
             allModelComponents={props.allModelComponents}
             isFormValid={getIsDescriptionFormValid}
@@ -149,7 +187,7 @@ export default function CreateViewComponentForm( props ) {
           >
           </CreateDescriptionViewForm>
         </Tab>
-        <Tab eventKey='vibration' title='Vibration' tabClassName={styles.tab}>
+        <Tab disabled={tabDisabled} eventKey='vibration' title='Vibration' tabClassName={styles.tab}>
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.
         </Tab>
       </Tabs>
