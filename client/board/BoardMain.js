@@ -19,6 +19,7 @@ export default function BoardMain( props ) {
   // a reference to the Display object, so it can be handed to various components
   const [ sceneryDisplay, setSceneryDisplay ] = useState( null );
 
+  // Get the scenery display once it is created so it can be passed to various other components
   const modifySceneryDisplay = display => {
     setSceneryDisplay( display );
   };
