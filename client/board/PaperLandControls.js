@@ -3,6 +3,7 @@
  */
 
 import React, { useState } from 'react';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styles from './BoardMain.css';
 
@@ -19,21 +20,23 @@ export default function PaperLandControls( props ) {
   return (
     <div className={`${styles.paperLandControlsContent} ${styles.boardPanel}`}>
       <>
-        <div>
-          <Form.Label>Position Interval</Form.Label>
-          <p className={styles.inlineValue}>{positionInterval}</p>
-        </div>
-        <Form.Range
-          min={MIN_POSITION_INTERVAL}
-          max={MAX_POSITION_INTERVAL}
-          step={POSITION_INTERVAL_STEP}
-          value={positionInterval}
-          onChange={event => {
-            const newValue = event.target.value;
-            setPositionInterval( newValue );
-            props.updatePositionInterval( newValue );
-          }}
-        />
+        <>
+          <div>
+            <Form.Label>Position Interval</Form.Label>
+            <p className={styles.inlineValue}>{positionInterval}</p>
+            <Form.Range
+              min={MIN_POSITION_INTERVAL}
+              max={MAX_POSITION_INTERVAL}
+              step={POSITION_INTERVAL_STEP}
+              value={positionInterval}
+              onChange={event => {
+                const newValue = event.target.value;
+                setPositionInterval( newValue );
+                props.updatePositionInterval( newValue );
+              }}
+            />
+          </div>
+        </>
       </>
       <>
         <Form.Check
@@ -46,6 +49,15 @@ export default function PaperLandControls( props ) {
             props.updateConsoleVisibility( newValue );
           }}
         />
+      </>
+      <>
+        <Button
+          onClick={() => {
+            if ( props.sceneryDisplay ) {
+              phet.scenery.FullScreen.enterFullScreen( props.sceneryDisplay );
+            }
+          }}
+        >Projector Mode</Button>
       </>
     </div>
   );

@@ -23,6 +23,9 @@ const SceneryDisplay = props => {
       container: sceneryDisplayDomElement
     } );
 
+    // Additional modifications as needed by subclasses
+    props.modifyDisplay( sceneryDisplay );
+
     // styling for the root DOM element
     sceneryDisplayDomElement.classList.add( styles.simDisplayPanel );
     sceneryDisplayDomElement.classList.add( styles.boardPanel );

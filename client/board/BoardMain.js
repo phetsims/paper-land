@@ -16,6 +16,13 @@ export default function BoardMain( props ) {
 
   const [ consoleVisible, setConsoleVisible ] = useState( true );
 
+  // a reference to the Display object, so it can be handed to various components
+  const [ sceneryDisplay, setSceneryDisplay ] = useState( null );
+
+  const modifySceneryDisplay = display => {
+    setSceneryDisplay( display );
+  };
+
   return (
     <div>
       <div className={styles.titleContainer}>
@@ -26,7 +33,7 @@ export default function BoardMain( props ) {
         <div className={styles.rowSpacer}>
         </div>
         <div className={styles.displayWithLog}>
-          <SceneryDisplay scene={scene}/>
+          <SceneryDisplay scene={scene} modifyDisplay={modifySceneryDisplay}/>
           <PaperLandConsole consoleVisible={consoleVisible}></PaperLandConsole>
         </div>
         <div className={styles.controls}>
@@ -35,6 +42,7 @@ export default function BoardMain( props ) {
               initialPositionInterval={boardConfigObject.positionInterval}
               updatePositionInterval={updatePositionInterval}
               updateConsoleVisibility={setConsoleVisible}
+              sceneryDisplay={sceneryDisplay}
             ></PaperLandControls>
           </div>
         </div>
