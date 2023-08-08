@@ -11,6 +11,7 @@
 ## Program Detection (OpenCV)
 - Additional dot colors (increase max program number per database)
 - Custom dot colors
+- Marker colors and shapes independent of dot colors
 - Improve base performance
 - Automatic calibration
 - Optional Alternatives for detection:
