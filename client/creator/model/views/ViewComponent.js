@@ -17,11 +17,31 @@ export default class ViewComponent extends Component {
     this.controlFunctionString = controlFunctionString;
 
     this.setModelComponents( modelComponents );
+
+    // A multilink that will update the list of dependency names whenever one of the depencies changes its name.
+    this._nameChangeMultilink = null;
   }
 
   setModelComponents( components ) {
-    this._modelComponents = components;
+    if ( this._nameChangeMultilink ) {
+      this._nameChangeMultilink.dispose();
+      this._nameChangeMultilink = null;
+    }
 
+    this._modelComponents = components;
+    this.updateDependencyNames();
+
+    // Createa multilink that updates dependency names whenever any dependency has a name change
+    this._nameChangeMultilink = phet.axon.Multilink.multilink(
+      components.map( component => component.nameProperty ),
+      () => this.updateDependencyNames()
+    );
+  }
+
+  /**
+   * Updates the list of dependency names when we have a name change.
+   */
+  updateDependencyNames() {
     this.modelComponentNames = this._modelComponents.map( component => component.nameProperty.value );
   }
 

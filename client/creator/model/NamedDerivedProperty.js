@@ -8,11 +8,37 @@ export default class NamedDerivedProperty extends NamedProperty {
   constructor( name, dependencies, derivation ) {
     super( name, 'DerivedProperty' );
 
+    this._dependencies = dependencies;
+
     // {string[]} - the list of names for the derivations
-    this.dependencyNames = dependencies.map( dependency => dependency.nameProperty.value );
+    this.dependencyNames = [];
 
     // {string} - the function for the DerivedProperty
     this.derivation = derivation;
+
+    // A Multilink that will update the collection of names whenever a dependency changes its name.
+    this._nameChangeMultilink = null;
+
+    this.setDependencies( dependencies );
+  }
+
+  setDependencies( dependencies ) {
+    if ( this._nameChangeMultilink ) {
+      this._nameChangeMultilink.dispose();
+      this._nameChangeMultilink = null;
+    }
+
+    this._dependencies = dependencies;
+    this.updateDependencyNames();
+
+    this._nameChangeMultilink = phet.axon.Multilink.multilink(
+      this._dependencies.map( dependency => dependency.nameProperty ),
+      () => { this.updateDependencyNames(); }
+    );
+  }
+
+  updateDependencyNames() {
+    this.dependencyNames = this._dependencies.map( dependency => dependency.nameProperty.value );
   }
 
   /**
