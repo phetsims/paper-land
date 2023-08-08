@@ -4,6 +4,11 @@ import styles from './../CreatorMain.css';
 
 export default function CreatorMonacoEditor( props ) {
 
+  // require props
+  if ( !props.formData ) {
+    throw new Error( 'The formData prop is required for form state.' );
+  }
+
   const handleChange = props.handleChange || ( () => {} );
 
   // Ref to the current value of code (shouldn't trigger re-render)
@@ -17,6 +22,7 @@ export default function CreatorMonacoEditor( props ) {
   return (
     <div className={`${styles.editor} ${styles.controlElement}`}>
       <MonacoEditor
+        value={props.formData.controlFunctionString}
         language='javascript'
         theme='vs-dark'
         onChange={( newValue, event ) => {

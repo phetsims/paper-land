@@ -35,4 +35,11 @@ export default class SoundViewComponent extends ViewComponent {
       stateObject.soundFileName
     );
   }
+
+  static getStateSchema() {
+    return {
+      ...ViewComponent.getStateSchema(),
+      soundFileName: ''
+    };
+  }
 }

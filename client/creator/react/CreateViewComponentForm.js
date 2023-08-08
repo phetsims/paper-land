@@ -107,7 +107,6 @@ export default function CreateViewComponentForm( props ) {
 
   // Set the selected tab when the active edit changes
   useEffect( () => {
-    console.log( getTabForActiveEdit( activeEdit ) );
     setSelectedTab( getTabForActiveEdit( activeEdit ) );
   }, [ activeEdit ] );
 
@@ -161,6 +160,7 @@ export default function CreateViewComponentForm( props ) {
             allModelComponents={props.allModelComponents}
             isFormValid={getIsBackgroundFormValid}
             getGeneralFormData={getDataForGeneral}
+            activeEdit={activeEdit}
           ></CreateBackgroundViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='images' title='Images' tabClassName={styles.tab}>
@@ -169,6 +169,7 @@ export default function CreateViewComponentForm( props ) {
             isFormValid={getIsImagesFormValid}
             getImageFormData={getDataForImages}
             getGeneralFormData={getDataForGeneral}
+            activeEdit={activeEdit}
           ></CreateImageViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
@@ -177,6 +178,7 @@ export default function CreateViewComponentForm( props ) {
             isFormValid={getIsSoundsFormValid}
             getSoundFormData={getDataForSounds}
             getGeneralFormData={getDataForGeneral}
+            activeEdit={activeEdit}
           ></CreateSoundViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='description' title='Description' tabClassName={styles.tab}>
@@ -184,6 +186,7 @@ export default function CreateViewComponentForm( props ) {
             allModelComponents={props.allModelComponents}
             isFormValid={getIsDescriptionFormValid}
             getGeneralFormData={getDataForGeneral}
+            activeEdit={activeEdit}
           >
           </CreateDescriptionViewForm>
         </Tab>

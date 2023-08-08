@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 
 export default function ModelComponentSelector( props ) {
   const allModelComponents = props.allModelComponents;
+  const selectedModelComponents = props.selectedModelComponents;
 
   // A function to be called whenever any checkbox changes.
   const handleChange = props.handleChange || ( () => {} );
@@ -54,6 +55,7 @@ export default function ModelComponentSelector( props ) {
                       <Col key={`inner-row-${innerIndex}`}>
                         {innerComponent ?
                          <Form.Check
+                           checked={selectedModelComponents.includes( innerComponent )}
                            type={'checkbox'}
                            id={`dependency-checkbox-${innerIndex}`}
                            label={innerComponent.nameProperty.value}

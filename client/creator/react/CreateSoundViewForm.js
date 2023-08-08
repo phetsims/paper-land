@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import xhr from 'xhr';
+import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
 export default function CreateSoundViewForm( props ) {
   const [ soundFiles, setSoundFiles ] = useState( [] );
+
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getGeneralFormData,
+    SoundViewComponent
+  );
 
   // Load sound files on mount
   useEffect( () => {
@@ -32,7 +41,9 @@ export default function CreateSoundViewForm( props ) {
     <div>
       <Form.Label>Select sound file:</Form.Label>
       <Form.Select
+        value={formData.soundFileName}
         onChange={event => {
+          handleChange( { soundFileName: event.target.value } );
           props.getSoundFormData( { soundFileName: event.target.value } );
         }}
       >
@@ -66,6 +77,8 @@ export default function CreateSoundViewForm( props ) {
         allModelComponents={props.allModelComponents}
         typeSpecificControls={soundFileSelector}
         typeSpecificFunctions={soundFunctions}
+        formData={formData}
+        handleChange={handleChange}
         isFormValid={props.isFormValid}
         getFormData={props.getGeneralFormData}
         functionPrompt={'Use the available functions and variables to control the sound.'}

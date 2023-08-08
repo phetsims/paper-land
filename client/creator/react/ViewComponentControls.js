@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { getComponentDocumentation } from '../../utils.js';
+import ViewComponent from '../model/views/ViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 import ModelComponentSelector from './ModelComponentSelector.js';
@@ -14,22 +15,15 @@ export default function ViewComponentControls( props ) {
   if ( !props.componentsPrompt ) {
     throw new Error( 'ViewComponentControls requires a componentsPrompt prop.' );
   }
+  if ( !props.formData ) {
+    throw new Error( 'ViewComponentControls requires a formData prop to control state.' );
+  }
+  if ( !props.handleChange ) {
+    throw new Error( 'ViewComponentControls requires a handleChange prop to control state.' );
+  }
 
-  // The selected model components
-  const [ selectedComponents, setSelectedComponents ] = useState( [] );
-
-  // Reference to the current code in the editor
-  const currentCode = useRef( '' );
-
-  const handleAnyChange = () => {
-    const valid = selectedComponents.length > 0 && currentCode.current.length > 0;
-    props.isFormValid( valid );
-
-    props.getFormData( {
-      dependencies: selectedComponents,
-      code: currentCode.current
-    } );
-  };
+  // Get the references to the actual model components from selected form data (name strings)
+  const selectedModelComponents = ViewComponent.findDependenciesByName( props.allModelComponents, props.formData.modelComponentNames );
 
   return (
     <>
@@ -40,9 +34,11 @@ export default function ViewComponentControls( props ) {
         <p className={styles.controlElement}>{props.componentsPrompt}</p>
         <ModelComponentSelector
           allModelComponents={props.allModelComponents}
+          selectedModelComponents={selectedModelComponents}
           handleChange={selectedComponents => {
-            setSelectedComponents( selectedComponents );
-            handleAnyChange();
+            props.handleChange( { modelComponentNames: selectedComponents.map( component => component.nameProperty.value ) } );
+
+            // handleAnyChange();
           }}
         ></ModelComponentSelector>
       </div>
@@ -53,7 +49,7 @@ export default function ViewComponentControls( props ) {
         <p>Available variables:</p>
         <ListGroup>
           {
-            selectedComponents.map( ( selectedComponent, index ) => {
+            selectedModelComponents.map( ( selectedComponent, index ) => {
               return (
                 <ListGroup.Item
                   key={`component-documentation-${index}`}
@@ -65,9 +61,13 @@ export default function ViewComponentControls( props ) {
         </ListGroup>
         {props.typeSpecificFunctions ? props.typeSpecificFunctions : ''}
         <CreatorMonacoEditor
+          formData={props.formData}
           handleChange={newValue => {
-            currentCode.current = newValue;
-            handleAnyChange();
+
+            props.handleChange( { controlFunctionString: newValue } );
+
+            // currentCode.current = newValue;
+            // handleAnyChange();
           }}></CreatorMonacoEditor>
       </div>
     </>

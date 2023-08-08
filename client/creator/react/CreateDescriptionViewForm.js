@@ -1,9 +1,19 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
+import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
 export default function CreateDescriptionViewForm( props ) {
+
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getGeneralFormData,
+    DescriptionViewComponent
+  );
+
 
   const descriptionFunctions = (
     <div className={styles.controlElement}>
@@ -22,6 +32,8 @@ export default function CreateDescriptionViewForm( props ) {
         typeSpecificFunctions={descriptionFunctions}
         isFormValid={props.isFormValid}
         getFormData={props.getGeneralFormData}
+        formData={formData}
+        handleChange={handleChange}
         functionPrompt={'Write a function using the variables to return a string.'}
         componentsPrompt={'Function is called and the string is spoken when selected components change.'}
       ></ViewComponentControls>

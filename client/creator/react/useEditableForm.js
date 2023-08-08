@@ -23,6 +23,7 @@ const verifyRequiredKeys = ( templateObject, testingObject ) => {
 
 const validateData = ( templateObject, testObject ) => {
   if ( !verifyRequiredKeys( templateObject, testObject ) ) {
+    debugger;
     throw new Error( 'New data does not match the schema of the component.' );
   }
 };
@@ -30,11 +31,10 @@ const validateData = ( templateObject, testObject ) => {
 const useEditableForm = ( activeEdit, isFormValid, getFormData, ComponentClass ) => {
 
   if ( !ComponentClass.getStateSchema ) {
-    throw new Error( 'ComponentClass must have a static getInitialState function to define the component schema' );
+    throw new Error( 'ComponentClass must have a static getStateSchema function to define the component schema' );
   }
   const componentStateSchema = ComponentClass.getStateSchema();
 
-  // This breaks because activeEdit.component is not the same schema as componentStateSchema
   const [ formData, setFormData ] = useState( componentStateSchema );
 
   // // Update form to saved state whenever the active edit changes.

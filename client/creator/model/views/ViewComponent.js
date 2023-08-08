@@ -60,6 +60,14 @@ export default class ViewComponent extends Component {
     throw new Error( 'Subclasses must override' );
   }
 
+  static getStateSchema() {
+    return {
+      name: '',
+      modelComponentNames: [],
+      controlFunctionString: ''
+    };
+  }
+
   /**
    * Find all of the components (dependencies) that have a name in the list of name strings.
    *

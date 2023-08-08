@@ -2,10 +2,20 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import xhr from 'xhr';
+import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import styles from './../CreatorMain.css';
+import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
 export default function CreateImageViewForm( props ) {
+
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    props.getGeneralFormData,
+    ImageViewComponent
+  );
+
   const [ imageFiles, setImageFiles ] = useState( [] );
 
   // Load image files on mount
@@ -68,6 +78,8 @@ export default function CreateImageViewForm( props ) {
         typeSpecificFunctions={imageFunctions}
         isFormValid={props.isFormValid}
         getFormData={props.getGeneralFormData}
+        formData={formData}
+        handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the image.'}
         componentsPrompt={'Function is called whenever a selected component changes.'}
       ></ViewComponentControls>
