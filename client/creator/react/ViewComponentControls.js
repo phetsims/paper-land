@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { getComponentDocumentation } from '../../utils.js';
 import ViewComponent from '../model/views/ViewComponent.js';
@@ -25,6 +25,12 @@ export default function ViewComponentControls( props ) {
   // Get the references to the actual model components from selected form data (name strings)
   const selectedModelComponents = ViewComponent.findDependenciesByName( props.allModelComponents, props.formData.modelComponentNames );
 
+  // Return the data to the parent components.
+  useEffect( () => {
+    props.getFormData( props.formData );
+  }, [ props.formData ] );
+  props.getFormData( props.formData );
+
   return (
     <>
       {props.typeSpecificControls ? props.typeSpecificControls : ''}
@@ -37,8 +43,6 @@ export default function ViewComponentControls( props ) {
           selectedModelComponents={selectedModelComponents}
           handleChange={selectedComponents => {
             props.handleChange( { modelComponentNames: selectedComponents.map( component => component.nameProperty.value ) } );
-
-            // handleAnyChange();
           }}
         ></ModelComponentSelector>
       </div>
@@ -63,11 +67,7 @@ export default function ViewComponentControls( props ) {
         <CreatorMonacoEditor
           formData={props.formData}
           handleChange={newValue => {
-
             props.handleChange( { controlFunctionString: newValue } );
-
-            // currentCode.current = newValue;
-            // handleAnyChange();
           }}></CreatorMonacoEditor>
       </div>
     </>

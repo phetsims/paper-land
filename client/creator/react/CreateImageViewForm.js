@@ -12,7 +12,11 @@ export default function CreateImageViewForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    componentData => {
+      return componentData.modelComponentNames.length > 0 &&
+             componentData.imageFileName.length > 0 &&
+             componentData.controlFunctionString.length > 0;
+    },
     props.getGeneralFormData,
     ImageViewComponent
   );

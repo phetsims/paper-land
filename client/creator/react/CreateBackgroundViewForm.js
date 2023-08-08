@@ -7,7 +7,10 @@ export default function CreateBackgroundViewForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    componentData => {
+      return componentData.modelComponentNames.length > 0 &&
+             componentData.controlFunctionString.length > 0;
+    },
     props.getGeneralFormData,
     BackgroundViewComponent
   );

@@ -70,6 +70,13 @@ export default function CreateSoundViewForm( props ) {
     </div>
   );
 
+  // Get form data from the child and forward it back to the parent form so we have data in one place to
+  // create a component.
+  const getFormData = formData => {
+    props.getGeneralFormData( formData );
+    props.getSoundFormData( formData );
+  };
+
   // A list of functions that can be used in the code string by the user.
   const soundFunctions = (
     <div className={styles.controlElement}>
@@ -89,7 +96,7 @@ export default function CreateSoundViewForm( props ) {
         typeSpecificFunctions={soundFunctions}
         formData={formData}
         handleChange={handleChange}
-        getFormData={props.getGeneralFormData}
+        getFormData={getFormData}
         functionPrompt={'Use the available functions and variables to control the sound.'}
         componentsPrompt={'Function is called and sound is played whenever a component changes.'}
       ></ViewComponentControls>
