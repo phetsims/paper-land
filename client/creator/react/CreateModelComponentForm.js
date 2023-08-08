@@ -232,9 +232,9 @@ export default function CreateModelComponentForm( props ) {
         </Tab>
       </Tabs>
       <CreateComponentButton
+        activeEditProperty={model.activeEditProperty}
         selectedTabFormValid={selectedTabFormValid}
         createComponent={createComponent}
-        activeEdit={activeEdit}
       ></CreateComponentButton>
     </>
   );

@@ -197,7 +197,7 @@ export default function CreateViewComponentForm( props ) {
       <CreateComponentButton
         selectedTabFormValid={selectedTabFormValid}
         createComponent={createComponent}
-        activeEdit={props.activeEdit}
+        activeEditProperty={model.activeEditProperty}
       ></CreateComponentButton>
     </>
   );

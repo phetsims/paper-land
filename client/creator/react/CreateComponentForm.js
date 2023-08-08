@@ -98,6 +98,7 @@ export default function CreateComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='controller' title='Controller' tabClassName={styles.tab}>
           <CreateModelControllerForm
+            model={model}
             componentName={componentName}
             activeEdit={props.activeEdit}
             allModelComponents={props.allModelComponents}

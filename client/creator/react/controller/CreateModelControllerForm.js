@@ -25,6 +25,9 @@ export default function CreateModelControllerForm( props ) {
   if ( !props.onComponentCreated ) {
     throw new Error( 'CreateModelControllerForm requires an onComponentCreated callback' );
   }
+  if ( !props.model ) {
+    throw new Error( 'CreateModelControllerForm requires a model' );
+  }
 
   /**
    * Get a list of all model components, except for DerivedProperty components. Those cannot be controlled directly.
@@ -157,7 +160,7 @@ export default function CreateModelControllerForm( props ) {
         <CreateComponentButton
           createComponent={createComponent}
           componentFormValid={componentFormValid}
-          activeEdit={props.activeEdit}
+          activeEditProperty={props.model.activeEditProperty}
         ></CreateComponentButton>
       </div>
     </>

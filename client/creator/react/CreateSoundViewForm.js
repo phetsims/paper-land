@@ -8,8 +8,11 @@ import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
 export default function CreateSoundViewForm( props ) {
+
+  // State for the available sounds files from the server.
   const [ soundFiles, setSoundFiles ] = useState( [] );
 
+  // State for the form data that will create and edit components.
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
@@ -17,7 +20,7 @@ export default function CreateSoundViewForm( props ) {
     SoundViewComponent
   );
 
-  // Load sound files on mount
+  // Load available sound files on mount (load)
   useEffect( () => {
     const soundFilesListUrl = new URL( 'api/creator/soundFiles', window.location.origin ).toString();
     xhr.get( soundFilesListUrl, { json: true }, ( error, response ) => {
@@ -37,6 +40,7 @@ export default function CreateSoundViewForm( props ) {
     } );
   }, [] );
 
+  // A select UI component to use a particular sound.
   const soundFileSelector = (
     <div>
       <Form.Label>Select sound file:</Form.Label>
@@ -61,6 +65,7 @@ export default function CreateSoundViewForm( props ) {
     </div>
   );
 
+  // A list of functions that can be used in the code string by the user.
   const soundFunctions = (
     <div className={styles.controlElement}>
       <p>Available functions:</p>
