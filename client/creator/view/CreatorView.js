@@ -7,7 +7,6 @@
 import xhr from 'xhr';
 import ConnectionsCanvasNode from './ConnectionsCanvasNode.js';
 import CreatorVisibilityControls from './CreatorVisibilityControls.js';
-import DeleteProgramAreaNode from './DeleteProgramAreaNode.js';
 import ProgramNode from './ProgramNode.js';
 import SavedRectangle from './SavedRectangle.js';
 import ViewConstants from './ViewConstants.js';
@@ -67,8 +66,6 @@ export default class CreatorView extends phet.scenery.Node {
       }
     } ) );
 
-    this.deleteProgramArea = new DeleteProgramAreaNode();
-
     // rendering order
     this.addChild( this.applicationLayerNode );
     this.addChild( controlLayerNode );
@@ -81,11 +78,10 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.visibilityControls );
-    controlLayerNode.addChild( this.deleteProgramArea );
 
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
-      const newProgramNode = new ProgramNode( newProgram, this.deleteProgramArea.globalBounds, model.activeEditProperty );
+      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty );
       this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 
@@ -160,7 +156,6 @@ export default class CreatorView extends phet.scenery.Node {
     this.newProgramButton.leftTop = new phet.dot.Vector2( 5, 5 );
     this.saveSystemButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveSystemButton.rightBottom.plusXY( 0, 5 );
-    this.deleteProgramArea.rightBottom = new phet.dot.Vector2( width - 10, height - 10 );
     this.savedRectangle.rightCenter = this.saveSystemButton.leftCenter.plusXY( -5, 0 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 

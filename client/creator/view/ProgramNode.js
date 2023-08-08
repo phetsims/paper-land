@@ -1,6 +1,7 @@
 import ActiveEdit from '../model/ActiveEdit.js';
 import EditType from '../model/EditType.js';
 import ComponentListItemNode from './ComponentListItemNode.js';
+import ImageLoader from './ImageLoader.js';
 import ViewConstants from './ViewConstants.js';
 
 // default dimensions of a paper, though it may change as components are added
@@ -26,11 +27,9 @@ export default class ProgramNode extends phet.scenery.Node {
 
   /**
    * @param {ProgramModel} model
-   * @param {Bounds2} deleteAreaGlobalBounds - The global bounds of the delete area - when program is released over
-   *                                           these bounds it is removed.
    * @param {Property<null|ActiveEdit>} activeEditProperty
    */
-  constructor( model, deleteAreaGlobalBounds, activeEditProperty ) {
+  constructor( model, activeEditProperty ) {
     super();
     this.model = model;
 
@@ -112,10 +111,28 @@ export default class ProgramNode extends phet.scenery.Node {
       ]
     } );
 
+    // A parent is made eagerly for the button, which won't be available intil the image
+    // is loaded. But it is ready for use immediately.
+    this.deleteButtonParent = new phet.scenery.Node();
+    ImageLoader.loadImage( 'media/images/trash3-red.svg', imageElement => {
+      const imageNode = new phet.scenery.Image( imageElement, {
+        scale: 0.7
+      } );
+      const button = new phet.sun.RectangularPushButton( _.merge( {}, {
+        content: imageNode,
+        listener: () => model.deleteEmitter.emit()
+      }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
+
+      this.deleteButtonParent.addChild( button );
+      this.layout();
+    } );
+
+
     // rendering order
     this.addChild( this.background );
     this.addChild( this.programNumber );
     this.addChild( this.titleText );
+    this.addChild( this.deleteButtonParent );
     this.addChild( this.allComponentsVBox );
     this.addChild( this.createComponentButton );
     this.addChild( this.createListenerButton );
@@ -133,26 +150,11 @@ export default class ProgramNode extends phet.scenery.Node {
       positionProperty: model.positionProperty,
       start: () => {
         activeEditProperty.value = new ActiveEdit( model, EditType.METADATA );
-      },
-      drag: () => {
-
-        if ( this.globalBounds.intersectsBounds( deleteAreaGlobalBounds ) ) {
-          this.background.stroke = ViewConstants.ERROR_COLOR;
-        }
-        else {
-          this.background.stroke = 'black';
-        }
-      },
-      end: () => {
-        if ( this.globalBounds.intersectsBounds( deleteAreaGlobalBounds ) ) {
-          model.deleteEmitter.emit();
-        }
       }
     } );
     this.addInputListener( dragListener );
 
-    // Don't pan the view with the dragged program, I find that annoying in this context and prevents dragging programs
-    // to the delete area.
+    // Don't pan the view with the dragged program, I find that annoying in this context.
     dragListener.setCreatePanTargetBounds( () => { return null; } );
 
     const registerComponentListListener = ( observableArray, parentNode ) => {
@@ -229,6 +231,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
+    this.deleteButtonParent.rightTop = this.background.rightTop.plusXY( -MARGIN, MARGIN );
     this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
     this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -MARGIN );
     this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
