@@ -114,6 +114,27 @@ export default class ProgramNode extends phet.scenery.Node {
     // A parent is made eagerly for the button, which won't be available intil the image
     // is loaded. But it is ready for use immediately.
     this.deleteButtonParent = new phet.scenery.Node();
+
+    // rendering order
+    this.addChild( this.background );
+    this.addChild( this.programNumber );
+    this.addChild( this.titleText );
+    this.addChild( this.deleteButtonParent );
+    this.addChild( this.allComponentsVBox );
+    this.addChild( this.createComponentButton );
+    this.addChild( this.createListenerButton );
+
+    // collection of components that will contribute to layout bounds, to easily calculate height
+    this.allComponents = [
+      this.programNumber,
+      this.titleText,
+      this.deleteButtonParent,
+      this.allComponentsVBox,
+      this.createListenerButton,
+      this.createComponentButton
+    ];
+
+    // Load after components needed for layout are set up.
     ImageLoader.loadImage( 'media/images/trash3-red.svg', imageElement => {
       const imageNode = new phet.scenery.Image( imageElement, {
         scale: 0.7
@@ -126,16 +147,6 @@ export default class ProgramNode extends phet.scenery.Node {
       this.deleteButtonParent.addChild( button );
       this.layout();
     } );
-
-
-    // rendering order
-    this.addChild( this.background );
-    this.addChild( this.programNumber );
-    this.addChild( this.titleText );
-    this.addChild( this.deleteButtonParent );
-    this.addChild( this.allComponentsVBox );
-    this.addChild( this.createComponentButton );
-    this.addChild( this.createListenerButton );
 
     // listeners
     model.positionProperty.link( position => {
@@ -190,15 +201,6 @@ export default class ProgramNode extends phet.scenery.Node {
     registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
     registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
     registerComponentListListener( model.viewContainer.allComponents, this.viewComponentList );
-
-    // collection of components that will contribute to layout bounds, to easily calculate height
-    this.allComponents = [
-      this.programNumber,
-      this.titleText,
-      this.allComponentsVBox,
-      this.createListenerButton,
-      this.createComponentButton
-    ];
 
     // initial layout
     this.layout();
