@@ -10,6 +10,7 @@ export default function CreateDescriptionViewForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
+    () => {},
     props.getGeneralFormData,
     DescriptionViewComponent
   );

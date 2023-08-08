@@ -39,6 +39,9 @@ export default function CreateComponentForm( props ) {
       if ( newValue && newValue.component ) {
         setActiveEditObject( newValue );
       }
+      else {
+        setActiveEditObject( null );
+      }
     };
     model.activeEditProperty.link( selectedProgramListener );
 
@@ -46,7 +49,7 @@ export default function CreateComponentForm( props ) {
     return function cleanup() {
       model.activeEditProperty.unlink( selectedProgramListener );
     };
-  } );
+  }, [] );
 
   /**
    * Returns the Tab key from the current state of activeEditComponent.

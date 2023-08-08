@@ -11,8 +11,11 @@ export default function ComponentNameControl( props ) {
   const setComponentName = props.setComponentName || ( () => {} );
 
   useEffect( () => {
-    if ( props.activeEditObject ) {
+    if ( props.activeEditObject && props.activeEditObject.component ) {
       setComponentName( props.activeEditObject.component.nameProperty.value );
+    }
+    else {
+      setComponentName( '' );
     }
   }, [ props.activeEditObject ] );
 

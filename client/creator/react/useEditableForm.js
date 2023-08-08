@@ -21,14 +21,14 @@ const verifyRequiredKeys = ( templateObject, testingObject ) => {
   return true;
 };
 
-const validateData = ( templateObject, testObject ) => {
+// Make sure that the new data matches the schema for the component.
+const validateSchema = ( templateObject, testObject ) => {
   if ( !verifyRequiredKeys( templateObject, testObject ) ) {
-    debugger;
     throw new Error( 'New data does not match the schema of the component.' );
   }
 };
 
-const useEditableForm = ( activeEdit, isFormValid, getFormData, ComponentClass ) => {
+const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormData, ComponentClass ) => {
 
   if ( !ComponentClass.getStateSchema ) {
     throw new Error( 'ComponentClass must have a static getStateSchema function to define the component schema' );
@@ -41,10 +41,21 @@ const useEditableForm = ( activeEdit, isFormValid, getFormData, ComponentClass )
   useEffect( () => {
     if ( activeEdit.component instanceof ComponentClass ) {
       const serialized = activeEdit.component.save();
-      validateData( componentStateSchema, serialized );
+      validateSchema( componentStateSchema, serialized );
       setFormData( serialized );
+      getFormData( serialized );
     }
   }, [ activeEdit ] );
+
+  // Initial checks and state updates, empty dependencies array so that it only runs once but not
+  // during the render of this component which is bad for react. After this check, the work will
+  // happen every form change.
+  useEffect( () => {
+    setIsFormValid( formData );
+
+    // send the data back to the parent so it is available right away
+    getFormData( formData );
+  }, [] );
 
   const handleChange = newData => {
 
@@ -52,13 +63,18 @@ const useEditableForm = ( activeEdit, isFormValid, getFormData, ComponentClass )
     const totalData = { ...formData, ...newData };
 
     // Make sure that the change function provided the correct data for this component
-    validateData( componentStateSchema, totalData );
+    validateSchema( componentStateSchema, totalData );
     setFormData( totalData );
 
-    // TODO: Other validation logic here
-    const defined = Object.values( totalData ).every( val => val !== '' );
+    // All values must be defined
 
-    isFormValid( defined );
+    // All values must be defined
+    // const defined = Object.values( totalData ).every( val => val !== '' );
+
+    // Update the form validity based on new state
+    setIsFormValid( validateFormData( totalData ) );
+
+    // Notify change of data to parent components that aren't using state
     getFormData( totalData );
   };
 

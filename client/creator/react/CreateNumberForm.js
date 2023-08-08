@@ -36,6 +36,7 @@ export default function CreateNumberForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
+    () => {},
     props.getFormData,
     NamedNumberProperty
   );

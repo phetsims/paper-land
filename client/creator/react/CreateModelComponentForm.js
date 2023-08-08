@@ -69,10 +69,7 @@ export default function CreateModelComponentForm( props ) {
   // to be called every change so that we can use this data to create
   const getDataForNumber = data => { numberDataRef.current = data; };
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
-  const getDataForBoolean = data => {
-    booleanDataRef.current = data;
-    console.log( booleanDataRef.current )
-  };
+  const getDataForBoolean = data => { booleanDataRef.current = data; };
   const getDataForPosition = data => { positionDataRef.current = data; };
   const getDataForDerived = data => { derivedDataRef.current = data; };
 

@@ -87,7 +87,13 @@ export default function CreateViewComponentForm( props ) {
 
 
   const isComponentNameValid = () => {
-    return componentName.length > 0 && model.isNameAvailable( componentName );
+    if ( activeEdit && activeEdit.component ) {
+      return componentName.length > 0 && ( model.isNameAvailable( componentName ) || activeEdit.component.nameProperty.value === componentName );
+
+    }
+    else {
+      return componentName.length > 0 && model.isNameAvailable( componentName );
+    }
   };
 
   useEffect( () => {
@@ -113,26 +119,41 @@ export default function CreateViewComponentForm( props ) {
   const createComponent = () => {
     const componentName = props.componentName;
     const modelComponents = generalDataRef.current.dependencies;
-
-    // const modelComponentNames = generalDataRef.current.dependencies.map( dependency => dependency.nameProperty.value );
     const controlFunctionString = generalDataRef.current.code;
-    if ( selectedTab === 'sounds' ) {
-      const soundFileName = soundsDataRef.current.soundFileName;
-      const soundViewComponent = new SoundViewComponent( componentName, modelComponents, controlFunctionString, soundFileName );
-      activeProgram.viewContainer.addSoundView( soundViewComponent );
+
+    if ( activeEdit && activeEdit.component ) {
+      const editingComponent = activeEdit.component;
+
+      // basic updates
+      editingComponent.nameProperty.value = componentName;
+      editingComponent.modelComponents = modelComponents;
+      editingComponent.controlFunctionString = controlFunctionString;
+
+      // component specific data
+      if ( selectedTab === 'sounds' ) {
+        editingComponent.soundFileName = soundsDataRef.current.soundFileName;
+      }
     }
-    else if ( selectedTab === 'description' ) {
-      const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponents, controlFunctionString );
-      activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
-    }
-    else if ( selectedTab === 'background' ) {
-      const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponents, controlFunctionString );
-      activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
-    }
-    else if ( selectedTab === 'images' ) {
-      const imageFileName = imagesDataRef.current.imageFileName;
-      const imageViewComponent = new ImageViewComponent( componentName, modelComponents, controlFunctionString, imageFileName );
-      activeProgram.viewContainer.addImageView( imageViewComponent );
+    else {
+
+      if ( selectedTab === 'sounds' ) {
+        const soundFileName = soundsDataRef.current.soundFileName;
+        const soundViewComponent = new SoundViewComponent( componentName, modelComponents, controlFunctionString, soundFileName );
+        activeProgram.viewContainer.addSoundView( soundViewComponent );
+      }
+      else if ( selectedTab === 'description' ) {
+        const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponents, controlFunctionString );
+        activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
+      }
+      else if ( selectedTab === 'background' ) {
+        const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponents, controlFunctionString );
+        activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
+      }
+      else if ( selectedTab === 'images' ) {
+        const imageFileName = imagesDataRef.current.imageFileName;
+        const imageViewComponent = new ImageViewComponent( componentName, modelComponents, controlFunctionString, imageFileName );
+        activeProgram.viewContainer.addImageView( imageViewComponent );
+      }
     }
 
     props.onComponentCreated();

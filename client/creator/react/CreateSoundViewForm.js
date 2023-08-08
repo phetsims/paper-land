@@ -16,6 +16,11 @@ export default function CreateSoundViewForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
+    componentData => {
+      return componentData.modelComponentNames.length > 0 &&
+             componentData.soundFileName.length > 0 &&
+             componentData.controlFunctionString.length > 0;
+    },
     props.getGeneralFormData,
     SoundViewComponent
   );
@@ -84,7 +89,6 @@ export default function CreateSoundViewForm( props ) {
         typeSpecificFunctions={soundFunctions}
         formData={formData}
         handleChange={handleChange}
-        isFormValid={props.isFormValid}
         getFormData={props.getGeneralFormData}
         functionPrompt={'Use the available functions and variables to control the sound.'}
         componentsPrompt={'Function is called and sound is played whenever a component changes.'}

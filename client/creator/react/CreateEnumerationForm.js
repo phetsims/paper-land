@@ -9,6 +9,7 @@ export default function CreateEnumerationForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
+    () => {},
     props.getFormData,
     NamedEnumerationProperty
   );
