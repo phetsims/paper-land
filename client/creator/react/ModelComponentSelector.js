@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -11,28 +11,16 @@ export default function ModelComponentSelector( props ) {
   // A function to be called whenever any checkbox changes.
   const handleChange = props.handleChange || ( () => {} );
 
-  // state for selected components
-  const [ selectedComponents, setSelectedComponents ] = useState( [] );
-
+  // Event listener for every individual checkbox. Will add or remove the component from the state of selected
+  // components.
   const handleCheckboxChange = ( event, namedProperty ) => {
     if ( event.target.checked ) {
-      const copy = selectedComponents.slice();
-      copy.push( namedProperty );
-      setSelectedComponents( copy );
+      handleChange( [ ...selectedModelComponents, namedProperty ] );
     }
     else {
-
-      // Remove the unchecked component from the list
-      const copy = selectedComponents.slice();
-      copy.splice( selectedComponents.indexOf( namedProperty ), 1 );
-      setSelectedComponents( copy );
+      handleChange( selectedModelComponents.filter( component => component !== namedProperty ) );
     }
   };
-
-  // Call the handleChange function whenever the selected components change
-  useEffect( () => {
-    handleChange( selectedComponents );
-  }, [ selectedComponents ] );
 
   return (
     <Container>
