@@ -1,17 +1,18 @@
 import ViewComponent from './ViewComponent.js';
 
 export default class DescriptionViewComponent extends ViewComponent {
-  constructor( name, modelComponentNames, controlFunctionString ) {
-    super( name, modelComponentNames, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString ) {
+    super( name, modelComponents, controlFunctionString );
   }
 
   /**
    * Load an instance from a state object.
    */
-  static fromStateObject( stateObject ) {
+  static fromStateObject( stateObject, allComponents ) {
+    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
     return new DescriptionViewComponent(
       stateObject.name,
-      stateObject.modelComponentNames,
+      dependencies,
       stateObject.controlFunctionString
     );
   }

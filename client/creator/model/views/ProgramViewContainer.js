@@ -100,7 +100,7 @@ export default class ProgramViewContainer extends ComponentContainer {
   /**
    * Loads all view components from the provided JSON object.
    */
-  load( json ) {
+  load( json, allComponents ) {
 
     // Gracefully handle missing properties
     const soundViews = json.soundViews || [];
@@ -109,19 +109,19 @@ export default class ProgramViewContainer extends ComponentContainer {
     const imageViews = json.imageViews || [];
 
     soundViews.forEach( soundViewJSON => {
-      const soundView = SoundViewComponent.fromStateObject( soundViewJSON );
+      const soundView = SoundViewComponent.fromStateObject( soundViewJSON, allComponents );
       this.addSoundView( soundView );
     } );
     descriptionViews.forEach( descriptionViewJSON => {
-      const descriptionView = DescriptionViewComponent.fromStateObject( descriptionViewJSON );
+      const descriptionView = DescriptionViewComponent.fromStateObject( descriptionViewJSON, allComponents );
       this.addDescriptionView( descriptionView );
     } );
     backgroundViews.forEach( backgroundViewJSON => {
-      const backgroundView = BackgroundViewComponent.fromStateObject( backgroundViewJSON );
+      const backgroundView = BackgroundViewComponent.fromStateObject( backgroundViewJSON, allComponents );
       this.addBackgroundView( backgroundView );
     } );
     imageViews.forEach( imageViewJSON => {
-      const imageView = ImageViewComponent.fromStateObject( imageViewJSON );
+      const imageView = ImageViewComponent.fromStateObject( imageViewJSON, allComponents );
       this.addImageView( imageView );
     } );
   }

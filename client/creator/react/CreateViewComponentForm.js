@@ -78,24 +78,26 @@ export default function CreateViewComponentForm( props ) {
 
   const createComponent = () => {
     const componentName = props.componentName;
-    const modelComponentNames = generalDataRef.current.dependencies.map( dependency => dependency.nameProperty.value );
+    const modelComponents = generalDataRef.current.dependencies;
+
+    // const modelComponentNames = generalDataRef.current.dependencies.map( dependency => dependency.nameProperty.value );
     const controlFunctionString = generalDataRef.current.code;
     if ( selectedTab === 'sounds' ) {
       const soundFileName = soundsDataRef.current.soundFileName;
-      const soundViewComponent = new SoundViewComponent( componentName, modelComponentNames, controlFunctionString, soundFileName );
+      const soundViewComponent = new SoundViewComponent( componentName, modelComponents, controlFunctionString, soundFileName );
       activeProgram.viewContainer.addSoundView( soundViewComponent );
     }
     else if ( selectedTab === 'description' ) {
-      const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponentNames, controlFunctionString );
+      const descriptionViewComponent = new DescriptionViewComponent( componentName, modelComponents, controlFunctionString );
       activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
     }
     else if ( selectedTab === 'background' ) {
-      const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponentNames, controlFunctionString );
+      const backgroundViewComponent = new BackgroundViewComponent( componentName, modelComponents, controlFunctionString );
       activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
     }
     else if ( selectedTab === 'images' ) {
       const imageFileName = imagesDataRef.current.imageFileName;
-      const imageViewComponent = new ImageViewComponent( componentName, modelComponentNames, controlFunctionString, imageFileName );
+      const imageViewComponent = new ImageViewComponent( componentName, modelComponents, controlFunctionString, imageFileName );
       activeProgram.viewContainer.addImageView( imageViewComponent );
     }
 

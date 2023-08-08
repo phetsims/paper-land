@@ -4,12 +4,12 @@ export default class ImageViewComponent extends ViewComponent {
 
   /**
    * @param {string} name - name of this component
-   * @param {string[]} modelComponentNames - names of the model components this represents
+   * @param {NamedProperty[]} modelComponents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
    * @param {string} imageFileName - an image file that exists in www/media/images
    */
-  constructor( name, modelComponentNames, controlFunctionString, imageFileName ) {
-    super( name, modelComponentNames, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString, imageFileName ) {
+    super( name, modelComponents, controlFunctionString );
     this.imageFileName = imageFileName;
   }
 
@@ -26,10 +26,11 @@ export default class ImageViewComponent extends ViewComponent {
   /**
    * Given a state object, return a new ImageViewComponent.
    */
-  static fromStateObject( stateObject ) {
+  static fromStateObject( stateObject, allComponents ) {
+    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
     return new ImageViewComponent(
       stateObject.name,
-      stateObject.modelComponentNames,
+      dependencies,
       stateObject.controlFunctionString,
       stateObject.imageFileName
     );
