@@ -222,7 +222,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     // draw the arrow head
     // Draw arrowhead
-    const arrowSize = 5;
+    const arrowSize = 12;
     const angle = Math.atan2( end.y - cp2y, end.x - cp2x );
     const angle1 = angle - Math.PI / 6;
     const angle2 = angle + Math.PI / 6;
