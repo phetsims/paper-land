@@ -12,6 +12,13 @@ export default function CreateSoundViewForm( props ) {
   // State for the available sounds files from the server.
   const [ soundFiles, setSoundFiles ] = useState( [] );
 
+  // Get form data from the child and forward it back to the parent form so we have data in one place to
+  // create a component.
+  const getFormData = providedData => {
+    props.getGeneralFormData( providedData );
+    props.getSoundFormData( providedData );
+  };
+
   // State for the form data that will create and edit components.
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
@@ -21,7 +28,7 @@ export default function CreateSoundViewForm( props ) {
              componentData.soundFileName.length > 0 &&
              componentData.controlFunctionString.length > 0;
     },
-    props.getGeneralFormData,
+    getFormData,
     SoundViewComponent
   );
 
@@ -70,13 +77,6 @@ export default function CreateSoundViewForm( props ) {
     </div>
   );
 
-  // Get form data from the child and forward it back to the parent form so we have data in one place to
-  // create a component.
-  const getFormData = providedData => {
-    props.getGeneralFormData( providedData );
-    props.getSoundFormData( providedData );
-  };
-
   // A list of functions that can be used in the code string by the user.
   const soundFunctions = (
     <div className={styles.controlElement}>
@@ -96,7 +96,6 @@ export default function CreateSoundViewForm( props ) {
         typeSpecificFunctions={soundFunctions}
         formData={formData}
         handleChange={handleChange}
-        getFormData={getFormData}
         functionPrompt={'Use the available functions and variables to control the sound.'}
         componentsPrompt={'Function is called and sound is played whenever a component changes.'}
       ></ViewComponentControls>

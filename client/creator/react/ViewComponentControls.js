@@ -25,12 +25,6 @@ export default function ViewComponentControls( props ) {
   // Get the references to the actual model components from selected form data (name strings)
   const selectedModelComponents = ViewComponent.findDependenciesByName( props.allModelComponents, props.formData.modelComponentNames );
 
-  // Return the data to the parent components.
-  useEffect( () => {
-    props.getFormData( props.formData );
-  }, [ props.formData ] );
-  props.getFormData( props.formData );
-
   return (
     <>
       {props.typeSpecificControls ? props.typeSpecificControls : ''}

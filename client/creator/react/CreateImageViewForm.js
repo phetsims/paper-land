@@ -9,6 +9,11 @@ import ViewComponentControls from './ViewComponentControls.js';
 
 export default function CreateImageViewForm( props ) {
 
+  const getFormData = providedData => {
+    props.getGeneralFormData( providedData );
+    props.getImageFormData( providedData );
+  };
+
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
@@ -17,7 +22,7 @@ export default function CreateImageViewForm( props ) {
              componentData.imageFileName.length > 0 &&
              componentData.controlFunctionString.length > 0;
     },
-    props.getGeneralFormData,
+    getFormData,
     ImageViewComponent
   );
 
@@ -75,11 +80,6 @@ export default function CreateImageViewForm( props ) {
     </div>
   );
 
-  const getFormData = providedData => {
-    props.getGeneralFormData( providedData );
-    props.getImageFormData( providedData );
-  };
-
   return (
     <div>
       <ViewComponentControls
@@ -87,7 +87,6 @@ export default function CreateImageViewForm( props ) {
         typeSpecificControls={imageFileSelector}
         typeSpecificFunctions={imageFunctions}
         isFormValid={props.isFormValid}
-        getFormData={getFormData}
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the image.'}

@@ -35,7 +35,6 @@ export default function CreateDescriptionViewForm( props ) {
         allModelComponents={props.allModelComponents}
         typeSpecificFunctions={descriptionFunctions}
         isFormValid={props.isFormValid}
-        getFormData={props.getGeneralFormData}
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Write a function using the variables to return a string.'}

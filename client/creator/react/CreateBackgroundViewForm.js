@@ -20,7 +20,6 @@ export default function CreateBackgroundViewForm( props ) {
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         isFormValid={props.isFormValid}
-        getFormData={props.getGeneralFormData}
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Write a function with the provided variables to return a color string. Can be any CSS color.'}

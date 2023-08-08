@@ -55,7 +55,7 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
 
     // send the data back to the parent so it is available right away
     getFormData( formData );
-  }, [] );
+  }, [ formData ] );
 
   const handleChange = newData => {
 
