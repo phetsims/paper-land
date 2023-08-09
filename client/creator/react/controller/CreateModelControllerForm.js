@@ -4,6 +4,7 @@ import styles from '../../CreatorMain.css';
 import BooleanPropertyController from '../../model/controllers/BooleanPropertyController.js';
 import EnumerationPropertyController from '../../model/controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
+import PropertyController from '../../model/controllers/PropertyController.js';
 import Vector2PropertyController from '../../model/controllers/Vector2PropertyController.js';
 import Utils from '../../Utils.js';
 import CreateComponentButton from '../CreateComponentButton.js';
@@ -18,6 +19,8 @@ export default function CreateModelControllerForm( props ) {
   const allModelComponents = props.allModelComponents;
 
   const activeProgram = props.activeEdit.program;
+
+  const activeEdit = props.activeEdit;
 
   // {string}
   const componentName = props.componentName;
@@ -73,21 +76,47 @@ export default function CreateModelControllerForm( props ) {
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
 
   const createComponent = () => {
-    if ( selectedComponentType === 'Vector2Property' ) {
-      const vector2PropertyController = new Vector2PropertyController( componentName, selectedComponent, positionDataRef.current.controlType );
-      activeProgram.controllerContainer.addVector2PropertyController( vector2PropertyController );
+    if ( activeEdit && activeEdit.component instanceof PropertyController ) {
+      const editingComponent = activeEdit.component;
+
+      // basic updates
+      editingComponent.nameProperty.value = componentName;
+      editingComponent.namedProperty = selectedComponent;
+
+      // component specific updates - since useEditableForm works with serialized data we need to
+      // convert back to enumeratin values
+      // TODO: Consider replacing enumerations with strings entirely or something else.
+      if ( selectedComponentType === 'Vector2Property' ) {
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( positionDataRef.current.controlType, Vector2PropertyController.ControlType );
+      }
+      else if ( selectedComponentType === 'BooleanProperty' ) {
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
+      }
+      else if ( selectedComponentType === 'NumberProperty' ) {
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.directionControlType, NumberPropertyController.DirectionControlType );
+        editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
+      }
+      else if ( selectedComponentType === 'StringProperty' ) {
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( enumerationDataRef.current.controlType, EnumerationPropertyController.ControlType );
+      }
     }
-    else if ( selectedComponentType === 'BooleanProperty' ) {
-      const booleanController = new BooleanPropertyController( componentName, selectedComponent, booleanDataRef.current.controlType );
-      activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
-    }
-    else if ( selectedComponentType === 'NumberProperty' ) {
-      const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType );
-      activeProgram.controllerContainer.addNumberPropertyController( numberController );
-    }
-    else if ( selectedComponentType === 'StringProperty' ) {
-      const enumerationController = new EnumerationPropertyController( componentName, selectedComponent, enumerationDataRef.current.controlType );
-      activeProgram.controllerContainer.addEnumerationPropertyController( enumerationController );
+    else {
+      if ( selectedComponentType === 'Vector2Property' ) {
+        const vector2PropertyController = new Vector2PropertyController( componentName, selectedComponent, positionDataRef.current.controlType );
+        activeProgram.controllerContainer.addVector2PropertyController( vector2PropertyController );
+      }
+      else if ( selectedComponentType === 'BooleanProperty' ) {
+        const booleanController = new BooleanPropertyController( componentName, selectedComponent, booleanDataRef.current.controlType );
+        activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
+      }
+      else if ( selectedComponentType === 'NumberProperty' ) {
+        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType );
+        activeProgram.controllerContainer.addNumberPropertyController( numberController );
+      }
+      else if ( selectedComponentType === 'StringProperty' ) {
+        const enumerationController = new EnumerationPropertyController( componentName, selectedComponent, enumerationDataRef.current.controlType );
+        activeProgram.controllerContainer.addEnumerationPropertyController( enumerationController );
+      }
     }
 
     props.onComponentCreated();
@@ -116,6 +145,12 @@ export default function CreateModelControllerForm( props ) {
     };
   } );
 
+  useEffect( () => {
+    if ( activeEdit && activeEdit.component instanceof PropertyController ) {
+      setSelectedComponent( activeEdit.component.namedProperty );
+    }
+  }, [ props.activeEdit ] );
+
   // Update valid form state when validity of a child form changes.
   useEffect( () => {
     if ( selectedComponentType === 'Vector2Property' ) {
@@ -141,6 +176,9 @@ export default function CreateModelControllerForm( props ) {
         <div className={styles.controlElement}>
           <Form.Label>Select a model component:</Form.Label>
           <Form.Select
+
+            // TODO: I dislike this element value mapping to index in the array. Consider something better.
+            value={`${selectedComponent ? selectedComponent.nameProperty.value : ''}-${allComponents.indexOf( selectedComponent )}`}
             onChange={event => {
               const indexOfSelection = Utils.getIndexFromIdString( event.target.value );
               setSelectedComponent( allComponents[ indexOfSelection ] );
@@ -151,7 +189,12 @@ export default function CreateModelControllerForm( props ) {
             } )}
           </Form.Select>
         </div>
-        {selectedComponentType === 'Vector2Property' ? <CreateVector2ControllerForm getFormData={getDataForPosition} isFormValid={getIsPositionFormValid}></CreateVector2ControllerForm> :
+        {selectedComponentType === 'Vector2Property' ?
+         <CreateVector2ControllerForm
+           activeEdit={activeEdit}
+           getFormData={getDataForPosition}
+           isFormValid={getIsPositionFormValid}>
+         </CreateVector2ControllerForm> :
          selectedComponentType === 'StringProperty' ? <CreateEnumerationControllerForm getFormData={getDataForEnumeration} isFormValid={getIsEnumerationFormValid}></CreateEnumerationControllerForm> :
          selectedComponentType === 'NumberProperty' ? <CreateNumberControllerForm getFormData={getDataFormNumber} isFormValid={getIsNumberFormValid}></CreateNumberControllerForm> :
          selectedComponentType === 'BooleanProperty' ? <CreateBooleanControllerForm getFormData={getDataForBoolean} isFormValid={getIsBooleanFormValid}></CreateBooleanControllerForm> :
@@ -159,7 +202,7 @@ export default function CreateModelControllerForm( props ) {
         }
         <CreateComponentButton
           createComponent={createComponent}
-          componentFormValid={componentFormValid}
+          selectedTabFormValid={componentFormValid}
           activeEditProperty={props.model.activeEditProperty}
         ></CreateComponentButton>
       </div>

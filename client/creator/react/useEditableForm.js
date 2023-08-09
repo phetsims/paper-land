@@ -37,7 +37,7 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
 
   const [ formData, setFormData ] = useState( componentStateSchema );
 
-  // // Update form to saved state whenever the active edit changes.
+  // Update form to saved state whenever the active edit changes.
   useEffect( () => {
     if ( activeEdit.component instanceof ComponentClass ) {
       const serialized = activeEdit.component.save();
@@ -47,9 +47,7 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
     }
   }, [ activeEdit ] );
 
-  // Initial checks and state updates, empty dependencies array so that it only runs once but not
-  // during the render of this component which is bad for react. After this check, the work will
-  // happen every form change.
+  // Initial checks and state updates.
   useEffect( () => {
     setIsFormValid( formData );
 

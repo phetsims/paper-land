@@ -45,4 +45,12 @@ export default class PropertyController extends Component {
   static assertEnumerationIncludes( enumeration, value ) {
     assert && assert( enumeration.enumeration.includes( value ), 'Incorrect control type' );
   }
+
+  static getStateSchema() {
+    return {
+      ...Component.getStateSchema(),
+      controlledComponentName: '',
+      controlType: ''
+    };
+  }
 }
