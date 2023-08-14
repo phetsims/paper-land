@@ -195,9 +195,24 @@ export default function CreateModelControllerForm( props ) {
            getFormData={getDataForPosition}
            isFormValid={getIsPositionFormValid}>
          </CreateVector2ControllerForm> :
-         selectedComponentType === 'StringProperty' ? <CreateEnumerationControllerForm getFormData={getDataForEnumeration} isFormValid={getIsEnumerationFormValid}></CreateEnumerationControllerForm> :
-         selectedComponentType === 'NumberProperty' ? <CreateNumberControllerForm getFormData={getDataFormNumber} isFormValid={getIsNumberFormValid}></CreateNumberControllerForm> :
-         selectedComponentType === 'BooleanProperty' ? <CreateBooleanControllerForm getFormData={getDataForBoolean} isFormValid={getIsBooleanFormValid}></CreateBooleanControllerForm> :
+         selectedComponentType === 'StringProperty' ?
+         <CreateEnumerationControllerForm
+           activeEdit={activeEdit}
+           getFormData={getDataForEnumeration}
+           isFormValid={getIsEnumerationFormValid}>
+         </CreateEnumerationControllerForm> :
+         selectedComponentType === 'NumberProperty' ?
+         <CreateNumberControllerForm
+           activeEdit={activeEdit}
+           getFormData={getDataFormNumber}
+           isFormValid={getIsNumberFormValid}>
+         </CreateNumberControllerForm> :
+         selectedComponentType === 'BooleanProperty' ?
+         <CreateBooleanControllerForm
+           activeEdit={activeEdit}
+           getFormData={getDataForBoolean}
+           isFormValid={getIsBooleanFormValid}>
+         </CreateBooleanControllerForm> :
          <p className={styles.controlElement}>Create a Model Component to control.</p>
         }
         <CreateComponentButton
