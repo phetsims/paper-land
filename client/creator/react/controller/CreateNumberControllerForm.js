@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from '../../CreatorMain.css';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
@@ -37,7 +37,7 @@ export default function CreateNumberControllerForm( props ) {
           key={`number-direction-${valueString}`}
           label={nameString}
           onChange={() => {
-            handleChange( { directionControlType: valueString } );
+            handleChange( { controlType: valueString } );
           }}
         />;
       } )}

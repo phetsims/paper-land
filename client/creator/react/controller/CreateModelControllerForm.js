@@ -62,11 +62,6 @@ export default function CreateModelControllerForm( props ) {
   const positionDataRef = useRef( {} );
   const booleanDataRef = useRef( {} );
   const enumerationDataRef = useRef( {} );
-
-  // An object with {
-  //  directionControlType: NumberPropertyController.DirectionControlType,
-  //  relationshipControlType: NumberPropertyController.RelationshipControlType
-  // }
   const numberDataRef = useRef( {} );
 
   // To be called on form changes to receive the data to create controllers
@@ -93,7 +88,7 @@ export default function CreateModelControllerForm( props ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
-        editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.directionControlType, NumberPropertyController.DirectionControlType );
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.DirectionControlType );
         editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
       }
       else if ( selectedComponentType === 'StringProperty' ) {
@@ -110,7 +105,7 @@ export default function CreateModelControllerForm( props ) {
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
-        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.directionControlType, numberDataRef.current.relationshipControlType );
+        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.controlType, numberDataRef.current.relationshipControlType );
         activeProgram.controllerContainer.addNumberPropertyController( numberController );
       }
       else if ( selectedComponentType === 'StringProperty' ) {
