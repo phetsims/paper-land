@@ -2,23 +2,23 @@ import React, { useRef } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from '../../CreatorMain.css';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
+import useEditableForm from '../useEditableForm.js';
 
 export default function CreateNumberControllerForm( props ) {
 
-  // Reference to the current value (not state because we don't need a re-render)
-  const directionControlType = useRef( null );
-  const relationshipControlType = useRef( null );
+  const [ formData, handleChange ] = useEditableForm(
+    props.activeEdit,
+    props.isFormValid,
+    componentData => {
+      return !!componentData.controlType && !!componentData.relationshipControlType;
+    },
+    props.getFormData,
+    NumberPropertyController
+  );
 
   const directionControlTypes = NumberPropertyController.DirectionControlType.enumeration.values;
   const relationshipControlTypes = NumberPropertyController.RelationshipControlType.enumeration.values;
 
-  const handleChange = event => {
-    props.isFormValid( true );
-    props.getFormData( {
-      directionControlType: directionControlType.current,
-      relationshipControlType: relationshipControlType.current
-    } );
-  };
   return (
     <div className={styles.controlElement}>
       <Form.Label>Paper movement:</Form.Label>
@@ -27,16 +27,17 @@ export default function CreateNumberControllerForm( props ) {
                            value === NumberPropertyController.DirectionControlType.VERTICAL ? 'Vertical' :
                            'Rotation';
 
+        const valueString = value.toString();
         return <Form.Check
           name={'direction-options'}
-          value={value}
+          value={valueString}
+          checked={valueString === formData.controlType}
           type={'radio'}
-          id={`number-direction-${value}`}
-          key={`number-direction-${value}`}
+          id={`number-direction-${valueString}`}
+          key={`number-direction-${valueString}`}
           label={nameString}
-          onChange={event => {
-            directionControlType.current = event.target.value;
-            handleChange( event );
+          onChange={() => {
+            handleChange( { directionControlType: valueString } );
           }}
         />;
       } )}
@@ -46,16 +47,17 @@ export default function CreateNumberControllerForm( props ) {
                            value === NumberPropertyController.RelationshipControlType.EXPONENTIAL ? 'Exponential' :
                            'Logarithmic';
 
+        const valueString = value.toString();
         return <Form.Check
           name={'relationship-controls'}
-          value={value}
+          value={valueString}
+          checked={valueString === formData.relationshipControlType}
           type={'radio'}
-          id={`number-relationship-${value}`}
-          key={`number-relationship-${value}`}
+          id={`number-relationship-${valueString}`}
+          key={`number-relationship-${valueString}`}
           label={nameString}
-          onChange={event => {
-            relationshipControlType.current = event.target.value;
-            handleChange( event );
+          onChange={() => {
+            handleChange( { relationshipControlType: valueString } );
           }}
         />;
       } )}
