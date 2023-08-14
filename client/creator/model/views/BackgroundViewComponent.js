@@ -1,3 +1,4 @@
+import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
 export default class BackgroundViewComponent extends ViewComponent {
@@ -16,7 +17,7 @@ export default class BackgroundViewComponent extends ViewComponent {
    */
   static fromStateObject( stateObject, allComponents ) {
 
-    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
+    const dependencies = Component.findComponentsByName( allComponents, stateObject.modelComponentNames );
     return new BackgroundViewComponent(
       stateObject.name,
       dependencies,

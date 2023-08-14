@@ -27,4 +27,22 @@ export default class Component {
       name: ''
     };
   }
+
+  /**
+   * Find components (dependencies) that have a name in the list of name strings.
+   *
+   * @param {NamedProperty[]} dependencies
+   * @param {string[]} names
+   */
+  static findComponentsByName( dependencies, names ) {
+    const matchingDependencies = [];
+
+    for ( const dependency of dependencies ) {
+      if ( names.includes( dependency.nameProperty.value ) ) {
+        matchingDependencies.push( dependency );
+      }
+    }
+
+    return matchingDependencies;
+  }
 }

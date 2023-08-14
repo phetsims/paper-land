@@ -1,3 +1,4 @@
+import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
 export default class ImageViewComponent extends ViewComponent {
@@ -27,7 +28,7 @@ export default class ImageViewComponent extends ViewComponent {
    * Given a state object, return a new ImageViewComponent.
    */
   static fromStateObject( stateObject, allComponents ) {
-    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
+    const dependencies = Component.findComponentsByName( allComponents, stateObject.modelComponentNames );
     return new ImageViewComponent(
       stateObject.name,
       dependencies,

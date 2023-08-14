@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import Component from '../model/Component.js';
 import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
@@ -119,7 +120,7 @@ export default function CreateViewComponentForm( props ) {
   const createComponent = () => {
     const componentName = props.componentName;
     const componentNames = generalDataRef.current.modelComponentNames;
-    const selectedModelComponents = ViewComponent.findDependenciesByName( props.allModelComponents, componentNames );
+    const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, componentNames );
     const controlFunctionString = generalDataRef.current.controlFunctionString;
 
     if ( activeEdit && activeEdit.component ) {

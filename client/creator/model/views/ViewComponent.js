@@ -67,22 +67,4 @@ export default class ViewComponent extends Component {
       controlFunctionString: ''
     };
   }
-
-  /**
-   * Find all of the components (dependencies) that have a name in the list of name strings.
-   *
-   * @param {NamedProperty[]} dependencies
-   * @param {string[]} names
-   */
-  static findDependenciesByName( dependencies, names ) {
-    const matchingDependencies = [];
-
-    for ( const dependency of dependencies ) {
-      if ( names.includes( dependency.nameProperty.value ) ) {
-        matchingDependencies.push( dependency );
-      }
-    }
-
-    return matchingDependencies;
-  }
 }

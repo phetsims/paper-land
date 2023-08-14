@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { isNameValid } from '../../utils.js';
+import Component from '../model/Component.js';
 import NamedBooleanProperty from '../model/NamedBooleanProperty.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
@@ -149,7 +150,8 @@ export default function CreateModelComponentForm( props ) {
         activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
       }
       else if ( selectedTab === 'derived' ) {
-        const dependencies = derivedDataRef.current.dependencies;
+        const dependencyNames = derivedDataRef.current.dependencyNames;
+        const dependencies = Component.findComponentsByName( allModelComponents, dependencyNames );
         const derivation = derivedDataRef.current.derivation;
         activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );
       }

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { getComponentDocumentation } from '../../utils.js';
+import Component from '../model/Component.js';
 import ViewComponent from '../model/views/ViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
@@ -23,7 +24,7 @@ export default function ViewComponentControls( props ) {
   }
 
   // Get the references to the actual model components from selected form data (name strings)
-  const selectedModelComponents = ViewComponent.findDependenciesByName( props.allModelComponents, props.formData.modelComponentNames );
+  const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, props.formData.modelComponentNames );
 
   return (
     <>

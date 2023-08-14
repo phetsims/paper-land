@@ -1,3 +1,4 @@
+import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
 export default class DescriptionViewComponent extends ViewComponent {
@@ -9,7 +10,7 @@ export default class DescriptionViewComponent extends ViewComponent {
    * Load an instance from a state object.
    */
   static fromStateObject( stateObject, allComponents ) {
-    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
+    const dependencies = Component.findComponentsByName( allComponents, stateObject.modelComponentNames );
     return new DescriptionViewComponent(
       stateObject.name,
       dependencies,

@@ -1,3 +1,4 @@
+import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
 export default class SoundViewComponent extends ViewComponent {
@@ -27,7 +28,7 @@ export default class SoundViewComponent extends ViewComponent {
    * Given a state object, return a new SoundViewComponent.
    */
   static fromStateObject( stateObject, allComponents ) {
-    const dependencies = ViewComponent.findDependenciesByName( allComponents, stateObject.modelComponentNames );
+    const dependencies = Component.findComponentsByName( allComponents, stateObject.modelComponentNames );
     return new SoundViewComponent(
       stateObject.name,
       dependencies,
