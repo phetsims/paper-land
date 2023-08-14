@@ -628,4 +628,4 @@ importScripts('paper.js');
 
 !!! info
 
-    See more examples in the [hard-coded Paper Programs Database](https://github.com/phetsims/paper-land/tree/master/paper-programs-backup)!
+    See more examples in the [hard-coded Paper Programs Database](https://github.com/phetsims/paper-land/tree/main/paper-programs-backup)!

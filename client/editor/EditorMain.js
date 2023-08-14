@@ -359,7 +359,7 @@ export default class EditorMain extends React.Component {
 
           <div className={styles.sidebarSection}>
             <a
-              href='https://github.com/phetsims/phet-info/blob/master/doc/phet-development-overview.md#source-code-and-dependencies'
+              href='https://github.com/phetsims/phet-info/blob/main/doc/phet-development-overview.md#source-code-and-dependencies'
               target='_blank'
               className={styles.link} rel='noreferrer'
             >

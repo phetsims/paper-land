@@ -60,7 +60,7 @@ However, there are **many other areas** that the project can be expanded (see Co
 
 ## License
 
-This software is licensed under the MIT license. For more information, see the [LICENSE](https://github.com/phetsims/paper-land/blob/master/LICENSE) file.
+This software is licensed under the MIT license. For more information, see the [LICENSE](https://github.com/phetsims/paper-land/blob/main/LICENSE) file.
 
 ## Acknowledgments
 

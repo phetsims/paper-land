@@ -6,15 +6,15 @@
 
 ## At a Glance
 
-- [Introduction](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#introduction)
-- [Paper Event Functions](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#paper-event-functions)
-- [Shared Data (`sharedData`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata)
-- [Board Model (`boardModel`)](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-model-boardmodel)
-- [Program Data](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#program-data)
-- [Board View](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-view)
-- [Whiskers](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#whiskers)
-- [Utils](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#utils)
-- [Console](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#console)
+- [Introduction](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#introduction)
+- [Paper Event Functions](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#paper-event-functions)
+- [Shared Data (`sharedData`)](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata)
+- [Board Model (`boardModel`)](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-model-boardmodel)
+- [Program Data](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#program-data)
+- [Board View](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-view)
+- [Whiskers](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#whiskers)
+- [Utils](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#utils)
+- [Console](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#console)
 
 ## Introduction
 
@@ -67,7 +67,7 @@ The function called when your program is detected by the camera.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -99,7 +99,7 @@ The function called when your program is no longer detected by the camera.
   Assign
   variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -134,7 +134,7 @@ The function called when your program changes position (move or rotate).
   Assign
   variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -171,7 +171,7 @@ The function called when one or more markers are placed inside the program.
   Assign
   variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -209,7 +209,7 @@ The function called when one or more markers are removed from a program.
   Assign
   variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -247,7 +247,7 @@ The function called when one or more markers change their position on this progr
   Assign
   variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 - `{Object[]}` `markersOnProgram` - A list of all the markers on the program.
   See [Markers API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points) for information
   on each marker.
@@ -287,7 +287,7 @@ is
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -319,7 +319,7 @@ and presumably received an onProgramAdjacent event.
 - `{Object}` `scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.
   Assign variables to this object to use the same variable in more than one function.
 - `{Object}` `sharedData` - A JavaScript object with global variables of paper-land.
-  See [sharedData](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#shared-data-shareddata).
+  See [sharedData](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata).
 
 #### Example
 
@@ -346,10 +346,10 @@ that is shared between all programs.
 ```js
 sharedData = {
 
-  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-model-boardmodel
+  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-model-boardmodel
   model: boardModel,
   
-  // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#board-view
+  // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-view
   scene: scene,
   
   // The size of the Board display, in view coordinates.
@@ -609,7 +609,7 @@ be used in the `onProgramAdded` function.
 
 > :warning: You almost always want to remove the model component in the `onProgramRemoved` function.
 >
-See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#onprogramremoved-paperprogramnumber-scratchpad-shareddata-).
+See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#onprogramremoved-paperprogramnumber-scratchpad-shareddata-).
 
 #### Arguments
 
@@ -720,7 +720,7 @@ When the Property is removed with `removeModelComponent`, the listener will be r
 this in the `onProgramAdded` function.
 
 > :warning: You almost always want to remove the listener in the `onProgramRemoved` function. See
-[removeModelPropertyLink](https://github.com/phetsims/paper-land/blob/master/docs/use/board-api.md#phetpaperlandremovemodelpropertylink-componentname-linkid-).
+[removeModelPropertyLink](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#phetpaperlandremovemodelpropertylink-componentname-linkid-).
 
 #### Arguments
 
