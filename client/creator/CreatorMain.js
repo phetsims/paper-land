@@ -86,6 +86,11 @@ export default function CreatorMain( props ) {
     phet.scenery.animatedPanZoomSingleton.listener.scaleGestureTargetPosition = new phet.dot.Vector2( 0, 0 );
     phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 3 );
 
+    // for debugging, start zoomed out so that the entire scene is visible
+    if ( window.dev ) {
+      phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 1 );
+    }
+
     // Prevent the scenery display from panning/zooming while interacting with the react form controls.
     window.addEventListener( 'click', event => {
       phet.scenery.globalKeyStateTracker.enabled = !( reactParentRef.current && reactParentRef.current.contains( event.target ) );
