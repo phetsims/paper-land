@@ -2,7 +2,7 @@
  * Controls that impact the behavior of the board in paper-land.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styles from './BoardMain.css';
@@ -16,6 +16,38 @@ const POSITION_INTERVAL_STEP = 0.01;
 export default function PaperLandControls( props ) {
   const [ positionInterval, setPositionInterval ] = useState( props.initialPositionInterval );
   const [ consoleVisible, setConsoleVisible ] = useState( true );
+
+  useEffect( () => {
+    const fullScreenListener = fullScreen => {
+      if ( props.sceneryDisplay ) {
+        if ( fullScreen ) {
+
+          // remove the styling that positions the board for development
+          props.sceneryDisplay.domElement.classList.remove( styles.simDisplayPanel );
+          props.sceneryDisplay.domElement.classList.remove( styles.boardPanel );
+
+          // take up the full window
+          props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
+        }
+        else {
+
+          // re-apply styling for development
+          props.sceneryDisplay.domElement.classList.add( styles.simDisplayPanel );
+          props.sceneryDisplay.domElement.classList.add( styles.boardPanel );
+
+          // TODO: Why do we have to add the pading values here?
+          props.sceneryDisplay.setWidthHeight( 640 + 2 * ( styles.panelBorderNumber + styles.panelPaddingNumber ), 480 );
+        }
+      }
+    };
+    phet.scenery.FullScreen.isFullScreenProperty.link( fullScreenListener );
+
+
+    // cleanup, removing the listener before re-render
+    return () => {
+      phet.scenery.FullScreen.isFullScreenProperty.unlink( fullScreenListener );
+    };
+  }, [ props.sceneryDisplay ] );
 
   return (
     <div className={`${styles.paperLandControlsContent} ${styles.boardPanel}`}>

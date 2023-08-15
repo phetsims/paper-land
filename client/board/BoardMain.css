@@ -3,6 +3,14 @@
 
 @value displayHeight: 480px;
 
+@value displayWidthNumber: 640;
+
+@value displayHeightNumber: 480;
+
+@value panelBorderNumber: 4;
+
+@value panelPaddingNumber: 4;
+
 :local(.titleContainer) {
   text-align: center;
 }
@@ -60,6 +68,7 @@
 :local(.simDisplayPanel) {
   width: displayWidth;
   height: displayHeight;
+  background-color: #000000;
 }
 
 :local(.consoleContainer) {

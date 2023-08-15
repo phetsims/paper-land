@@ -124,7 +124,11 @@ const mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 const sharedData = {
   model: boardModel,
   scene: scene,
-  displaySize: DISPLAY_SIZE,
+  get displaySize() {
+
+    // If full screen, the display size is the full window - a getter
+    return phet.scenery.FullScreen.isFullScreen() ? new phet.dot.Dimension2( window.innerWidth, window.innerHeight ) : DISPLAY_SIZE;
+  },
   allMarkers: allMarkers
 };
 
