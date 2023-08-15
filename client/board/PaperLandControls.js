@@ -61,7 +61,7 @@ export default function PaperLandControls( props ) {
 
     return () => {
       phet.scenery.voicingManager.startSpeakingEmitter.removeListener( printListener );
-    }
+    };
   }, [ printSpeechSynthesis ] );
 
   return (
