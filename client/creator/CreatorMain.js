@@ -84,12 +84,9 @@ export default function CreatorMain( props ) {
 
     // TODO: Why do you have to set the scaleGestureTargetPosition first?
     phet.scenery.animatedPanZoomSingleton.listener.scaleGestureTargetPosition = new phet.dot.Vector2( 0, 0 );
-    phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 3 );
 
-    // for debugging, start zoomed out so that the entire scene is visible
-    if ( window.dev ) {
-      phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( 1 );
-    }
+    // in development mode, start zoomed out so that the entire scene is visible
+    phet.scenery.animatedPanZoomSingleton.listener.setDestinationScale( window.dev ? 1 : 3 );
 
     // Prevent the scenery display from panning/zooming while interacting with the react form controls.
     window.addEventListener( 'click', event => {
