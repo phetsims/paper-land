@@ -6,6 +6,7 @@ import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
+import TextViewComponent from '../model/views/TextViewComponent.js';
 import ViewComponent from '../model/views/ViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
@@ -13,6 +14,7 @@ import CreateComponentButton from './CreateComponentButton.js';
 import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
+import CreateTextViewForm from './CreateTextViewForm.js';
 
 const getTabForActiveEdit = activeEdit => {
   if ( activeEdit && activeEdit.component instanceof ViewComponent ) {
@@ -29,6 +31,9 @@ const getTabForActiveEdit = activeEdit => {
     }
     else if ( component instanceof SoundViewComponent ) {
       return 'sounds';
+    }
+    else if ( component instanceof TextViewComponent ) {
+      return 'text';
     }
     else {
       throw new Error( 'Unknown component view type for tabs' );
@@ -67,6 +72,7 @@ export default function CreateViewComponentForm( props ) {
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
   const [ soundsFormValid, setSoundsFormValid ] = useState( false );
   const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
+  const [ textFormValid, setTextFormValid ] = useState( false );
   const [ backgroundFormValid, setBackgroundFormValid ] = useState( false );
   const [ imagesFormValid, setImagesFormValid ] = useState( false );
 
@@ -85,6 +91,7 @@ export default function CreateViewComponentForm( props ) {
   const getIsDescriptionFormValid = isFormValid => setDescriptionFormValid( isFormValid );
   const getIsBackgroundFormValid = isFormValid => setBackgroundFormValid( isFormValid );
   const getIsImagesFormValid = isFormValid => setImagesFormValid( isFormValid );
+  const getIsTextFormValid = isFormValid => setTextFormValid( isFormValid );
 
 
   const isComponentNameValid = () => {
@@ -109,6 +116,9 @@ export default function CreateViewComponentForm( props ) {
     }
     else if ( selectedTab === 'images' ) {
       setSelectedTabFormValid( imagesFormValid && isComponentNameValid() );
+    }
+    else if ( selectedTab === 'text' ) {
+      setSelectedTabFormValid( textFormValid && isComponentNameValid() );
     }
   }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid ] );
 
@@ -156,6 +166,10 @@ export default function CreateViewComponentForm( props ) {
         const imageViewComponent = new ImageViewComponent( componentName, selectedModelComponents, controlFunctionString, imageFileName );
         activeProgram.viewContainer.addImageView( imageViewComponent );
       }
+      else if ( selectedTab === 'text' ) {
+        const textViewComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString );
+        activeProgram.viewContainer.addTextView( textViewComponent );
+      }
     }
 
     props.onComponentCreated();
@@ -194,6 +208,14 @@ export default function CreateViewComponentForm( props ) {
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           ></CreateImageViewForm>
+        </Tab>
+        <Tab disabled={tabDisabled} eventKey='text' title='Text' tabClassName={styles.tab}>
+          <CreateTextViewForm
+            allModelComponents={props.allModelComponents}
+            isFormValid={getIsTextFormValid}
+            getGeneralFormData={getDataForGeneral}
+            activeEdit={activeEdit}
+          ></CreateTextViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
           <CreateSoundViewForm

@@ -6,6 +6,7 @@ import BackgroundViewComponent from './BackgroundViewComponent.js';
 import DescriptionViewComponent from './DescriptionViewComponent.js';
 import ImageViewComponent from './ImageViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
+import TextViewComponent from './TextViewComponent.js';
 
 export default class ProgramViewContainer extends ComponentContainer {
   constructor( programModel ) {
@@ -16,6 +17,9 @@ export default class ProgramViewContainer extends ComponentContainer {
 
     // The collection of all description views in this container
     this.descriptionViews = phet.axon.createObservableArray();
+
+    // The collection of all text views in this container
+    this.textViews = phet.axon.createObservableArray();
 
     // The collection of all background views in this container
     this.backgroundViews = phet.axon.createObservableArray();
@@ -62,6 +66,19 @@ export default class ProgramViewContainer extends ComponentContainer {
     this.removeFromAllComponents( descriptionView );
   }
 
+  addTextView( textView ) {
+    this.textViews.push( textView );
+    this.addToAllComponents( textView );
+    this.registerChangeListeners( textView, this.removeTextView.bind( this ) );
+  }
+
+  removeTextView( textView ) {
+    const textViewIndex = this.textViews.indexOf( textView );
+    assert && assert( textViewIndex >= 0, 'TextView not found' );
+    this.textViews.splice( textViewIndex, 1 );
+    this.removeFromAllComponents( textView );
+  }
+
   addBackgroundView( backgroundView ) {
     this.backgroundViews.push( backgroundView );
     this.addToAllComponents( backgroundView );
@@ -92,6 +109,7 @@ export default class ProgramViewContainer extends ComponentContainer {
     return {
       soundViews: this.soundViews.map( soundView => soundView.save() ),
       descriptionViews: this.descriptionViews.map( descriptionView => descriptionView.save() ),
+      textViews: this.textViews.map( textView => textView.save() ),
       backgroundViews: this.backgroundViews.map( backgroundView => backgroundView.save() ),
       imageViews: this.imageViews.map( imageView => imageView.save() )
     };
@@ -105,6 +123,7 @@ export default class ProgramViewContainer extends ComponentContainer {
     // Gracefully handle missing properties
     const soundViews = json.soundViews || [];
     const descriptionViews = json.descriptionViews || [];
+    const textViews = json.textViews || [];
     const backgroundViews = json.backgroundViews || [];
     const imageViews = json.imageViews || [];
 
@@ -115,6 +134,10 @@ export default class ProgramViewContainer extends ComponentContainer {
     descriptionViews.forEach( descriptionViewJSON => {
       const descriptionView = DescriptionViewComponent.fromStateObject( descriptionViewJSON, allComponents );
       this.addDescriptionView( descriptionView );
+    } );
+    textViews.forEach( textViewJSON => {
+      const textView = TextViewComponent.fromStateObject( textViewJSON, allComponents );
+      this.addTextView( textView );
     } );
     backgroundViews.forEach( backgroundViewJSON => {
       const backgroundView = BackgroundViewComponent.fromStateObject( backgroundViewJSON, allComponents );
