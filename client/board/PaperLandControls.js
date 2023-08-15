@@ -16,6 +16,7 @@ const POSITION_INTERVAL_STEP = 0.01;
 export default function PaperLandControls( props ) {
   const [ positionInterval, setPositionInterval ] = useState( props.initialPositionInterval );
   const [ consoleVisible, setConsoleVisible ] = useState( true );
+  const [ printSpeechSynthesis, setPrintSpeechSynthesis ] = useState( false );
 
   useEffect( () => {
     const fullScreenListener = fullScreen => {
@@ -49,6 +50,20 @@ export default function PaperLandControls( props ) {
     };
   }, [ props.sceneryDisplay ] );
 
+  // Print speech synthesis to the console
+  useEffect( () => {
+    const printListener = response => {
+      if ( printSpeechSynthesis ) {
+        phet.paperLand.console.log( 'Speech', `"${response}"` );
+      }
+    };
+    phet.scenery.voicingManager.startSpeakingEmitter.addListener( printListener );
+
+    return () => {
+      phet.scenery.voicingManager.startSpeakingEmitter.removeListener( printListener );
+    }
+  }, [ printSpeechSynthesis ] );
+
   return (
     <div className={`${styles.paperLandControlsContent} ${styles.boardPanel}`}>
       <>
@@ -81,6 +96,16 @@ export default function PaperLandControls( props ) {
             props.updateConsoleVisibility( newValue );
           }}
         />
+      </>
+      <>
+        <Form.Check
+          type='checkbox'
+          label='Print Speech'
+          checked={printSpeechSynthesis}
+          onChange={event => {
+            setPrintSpeechSynthesis( event.target.checked );
+          }}
+        ></Form.Check>
       </>
       <>
         <Button
