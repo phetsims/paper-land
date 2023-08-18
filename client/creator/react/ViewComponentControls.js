@@ -37,8 +37,8 @@ export default function ViewComponentControls( props ) {
       <hr/>
       <Accordion hidden={props.allModelComponents.length === 0}>
         <Accordion.Item eventKey='0'>
-          <Accordion.Header className={styles.cardHeader}>Custom Function</Accordion.Header>
-          <Accordion.Body className={styles.cardBody}>
+          <Accordion.Header>Custom Function</Accordion.Header>
+          <Accordion.Body>
             <hr/>
             <div className={styles.controlElement}>
               <h4>Model dependencies</h4>
@@ -73,6 +73,16 @@ export default function ViewComponentControls( props ) {
                 handleChange={newValue => {
                   props.handleChange( { controlFunctionString: newValue } );
                 }}></CreatorMonacoEditor>
+              <Accordion>
+                <Accordion.Item eventKey='0'>
+                  <Accordion.Header>AI Support</Accordion.Header>
+                  <Accordion.Body>
+                    <div>
+                      <p>Potentially insert AI chat here! Would have access to the above functions and documentation and could easily write code snippets for the user.</p>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
             </div>
           </Accordion.Body>
         </Accordion.Item>
