@@ -4,7 +4,9 @@
 @value displayHeight: 500px;
 
 @value baseButtonColor: rgb(89, 93, 94);
+
 @value pressedButtonColor: rgb(54,56,57);
+
 @value buttonBorderColor: transparent;
 
 @value focusHighlightColor: #6C8EAC;
@@ -180,4 +182,42 @@
 :local(.dialog) {
   background-color: backgroundColor;
   color: textColor;
+}
+
+/**
+  * Override the default styling for the accordion component
+  */
+.accordion-item {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+.accordion-body {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+.accordion-header {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+.accordion-button {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: backgroundColor;
+  color: textColor;
+}
+
+.accordion-button:focus {
+  outline-color: focusHighlightColor;
+  box-shadow: 0 0 0 0.25rem focusHighlightColor;
+}
+
+/* Incredibly, this is the only way to change the color of the chevron icon */
+.accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
 }

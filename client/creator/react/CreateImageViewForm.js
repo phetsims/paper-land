@@ -28,7 +28,7 @@ export default function CreateImageViewForm( props ) {
 
   const [ imageFiles, setImageFiles ] = useState( [] );
 
-  // Load image files on mount
+  // Load image files on mounts
   useEffect( () => {
     const imageFilesListUrl = new URL( 'api/creator/imageFiles', window.location.origin ).toString();
     xhr.get( imageFilesListUrl, { json: true }, ( error, response ) => {

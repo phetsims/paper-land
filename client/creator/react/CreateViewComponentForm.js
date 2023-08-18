@@ -3,6 +3,7 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Component from '../model/Component.js';
 import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
+import CreateShapeViewForm from '../model/views/CreateShapeViewForm.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
@@ -73,6 +74,7 @@ export default function CreateViewComponentForm( props ) {
   const [ soundsFormValid, setSoundsFormValid ] = useState( false );
   const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
   const [ textFormValid, setTextFormValid ] = useState( false );
+  const [ shapesFormValid, setShapesFormValid ] = useState( false );
   const [ backgroundFormValid, setBackgroundFormValid ] = useState( false );
   const [ imagesFormValid, setImagesFormValid ] = useState( false );
 
@@ -80,11 +82,13 @@ export default function CreateViewComponentForm( props ) {
   const generalDataRef = useRef( {} );
   const soundsDataRef = useRef( {} );
   const imagesDataRef = useRef( {} );
+  const shapesDataRef = useRef( {} );
 
   // to be called every change so that we can use data to create components
   const getDataForGeneral = data => {generalDataRef.current = data;};
   const getDataForSounds = data => {soundsDataRef.current = data;};
   const getDataForImages = data => {imagesDataRef.current = data;};
+  const getDataForShapes = data => {shapesDataRef.current = data;};
 
   // functions for subcomponents to set form validity
   const getIsSoundsFormValid = isFormValid => setSoundsFormValid( isFormValid );
@@ -92,6 +96,7 @@ export default function CreateViewComponentForm( props ) {
   const getIsBackgroundFormValid = isFormValid => setBackgroundFormValid( isFormValid );
   const getIsImagesFormValid = isFormValid => setImagesFormValid( isFormValid );
   const getIsTextFormValid = isFormValid => setTextFormValid( isFormValid );
+  const getIsShapesFormValid = isFormValid => setShapesFormValid( isFormValid );
 
 
   const isComponentNameValid = () => {
@@ -190,7 +195,13 @@ export default function CreateViewComponentForm( props ) {
         justify
       >
         <Tab disabled={tabDisabled} eventKey='shapes' title='Shapes' tabClassName={styles.tab}>
-          TODO: Select a model component, a shape, and describe how the model component will manipulate it (scale, position, fill, stroke, etc).
+          <CreateShapeViewForm
+            allModelComponents={props.allModelComponents}
+            isFormValid={getIsShapesFormValid}
+            getGeneralFormData={getDataForGeneral}
+            getShapeFormData={getDataForShapes}
+            activeEdit={activeEdit}
+          ></CreateShapeViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='background' title='Background' tabClassName={styles.tab}>
           <CreateBackgroundViewForm
