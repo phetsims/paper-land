@@ -139,7 +139,7 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'number' ) {
         const numberData = numberDataRef.current;
-        activeProgram.modelContainer.addNumberProperty( componentName, numberData.min, numberData.max, numberData.default );
+        activeProgram.modelContainer.addNumberProperty( componentName, numberData.min, numberData.max, numberData.defaultValue );
 
       }
       else if ( selectedTab === 'enumeration' ) {
@@ -196,8 +196,6 @@ export default function CreateModelComponentForm( props ) {
       setSelectedTab( getTabForActiveEdit() );
     }
   }, [ activeEdit ] );
-
-  // const activeTabKey = ( activeEdit && activeEdit.component ) ? getTabForActiveEdit() : selectedTab;
 
   // If there is an active edit, you cannot change tabs
   const tabDisabled = !!( activeEdit && activeEdit.component );

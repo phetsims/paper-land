@@ -26,7 +26,8 @@ export default function CreateTextViewForm( props ) {
         <ListGroup.Item className={styles.listGroupItem}>setCenterX() - A number, sets x position of the text.</ListGroup.Item>
         <ListGroup.Item className={styles.listGroupItem}>setCenterY() - A number, sets y position of the text.</ListGroup.Item>
         <ListGroup.Item className={styles.listGroupItem}>setFontSize() - A number, sets the font size of the text.</ListGroup.Item>
-        <ListGroup.Item className={styles.listGroupItem}>setFontColor() - A string, sets the font color of the text.</ListGroup.Item>
+        <ListGroup.Item className={styles.listGroupItem}>setTextColor() - A string, sets the font color of the text.</ListGroup.Item>
+        <ListGroup.Item className={styles.listGroupItem}>setFontFamily() - A string, sets the font family of the text.</ListGroup.Item>
       </ListGroup>
     </div>
   );

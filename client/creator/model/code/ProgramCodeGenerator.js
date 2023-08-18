@@ -220,6 +220,11 @@ export default class ProgramCodeGenerator {
       // No extra data for description components yet.
       data = {};
     }
+    else if ( componentType === 'TextViewComponent' ) {
+
+      // no extra data for text components yet.
+      data = {};
+    }
     else if ( componentType === 'BackgroundViewComponent' ) {
 
       // No extra data for background components yet.

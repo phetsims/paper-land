@@ -86,8 +86,8 @@ paperLand.removeModelComponent = componentName => {
     // emit events, passing the componentObject through so that client can dispose of various objects
     paperLand.modelComponentRemovedEmitter.emit( componentName, componentObject );
 
-    // dispose the component when we are done with it, if supported
-    componentObject.dispose && componentObject.dispose();
+    // dispose the component when we are done with it, if supported and the client hasn't already done so
+    componentObject.dispose && !componentObject.isDisposed && componentObject.dispose();
   }
 };
 

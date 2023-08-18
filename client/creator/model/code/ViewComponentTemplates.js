@@ -70,6 +70,55 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}DescriptionMultilink;
     `
   },
+  TextViewComponent: {
+    onProgramAdded: `
+      // Create the text and add it to the view.
+      const {{NAME}}Text = new phet.scenery.Text( '' );
+      
+      sharedData.scene.addChild( {{NAME}}Text );
+      scratchpad.{{NAME}}Text = {{NAME}}Text;
+      
+      // Update the text when a dependency changes.
+      scratchpad.{{NAME}}TextMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        // in a local scope, define the functions that the user can use to manipulate the text
+        
+        const setString = ( string ) => {
+          {{NAME}}Text.string = string;
+        };
+        
+        const setCenterX = ( x ) => {
+          {{NAME}}Text.centerX = x;
+        };
+        
+        const setCenterY = ( y ) => {
+          {{NAME}}Text.centerY = y;
+        };
+        
+        const setFontSize = ( size ) => {
+          {{NAME}}Text.fontSize = size;
+        };
+        
+        const setTextColor = ( color ) => {
+          {{NAME}}Text.fill = color;
+        };
+        
+        const setFontFamily = ( family ) => {
+          {{NAME}}Text.fontFamily = family;
+        };
+      
+        {{CONTROL_FUNCTION}}
+      } );
+    `,
+    onProgramRemoved: `
+      // Remove the text from the view.
+      sharedData.scene.removeChild( scratchpad.{{NAME}}Text );
+      delete scratchpad.{{NAME}}Text;
+      
+      // Remove the multilink
+      scratchpad.{{NAME}}TextMultilink.dispose();
+      delete scratchpad.{{NAME}}TextMultilink;
+    `
+  },
   BackgroundViewComponent: {
     onProgramAdded: `
       // Create a background rectangle and add it to the view.

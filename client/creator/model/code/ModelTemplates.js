@@ -53,6 +53,7 @@ const ModelComponentTemplates = {
           {{DERIVATION}}
         }
       );
+      phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
     `,
     onProgramRemoved: `
     
