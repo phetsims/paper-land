@@ -1,3 +1,7 @@
+/**
+ * Main form for creating a shape. Can select shape type and then options for each.
+ */
+
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import useEditableForm from '../../react/useEditableForm.js';
@@ -9,23 +13,26 @@ import ShapeViewComponent from './ShapeViewComponent.js';
 
 export default function CreateShapeViewForm( props ) {
 
+  // passes the form data back go the parent components for creation
   const getFormData = providedData => {
     props.getGeneralFormData( providedData );
     props.getShapeFormData( providedData );
   };
 
+  // Manages form state and validation
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
     componentData => {
 
-      // TODO: More conditions here?
-      return componentData.modelComponentNames.length;
+      // TODO: How should validation work for this component?
+      return true;
     },
     getFormData,
     ShapeViewComponent
   );
 
+  // A UI component that lets you select the type of shape you want to draw
   const shapeTypeSelector = (
     <>
       <div className={styles.controlElement}>
@@ -55,16 +62,12 @@ export default function CreateShapeViewForm( props ) {
     </>
   );
 
-  const typeSpecificFunctions = (
-    <ShapeFunctionsList formData={formData}/>
-  );
-
   return (
     <>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificControls={shapeTypeSelector}
-        typeSpecificFunctions={typeSpecificFunctions}
+        typeSpecificFunctions={( <ShapeFunctionsList formData={formData}/> )}
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
