@@ -38,6 +38,7 @@ export default function CreateShapeViewForm( props ) {
       <div className={styles.controlElement}>
         <Form.Label><h4>Select shape type:</h4></Form.Label>
         <Form.Select
+          value={formData.defaultShapeOptions.shapeType}
           onChange={event => {
 
             // update only the shape option for this control
