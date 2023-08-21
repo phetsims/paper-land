@@ -6,6 +6,7 @@ import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import CreateShapeViewForm from '../model/views/CreateShapeViewForm.js';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
+import ShapeViewComponent from '../model/views/ShapeViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import TextViewComponent from '../model/views/TextViewComponent.js';
 import ViewComponent from '../model/views/ViewComponent.js';
@@ -35,6 +36,9 @@ const getTabForActiveEdit = activeEdit => {
     }
     else if ( component instanceof TextViewComponent ) {
       return 'text';
+    }
+    else if ( component instanceof ShapeViewComponent ) {
+      return 'shapes';
     }
     else {
       throw new Error( 'Unknown component view type for tabs' );
@@ -125,7 +129,10 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'text' ) {
       setSelectedTabFormValid( textFormValid && isComponentNameValid() );
     }
-  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid ] );
+    else if ( selectedTab === 'shapes' ) {
+      setSelectedTabFormValid( shapesFormValid && isComponentNameValid() );
+    }
+  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid, shapesFormValid ] );
 
   // Set the selected tab when the active edit changes
   useEffect( () => {
@@ -174,6 +181,16 @@ export default function CreateViewComponentForm( props ) {
       else if ( selectedTab === 'text' ) {
         const textViewComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString );
         activeProgram.viewContainer.addTextView( textViewComponent );
+      }
+      else if ( selectedTab === 'shapes' ) {
+
+        // Combine the shape and view specific options into a single options object
+        const shapeOptions = {
+          ...shapesDataRef.current.defaultShapeOptions,
+          ...shapesDataRef.current.defaultViewOptions
+        };
+        const shapeViewComponent = new ShapeViewComponent( componentName, selectedModelComponents, controlFunctionString, shapeOptions );
+        activeProgram.viewContainer.addShapeView( shapeViewComponent );
       }
     }
 

@@ -24,6 +24,9 @@ export default class ProgramViewContainer extends ComponentContainer {
     // The collection of all background views in this container
     this.backgroundViews = phet.axon.createObservableArray();
 
+    // The collection of all shape views in this container
+    this.shapeViews = phet.axon.createObservableArray();
+
     // The collection of all image views in this container
     this.imageViews = phet.axon.createObservableArray();
   }
@@ -45,6 +48,27 @@ export default class ProgramViewContainer extends ComponentContainer {
     assert && assert( soundViewIndex >= 0, 'SoundView not found' );
     this.soundViews.splice( soundViewIndex, 1 );
     this.removeFromAllComponents( soundView );
+  }
+
+  /**
+   * Adds a new shape view.
+   * @param shapeView
+   */
+  addShapeView( shapeView ) {
+    this.shapeViews.push( shapeView );
+    this.addToAllComponents( shapeView );
+    this.registerChangeListeners( shapeView, this.removeShapeView.bind( this ) );
+  }
+
+  /**
+   * Removes a shape view from this container.
+   * @param shapeView
+   */
+  removeShapeView( shapeView ) {
+    const shapeViewIndex = this.shapeViews.indexOf( shapeView );
+    assert && assert( shapeViewIndex >= 0, 'ShapeView not found' );
+    this.shapeViews.splice( shapeViewIndex, 1 );
+    this.removeFromAllComponents( shapeView );
   }
 
   /**
