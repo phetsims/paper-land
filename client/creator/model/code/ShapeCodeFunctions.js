@@ -26,14 +26,11 @@ const ShapeCodeGenerator = {
     }
     else if ( shapeType === 'triangle' ) {
       return `
-        const height = ${shapeOptions.triangleHeight};
-        const baseWidth = ${shapeOptions.triangleBaseWidth};
-        const points = [
-          new phet.dot.Vector2( baseWidth / 2, 0 ),
-          new phet.dot.Vector2( 0, height ),
-          new phet.dot.Vector2( -baseWidth / 2, 0 )
-        ];
-        phet.kite.Shape.polygon( points );
+        phet.kite.Shape.polygon( [
+          new phet.dot.Vector2( ${shapeOptions.triangleBaseWidth} / 2, 0 ),
+          new phet.dot.Vector2( 0, ${shapeOptions.triangleHeight} ),
+          new phet.dot.Vector2( -${shapeOptions.triangleBaseWidth} / 2, 0 )
+        ] );
       `;
     }
     else if ( shapeType === 'polygon' ) {

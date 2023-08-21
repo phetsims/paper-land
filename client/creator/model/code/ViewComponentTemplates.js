@@ -187,12 +187,12 @@ const ViewComponentTemplates = {
     onProgramAdded: `
 
       // Create a shape with kite.
-      const {{NAME}}Shape = {{SHAPE_CREATOR_CODE}};
+      const {{NAME}}Shape = {{SHAPE_CREATOR_CODE}}
       
       // create a path for the shape
       const {{NAME}}Path = new phet.scenery.Path( {{NAME}}Shape, {
-        fill: {{FILL_COLOR}},
-        stroke: {{STROKE_COLOR}},
+        fill: '{{FILL_COLOR}}',
+        stroke: '{{STROKE_COLOR}}',
         lineWidth: {{LINE_WIDTH}},
         
         centerX: {{CENTER_X}},
