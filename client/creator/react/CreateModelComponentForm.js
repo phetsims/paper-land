@@ -147,7 +147,7 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'position' ) {
         const positionData = positionDataRef.current;
-        activeProgram.modelContainer.addVector2Property( componentName, positionData.x, positionData.y );
+        activeProgram.modelContainer.addVector2Property( componentName, positionData.defaultX, positionData.defaultY );
       }
       else if ( selectedTab === 'derived' ) {
         const dependencyNames = derivedDataRef.current.dependencyNames;

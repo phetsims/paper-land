@@ -182,6 +182,45 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}ImageMultilink.dispose();
       delete scratchpad.{{NAME}}ImageMultilink;
     `
+  },
+  ShapeViewComponent: {
+    onProgramAdded: `
+
+      // Create a shape with kite.
+      const {{NAME}}Shape = {{SHAPE_CREATOR_CODE}};
+      
+      // create a path for the shape
+      const {{NAME}}Path = new phet.scenery.Path( {{NAME}}Shape, {
+        fill: {{FILL_COLOR}},
+        stroke: {{STROKE_COLOR}},
+        lineWidth: {{LINE_WIDTH}},
+        
+        centerX: {{CENTER_X}},
+        centerY: {{CENTER_Y}},
+        scale: {{SCALE}},
+        rotation: {{ROTATION}},
+        opacity: {{OPACITY}}
+      } );
+      
+      // assign to scratchpad so that we can remove it later
+      sharedData.scene.addChild( {{NAME}}Path );
+      scratchpad.{{NAME}}Path = {{NAME}}Path;
+      
+      // Update the image when a dependency changes.
+      scratchpad.{{NAME}}PathMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        {{CONTROL_FUNCTION}}
+      } );
+    `,
+    onProgramRemoved: `
+    
+      // Remove the Path from the view
+      sharedData.scene.removeChild( scratchpad.{{NAME}}Path );
+      delete scratchpad.{{NAME}}Path;
+      
+      // Remove the multilink
+      scratchpad.{{NAME}}PathMultilink.dispose();
+      delete scratchpad.{{NAME}}PathMultilink;
+    `
   }
 };
 

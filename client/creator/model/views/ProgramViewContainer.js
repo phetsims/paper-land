@@ -5,6 +5,7 @@ import ComponentContainer from '../ComponentContainer.js';
 import BackgroundViewComponent from './BackgroundViewComponent.js';
 import DescriptionViewComponent from './DescriptionViewComponent.js';
 import ImageViewComponent from './ImageViewComponent.js';
+import ShapeViewComponent from './ShapeViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
 import TextViewComponent from './TextViewComponent.js';
 
@@ -134,6 +135,7 @@ export default class ProgramViewContainer extends ComponentContainer {
       soundViews: this.soundViews.map( soundView => soundView.save() ),
       descriptionViews: this.descriptionViews.map( descriptionView => descriptionView.save() ),
       textViews: this.textViews.map( textView => textView.save() ),
+      shapeViews: this.shapeViews.map( shapeView => shapeView.save() ),
       backgroundViews: this.backgroundViews.map( backgroundView => backgroundView.save() ),
       imageViews: this.imageViews.map( imageView => imageView.save() )
     };
@@ -148,6 +150,7 @@ export default class ProgramViewContainer extends ComponentContainer {
     const soundViews = json.soundViews || [];
     const descriptionViews = json.descriptionViews || [];
     const textViews = json.textViews || [];
+    const shapeViews = json.shapeViews || [];
     const backgroundViews = json.backgroundViews || [];
     const imageViews = json.imageViews || [];
 
@@ -171,6 +174,10 @@ export default class ProgramViewContainer extends ComponentContainer {
       const imageView = ImageViewComponent.fromStateObject( imageViewJSON, allComponents );
       this.addImageView( imageView );
     } );
+    shapeViews.forEach( shapeViewJSON => {
+      const shapeView = ShapeViewComponent.fromStateObject( shapeViewJSON, allComponents );
+      this.addShapeView( shapeView );
+    } );
   }
 
   dispose() {
@@ -178,6 +185,7 @@ export default class ProgramViewContainer extends ComponentContainer {
     this.descriptionViews.dispose();
     this.allComponents.dispose();
     this.backgroundViews.dispose();
+    this.shapeViews.dispose();
     this.imageViews.dispose();
   }
 }

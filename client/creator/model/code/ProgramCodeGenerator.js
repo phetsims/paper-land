@@ -2,6 +2,7 @@ import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ModelComponentTemplates from './ModelTemplates.js';
 import programTemplate from './programTemplate.js';
+import ShapeCodeFunctions from './ShapeCodeFunctions.js';
 import ViewComponentTemplates from './ViewComponentTemplates.js';
 
 export default class ProgramCodeGenerator {
@@ -219,6 +220,23 @@ export default class ProgramCodeGenerator {
 
       // No extra data for description components yet.
       data = {};
+    }
+    else if ( componentType === 'ShapeViewComponent' ) {
+
+      // No extra data for shape components yet.
+      data = {
+        SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.defaultShapeOptions ),
+        FILL_COLOR: viewComponent.defaultShapeOptions.fill,
+        STROKE_COLOR: viewComponent.defaultShapeOptions.stroke,
+        LINE_WIDTH: viewComponent.defaultShapeOptions.lineWidth,
+
+        // Node view options
+        CENTER_X: viewComponent.defaultViewOptions.centerX,
+        CENTER_Y: viewComponent.defaultViewOptions.centerY,
+        SCALE: viewComponent.defaultViewOptions.scale,
+        ROTATION: viewComponent.defaultViewOptions.rotation,
+        OPACITY: viewComponent.defaultViewOptions.opacity
+      };
     }
     else if ( componentType === 'TextViewComponent' ) {
 
