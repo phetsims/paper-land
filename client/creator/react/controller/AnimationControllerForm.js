@@ -80,7 +80,7 @@ export default function AnimationControllerForm( props ) {
         }}
       />
       <ComponentSetterList
-        helperPrompt={'Use "dt" in milliseconds to update values with the following functions.'}
+        helperPrompt={'Use "dt" and "elapsedTime" in milliseconds to update values with the following functions.'}
         components={selectedControlledComponents}
       ></ComponentSetterList>
       <CreatorMonacoEditor
