@@ -238,6 +238,9 @@ export default class CreatorModel {
         else {
           resolve( 'System Created!' );
           console.log( 'System created!' );
+
+          // Set a flag on the appliation storage to indicate that programs were just created with Creator
+          localStorage.paperProgramsCreatedWithCreator = true;
         }
       } );
     } );

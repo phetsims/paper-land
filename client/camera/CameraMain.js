@@ -159,6 +159,7 @@ export default class CameraMain extends React.Component {
       }
       else {
         if ( !_.isEqual( this.state.spaceData, response.body ) ) {
+
           this.setState( { spaceData: response.body }, () => {
             this._programsChange( this.props.paperProgramsProgramsToRender );
 
@@ -166,11 +167,17 @@ export default class CameraMain extends React.Component {
             const selectedProgramInSpace = !!this.state.programInEditor && this.state.spaceData.programs.find(
               program => program.number === this.state.programInEditor.number
             ) !== undefined;
-            if ( !selectedProgramInSpace ) {
+
+            // If an edit came from the Creator, we want to allow full overwrite of all code and programs
+            if ( !selectedProgramInSpace || localStorage.paperProgramsCreatedWithCreator === 'true' ) {
 
               // The selected space does not contain the currently selected program, probably because the user changed
               // which space was selected.  Load a default program from the currently selected space into the editor.
               this._loadEditorWithDefault();
+
+              // we just loaded programs, clear the flag - this is set to true by the Creator application, to
+              // notify the camera that a full overwrite of all programs is necessary
+              localStorage.paperProgramsCreatedWithCreator = false;
             }
           } );
         }
