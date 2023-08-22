@@ -49,7 +49,7 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
 
   // Initial checks and state updates.
   useEffect( () => {
-    setIsFormValid( formData );
+    setIsFormValid( validateFormData( formData ) );
 
     // send the data back to the parent so it is available right away
     getFormData( formData );
@@ -63,11 +63,6 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
     // Make sure that the change function provided the correct data for this component
     validateSchema( componentStateSchema, totalData );
     setFormData( totalData );
-
-    // All values must be defined
-
-    // All values must be defined
-    // const defined = Object.values( totalData ).every( val => val !== '' );
 
     // Update the form validity based on new state
     setIsFormValid( validateFormData( totalData ) );

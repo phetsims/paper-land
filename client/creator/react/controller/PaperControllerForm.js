@@ -1,3 +1,7 @@
+/**
+ * A large form for creating a controller for a single model Property from a paper event.
+ */
+
 import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import BooleanPropertyController from '../../model/controllers/BooleanPropertyController.js';

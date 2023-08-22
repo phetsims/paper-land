@@ -12,5 +12,6 @@ export default class CreatorVisibilityModel {
     this.derivedConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
     this.viewConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
     this.controllerConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
+    this.listenerConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
   }
 }

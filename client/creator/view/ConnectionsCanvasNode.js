@@ -70,6 +70,17 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.stroke();
     }
 
+    if ( this.visibilityModel.listenerConnectionsVisibleProperty.value ) {
+      this.updateListenerConnections();
+
+      context.beginPath();
+      context.strokeStyle = ViewConstants.LINK_WIRE_COLOR;
+      this.linkConnections.forEach( connection => {
+        this.drawCurve( context, connection.start, connection.end );
+      } );
+      context.stroke();
+    }
+
     context.restore();
   }
 
@@ -194,6 +205,72 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         if ( startPoint && endPoint ) {
           this.viewConnections.push( { start: startPoint, end: endPoint } );
         }
+      } );
+    } );
+  }
+
+  /**
+   * Inspect the model for listener connections.
+   */
+  updateListenerConnections() {
+
+    // Link connetions will be drawn from the dependency Properties to the listener component, and from the listener
+    // to the controlled components
+    this.linkConnections = [];
+
+    this.model.allListenerComponents.forEach( component => {
+      const componentName = component.nameProperty.value;
+      const dependencyNames = component.dependencyNames;
+      const controlledPropertyNames = component.controlledPropertyNames;
+
+      // Look for the view point of the listener component
+      let listenerComponentPoint;
+      this.programNodes.forEach( programNode => {
+        programNode.model.listenerContainer.allComponents.forEach( modelComponent => {
+          if ( modelComponent.nameProperty.value === componentName ) {
+            listenerComponentPoint = programNode.getComponentListItemConnectionPoint( componentName );
+          }
+        } );
+      } );
+
+      // Look for the view point of each dependency Property
+      dependencyNames.forEach( dependencyName => {
+        this.programNodes.forEach( programNode => {
+          programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+            if ( modelComponent.nameProperty.value === dependencyName ) {
+
+              // view point of the dependency
+              const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName );
+
+              if ( startPoint && listenerComponentPoint ) {
+                this.linkConnections.push( {
+                  start: programNode.getComponentListItemConnectionPoint( dependencyName ),
+                  end: listenerComponentPoint
+                } );
+              }
+            }
+          } );
+        } );
+      } );
+
+      // Look for the view point of each controlled Property
+      controlledPropertyNames.forEach( controlledPropertyName => {
+        this.programNodes.forEach( programNode => {
+          programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+            if ( modelComponent.nameProperty.value === controlledPropertyName ) {
+
+              // view point of the controlled property
+              const endPoint = programNode.getComponentListItemConnectionPoint( controlledPropertyName );
+
+              if ( listenerComponentPoint && endPoint ) {
+                this.linkConnections.push( {
+                  start: listenerComponentPoint,
+                  end: endPoint
+                } );
+              }
+            }
+          } );
+        } );
       } );
     } );
   }

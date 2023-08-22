@@ -9,7 +9,17 @@ export default function CreateNumberForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    newData => {
+
+      const allDefined = newData.min !== '' &&
+                         newData.max !== '' &&
+                         newData.defaultValue !== '';
+
+      const rangesCorrect = newData.min <= newData.defaultValue &&
+                            newData.defaultValue <= newData.max;
+
+      return allDefined && rangesCorrect;
+    },
     props.getFormData,
     NamedNumberProperty
   );

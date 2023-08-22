@@ -1,16 +1,15 @@
 /**
  * Collection of all the controller components for a single program, with functions to create them.
  */
-import ActiveEdit from './ActiveEdit.js';
 import ComponentContainer from './ComponentContainer.js';
 import BooleanPropertyController from './controllers/BooleanPropertyController.js';
 import EnumerationPropertyController from './controllers/EnumerationPropertyController.js';
+import MultilinkListenerComponent from './controllers/MultilinkListenerComponent.js';
 import NumberPropertyController from './controllers/NumberPropertyController.js';
 import Vector2PropertyController from './controllers/Vector2PropertyController.js';
-import EditType from './EditType.js';
 
 export default class ProgramControllerContainer extends ComponentContainer {
-  constructor( programModel) {
+  constructor( programModel ) {
     super( programModel );
 
     // {ObservableArray<Vector2PropertyController}
@@ -24,6 +23,9 @@ export default class ProgramControllerContainer extends ComponentContainer {
 
     // {ObservableArray<EnumerationPropertyController>
     this.enumerationPropertyControllers = phet.axon.createObservableArray();
+
+    // {ObservableArray<MultilinkController>}
+    this.multilinkPropertyController = phet.axon.createObservableArray();
   }
 
   /**
@@ -44,6 +46,25 @@ export default class ProgramControllerContainer extends ComponentContainer {
   removeVector2PropertyController( vector2PropertyController ) {
     this.vector2PropertyControllers.remove( vector2PropertyController );
     this.removeFromAllComponents( vector2PropertyController );
+  }
+
+  /**
+   * Adds a 'controller' where you can write work to be done in a Multilink to control
+   * other Properties
+   */
+  addMultilinkController( linkPropertyController ) {
+    this.multilinkPropertyController.push( linkPropertyController );
+    this.addToAllComponents( linkPropertyController );
+    this.registerChangeListeners( linkPropertyController, this.removeMultilinkController.bind( this ) );
+  }
+
+  /**
+   * Removes a controller for a 'link' controller.
+   * @param linkPropertyController
+   */
+  removeMultilinkController( linkPropertyController ) {
+    this.multilinkPropertyController.remove( linkPropertyController );
+    this.removeFromAllComponents( linkPropertyController );
   }
 
   /**
@@ -121,6 +142,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
       propertyController.deleteEmitter.removeListener( deleteListener );
       propertyController.namedProperty.deleteEmitter.removeListener( deleteListener );
     };
+
     propertyController.deleteEmitter.addListener( deleteListener );
     propertyController.namedProperty.deleteEmitter.addListener( deleteListener );
   }
@@ -130,6 +152,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
       vector2PropertyControllers: this.vector2PropertyControllers.map( controller => controller.save() ),
       booleanPropertyControllers: this.booleanPropertyControllers.map( controller => controller.save() ),
       numberPropertyControllers: this.numberPropertyControllers.map( controller => controller.save() ),
+      multilinkPropertyController: this.multilinkPropertyController.map( controller => controller.save() ),
       enumerationPropertyControllers: this.enumerationPropertyControllers.map( controller => controller.save() )
     };
   }
@@ -154,6 +177,11 @@ export default class ProgramControllerContainer extends ComponentContainer {
     savedData.enumerationPropertyControllers.forEach( controllerData => {
       const controller = EnumerationPropertyController.fromData( controllerData, namedProperties );
       this.addEnumerationPropertyController( controller );
+    } );
+
+    savedData.multilinkPropertyController.forEach( controllerData => {
+      const controller = MultilinkListenerComponent.fromData( controllerData, namedProperties );
+      this.addMultilinkController( controller );
     } );
   }
 

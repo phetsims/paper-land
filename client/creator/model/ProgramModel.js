@@ -2,6 +2,7 @@ import ProgramCodeGenerator from './code/ProgramCodeGenerator.js';
 import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 import ProgramViewContainer from './views/ProgramViewContainer.js';
+import ProgramListenerContainer from './ProgramListenerContainer.js';
 
 // This value comes from the paper-land API. I am not sure why this value is used. It exists in server files so
 // I am not sure how best to share it.
@@ -35,6 +36,9 @@ export default class ProgramModel {
     // @public - responsible for all 'view' components of this program
     this.viewContainer = new ProgramViewContainer( this, activeEditProperty );
 
+    // @public - responsible for miscellaneous 'listener' components for this program.
+    this.listenerContainer = new ProgramListenerContainer( this, activeEditProperty );
+
     // @public - the position of this program in the editor
     this.positionProperty = new phet.dot.Vector2Property( initialPosition );
 
@@ -51,8 +55,9 @@ export default class ProgramModel {
     const usedInModel = this.modelContainer.allComponents.some( component => component.nameProperty.value === name );
     const usedInController = this.controllerContainer.allComponents.some( component => component.nameProperty.value === name );
     const usedInView = this.viewContainer.allComponents.some( component => component.nameProperty.value === name );
+    const usedInListener = this.listenerContainer.allComponents.some( component => component.nameProperty.value === name );
 
-    return usedInModel || usedInController || usedInView;
+    return usedInModel || usedInController || usedInView || usedInListener;
   }
 
   /**
@@ -64,6 +69,7 @@ export default class ProgramModel {
     this.modelContainer.dispose();
     this.controllerContainer.dispose();
     this.viewContainer.dispose();
+    this.listenerContainer.dispose();
 
     this.deleteEmitter.dispose();
   }
@@ -80,7 +86,8 @@ export default class ProgramModel {
 
       modelContainer: this.modelContainer.save(),
       controllerContainer: this.controllerContainer.save(),
-      viewContainer: this.viewContainer.save()
+      viewContainer: this.viewContainer.save(),
+      listenerContainer: this.listenerContainer.save()
     };
   }
 
@@ -118,6 +125,11 @@ export default class ProgramModel {
    */
   loadControllerComponents( stateObject, allComponents ) {
     this.controllerContainer.load( stateObject.controllerContainer, allComponents );
+
+    // I am considering listener components like this similar to the 'controller' components and
+    // loading them as part of this step.
+    const listenerContainer = stateObject.listenerContainer || {}
+    this.listenerContainer.load( listenerContainer, allComponents );
   }
 
   /**

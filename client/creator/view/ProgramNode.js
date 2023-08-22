@@ -83,6 +83,15 @@ export default class ProgramNode extends phet.scenery.Node {
       stroke: 'rgb(100,100,100)'
     } );
 
+    this.listenerComponentList = new phet.scenery.VBox( {
+      align: 'left',
+      spacing: MARGIN
+    } );
+
+    this.listenerSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
+      stroke: 'rgb(100,100,100)'
+    } );
+
     // Creates a new "component"
     this.createComponentButton = new phet.sun.TextPushButton( 'Create Component', _.merge( {}, BUTTON_OPTIONS, {
       listener: () => {
@@ -107,7 +116,9 @@ export default class ProgramNode extends phet.scenery.Node {
         this.controllerComponentList,
         this.controllerSeparator,
         this.viewComponentList,
-        this.viewSeparator
+        this.viewSeparator,
+        this.listenerComponentList,
+        this.listenerSeparator
       ]
     } );
 
@@ -201,6 +212,7 @@ export default class ProgramNode extends phet.scenery.Node {
     registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
     registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
     registerComponentListListener( model.viewContainer.allComponents, this.viewComponentList );
+    registerComponentListListener( model.listenerContainer.allComponents, this.listenerComponentList );
 
     // initial layout
     this.layout();
@@ -230,6 +242,7 @@ export default class ProgramNode extends phet.scenery.Node {
     this.modelSeparator.visible = this.modelComponentList.children.length > 0;
     this.controllerSeparator.visible = this.controllerComponentList.children.length > 0;
     this.viewSeparator.visible = this.viewComponentList.children.length > 0;
+    this.listenerSeparator.visible = this.listenerComponentList.children.length > 0;
 
     this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );

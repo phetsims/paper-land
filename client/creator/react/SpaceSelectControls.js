@@ -37,7 +37,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'creator-tests' );
 
               setTimeout( () => {
-                setSelectedSystemName( 'shape-test' );
+                setSelectedSystemName( 'multilink-test' );
               }, 500 );
             }, 500 );
           }

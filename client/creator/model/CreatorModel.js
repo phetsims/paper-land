@@ -21,6 +21,8 @@ export default class CreatorModel {
 
     this.allViewComponents = phet.axon.createObservableArray();
 
+    this.allListenerComponents = phet.axon.createObservableArray();
+
     // {Property.<ActiveEdit|null>} - A reference to the program and type of components/data we are editing for it.
     this.activeEditProperty = new phet.axon.Property( null );
 
@@ -84,6 +86,7 @@ export default class CreatorModel {
     this.addComponentAddedListener( this.allModelComponents, newProgram.modelContainer.allComponents );
     this.addComponentAddedListener( this.allControllerComponents, newProgram.controllerContainer.allComponents );
     this.addComponentAddedListener( this.allViewComponents, newProgram.viewContainer.allComponents );
+    this.addComponentAddedListener( this.allListenerComponents, newProgram.listenerContainer.allComponents );
 
     this.programAddedEmitter.emit( newProgram );
 
