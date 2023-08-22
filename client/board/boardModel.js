@@ -306,6 +306,20 @@ paperLand.removeModelObserver = ( componentName, observerId ) => {
   cleanupListenerMaps( observerId );
 };
 
+/**
+ * Add an observer for multiple model components that are expected to exist in the boardModel.
+ *
+ * When all components exist in the model, handleComponentsAttach is called. When any of the components are removed,
+ * handleComponentsDetach is called. Listeners are added to attach and detach when the dependencies are detected and'
+ * missing.
+ *
+ * Returns an ID so that the observer can be removed when necessary.
+ *
+ * @param {string[]} componentNames - Array of components that are required for attach
+ * @param {function} handleComponentsAttach - called when all components exist in the model
+ * @param {function} handleComponentsDetach - called when any of the components are removed from the model
+ * @return {number}
+ */
 paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, handleComponentsDetach ) => {
 
   // reference to a new identifier so callbacks below use the same value as observerId increments
@@ -371,6 +385,13 @@ paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, hand
   return uniqueId;
 };
 
+/**
+ * Removes an observer that is watching for multiple components to exist in the model. If all components
+ * exist when the observer is removed, the detachment callback provided to addMultiModelObserver will be called.
+ *
+ * @param {string[]} componentNames - Array of components that were provided to addMultiModelObserver
+ * @param {number} observerId - The unique ID returned by addMultiModelObserver, needed to remove internal listeners.
+ */
 phet.paperLand.removeMultiModelObserver = ( componentNames, observerId ) => {
   if ( idToComponentDetachMap.has( observerId ) ) {
     const components = componentNames.map( name => boardModel.get( name ) );
