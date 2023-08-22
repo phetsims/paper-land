@@ -22,6 +22,22 @@ const ListenerComponentTemplates = {
       phet.axon.stepTimer.removeListener( scratchpad.{{NAME}}AnimationListener );
       delete scratchpad.{{NAME}}AnimationListener;
     `
+  },
+  MultilinkListenerComponent: {
+    onProgramAdded: `
+      scratchpad.{{NAME}}Multilink = new phet.axon.Multilink( [ {{DEPENDENCIES}} ], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
+        // the functions that are available to the client from their selected dependencies
+        {{CONTROL_FUNCTIONS}}
+      
+        // the code block that the user wrote to change controlled Properties
+        {{CONTROL_FUNCTION}}
+      } );
+    `,
+    onProgramRemoved: `
+      scratchpad.{{NAME}}Multilink.dispose();
+      delete scratchpad.{{NAME}}Multilink;
+    `
   }
 };
 

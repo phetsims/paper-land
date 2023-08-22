@@ -73,7 +73,7 @@ const ViewComponentTemplates = {
   TextViewComponent: {
     onProgramAdded: `
       // Create the text and add it to the view.
-      const {{NAME}}Text = new phet.scenery.Text( '' );
+      const {{NAME}}Text = new phet.scenery.Text( '', { stroke: 'white' } );
       
       sharedData.scene.addChild( {{NAME}}Text );
       scratchpad.{{NAME}}Text = {{NAME}}Text;

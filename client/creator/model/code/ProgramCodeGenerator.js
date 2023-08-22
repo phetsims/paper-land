@@ -92,7 +92,7 @@ export default class ProgramCodeGenerator {
       const componentType = viewComponent.constructor.name;
 
       if ( !ViewComponentTemplates[ componentType ] ) {
-        throw new Error( `${componentType} is not supported yet for code generation` );
+        throw new Error( `${componentType} view is not supported yet for code generation` );
       }
       const template = ViewComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
@@ -123,7 +123,7 @@ export default class ProgramCodeGenerator {
       const componentType = controllerComponent.constructor.name;
 
       if ( !ControllerComponentTemplates[ componentType ] ) {
-        throw new Error( `${componentType} is not supported yet for code generation.` );
+        throw new Error( `${componentType} controller is not supported yet for code generation.` );
       }
       const template = ControllerComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
@@ -150,13 +150,20 @@ export default class ProgramCodeGenerator {
       const componentType = listenerComponent.constructor.name;
 
       if ( !ListenerComponentTemplates[ componentType ] ) {
-        throw new Error( `${componentType} is not supported yet for code generation.` );
+        throw new Error( `${componentType} listener is not supported yet for code generation.` );
       }
       const template = ListenerComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
         const componentData = ProgramCodeGenerator.getListenerComponentData( listenerComponent );
+        const controlFunctions = ProgramCodeGenerator.combineCodeList( ListenerCodeGenerator.getComponentSetterFunctions( listenerComponent.controlledPropertyNames ) );
+
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: listenerComponent.nameProperty.value,
+
+          // the available functions to control existing model components
+          CONTROL_FUNCTIONS: controlFunctions,
+
+          // the function that the user wrote to change values
           CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( listenerComponent.controlFunctionString ),
           ...componentData
         } );
@@ -292,14 +299,20 @@ export default class ProgramCodeGenerator {
 
   static getListenerComponentData( listenerComponent ) {
     const componentType = listenerComponent.constructor.name;
-    const controlledNames = listenerComponent.controlledPropertyNames;
     let data = {};
 
-    if ( componentType === 'AnimationListenerComponent' ) {
-      data = {
 
-        // the available functions for the user
-        CONTROL_FUNCTIONS: ProgramCodeGenerator.combineCodeList( ListenerCodeGenerator.getComponentSetterFunctions( controlledNames ) )
+    if ( componentType === 'AnimationListenerComponent' ) {
+      data = {};
+    }
+    else if ( componentType === 'MultilinkListenerComponent' ) {
+      data = {
+        DEPENDENCIES: listenerComponent.dependencyNames.map( name => {
+          return `phet.paperLand.getModelComponent( '${name}' )`;
+        } ).join( ', ' ),
+        DEPENDENCY_ARGUMENTS: listenerComponent.dependencyNames.map( name => {
+          return name;
+        } ).join( ', ' )
       };
     }
     else {

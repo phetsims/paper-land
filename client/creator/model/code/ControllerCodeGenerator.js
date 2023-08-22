@@ -75,7 +75,7 @@ class ControllerCodeGenerator {
         controlledName,
 
         // The value is only true when the program is rotated
-        () => 'phet.paperLand.utils.getNormalizedProgramRotation( points ) > Math.PI / 2'
+        () => 'phet.paperLand.utils.getNormalizedProgramRotation( points ) > 0.25'
       );
     }
     return '';
