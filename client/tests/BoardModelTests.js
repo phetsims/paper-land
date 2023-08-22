@@ -214,3 +214,5 @@ QUnit.test( 'MultiModelObserver', assert => {
   phet.paperLand.addModelComponent( 'componentA', componentA );
   assert.ok( attachCount === 2, 'observer removed, attach should not happen again' );
 } );
+
+QUnit.test( 'addModelPropertyMultilink', assert => {} );

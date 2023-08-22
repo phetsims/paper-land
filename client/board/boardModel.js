@@ -452,7 +452,7 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
  * @param {function} listener - the callback for the Multilink
  * @return {number}
  */
-paperLand.addMultiModelPropertyLink = ( componentNames, listener ) => {
+paperLand.addModelPropertyMultilink = ( componentNames, listener ) => {
   let multilink = null;
 
   return paperLand.addMultiModelObserver(
@@ -461,7 +461,7 @@ paperLand.addMultiModelPropertyLink = ( componentNames, listener ) => {
     // attach - Multilink to all components when they exist
     components => {
       if ( !components.every( component => component.link ) ) {
-        throw new Error( 'Model component must be an axon.Property for addMultiModelPropertyLink' );
+        throw new Error( 'Model component must be an axon.Property for addModelPropertyMultilink' );
       }
       if ( multilink !== null ) {
         throw new Error( 'Multilink already exists.' );
@@ -473,7 +473,7 @@ paperLand.addMultiModelPropertyLink = ( componentNames, listener ) => {
     // detach - detach the multilink
     components => {
       if ( !components.every( component => component.link ) ) {
-        throw new Error( 'Model component must be an axon.Property for addMultiModelPropertyLink' );
+        throw new Error( 'Model component must be an axon.Property for addModelPropertyMultilink' );
       }
 
       multilink.dispose();
@@ -483,13 +483,13 @@ paperLand.addMultiModelPropertyLink = ( componentNames, listener ) => {
 };
 
 /**
- * Removes a multilink that was added with addMultiModelPropertyLink and stops watching for properties to be added
+ * Removes a multilink that was added with addModelPropertyMultilink and stops watching for properties to be added
  * and removed from the model.
  *
  * @param {string[]} componentNames
  * @param {number} linkId
  */
-paperLand.removeMultiModelPropertyLink = ( componentNames, linkId ) => {
+paperLand.removeModelPropertyMultilink = ( componentNames, linkId ) => {
   paperLand.removeMultiModelObserver(
     componentNames,
     linkId
