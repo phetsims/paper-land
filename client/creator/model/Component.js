@@ -29,6 +29,15 @@ export default class Component {
   }
 
   /**
+   * Serializes this data for save/load.
+   */
+  save() {
+    return {
+      name: this.nameProperty.value
+    };
+  }
+
+  /**
    * Find components (dependencies) that have a name in the list of name strings.
    *
    * @param {NamedProperty[]} dependencies

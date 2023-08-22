@@ -8,7 +8,9 @@ export default function CreatePositionForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    componentData => {
+      return componentData.defaultX !== undefined && componentData.defaultY !== undefined;
+    },
     props.getFormData,
     NamedVector2Property
   );

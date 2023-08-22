@@ -1,8 +1,9 @@
 import Component from '../Component.js';
+import ListenerComponent from './ListenerComponent.js';
 
-export default class MultilinkListenerComponent extends Component {
+export default class MultilinkListenerComponent extends ListenerComponent {
   constructor( name, dependencies, controlledProperties, controlFunctionString ) {
-    super( name );
+    super( name, controlledProperties, controlFunctionString );
 
     // The list of Properties that will call the listener upon changing
     this._dependencies = [];
@@ -10,23 +11,10 @@ export default class MultilinkListenerComponent extends Component {
     // The list of names for the dependency NamedProperties.
     this.dependencyNames = [];
 
-    // The list of Properties that the user can change in the listener.
-    this._controlledProperties = [];
-
-    // The list of names for the controlled Properties.
-    this.controlledPropertyNames = [];
-
-    // {string} - the callback function for the Multilink
-    this.controlFunctionString = controlFunctionString;
-
     // A Multilink that will update the collection of names whenever a dependency changes its name.
     this._dependencyNameChangeMultilink = null;
 
-    // A multilink that will update the list of controlling Properties when one of their names change
-    this._controllingPropertyNameChangeMultilink = null;
-
     this.setDependencies( dependencies );
-    this.setControlledProperties( controlledProperties );
   }
 
   /**
@@ -56,40 +44,17 @@ export default class MultilinkListenerComponent extends Component {
     this.dependencyNames = this._dependencies.map( dependency => dependency.nameProperty.value );
   }
 
-  /**
-   * Set the list of Properties that are controlled by this MultilinkListenerComponent.
-   */
-  setControlledProperties( controlledProperties ) {
-    if ( this._controllingPropertyNameChangeMultilink ) {
-      this._controllingPropertyNameChangeMultilink.dispose();
-      this._controllingPropertyNameChangeMultilink = null;
-    }
-
-    this._controlledProperties = controlledProperties;
-    this.updateControlledPropertyNames();
-
-    this._controllingPropertyNameChangeMultilink = phet.axon.Multilink.multilink(
-      this._controlledProperties.map( controllingProperty => controllingProperty.nameProperty ),
-      () => { this.updateControlledPropertyNames(); }
-    );
-  }
-
-  /**
-   * Updates the list of names of controlled Properties.
-   */
-  updateControlledPropertyNames() {
-    this.controlledPropertyNames = this._controlledProperties.map( controllingProperty => controllingProperty.nameProperty.value );
-  }
-
   save() {
     return {
-      name: this.nameProperty.value,
+      ...super.save(),
       dependencyNames: this.dependencyNames,
-      controlledPropertyNames: this.controlledPropertyNames,
       controlFunctionString: this.controlFunctionString
     };
   }
 
+  /**
+   * Creates a new MultilinkListenerComponent from a serialized state.
+   */
   static fromData( data, namedProperties ) {
     const dependencies = Component.findComponentsByName( namedProperties, data.dependencyNames );
     if ( dependencies.length < 1 ) {

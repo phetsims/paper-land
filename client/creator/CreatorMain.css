@@ -16,7 +16,6 @@
 
 @value textColor: #bdcbda;
 
-
 /* The flex parent for the three columns of the board page */
 :local(.rowContainer) {
   display: flex;
