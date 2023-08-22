@@ -44,7 +44,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
     const linkListeners = json.linkListeners || [];
 
     linkListeners.forEach( linkListenerJSON => {
-      const linkListener = MultilinkListenerComponent.fromStateObject( linkListenerJSON, allComponents );
+      const linkListener = MultilinkListenerComponent.fromData( linkListenerJSON, allComponents );
       this.addLinkListener( linkListener );
     } );
   }
