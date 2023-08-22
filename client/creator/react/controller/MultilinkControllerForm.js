@@ -14,24 +14,36 @@ export default function MultilinkControllerForm( props ) {
   const componentName = props.componentName;
   const model = props.model;
 
+  // validity state for the form
   const [ formValid, setFormValid ] = useState( false );
 
-
-  // Only the name determines validity for this.
-  useEffect( () => {
-    setFormValid( isNameValid( activeEditProperty.value, model, componentName ) );
-  }, [ componentName ] );
-
+  // The function that determines if the form is valid, needs to be updated when formData and name
+  // change
+  const getIsFormValid = currentFormData => {
+    const nameGood = isNameValid( activeEditProperty.value, model, componentName );
+    const dependenciesGood = currentFormData.dependencyNames.length > 0;
+    const controlledGood = currentFormData.controlledPropertyNames.length > 0;
+    const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
+    return nameGood && dependenciesGood && controlledGood && controlFunctionGood;
+  };
 
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
 
     // only the name controls validity for now
-    valid => {},
-    data => {},
+    valid => {
+      setFormValid( valid );
+    },
+    data => {
+      return getIsFormValid( data );
+    },
     props.getFormData,
     MultilinkListenerComponent
   );
+
+  useEffect( () => {
+    setFormValid( getIsFormValid( formData ) );
+  }, [ componentName ] );
 
   // Get the references to the actual model components from selected form data (name strings)
   const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, formData.dependencyNames );
