@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { isNameValid } from '../../../utils.js';
 import Component from '../../model/Component.js';
 import MultilinkListenerComponent from '../../model/controllers/MultilinkListenerComponent.js';
+import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
@@ -89,9 +90,6 @@ export default function MultilinkControllerForm( props ) {
           } );
         }}
       />
-      <VariableDocumentationList
-        components={selectedModelComponents}
-      ></VariableDocumentationList>
       <hr></hr>
       <h4>Controlled Properties</h4>
       <ModelComponentSelector
@@ -102,6 +100,14 @@ export default function MultilinkControllerForm( props ) {
           handleChange( { controlledPropertyNames: selectedComponents.map( component => component.nameProperty.value ) } );
         }}
       />
+      <VariableDocumentationList
+        components={selectedModelComponents}
+      ></VariableDocumentationList>
+      <hr></hr>
+      <ComponentSetterList
+        components={selectedControlledComponents}
+        helperPrompt={'Use the following functions in your code to update model components.'}
+      ></ComponentSetterList>
       <CreatorMonacoEditor
         formData={formData}
         handleChange={newValue => {
