@@ -1,4 +1,5 @@
 import ComponentContainer from './ComponentContainer.js';
+import AnimationListenerComponent from './controllers/AnimationListenerComponent.js';
 import MultilinkListenerComponent from './controllers/MultilinkListenerComponent.js';
 
 export default class ProgramListenerContainer extends ComponentContainer {
@@ -72,7 +73,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
       this.addLinkListener( linkListener );
     } );
     animationListeners.forEach( animationListenerJSON => {
-      const animationListener = MultilinkListenerComponent.fromData( animationListenerJSON, allComponents );
+      const animationListener = AnimationListenerComponent.fromData( animationListenerJSON, allComponents );
       this.addAnimationListener( animationListener );
     } );
   }
