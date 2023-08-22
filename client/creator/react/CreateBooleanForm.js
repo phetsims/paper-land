@@ -8,7 +8,9 @@ export default function CreateBooleanForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    () => {
+      return true;
+    },
     props.getFormData,
     NamedBooleanProperty
   );

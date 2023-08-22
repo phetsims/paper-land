@@ -206,8 +206,16 @@ const ViewComponentTemplates = {
       sharedData.scene.addChild( {{NAME}}Path );
       scratchpad.{{NAME}}Path = {{NAME}}Path;
       
-      // Update the image when a dependency changes.
+      // Update the shape when a dependency changes.
       scratchpad.{{NAME}}PathMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
+        const setCenterX = ( x ) => {
+          {{NAME}}Path.centerX = x;
+        };
+        
+        const setCenterY = ( y ) => {
+          {{NAME}}Path.centerY = y;
+        };
         {{CONTROL_FUNCTION}}
       } );
     `,

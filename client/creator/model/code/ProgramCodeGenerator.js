@@ -1,5 +1,7 @@
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
+import ListenerCodeGenerator from './ListenerCodeGenerator.js';
+import ListenerComponentTemplates from './ListenerComponentTemplates.js';
 import ModelComponentTemplates from './ModelTemplates.js';
 import programTemplate from './programTemplate.js';
 import ShapeCodeFunctions from './ShapeCodeFunctions.js';
@@ -52,8 +54,9 @@ export default class ProgramCodeGenerator {
     const modelCode = ProgramCodeGenerator.createProgramEventCodeForModelComponent( program, eventName );
     const viewCode = ProgramCodeGenerator.createProgramEventCodeForViewComponent( program, eventName );
     const controllerCode = ProgramCodeGenerator.createProgramEventCodeForControllerComponent( program, eventName );
+    const listenerCode = ProgramCodeGenerator.createProgramEventCodeForListenerComponent( program, eventName );
 
-    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode, controllerCode ] );
+    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode, controllerCode, listenerCode ] );
   }
 
   static createProgramEventCodeForModelComponent( program, eventName ) {
@@ -128,6 +131,33 @@ export default class ProgramCodeGenerator {
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: controllerComponent.nameProperty.value,
           CONTROLLED_NAME: controllerComponent.namedProperty.nameProperty.value,
+          ...componentData
+        } );
+      }
+      else {
+        return '';
+      }
+    } );
+
+    return ProgramCodeGenerator.combineCodeList( codeList );
+  }
+
+  /**
+   * Create program code for the listener components.
+   */
+  static createProgramEventCodeForListenerComponent( program, eventName ) {
+    const codeList = program.listenerContainer.allComponents.map( listenerComponent => {
+      const componentType = listenerComponent.constructor.name;
+
+      if ( !ListenerComponentTemplates[ componentType ] ) {
+        throw new Error( `${componentType} is not supported yet for code generation.` );
+      }
+      const template = ListenerComponentTemplates[ componentType ][ eventName ];
+      if ( template ) {
+        const componentData = ProgramCodeGenerator.getListenerComponentData( listenerComponent );
+        return ProgramCodeGenerator.fillInTemplate( template, {
+          NAME: listenerComponent.nameProperty.value,
+          CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( listenerComponent.controlFunctionString ),
           ...componentData
         } );
       }
@@ -255,6 +285,25 @@ export default class ProgramCodeGenerator {
     }
     else {
       throw new Error( `View component ${componentType} is not supported yet for code generation.` );
+    }
+
+    return data;
+  }
+
+  static getListenerComponentData( listenerComponent ) {
+    const componentType = listenerComponent.constructor.name;
+    const controlledNames = listenerComponent.controlledPropertyNames;
+    let data = {};
+
+    if ( componentType === 'AnimationListenerComponent' ) {
+      data = {
+
+        // the available functions for the user
+        CONTROL_FUNCTIONS: ProgramCodeGenerator.combineCodeList( ListenerCodeGenerator.getComponentSetterFunctions( controlledNames ) )
+      };
+    }
+    else {
+      throw new Error( 'Unknown component type for getting listener data.' );
     }
 
     return data;

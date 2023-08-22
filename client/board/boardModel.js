@@ -361,4 +361,10 @@ paperLand.removeModelController = ( componentName, controllerId ) => {
   paperLand.removeModelObserver( componentName, controllerId );
 };
 
+// The amount of time that has elapsed since the board was created, useful in animation.
+paperLand.elapsedTimeProperty = new phet.axon.Property( 0 );
+phet.axon.stepTimer.addListener( dt => {
+  paperLand.elapsedTimeProperty.value = paperLand.elapsedTimeProperty.value + dt;
+} );
+
 export default boardModel;
