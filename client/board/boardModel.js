@@ -214,6 +214,8 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
  *                                                      exists (for example, call `component.link` here)
  * @param handleComponentDetach {function(component)} - handles detachment from the model component when component is
  *                                                      removed (for example, call `component.unlink` here)
+ *
+ * TODO: Replace implementation by using addMultiModelObserver?
  */
 paperLand.addModelObserver = ( componentName, handleComponentAttach, handleComponentDetach ) => {
 
@@ -268,6 +270,24 @@ paperLand.addModelObserver = ( componentName, handleComponentAttach, handleCompo
 };
 
 /**
+ * When an observer is removed, remove the related listeners that watch for an individual model component add/remove.
+ */
+const cleanupListenerMaps = observerId => {
+  const componentAddedListeners = idToComponentAddedListenerMap.get( observerId );
+  if ( componentAddedListeners ) {
+    while ( componentAddedListeners.length > 0 ) {
+      paperLand.modelComponentAddedEmitter.removeListener( componentAddedListeners.pop() );
+    }
+  }
+  const componentRemovedListeners = idToComponentRemovedListenerMap.get( observerId );
+  if ( componentRemovedListeners ) {
+    while ( componentRemovedListeners.length > 0 ) {
+      paperLand.modelComponentRemovedEmitter.removeListener( componentRemovedListeners.pop() );
+    }
+  }
+};
+
+/**
  * Removes the model observer for the component with the provided name and does some detachment from the model
  * component.
  * @param componentName {string} - name of the model component to stop watching
@@ -283,21 +303,82 @@ paperLand.removeModelObserver = ( componentName, observerId ) => {
     idToComponentDetachMap.delete( observerId );
   }
 
-  // remove any modelComponentAdded/modelComponentRemoved emitter listeners that were added on
-  // addModelObserver...
-  const componentAddedListeners = idToComponentAddedListenerMap.get( observerId );
-  if ( componentAddedListeners ) {
-    while ( componentAddedListeners.length > 0 ) {
-      paperLand.modelComponentAddedEmitter.removeListener( componentAddedListeners.pop() );
+  cleanupListenerMaps( observerId );
+};
+
+paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, handleComponentsDetach ) => {
+
+  // reference to a new identifier so callbacks below use the same value as observerId increments
+  const uniqueId = ++observerId; // (get next value before saving reference)
+
+  // All dependencies exist in the model - do whatever work is needed on attach and add listeners to watch for when
+  // a dependency is removed again.
+  const handleComponentsExist = components => {
+    if ( assert ) {
+
+      // verify that every component is in the model
+      const allComponentsExist = componentNames.every( componentName => boardModel.has( componentName ) );
+      assert( allComponentsExist, 'All components must exist in the model to add a multi-model observer.' );
     }
+
+    handleComponentsAttach( components );
+
+    // store the detach listener so we can call it when we remove the model observer
+    idToComponentDetachMap.set( uniqueId, handleComponentsDetach );
+
+    const componentRemovedListener = removedComponentName => {
+
+      // one of the dependency components was removed, so we need to remove this entire observer
+      if ( componentNames.includes( removedComponentName ) ) {
+        handleComponentsDoNotExist( components );
+        removeListenerFromModelChangeEmitter( uniqueId, componentRemovedListener, 'remove' );
+      }
+    };
+    addListenerToModelChangeEmitter( uniqueId, componentRemovedListener, 'remove' );
+  };
+
+  const handleComponentsDoNotExist = components => {
+    if ( components !== undefined ) {
+      handleComponentsDetach( components );
+
+      // now that it is detached, we don't want to attempt to detach again when we remove the observer
+      idToComponentDetachMap.delete( uniqueId );
+    }
+
+    const componentAddedListener = ( addedComponentName, addedComponent ) => {
+
+      // if every dependency is in the model, the observer can be added
+      if ( componentNames.every( name => boardModel.has( name ) ) ) {
+        handleComponentsExist( componentNames.map( name => boardModel.get( name ) ) );
+        removeListenerFromModelChangeEmitter( uniqueId, componentAddedListener, 'add' );
+      }
+    };
+    addListenerToModelChangeEmitter( uniqueId, componentAddedListener, 'add' );
+  };
+
+  if ( componentNames.every( name => boardModel.has( name ) ) ) {
+
+    // component already exists in the model, handle it and wait for removal
+    const components = componentNames.map( name => boardModel.get( name ) );
+    handleComponentsExist( components );
+  }
+  else {
+
+    // component does not exist yet, wait for it to be added
+    handleComponentsDoNotExist();
   }
 
-  const componentRemovedListeners = idToComponentRemovedListenerMap.get( observerId );
-  if ( componentRemovedListeners ) {
-    while ( componentRemovedListeners.length > 0 ) {
-      paperLand.modelComponentRemovedEmitter.removeListener( componentRemovedListeners.pop() );
-    }
+  return uniqueId;
+};
+
+phet.paperLand.removeMultiModelObserver = ( componentNames, observerId ) => {
+  if ( idToComponentDetachMap.has( observerId ) ) {
+    const components = componentNames.map( name => boardModel.get( name ) );
+    idToComponentDetachMap.get( observerId )( components );
+    idToComponentDetachMap.delete( observerId );
   }
+
+  cleanupListenerMaps( observerId );
 };
 
 /**

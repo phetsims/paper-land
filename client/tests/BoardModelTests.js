@@ -151,3 +151,66 @@ QUnit.test( 'addModelController/removeModelController', assert => {
 
   phet.paperLand.removeModelComponent( 'modelComponent' );
 } );
+
+QUnit.test( 'MultiModelObserver', assert => {
+
+  // The dependency components. Each must be added to the model for the observer to attach.
+  const componentA = { value: 0 };
+  const componentB = { value: 0 };
+  const componentC = { value: 0 };
+  const componentD = { value: 0 };
+
+  // an extra component that is not a dependency
+  const componentE = { value: 0 };
+
+  let attachCount = 0;
+  const handleComponentsAttach = components => {
+    attachCount++;
+  };
+
+  let detachCount = 0;
+  const handleComponentsDetach = components => {
+    detachCount++;
+  };
+
+  const componentNames = [ 'componentA', 'componentB', 'componentC', 'componentD' ];
+  const observerId = phet.paperLand.addMultiModelObserver( componentNames, handleComponentsAttach, handleComponentsDetach );
+  assert.ok( attachCount === 0, 'observer should not have attached yet' );
+  assert.ok( detachCount === 0, 'observer should not have detached yet' );
+
+  phet.paperLand.addModelComponent( 'componentA', componentA );
+  assert.ok( attachCount === 0, 'observer should not have attached yet' );
+  phet.paperLand.addModelComponent( 'componentB', componentB );
+  assert.ok( attachCount === 0, 'observer should not have attached yet' );
+  phet.paperLand.addModelComponent( 'componentC', componentC );
+  assert.ok( attachCount === 0, 'observer should not have attached yet' );
+  phet.paperLand.addModelComponent( 'componentD', componentD );
+  assert.ok( attachCount === 1, 'observer should be attached now that all components are added' );
+  assert.ok( detachCount === 0, 'observer should not have detached yet' );
+
+  phet.paperLand.removeModelComponent( 'componentA' );
+  assert.ok( attachCount === 1, 'observer should only have been attached once' );
+  assert.ok( detachCount === 1, 'one dependency was removed after attachment, detachment should have happened' );
+
+  phet.paperLand.removeModelComponent( 'componentB' );
+  assert.ok( detachCount === 1, 'only one detachment event for all dependencies' );
+
+  phet.paperLand.addModelComponent( 'componentA', componentA );
+  phet.paperLand.addModelComponent( 'componentB', componentB );
+  assert.ok( attachCount === 2, 'observer should have attached again' );
+
+  phet.paperLand.addModelComponent( 'componentE', componentE );
+  assert.ok( attachCount === 2, 'no op when adding a component out of the list' );
+
+  phet.paperLand.removeModelComponent( 'componentE' );
+  assert.ok( detachCount === 1, 'no op when removing a component out of the list' );
+
+  phet.paperLand.removeMultiModelObserver( componentNames, observerId );
+  assert.ok( detachCount === 2, 'observer should have been detached again when the observer is removed' );
+
+  phet.paperLand.removeModelComponent( 'componentA' );
+  assert.ok( detachCount === 2, 'observer removed, detach should not happen again' );
+
+  phet.paperLand.addModelComponent( 'componentA', componentA );
+  assert.ok( attachCount === 2, 'observer removed, attach should not happen again' );
+} );
