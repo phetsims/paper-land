@@ -444,6 +444,59 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
 };
 
 /**
+ * Adds a listener to multiple Properties in the boardModel. If any of the Properties do not exist, the listener will
+ * be linked as soon as they do. If any of the Properties are removed from the model, the listener will be unlinked,
+ * but linked again as soon as the Property is added back to the model.
+ *
+ * @param {string[]} componentNames
+ * @param {function} listener - the callback for the Multilink
+ * @return {number}
+ */
+paperLand.addMultiModelPropertyLink = ( componentNames, listener ) => {
+  let multilink = null;
+
+  return paperLand.addMultiModelObserver(
+    componentNames,
+
+    // attach - Multilink to all components when they exist
+    components => {
+      if ( !components.every( component => component.link ) ) {
+        throw new Error( 'Model component must be an axon.Property for addMultiModelPropertyLink' );
+      }
+      if ( multilink !== null ) {
+        throw new Error( 'Multilink already exists.' );
+      }
+
+      multilink = new phet.axon.Multilink( components, listener );
+    },
+
+    // detach - detach the multilink
+    components => {
+      if ( !components.every( component => component.link ) ) {
+        throw new Error( 'Model component must be an axon.Property for addMultiModelPropertyLink' );
+      }
+
+      multilink.dispose();
+      multilink = null;
+    }
+  );
+};
+
+/**
+ * Removes a multilink that was added with addMultiModelPropertyLink and stops watching for properties to be added
+ * and removed from the model.
+ *
+ * @param {string[]} componentNames
+ * @param {number} linkId
+ */
+paperLand.removeMultiModelPropertyLink = ( componentNames, linkId ) => {
+  paperLand.removeMultiModelObserver(
+    componentNames,
+    linkId
+  );
+};
+
+/**
  * Adds a function that sets a Property value once when the value exists or is added to the model.
  * @param componentName {string} - the name of the component to control
  * @param controllerAttach {function(component)} - called with the component to set its value
