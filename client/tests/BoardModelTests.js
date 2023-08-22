@@ -213,6 +213,49 @@ QUnit.test( 'MultiModelObserver', assert => {
 
   phet.paperLand.addModelComponent( 'componentA', componentA );
   assert.ok( attachCount === 2, 'observer removed, attach should not happen again' );
+
+  // remove all components for test
+  phet.paperLand.removeModelComponent( 'componentA' );
+  phet.paperLand.removeModelComponent( 'componentB' );
+  phet.paperLand.removeModelComponent( 'componentC' );
+  phet.paperLand.removeModelComponent( 'componentD' );
 } );
 
-QUnit.test( 'addModelPropertyMultilink', assert => {} );
+QUnit.test( 'addModelPropertyMultilink', assert => {
+
+  // add model components
+  const componentAProperty = new phet.axon.Property( 0 );
+  const componentBProperty = new phet.axon.Property( 0 );
+
+  let listenerCount = 0;
+  const listener = ( componentA, componentB ) => {
+    listenerCount++;
+  };
+
+  phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], listener );
+  assert.ok( listenerCount === 0, 'components do not exist in the model and the listener should not have been called' );
+
+  phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
+  assert.ok( listenerCount === 0, 'componentAProperty exists in the model but componentBProperty does not, the listener should not have been called' );
+
+  phet.paperLand.addModelComponent( 'componentBProperty', componentBProperty );
+  assert.ok( listenerCount === 1, 'Both components now exist, the listener will be called.' );
+
+  componentAProperty.value = 1;
+  assert.ok( listenerCount === 2, 'Listener should be attached and changing a value should trigger it' );
+
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+  componentAProperty.value = 2;
+  assert.ok( listenerCount === 2, 'Listener was detached on component removal, changing value should not call listener' );
+
+  phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
+  assert.ok( listenerCount === 3, 'Adding components again, listener should trigger' );
+
+  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], listener );
+
+  componentAProperty.value = 3;
+  assert.ok( listenerCount === 3, 'Multilink was removed, changing value should not call listener' );
+
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+} );
