@@ -233,26 +233,6 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         } );
       } );
 
-      // Look for the view point of each dependency Property
-      dependencyNames.forEach( dependencyName => {
-        this.programNodes.forEach( programNode => {
-          programNode.model.modelContainer.allComponents.forEach( modelComponent => {
-            if ( modelComponent.nameProperty.value === dependencyName ) {
-
-              // view point of the dependency
-              const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName );
-
-              if ( startPoint && listenerComponentPoint ) {
-                this.linkConnections.push( {
-                  start: programNode.getComponentListItemConnectionPoint( dependencyName ),
-                  end: listenerComponentPoint
-                } );
-              }
-            }
-          } );
-        } );
-      } );
-
       // Look for the view point of each controlled Property
       controlledPropertyNames.forEach( controlledPropertyName => {
         this.programNodes.forEach( programNode => {
@@ -272,6 +252,28 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           } );
         } );
       } );
+
+      // Look for the view point of each dependency Property
+      if ( dependencyNames ) {
+        dependencyNames.forEach( dependencyName => {
+          this.programNodes.forEach( programNode => {
+            programNode.model.modelContainer.allComponents.forEach( modelComponent => {
+              if ( modelComponent.nameProperty.value === dependencyName ) {
+
+                // view point of the dependency
+                const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName );
+
+                if ( startPoint && listenerComponentPoint ) {
+                  this.linkConnections.push( {
+                    start: programNode.getComponentListItemConnectionPoint( dependencyName ),
+                    end: listenerComponentPoint
+                  } );
+                }
+              }
+            } );
+          } );
+        } );
+      }
     } );
   }
 

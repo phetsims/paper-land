@@ -54,4 +54,12 @@ export default class ListenerComponent extends Component {
       controlFunctionString: this.controlFunctionString
     };
   }
+
+  static getStateSchema() {
+    return {
+      ...Component.getStateSchema(),
+      controlledPropertyNames: [],
+      controlFunctionString: ''
+    };
+  }
 }

@@ -7,6 +7,9 @@ export default class ProgramListenerContainer extends ComponentContainer {
 
     // the collection of all link listeners in this container
     this.linkListeners = phet.axon.createObservableArray();
+
+    // the collection of all animation listeners in this container
+    this.animationListeners = phet.axon.createObservableArray();
   }
 
   /**
@@ -29,11 +32,31 @@ export default class ProgramListenerContainer extends ComponentContainer {
   }
 
   /**
+   * Add an animation listener to this container.
+   */
+  addAnimationListener( animationListener ) {
+    this.animationListeners.push( animationListener );
+    this.addToAllComponents( animationListener );
+    this.registerChangeListeners( animationListener, this.removeAnimationListener.bind( this ) );
+  }
+
+  /**
+   * Remove an animation listener from this container.
+   */
+  removeAnimationListener( animationListener ) {
+    const animationListenerIndex = this.animationListeners.indexOf( animationListener );
+    assert && assert( animationListenerIndex >= 0, 'AnimationListener not found' );
+    this.animationListeners.splice( animationListenerIndex, 1 );
+    this.removeFromAllComponents( animationListener );
+  }
+
+  /**
    * Save this instance to a serialized JSON for save/load.
    */
   save() {
     return {
-      linkListeners: this.linkListeners.map( linkListener => linkListener.save() )
+      linkListeners: this.linkListeners.map( linkListener => linkListener.save() ),
+      animationListeners: this.animationListeners.map( animationListener => animationListener.save() )
     };
   }
 
@@ -42,10 +65,15 @@ export default class ProgramListenerContainer extends ComponentContainer {
    */
   load( json, allComponents ) {
     const linkListeners = json.linkListeners || [];
+    const animationListeners = json.animationListeners || [];
 
     linkListeners.forEach( linkListenerJSON => {
       const linkListener = MultilinkListenerComponent.fromData( linkListenerJSON, allComponents );
       this.addLinkListener( linkListener );
+    } );
+    animationListeners.forEach( animationListenerJSON => {
+      const animationListener = MultilinkListenerComponent.fromData( animationListenerJSON, allComponents );
+      this.addAnimationListener( animationListener );
     } );
   }
 }

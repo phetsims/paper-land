@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
-import React, { useState } from 'react';
+import styles from './../../CreatorMain.css';
+import AnimationControllerForm from './AnimationControllerForm.js';
 import MultilinkControllerForm from './MultilinkControllerForm.js';
 import PaperControllerForm from './PaperControllerForm.js';
-import styles from './../../CreatorMain.css';
 
 export default function CreateModelControllerForm( props ) {
 
@@ -61,7 +62,16 @@ export default function CreateModelControllerForm( props ) {
           />
         </Tab>
         <Tab eventKey='animation' title='Animation' tabClassName={styles.tab}>
-          <p>Animation here</p>
+          <AnimationControllerForm
+            activeEdit={activeEdit}
+            isFormValid={() => {}}
+            getFormData={() => {}}
+            allModelComponents={allModelComponents}
+            componentName={componentName}
+            activeEditProperty={activeEditProperty}
+            onComponentCreated={props.onComponentCreated}
+            model={model}
+          />
         </Tab>
       </Tabs>
     </>

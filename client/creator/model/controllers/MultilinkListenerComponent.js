@@ -71,10 +71,8 @@ export default class MultilinkListenerComponent extends ListenerComponent {
 
   static getStateSchema() {
     return {
-      name: '',
-      dependencyNames: [],
-      controlledPropertyNames: [],
-      controlFunctionString: ''
+      ...ListenerComponent.getStateSchema(),
+      dependencyNames: []
     };
   }
 }
