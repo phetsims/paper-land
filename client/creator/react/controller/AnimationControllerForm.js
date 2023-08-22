@@ -48,7 +48,12 @@ export default function AnimationControllerForm( props ) {
 
   const createComponent = () => {
     if ( props.activeEdit && props.activeEdit.component instanceof AnimationListenerComponent ) {
-      throw new Error( 'Edit of AnimationListenerComponent not yet implemented.' );
+
+      // Update values for the existing component if we are editing
+      const component = props.activeEdit.component;
+      component.nameProperty.value = props.componentName;
+      component.setControlledProperties( selectedControlledComponents );
+      component.controlFunctionString = formData.controlFunctionString;
     }
     else {
       const animationListener = new AnimationListenerComponent(
