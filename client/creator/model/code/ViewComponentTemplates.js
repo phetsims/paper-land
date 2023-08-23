@@ -216,6 +216,11 @@ const ViewComponentTemplates = {
         const setCenterY = ( y ) => {
           {{NAME}}Path.centerY = y;
         };
+        
+        const setRotation = ( rotation ) => {
+          {{NAME}}Path.rotation = rotation;
+        };
+        
         {{CONTROL_FUNCTION}}
       } );
     `,
