@@ -126,12 +126,8 @@ export default class ProgramCodeGenerator {
 
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: viewComponent.nameProperty.value,
-          DEPENDENCIES: viewComponent.modelComponentNames.map( name => {
-            return `phet.paperLand.getModelComponent( '${name}' )`;
-          } ).join( ', ' ),
-          DEPENDENCY_ARGUMENTS: viewComponent.modelComponentNames.map( name => {
-            return name;
-          } ).join( ', ' ),
+          DEPENDENCY_NAMES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( viewComponent.modelComponentNames ),
+          DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( viewComponent.modelComponentNames ),
           CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( viewComponent.controlFunctionString ),
           ...componentData
         } );

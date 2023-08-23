@@ -79,9 +79,9 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}Text = {{NAME}}Text;
       
       // Update the text when a dependency changes.
-      scratchpad.{{NAME}}TextMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}TextMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
         // in a local scope, define the functions that the user can use to manipulate the text
-        
         const setString = ( string ) => {
           {{NAME}}Text.string = string;
         };
@@ -115,8 +115,8 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Text;
       
       // Remove the multilink
-      scratchpad.{{NAME}}TextMultilink.dispose();
-      delete scratchpad.{{NAME}}TextMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}TextMultilinkId );
+      delete scratchpad.{{NAME}}TextMultilinkId;
     `
   },
   BackgroundViewComponent: {

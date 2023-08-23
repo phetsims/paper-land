@@ -337,7 +337,7 @@ export function inDevMode() {
 
   // window is not always available?
   if ( window && window.location && window.location.href ) {
-    
+
     // Get the current URL
     const url = new URL( window.location.href );
 
