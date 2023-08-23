@@ -10,7 +10,7 @@ const ViewComponentTemplates = {
       let {{NAME}}StopSoundTimeout = null;
 
       // Play the sound when any dependencies change value.
-      scratchpad.{{NAME}}SoundMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}SoundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         // in a local scope, define the functions that the user can use to manipulate the sound
         const setOutputLevel = ( level ) => {
         
@@ -48,8 +48,8 @@ const ViewComponentTemplates = {
       phet.tambo.soundManager.removeSoundGenerator( scratchpad.{{NAME}}SoundClip );
       delete scratchpad.{{NAME}}SoundClip;
       
-      scratchpad.{{NAME}}SoundMultilink.dispose();
-      delete scratchpad.{{NAME}}SoundMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}SoundMultilinkId );
+      delete scratchpad.{{NAME}}SoundMultilinkId;
     `
   },
   DescriptionViewComponent: {
@@ -59,15 +59,15 @@ const ViewComponentTemplates = {
         {{CONTROL_FUNCTION}}
       }
       
-      scratchpad.{{NAME}}DescriptionMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
         phet.scenery.voicingUtteranceQueue.addToBack( descriptionString );
       } ); 
     `,
     onProgramRemoved: `
       // Remove the description multilink
-      scratchpad.{{NAME}}DescriptionMultilink.dispose();
-      delete scratchpad.{{NAME}}DescriptionMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}DescriptionMultilinkId );
+      delete scratchpad.{{NAME}}DescriptionMultilinkId;
     `
   },
   TextViewComponent: {
@@ -135,7 +135,7 @@ const ViewComponentTemplates = {
       }
       
       // Update the background rectangle whenever the dependencies change.
-      scratchpad.{{NAME}}BackgroundMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
         {{NAME}}BackgroundRectangle.fill = backgroundColorString;
       } );
@@ -146,8 +146,8 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}BackgroundRectangle;
       
       // Remove the multilink
-      scratchpad.{{NAME}}BackgroundMultilink.dispose();
-      delete scratchpad.{{NAME}}BackgroundMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, {{NAME}}BackgroundMultilinkId );
+      delete scratchpad.{{NAME}}BackgroundMultilinkId;
     `
   },
   ImageViewComponent: {
@@ -161,7 +161,7 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}Image = {{NAME}}Image;
       
       // Update the image when a dependency changes.
-      scratchpad.{{NAME}}ImageMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}ImageMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         // in a local scope, define the functions that the user can use to manipulate the sound
         const setCenter = ( position ) => {
           {{NAME}}Image.center = position;
@@ -179,8 +179,8 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Image;
       
       // Remove the multilink
-      scratchpad.{{NAME}}ImageMultilink.dispose();
-      delete scratchpad.{{NAME}}ImageMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}ImageMultilinkId );
+      delete scratchpad.{{NAME}}ImageMultilinkId;
     `
   },
   ShapeViewComponent: {
@@ -207,7 +207,7 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}Path = {{NAME}}Path;
       
       // Update the shape when a dependency changes.
-      scratchpad.{{NAME}}PathMultilink = phet.axon.Multilink.multilink( [{{DEPENDENCIES}}], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}PathMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         const setCenterX = ( x ) => {
           {{NAME}}Path.centerX = x;
@@ -226,8 +226,8 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Path;
       
       // Remove the multilink
-      scratchpad.{{NAME}}PathMultilink.dispose();
-      delete scratchpad.{{NAME}}PathMultilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}PathMultilinkId );
+      delete scratchpad.{{NAME}}PathMultilinkId;
     `
   }
 };
