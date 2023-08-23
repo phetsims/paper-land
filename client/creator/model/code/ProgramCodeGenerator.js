@@ -39,6 +39,32 @@ export default class ProgramCodeGenerator {
   }
 
   /**
+   * Given an array of depenency names for a component, turns it into a string that represents
+   * an array of those strings. Useful for passing arguments to a multilink for generated code.
+   *
+   * [ 'bool', 'number', 'value' ] => "[ 'bool', 'number', 'value' ]"
+   *
+   * @param {string[]} dependencyNames
+   * @returns {string}
+   */
+  static dependencyNamesArrayToCodeString( dependencyNames ) {
+    return '[ ' + dependencyNames.map( name => `'${name}'` ).join( ', ' ) + ' ]';
+  }
+
+  /**
+   * Converts an array of string names to a string that separates them by commas. Uesful
+   * for code generation when dependency names are to be used in a callback function.
+   *
+   * [ 'bool', 'number', 'value' ] => "bool, number, value"
+   *
+   * @param {string[]} dependencyNames
+   * @returns {string}
+   */
+  static dependencyNamesToArgumentsListString( dependencyNames ) {
+    return dependencyNames.join( ', ' );
+  }
+
+  /**
    * Format the provided string for the Monaco editor. The output of monaco includes `\r\n` for newlines, but
    * if the \r is included in an INPUT string for a monaco editor, the React component breaks.
    * TODO: Could also add more prettify here too?
@@ -165,6 +191,8 @@ export default class ProgramCodeGenerator {
 
           // the function that the user wrote to change values
           CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( listenerComponent.controlFunctionString ),
+
+          // additional component-specific data
           ...componentData
         } );
       }
@@ -307,12 +335,8 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'MultilinkListenerComponent' ) {
       data = {
-        DEPENDENCIES: listenerComponent.dependencyNames.map( name => {
-          return `phet.paperLand.getModelComponent( '${name}' )`;
-        } ).join( ', ' ),
-        DEPENDENCY_ARGUMENTS: listenerComponent.dependencyNames.map( name => {
-          return name;
-        } ).join( ', ' )
+        DEPENDENCY_NAMES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
+        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames )
       };
     }
     else {

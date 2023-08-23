@@ -3,12 +3,10 @@ import randomColor from 'randomcolor';
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
-import {
-  codeToName, getApiUrl, getSaveString, programMatchesFilterString
-} from '../utils';
+import SaveAlert from '../common/SaveAlert.js';
+import { codeToName, getApiUrl, getSaveString, inDevMode, programMatchesFilterString } from '../utils';
 import CodeSnippetsDialog from './CodeSnippetsDialog.js';
 import styles from './EditorMain.css';
-import SaveAlert from '../common/SaveAlert.js';
 
 export default class EditorMain extends React.Component {
 
@@ -46,7 +44,23 @@ export default class EditorMain extends React.Component {
         console.error( error );
       }
       else {
-        this.setState( { spaceData: response.body } );
+        const state = { spaceData: response.body };
+
+        // In 'dev' mode, we will watch for updates from the creator editor and update the code
+        // when the space is re-created.
+        if ( inDevMode() && localStorage.paperProgramsCreatedWithCreator === 'true' ) {
+          const program = this._selectedProgram( this.state.selectedProgramNumber );
+          if ( program ) {
+            const remoteProgram = response.body.programs.find( p => p.number === program.number );
+            state.code = remoteProgram.currentCode;
+          }
+
+          // clear the flag now that we have received the update
+          localStorage.paperProgramsCreatedWithCreator = false;
+        }
+
+        // this.setState( { spaceData: response.body } );
+        this.setState( state );
       }
 
       const elapsedTimeMs = Date.now() - beginTimeMs;

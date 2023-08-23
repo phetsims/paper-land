@@ -14,6 +14,10 @@ const defaultConfig = {
   editorId: uuidv4()
 };
 
+// the query string up to the first ampersand is the space name
+// TODO: Better way to get this? This is a bad api.
+const spaceName = window.location.search.slice( 1 ).split( '&' )[ 0 ];
+
 localStorage.paperProgramsEditorConfig = JSON.stringify( {
   ...defaultConfig,
   ...JSON.parse( localStorage.paperProgramsEditorConfig || '{}' )
@@ -22,7 +26,7 @@ localStorage.paperProgramsEditorConfig = JSON.stringify( {
 ReactDOM.render(
   <EditorMain
     editorConfig={JSON.parse( localStorage.paperProgramsEditorConfig )}
-    spaceName={window.location.search.slice( 1 )}
+    spaceName={spaceName}
   />,
   element
 );

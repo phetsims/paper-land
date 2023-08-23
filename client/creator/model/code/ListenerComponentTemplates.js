@@ -25,7 +25,7 @@ const ListenerComponentTemplates = {
   },
   MultilinkListenerComponent: {
     onProgramAdded: `
-      scratchpad.{{NAME}}Multilink = new phet.axon.Multilink( [ {{DEPENDENCIES}} ], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         // the functions that are available to the client from their selected dependencies
         {{CONTROL_FUNCTIONS}}
@@ -35,8 +35,8 @@ const ListenerComponentTemplates = {
       } );
     `,
     onProgramRemoved: `
-      scratchpad.{{NAME}}Multilink.dispose();
-      delete scratchpad.{{NAME}}Multilink;
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}MultilinkId );
+      delete scratchpad.{{NAME}}MultilinkId;
     `
   }
 };

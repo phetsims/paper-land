@@ -325,7 +325,27 @@ export function isNameValid( activeEdit, creatorModel, componentName ) {
   // If editing a component, the name is valid if it is unused or if it matches the existing component name.
   // Otherwise, the name is valid if it is unused.
   const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.nameProperty.value ) :
-         creatorModel.isNameAvailable( componentName );
+                 creatorModel.isNameAvailable( componentName );
 
   return hasLength && unique;
+}
+
+//------------------------------------------------------
+// query parameters
+//------------------------------------------------------
+export function inDevMode() {
+
+  // window is not always available?
+  if ( window && window.location && window.location.href ) {
+    
+    // Get the current URL
+    const url = new URL( window.location.href );
+
+    // Get the query parameters string
+    const queryParamsString = url.search;
+
+    return queryParamsString.includes( 'dev' );
+  }
+
+  return false;
 }
