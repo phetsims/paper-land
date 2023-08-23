@@ -5,6 +5,7 @@ import ListenerComponentTemplates from './ListenerComponentTemplates.js';
 import ModelComponentTemplates from './ModelTemplates.js';
 import programTemplate from './programTemplate.js';
 import ShapeCodeFunctions from './ShapeCodeFunctions.js';
+import ViewCodeGenerator from './ViewCodeGenerator.js';
 import ViewComponentTemplates from './ViewComponentTemplates.js';
 
 export default class ProgramCodeGenerator {
@@ -287,6 +288,7 @@ export default class ProgramCodeGenerator {
       // No extra data for shape components yet.
       data = {
         SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.defaultShapeOptions ),
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType ),
         FILL_COLOR: viewComponent.defaultShapeOptions.fill,
         STROKE_COLOR: viewComponent.defaultShapeOptions.stroke,
         LINE_WIDTH: viewComponent.defaultShapeOptions.lineWidth,
@@ -302,7 +304,9 @@ export default class ProgramCodeGenerator {
     else if ( componentType === 'TextViewComponent' ) {
 
       // no extra data for text components yet.
-      data = {};
+      data = {
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType )
+      };
     }
     else if ( componentType === 'BackgroundViewComponent' ) {
 

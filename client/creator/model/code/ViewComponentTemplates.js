@@ -82,30 +82,9 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}TextMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         // in a local scope, define the functions that the user can use to manipulate the text
-        const setString = ( string ) => {
-          {{NAME}}Text.string = string;
-        };
-        
-        const setCenterX = ( x ) => {
-          {{NAME}}Text.centerX = x;
-        };
-        
-        const setCenterY = ( y ) => {
-          {{NAME}}Text.centerY = y;
-        };
-        
-        const setFontSize = ( size ) => {
-          {{NAME}}Text.fontSize = size;
-        };
-        
-        const setTextColor = ( color ) => {
-          {{NAME}}Text.fill = color;
-        };
-        
-        const setFontFamily = ( family ) => {
-          {{NAME}}Text.fontFamily = family;
-        };
-      
+        {{CONTROL_FUNCTIONS}}
+
+        // the function that the user wrote to update the text      
         {{CONTROL_FUNCTION}}
       } );
     `,
@@ -209,41 +188,8 @@ const ViewComponentTemplates = {
       // Update the shape when a dependency changes.
       scratchpad.{{NAME}}PathMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
-        const setCenterX = ( x ) => {
-          {{NAME}}Path.centerX = x;
-        };
-        
-        const setCenterY = ( y ) => {
-          {{NAME}}Path.centerY = y;
-        };
-        
-        const setScale( scale ) => {
-          {{NAME}}Path.scaleMagnitude = scale;
-        };
-        
-        const setOpacity = ( opacity ) => {
-          {{NAME}}Path.opacity = opacity;
-        };
-        
-        const setVisible = ( visible ) => {
-          {{NAME}}Path.visible = visible;
-        };
-        
-        const setRotation = ( rotation ) => {
-          {{NAME}}Path.rotation = rotation;
-        };
-        
-        const setStroke = ( color ) => {
-          {{NAME}}Path.stroke = color;
-        };
-        
-        const setLineWidth = ( width ) => {
-          {{NAME}}Path.lineWidth = width;
-        };
-        
-        const setFill = ( color ) => {
-          {{NAME}}Path.fill = color;
-        };
+        // the functions that are available for this view type
+        {{CONTROL_FUNCTIONS}}
         
         {{CONTROL_FUNCTION}}
       } );
