@@ -129,7 +129,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
       vector2PropertyControllers: this.vector2PropertyControllers.map( controller => controller.save() ),
       booleanPropertyControllers: this.booleanPropertyControllers.map( controller => controller.save() ),
       numberPropertyControllers: this.numberPropertyControllers.map( controller => controller.save() ),
-      multilinkPropertyController: this.multilinkPropertyController.map( controller => controller.save() ),
       enumerationPropertyControllers: this.enumerationPropertyControllers.map( controller => controller.save() )
     };
   }
