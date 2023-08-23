@@ -217,8 +217,32 @@ const ViewComponentTemplates = {
           {{NAME}}Path.centerY = y;
         };
         
+        const setScale( scale ) => {
+          {{NAME}}Path.scaleMagnitude = scale;
+        };
+        
+        const setOpacity = ( opacity ) => {
+          {{NAME}}Path.opacity = opacity;
+        };
+        
+        const setVisible = ( visible ) => {
+          {{NAME}}Path.visible = visible;
+        };
+        
         const setRotation = ( rotation ) => {
           {{NAME}}Path.rotation = rotation;
+        };
+        
+        const setStroke = ( color ) => {
+          {{NAME}}Path.stroke = color;
+        };
+        
+        const setLineWidth = ( width ) => {
+          {{NAME}}Path.lineWidth = width;
+        };
+        
+        const setFill = ( color ) => {
+          {{NAME}}Path.fill = color;
         };
         
         {{CONTROL_FUNCTION}}
