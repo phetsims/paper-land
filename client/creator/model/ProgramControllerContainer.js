@@ -4,7 +4,6 @@
 import ComponentContainer from './ComponentContainer.js';
 import BooleanPropertyController from './controllers/BooleanPropertyController.js';
 import EnumerationPropertyController from './controllers/EnumerationPropertyController.js';
-import MultilinkListenerComponent from './controllers/MultilinkListenerComponent.js';
 import NumberPropertyController from './controllers/NumberPropertyController.js';
 import Vector2PropertyController from './controllers/Vector2PropertyController.js';
 
@@ -23,9 +22,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
 
     // {ObservableArray<EnumerationPropertyController>
     this.enumerationPropertyControllers = phet.axon.createObservableArray();
-
-    // {ObservableArray<MultilinkController>}
-    this.multilinkPropertyController = phet.axon.createObservableArray();
   }
 
   /**
@@ -46,25 +42,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
   removeVector2PropertyController( vector2PropertyController ) {
     this.vector2PropertyControllers.remove( vector2PropertyController );
     this.removeFromAllComponents( vector2PropertyController );
-  }
-
-  /**
-   * Adds a 'controller' where you can write work to be done in a Multilink to control
-   * other Properties
-   */
-  addMultilinkController( linkPropertyController ) {
-    this.multilinkPropertyController.push( linkPropertyController );
-    this.addToAllComponents( linkPropertyController );
-    this.registerChangeListeners( linkPropertyController, this.removeMultilinkController.bind( this ) );
-  }
-
-  /**
-   * Removes a controller for a 'link' controller.
-   * @param linkPropertyController
-   */
-  removeMultilinkController( linkPropertyController ) {
-    this.multilinkPropertyController.remove( linkPropertyController );
-    this.removeFromAllComponents( linkPropertyController );
   }
 
   /**
@@ -177,11 +154,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
     savedData.enumerationPropertyControllers.forEach( controllerData => {
       const controller = EnumerationPropertyController.fromData( controllerData, namedProperties );
       this.addEnumerationPropertyController( controller );
-    } );
-
-    savedData.multilinkPropertyController.forEach( controllerData => {
-      const controller = MultilinkListenerComponent.fromData( controllerData, namedProperties );
-      this.addMultilinkController( controller );
     } );
   }
 
