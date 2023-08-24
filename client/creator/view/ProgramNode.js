@@ -122,9 +122,10 @@ export default class ProgramNode extends phet.scenery.Node {
       ]
     } );
 
-    // A parent is made eagerly for the button, which won't be available intil the image
-    // is loaded. But it is ready for use immediately.
+    // A parent is made eagerly for components with images, which won't be available intil the image
+    // is loaded. But the parent is ready for layout immediately
     this.deleteButtonParent = new phet.scenery.Node();
+    this.customCodeIconParent = new phet.scenery.Node();
 
     // rendering order
     this.addChild( this.background );
@@ -132,6 +133,7 @@ export default class ProgramNode extends phet.scenery.Node {
     this.addChild( this.titleText );
     this.addChild( this.deleteButtonParent );
     this.addChild( this.allComponentsVBox );
+    this.addChild( this.customCodeIconParent );
     this.addChild( this.createComponentButton );
     this.addChild( this.createListenerButton );
 
@@ -141,6 +143,7 @@ export default class ProgramNode extends phet.scenery.Node {
       this.titleText,
       this.deleteButtonParent,
       this.allComponentsVBox,
+      this.customCodeIconParent,
       this.createListenerButton,
       this.createComponentButton
     ];
@@ -159,6 +162,15 @@ export default class ProgramNode extends phet.scenery.Node {
       this.layout();
     } );
 
+    ImageLoader.loadImage( 'media/images/magic-wand.svg', imageElement => {
+      const imageNode = new phet.scenery.Image( imageElement, {
+        scale: 1.3
+      } );
+
+      this.customCodeIconParent.addChild( imageNode );
+      this.layout();
+    } );
+
     // listeners
     model.positionProperty.link( position => {
       this.leftTop = position;
@@ -166,6 +178,10 @@ export default class ProgramNode extends phet.scenery.Node {
 
     model.titleProperty.link( title => {
       this.titleText.string = title;
+    } );
+
+    model.customCodeContainer.hasCustomCodeProperty.link( hasCustomCode => {
+      this.customCodeIconParent.visible = hasCustomCode;
     } );
 
     const dragListener = new phet.scenery.DragListener( {
@@ -250,5 +266,6 @@ export default class ProgramNode extends phet.scenery.Node {
     this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
     this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -MARGIN );
     this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
+    this.customCodeIconParent.centerBottom = this.createComponentButton.centerTop.minusXY( 0, MARGIN );
   }
 }

@@ -69,7 +69,7 @@ export default function ViewComponentControls( props ) {
               </ListGroup>
               {props.typeSpecificFunctions ? props.typeSpecificFunctions : ''}
               <CreatorMonacoEditor
-                formData={props.formData}
+                controlFunctionString={props.formData.controlFunctionString}
                 handleChange={newValue => {
                   props.handleChange( { controlFunctionString: newValue } );
                 }}></CreatorMonacoEditor>

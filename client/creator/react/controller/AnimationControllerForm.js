@@ -84,7 +84,7 @@ export default function AnimationControllerForm( props ) {
         components={selectedControlledComponents}
       ></ComponentSetterList>
       <CreatorMonacoEditor
-        formData={formData}
+        controlFunctionString={formData.controlFunctionString}
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>

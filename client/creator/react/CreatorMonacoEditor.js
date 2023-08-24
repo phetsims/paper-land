@@ -5,8 +5,8 @@ import styles from './../CreatorMain.css';
 export default function CreatorMonacoEditor( props ) {
 
   // require props
-  if ( !props.formData ) {
-    throw new Error( 'The formData prop is required for form state.' );
+  if ( typeof props.controlFunctionString !== 'string' ) {
+    throw new Error( 'The controlFunctionString prop is required for form state, and must be a string.' );
   }
 
   const handleChange = props.handleChange || ( () => {} );
@@ -22,12 +22,16 @@ export default function CreatorMonacoEditor( props ) {
   return (
     <div className={`${styles.editor} ${styles.controlElement}`}>
       <MonacoEditor
-        value={props.formData.controlFunctionString}
+        value={props.controlFunctionString}
         language='javascript'
         theme='vs-dark'
         onChange={( newValue, event ) => {
-          handleCodeChange( newValue, event );
-          handleChange( newValue );
+
+          // an empty string in case of undefined
+          const codeValue = newValue || '';
+
+          handleCodeChange( codeValue, event );
+          handleChange( codeValue );
         }}
         options={{
           tabSize: 2,

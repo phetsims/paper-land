@@ -109,7 +109,7 @@ export default function MultilinkControllerForm( props ) {
         helperPrompt={'Use the following functions in your code to update model components.'}
       ></ComponentSetterList>
       <CreatorMonacoEditor
-        formData={formData}
+        controlFunctionString={formData.controlFunctionString}
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>

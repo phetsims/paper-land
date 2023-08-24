@@ -9,29 +9,45 @@ export default class CustomCodeContainer {
   constructor() {
 
     // The code strings for each paper event
-    // TODO for next time: Transitioning to axon Property, use these throughough thisfile.
     // Then update code editor form to match the metadata form.
     // Then code generation from this.
-    this.onProgramAddedCode = new phet.axon.StringProperty( '' );
-    this.onProgramRemovedCode = new phet.axon.StringProperty( '' );
-    this.onProgramChangedPositionCode = new phet.axon.StringProperty( '' );
-    this.onProgramMarkersAddedCode = new phet.axon.StringProperty( '' );
-    this.onProgramMarkersRemovedCode = new phet.axon.StringProperty( '' );
-    this.onProgramMarkersChangedPositionCode = new phet.axon.StringProperty( '' );
-    this.onProgramAdjacentCode = new phet.axon.StringProperty( '' );
-    this.onProgramSeparatedCode = new phet.axon.StringProperty( '' );
+    this.onProgramAddedCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramRemovedCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramChangedPositionCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramMarkersAddedCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramMarkersRemovedCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramMarkersChangedPositionCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramAdjacentCodeProperty = new phet.axon.StringProperty( '' );
+    this.onProgramSeparatedCodeProperty = new phet.axon.StringProperty( '' );
+
+    //  A property that is true if there is any custom code.
+    this.hasCustomCodeProperty = new phet.axon.DerivedProperty( [
+      this.onProgramAddedCodeProperty,
+      this.onProgramRemovedCodeProperty,
+      this.onProgramChangedPositionCodeProperty,
+      this.onProgramMarkersAddedCodeProperty,
+      this.onProgramMarkersRemovedCodeProperty,
+      this.onProgramMarkersChangedPositionCodeProperty,
+      this.onProgramAdjacentCodeProperty,
+      this.onProgramSeparatedCodeProperty
+    ], ( onProgramAddedCode, onProgramRemovedCode, onProgramChangedPositionCode, onProgramMarkersAddedCode,
+         onProgramMarkersRemovedCode, onProgramMarkersChangedPositionCode, onProgramAdjacentCode, onProgramSeparatedCode ) => {
+      return onProgramAddedCode || onProgramRemovedCode || onProgramChangedPositionCode ||
+             onProgramMarkersAddedCode || onProgramMarkersRemovedCode || onProgramMarkersChangedPositionCode ||
+             onProgramAdjacentCode || onProgramSeparatedCode;
+    } );
   }
 
   save() {
     return {
-      onProgramAddedCode: this.onProgramAddedCode,
-      onProgramRemovedCode: this.onProgramRemovedCode,
-      onProgramChangedPositionCode: this.onProgramChangedPositionCode,
-      onProgramMarkersAddedCode: this.onProgramMarkersAddedCode,
-      onProgramMarkersRemovedCode: this.onProgramMarkersRemovedCode,
-      onProgramMarkersChangedPositionCode: this.onProgramMarkersChangedPositionCode,
-      onProgramAdjacentCode: this.onProgramAdjacentCode,
-      onProgramSeparatedCode: this.onProgramSeparatedCode
+      onProgramAddedCode: this.onProgramAddedCodeProperty.value,
+      onProgramRemovedCode: this.onProgramRemovedCodeProperty.value,
+      onProgramChangedPositionCode: this.onProgramChangedPositionCodeProperty.value,
+      onProgramMarkersAddedCode: this.onProgramMarkersAddedCodeProperty.value,
+      onProgramMarkersRemovedCode: this.onProgramMarkersRemovedCodeProperty.value,
+      onProgramMarkersChangedPositionCode: this.onProgramMarkersChangedPositionCodeProperty.value,
+      onProgramAdjacentCode: this.onProgramAdjacentCodeProperty.value,
+      onProgramSeparatedCode: this.onProgramSeparatedCodeProperty.value
     };
   }
 
@@ -40,13 +56,13 @@ export default class CustomCodeContainer {
     // The custom code container is new and may not have been saved yet
     stateObject = stateObject || {};
 
-    this.onProgramAddedCode = stateObject.onProgramAddedCode;
-    this.onProgramRemovedCode = stateObject.onProgramRemovedCode;
-    this.onProgramChangedPositionCode = stateObject.onProgramChangedPositionCode;
-    this.onProgramMarkersAddedCode = stateObject.onProgramMarkersAddedCode;
-    this.onProgramMarkersRemovedCode = stateObject.onProgramMarkersRemovedCode;
-    this.onProgramMarkersChangedPositionCode = stateObject.onProgramMarkersChangedPositionCode;
-    this.onProgramAdjacentCode = stateObject.onProgramAdjacentCode;
-    this.onProgramSeparatedCode = stateObject.onProgramSeparatedCode;
+    this.onProgramAddedCodeProperty.value = stateObject.onProgramAddedCode || '';
+    this.onProgramRemovedCodeProperty.value = stateObject.onProgramRemovedCode || '';
+    this.onProgramChangedPositionCodeProperty.value = stateObject.onProgramChangedPositionCode || '';
+    this.onProgramMarkersAddedCodeProperty.value = stateObject.onProgramMarkersAddedCode || '';
+    this.onProgramMarkersRemovedCodeProperty.value = stateObject.onProgramMarkersRemovedCode || '';
+    this.onProgramMarkersChangedPositionCodeProperty.value = stateObject.onProgramMarkersChangedPositionCode || '';
+    this.onProgramAdjacentCodeProperty.value = stateObject.onProgramAdjacentCode || '';
+    this.onProgramSeparatedCodeProperty.value = stateObject.onProgramSeparatedCode || '';
   }
 }
