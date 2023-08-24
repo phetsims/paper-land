@@ -100,9 +100,9 @@ export default class ProgramNode extends phet.scenery.Node {
     } ) );
 
     // Creates a new "listener" to a paper event
-    this.createListenerButton = new phet.sun.TextPushButton( 'Create Listener', _.merge( {}, BUTTON_OPTIONS, {
+    this.createListenerButton = new phet.sun.TextPushButton( 'Custom Code', _.merge( {}, BUTTON_OPTIONS, {
       listener: () => {
-        activeEditProperty.value = new ActiveEdit( model, EditType.LISTENER );
+        activeEditProperty.value = new ActiveEdit( model, EditType.CUSTOM_CODE );
       }
     } ) );
 

@@ -1,4 +1,5 @@
 import ProgramCodeGenerator from './code/ProgramCodeGenerator.js';
+import CustomCodeContainer from './CustomCodeContainer.js';
 import ProgramControllerContainer from './ProgramControllerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 import ProgramViewContainer from './views/ProgramViewContainer.js';
@@ -38,6 +39,9 @@ export default class ProgramModel {
 
     // @public - responsible for miscellaneous 'listener' components for this program.
     this.listenerContainer = new ProgramListenerContainer( this, activeEditProperty );
+
+    // @public - responsiblg for any custom code for the paper events in this program
+    this.customCodeContainer = new CustomCodeContainer( this, activeEditProperty );
 
     // @public - the position of this program in the editor
     this.positionProperty = new phet.dot.Vector2Property( initialPosition );
@@ -87,7 +91,9 @@ export default class ProgramModel {
       modelContainer: this.modelContainer.save(),
       controllerContainer: this.controllerContainer.save(),
       viewContainer: this.viewContainer.save(),
-      listenerContainer: this.listenerContainer.save()
+      listenerContainer: this.listenerContainer.save(),
+
+      customCodeContainer: this.customCodeContainer.save()
     };
   }
 
@@ -128,7 +134,7 @@ export default class ProgramModel {
 
     // I am considering listener components like this similar to the 'controller' components and
     // loading them as part of this step.
-    const listenerContainer = stateObject.listenerContainer || {}
+    const listenerContainer = stateObject.listenerContainer || {};
     this.listenerContainer.load( listenerContainer, allComponents );
   }
 
@@ -139,6 +145,13 @@ export default class ProgramModel {
    */
   loadViewComponents( stateObject, allComponents ) {
     this.viewContainer.load( stateObject.viewContainer, allComponents );
+  }
+
+  /**
+   * Load any custom code that is associated with this program.
+   */
+  loadCustomCode( stateObject ) {
+    this.customCodeContainer.load( stateObject.customCodeContainer );
   }
 
   /**

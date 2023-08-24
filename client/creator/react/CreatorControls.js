@@ -7,6 +7,7 @@ import React, { forwardRef, useEffect, useState } from 'react';
 import styles from '../CreatorMain.css';
 import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
+import CreateCustomCodeForm from './CreateCustomCodeForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
 import SpaceSelectControls from './SpaceSelectControls.js';
 
@@ -45,6 +46,10 @@ const CreatorControls = forwardRef( ( props, ref ) => {
          allModelComponents={model.allModelComponents}
          model={model}
        ></CreateComponentForm> : ''}
+      {activeEdit && activeEdit.editType === EditType.CUSTOM_CODE ?
+       <CreateCustomCodeForm
+         activeEdit={activeEdit}
+       ></CreateCustomCodeForm> : ''}
     </div>
   );
 } );

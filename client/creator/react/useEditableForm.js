@@ -24,7 +24,6 @@ const verifyRequiredKeys = ( templateObject, testingObject ) => {
 // Make sure that the new data matches the schema for the component.
 const validateSchema = ( templateObject, testObject ) => {
   if ( !verifyRequiredKeys( templateObject, testObject ) ) {
-    debugger;
     throw new Error( 'New data does not match the schema of the component.' );
   }
 };

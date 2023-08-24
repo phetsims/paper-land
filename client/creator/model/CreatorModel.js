@@ -165,6 +165,8 @@ export default class CreatorModel {
     // shallow copy as we clear the array
     this.programs.slice().forEach( program => this.deleteProgram( program ) );
 
+    // Program components are loaded individually here because all program dependency components
+    // must be created before view code.
     if ( json.programs ) {
 
       // first create all programs and load dependency model components
@@ -175,6 +177,7 @@ export default class CreatorModel {
 
         newProgram.loadMetadata( programJSON );
         newProgram.loadDependencyModelComponents( programJSON );
+        newProgram.loadCustomCode( programJSON );
       } );
 
       // then load DerivedProperty components once dependencies are in place
