@@ -82,8 +82,9 @@ export default class ProgramCodeGenerator {
     const viewCode = ProgramCodeGenerator.createProgramEventCodeForViewComponent( program, eventName );
     const controllerCode = ProgramCodeGenerator.createProgramEventCodeForControllerComponent( program, eventName );
     const listenerCode = ProgramCodeGenerator.createProgramEventCodeForListenerComponent( program, eventName );
+    const customCode = ProgramCodeGenerator.createProgramEventCodeForCustomCode( program, eventName );
 
-    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode, controllerCode, listenerCode ] );
+    return ProgramCodeGenerator.combineCodeList( [ modelCode, viewCode, controllerCode, listenerCode, customCode ] );
   }
 
   static createProgramEventCodeForModelComponent( program, eventName ) {
@@ -199,6 +200,37 @@ export default class ProgramCodeGenerator {
     } );
 
     return ProgramCodeGenerator.combineCodeList( codeList );
+  }
+
+  /**
+   * Retrieve the custom code that the user may have written for a particular event type.
+   */
+  static createProgramEventCodeForCustomCode( program, eventName ) {
+    let programCode = '';
+
+    if ( eventName === 'onProgramAdded' ) {
+      programCode = program.customCodeContainer.onProgramAddedCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramRemoved' ) {
+      programCode = program.customCodeContainer.onProgramRemovedCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramChangedPosition' ) {
+      programCode = program.customCodeContainer.onProgramChangedPositionCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramMarkersAdded' ) {
+      programCode = program.customCodeContainer.onProgramMarkersAddedCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramMarkersRemoved' ) {
+      programCode = program.customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramAdjacent' ) {
+      programCode = program.customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
+    }
+    else if ( eventName === 'onProgramSeparated' ) {
+      programCode = program.customCodeContainer.onProgramSeparatedCodeProperty.value;
+    }
+
+    return programCode;
   }
 
   /**
