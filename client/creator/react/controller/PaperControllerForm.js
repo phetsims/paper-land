@@ -130,7 +130,7 @@ export default function PaperControllerForm( props ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
-        editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.DirectionControlType );
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.NumberPropertyControlType );
         editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
       }
       else if ( selectedComponentType === 'StringProperty' ) {

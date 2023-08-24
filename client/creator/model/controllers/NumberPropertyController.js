@@ -1,18 +1,18 @@
 import PropertyController from './PropertyController.js';
 
 // Ways you can control a Boolean from paper events
-class DirectionControlType extends phet.phetCore.EnumerationValue {
+class NumberPropertyControlType extends phet.phetCore.EnumerationValue {
 
-  // Moving paper left and right controls the value.
-  static HORIZONTAL = new DirectionControlType();
+  // Paper motion control types
+  static HORIZONTAL = new NumberPropertyControlType();
+  static VERTICAL = new NumberPropertyControlType();
+  static ROTATION = new NumberPropertyControlType();
 
-  // Moving paper up and down controls the value.
-  static VERTICAL = new DirectionControlType();
+  // Marker control types
+  static MARKER_COUNT = new NumberPropertyControlType();
+  static MARKER_LOCATION = new NumberPropertyControlType();
 
-  // Rotating the paper controls the value.
-  static ROTATION = new DirectionControlType();
-
-  static enumeration = new phet.phetCore.Enumeration( DirectionControlType );
+  static enumeration = new phet.phetCore.Enumeration( NumberPropertyControlType );
 }
 
 // Relationships for the control
@@ -30,14 +30,31 @@ class RelationshipControlType extends phet.phetCore.EnumerationValue {
   static enumeration = new phet.phetCore.Enumeration( RelationshipControlType );
 }
 
+const FamilyToControlTypeMap = {
+  PAPER_MOVEMENT: [
+    NumberPropertyControlType.HORIZONTAL,
+    NumberPropertyControlType.VERTICAL,
+    NumberPropertyControlType.ROTATION
+  ],
+  MARKERS: [
+    NumberPropertyControlType.MARKER_COUNT,
+    NumberPropertyControlType.MARKER_LOCATION
+  ]
+};
+
 export default class NumberPropertyController extends PropertyController {
-  constructor( name, namedProperty, directionControlTypeValue, relationshipControlTypeValue ) {
-    super( name, namedProperty, DirectionControlType, directionControlTypeValue );
+  constructor( name, namedProperty, controlTypeValue, relationshipControlTypeValue ) {
 
     // Convert back to enumeration value if React forms gave us a string
     relationshipControlTypeValue = PropertyController.controlTypeStringToValue( relationshipControlTypeValue, RelationshipControlType );
-    PropertyController.assertEnumerationIncludes( RelationshipControlType, relationshipControlTypeValue );
-    this.relationshipControlType = relationshipControlTypeValue;
+
+    // get the control type family from teh provided control type
+    const controlTypeFamily = FamilyToControlTypeMap.MARKERS.includes( relationshipControlTypeValue ) ? 'MARKERS' : 'PAPER_MOVEMENT';
+
+    super( name, namedProperty, NumberPropertyControlType, controlTypeValue, controlTypeFamily );
+
+    // {RelationshipControlType|null} This may not be defined depending on the control type family
+    this.relationshipControlType = relationshipControlTypeValue || null;
   }
 
   /**
@@ -46,10 +63,15 @@ export default class NumberPropertyController extends PropertyController {
    */
   save() {
     return {
-      name: this.nameProperty.value,
-      controlledComponentName: this.namedProperty.nameProperty.value,
-      controlType: this.controlType.name,
-      relationshipControlType: this.relationshipControlType.name
+      ...super.save(),
+      relationshipControlType: this.relationshipControlType ? this.relationshipControlType.name : null
+    };
+  }
+
+  static getStateSchema() {
+    return {
+      ...PropertyController.getStateSchema(),
+      relationshipControlType: ''
     };
   }
 
@@ -64,6 +86,7 @@ export default class NumberPropertyController extends PropertyController {
     return new NumberPropertyController( data.name, namedProperty, data.controlType, data.relationshipControlType );
   }
 
-  static DirectionControlType = DirectionControlType;
+  static NumberPropertyControlType = NumberPropertyControlType;
   static RelationshipControlType = RelationshipControlType;
+  static FAMILY_TO_CONTROL_TYPE_MAP = FamilyToControlTypeMap;
 }

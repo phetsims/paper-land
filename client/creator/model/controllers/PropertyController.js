@@ -10,12 +10,17 @@ export default class PropertyController extends Component {
    * @param {NamedProperty}namedProperty
    * @param {phet.phetCore.Enumeration} controlTypeEnumeration
    * @param {phet.phetCore.EnumerationValue|string} controlTypeValue
+   * @param {string} selectedControlTypeFamily
    */
-  constructor( name, namedProperty, controlTypeEnumeration, controlTypeValue ) {
+  constructor( name, namedProperty, controlTypeEnumeration, controlTypeValue, selectedControlTypeFamily ) {
     super( name );
 
     // {NamedProperty} that this will control
     this.namedProperty = namedProperty;
+
+    // The general conrol types supported for a particular controller. For example, 'number' values might
+    // be controlled by 'paper movement' or 'marker movement', and each of those might have further controls.
+    this.selectedControlTypeFamily = selectedControlTypeFamily;
 
     // From React, we might get a string from the EnumerationValue, return to enum first
     controlTypeValue = PropertyController.controlTypeStringToValue( controlTypeValue, controlTypeEnumeration );
@@ -31,7 +36,8 @@ export default class PropertyController extends Component {
     return {
       name: this.nameProperty.value,
       controlledComponentName: this.namedProperty.nameProperty.value,
-      controlType: this.controlType.name
+      controlType: this.controlType.name,
+      controlTypeFamily: this.selectedControlTypeFamily
     };
   }
 
@@ -49,6 +55,7 @@ export default class PropertyController extends Component {
   static getStateSchema() {
     return {
       ...Component.getStateSchema(),
+      controlTypeFamily: '',
       controlledComponentName: '',
       controlType: ''
     };

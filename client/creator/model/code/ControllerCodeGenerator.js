@@ -36,15 +36,15 @@ class ControllerCodeGenerator {
     }`;
   }
 
-  static getNumberControllerChangedPositionCode( directionControlType, relationshipControlType, controlledName ) {
+  static getNumberControllerChangedPositionCode( controlType, relationshipControlType, controlledName ) {
     if ( relationshipControlType !== NumberPropertyController.RelationshipControlType.LINEAR ) {
       throw new Error( `Sorry, only linear relationships are supported at this time. Can't generate code for ${relationshipControlType} control of ${controlledName}.` );
     }
 
-    const calculateValueCode = directionControlType === NumberPropertyController.DirectionControlType.ROTATION ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
-                               directionControlType === NumberPropertyController.DirectionControlType.VERTICAL ? '( 1 - phet.paperLand.utils.getProgramCenter( points ).y )' :
-                               directionControlType === NumberPropertyController.DirectionControlType.HORIZONTAL ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
-                               `throw new Error( 'Unknown direction control type from controller code generator' - ${directionControlType} )`;
+    const calculateValueCode = controlType === NumberPropertyController.NumberPropertyControlType.ROTATION ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
+                               controlType === NumberPropertyController.NumberPropertyControlType.VERTICAL ? '( 1 - phet.paperLand.utils.getProgramCenter( points ).y )' :
+                               controlType === NumberPropertyController.NumberPropertyControlType.HORIZONTAL ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
+                               `throw new Error( 'Unknown direction control type from controller code generator' - ${controlType} )`;
 
     // This gives us the normalized value of the control method, between zero and one. Multiplying by the length
     // of model range gives us the resultant model value.
