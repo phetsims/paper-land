@@ -54,7 +54,7 @@ export default function CreateCustomCodeForm( props ) {
     <>
       <hr></hr>
       <h3>Custom Code</h3>
-      <p>Write custom code for functionality that is not supported by the Creator interface. These will be called <b>after</b> any other generated code for this program.</p>
+      <p>Write custom code for functionality that is not supported by the Creator interface. Your code will be run <b>after</b> any other generated code for that event.</p>
 
 
       <div>
