@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
+import styles from './../CreatorMain.css';
+
+const PAPER_NUMBER_DOCUMENTATION = '`paperProgramNumber` - The number of the paper program.';
+const OTHER_PAPER_NUMBER_DOCUMENTATION = '`otherPaperProgramNumber` - The number of the other paper program.';
+const DIRECTION_DOCUMENTATION = '`direction` - - The direction of the adjacency. One of `left`, `right`, `up`, `down`.';
+const SCRATCHPAD_DOCUMENTATION = '`scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.';
+const SHARED_DATA_DOCUMENTATION = 'sharedData` - A JavaScript object with global variables of paper-land.';
 
 export default function CreateCustomCodeForm( props ) {
   const program = props.activeEdit.program;
@@ -55,14 +62,20 @@ export default function CreateCustomCodeForm( props ) {
       <hr></hr>
       <h3>Custom Code</h3>
       <p>Write custom code for functionality that is not supported by the Creator interface. Your code will be run <b>after</b> any other generated code for that event.</p>
-
+      <p>Refer to <a href='https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md'>Paper Land documentation</a> for more detailed information.</p>
 
       <div>
         <CustomCodeEditor
           title='onProgramAdded'
           functionDocumentationString='The function called when your program is detected by the camera.'
           codeStringProperty={program.customCodeContainer.onProgramAddedCodeProperty}
-          codeStateString={onProgramAddedCode}>
+          codeStateString={onProgramAddedCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION
+          ]}
+        >
         </CustomCodeEditor>
       </div>
 
@@ -142,17 +155,18 @@ const CustomCodeEditor = props => {
   const functionDocumentationString = props.functionDocumentationString || '';
 
   // an array of strings that will describe each parameter available in the function call
-  const functionParametersStrings = props.functionParametersStrings || [];
+  const functionParametersStrings = props.functionParameterStrings || [];
 
   return (
     <>
       <hr></hr>
       <h4>{title}:</h4>
       <p>{functionDocumentationString}</p>
+      <p>You can use the following variables.</p>
       <ListGroup>
         {functionParametersStrings.map( ( parameterString, index ) => {
           return (
-            <ListGroup.Item key={index}>{parameterString}</ListGroup.Item>
+            <ListGroup.Item className={styles.listGroupItem} key={index}>{parameterString}</ListGroup.Item>
           );
         } )}
       </ListGroup>
