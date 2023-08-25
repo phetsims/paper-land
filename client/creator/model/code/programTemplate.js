@@ -31,6 +31,18 @@ importScripts('paper.js');
   const onProgramMarkersRemoved = ( paperNumber, points, scratchpad, sharedData, markers ) => {
     {{PROGRAM_MARKERS_REMOVED_CODE}}
   };
+  
+  const onProgramMarkersChangedPosition = ( paperNumber, points, scratchpad, sharedData, markers ) => {
+    {{PROGRAM_MARKERS_CHANGED_POSITION_CODE}}
+  };
+  
+  const onProgramAdjacent = ( paperNumber, otherPaperNumber, direction, scratchpad, sharedData ) => {
+    {{PROGRAM_ADJACENT_CODE}}
+  };
+  
+  const onProgramSeparated = ( paperNumber, otherPaperNumber, direction, scratchpad, sharedData ) => {
+    {{PROGRAM_SEPARATED_CODE}}
+  };
 
   await paper.set( 'data', {
     paperPlaygroundData: {
@@ -40,7 +52,10 @@ importScripts('paper.js');
         onProgramRemoved: onProgramRemoved.toString(),
         onProgramChangedPosition: onProgramChangedPosition.toString(),
         onProgramMarkersAdded: onProgramMarkersAdded.toString(),
-        onProgramMarkersRemoved: onProgramMarkersRemoved.toString()
+        onProgramMarkersRemoved: onProgramMarkersRemoved.toString(),
+        onProgramMarkersChangedPosition: onProgramMarkersChangedPosition.toString(),
+        onProgramAdjacent: onProgramAdjacent.toString(),
+        onProgramSeparated: onProgramSeparated.toString()
       }
     }
   } );

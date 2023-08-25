@@ -20,7 +20,7 @@ export default class CustomCodeContainer {
     this.onProgramAdjacentCodeProperty = new phet.axon.StringProperty( '' );
     this.onProgramSeparatedCodeProperty = new phet.axon.StringProperty( '' );
 
-    //  A property that is true if there is any custom code.
+    // True if any of the above Properties have content.
     this.hasCustomCodeProperty = new phet.axon.DerivedProperty( [
       this.onProgramAddedCodeProperty,
       this.onProgramRemovedCodeProperty,
@@ -38,6 +38,9 @@ export default class CustomCodeContainer {
     } );
   }
 
+  /**
+   * Serialize this container to support save and load.
+   */
   save() {
     return {
       onProgramAddedCode: this.onProgramAddedCodeProperty.value,
@@ -51,6 +54,9 @@ export default class CustomCodeContainer {
     };
   }
 
+  /**
+   * Load an instance of this container from a serialized state.
+   */
   load( stateObject ) {
 
     // The custom code container is new and may not have been saved yet

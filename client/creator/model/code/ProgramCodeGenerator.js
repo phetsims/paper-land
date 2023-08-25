@@ -20,7 +20,10 @@ export default class ProgramCodeGenerator {
       PROGRAM_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramRemoved' ),
       PROGRAM_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramChangedPosition' ),
       PROGRAM_MARKERS_ADDED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersAdded' ),
-      PROGRAM_MARKERS_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersRemoved' )
+      PROGRAM_MARKERS_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersRemoved' ),
+      PROGRAM_MARKERS_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramMarkersChangedPosition' ),
+      PROGRAM_ADJACENT_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramAdjacent' ),
+      PROGRAM_SEPARATED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramSeparated' )
     };
 
     return ProgramCodeGenerator.fillInTemplate( programTemplate, data );
