@@ -10,6 +10,9 @@ const DEFAULT_HEIGHT = 180;
 
 // margins for UI components within the program
 const MARGIN = 2;
+
+// margin between all components in the program and the background rectangle
+const OUTER_MARGIN = 5;
 const BACKGROUND_LINE_WIDTH = 1;
 const SEPARATOR_LINE_WIDTH = WIDTH - MARGIN - BACKGROUND_LINE_WIDTH;
 
@@ -184,6 +187,20 @@ export default class ProgramNode extends phet.scenery.Node {
       this.customCodeIconParent.visible = hasCustomCode;
     } );
 
+    // When the ActiveEdit is working with this program, draw a highlight indicator around this rectangle
+    activeEditProperty.link( activeEdit => {
+      if ( activeEdit && activeEdit.program && activeEdit.program.number === model.number ) {
+        this.background.lineWidth = 5;
+        this.background.lineDash = [ 10, 5 ];
+        this.background.stroke = '#6C8EAC';
+      }
+      else {
+        this.background.lineWidth = 1;
+        this.background.lineDash = [];
+        this.background.stroke = 'black';
+      }
+    } );
+
     const dragListener = new phet.scenery.DragListener( {
       positionProperty: model.positionProperty,
       start: () => {
@@ -260,11 +277,11 @@ export default class ProgramNode extends phet.scenery.Node {
     this.viewSeparator.visible = this.viewComponentList.children.length > 0;
     this.listenerSeparator.visible = this.listenerComponentList.children.length > 0;
 
-    this.programNumber.leftTop = this.background.leftTop.plusXY( MARGIN, MARGIN );
+    this.programNumber.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
-    this.deleteButtonParent.rightTop = this.background.rightTop.plusXY( -MARGIN, MARGIN );
+    this.deleteButtonParent.rightTop = this.background.rightTop.plusXY( -OUTER_MARGIN, OUTER_MARGIN );
     this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
-    this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -MARGIN );
+    this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -OUTER_MARGIN );
     this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
     this.customCodeIconParent.centerBottom = this.createComponentButton.centerTop.minusXY( 0, MARGIN );
   }
