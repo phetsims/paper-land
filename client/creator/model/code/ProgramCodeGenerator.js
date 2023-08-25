@@ -226,8 +226,11 @@ export default class ProgramCodeGenerator {
     else if ( eventName === 'onProgramMarkersRemoved' ) {
       programCode = program.customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
     }
+    else if ( eventName === 'onProgramMarkersChangedPosition' ) {
+      programCode = program.customCodeContainer.onProgramMarkersChangedPositionCodeProperty.value;
+    }
     else if ( eventName === 'onProgramAdjacent' ) {
-      programCode = program.customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
+      programCode = program.customCodeContainer.onProgramAdjacentCodeProperty.value;
     }
     else if ( eventName === 'onProgramSeparated' ) {
       programCode = program.customCodeContainer.onProgramSeparatedCodeProperty.value;
