@@ -276,8 +276,7 @@ await paper.set( 'data', {
 
 ### ```onProgramAdjacent( paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData )```
 
-Called when a program becomes adjacent to another program in one of the cardinal directions. Will fire when a whisker
-is
+Called when a program becomes adjacent to another program in one of the cardinal directions.
 
 #### Arguments
 

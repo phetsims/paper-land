@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ListGroup from 'react-bootstrap/ListGroup';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 
 export default function CreateCustomCodeForm( props ) {
@@ -59,6 +60,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramAdded'
+          functionDocumentationString='The function called when your program is detected by the camera.'
           codeStringProperty={program.customCodeContainer.onProgramAddedCodeProperty}
           codeStateString={onProgramAddedCode}>
         </CustomCodeEditor>
@@ -67,6 +69,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramRemoved'
+          functionDocumentationString='The function called when your program is no longer detected by the camera.'
           codeStringProperty={program.customCodeContainer.onProgramRemovedCodeProperty}
           codeStateString={onProgramRemovedCode}>
         </CustomCodeEditor>
@@ -75,6 +78,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramChangedPosition'
+          functionDocumentationString='The function called when your program changes position (move or rotate).'
           codeStringProperty={program.customCodeContainer.onProgramChangedPositionCodeProperty}
           codeStateString={onProgramChangedPositionCode}>
         </CustomCodeEditor>
@@ -83,6 +87,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramMarkersAdded'
+          functionDocumentationString='The function called when one or more markers are placed inside the program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersAddedCodeProperty}
           codeStateString={onProgramMarkersAddedCode}>
         </CustomCodeEditor>
@@ -91,6 +96,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramMarkersRemoved'
+          functionDocumentationString='The function called when one or more markers are removed from a program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersRemovedCodeProperty}
           codeStateString={onProgramMarkersRemovedCode}>
         </CustomCodeEditor>
@@ -99,6 +105,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramMarkersChangedPosition'
+          functionDocumentationString='The function called when one or more markers change their position inside this program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersChangedPositionCodeProperty}
           codeStateString={onProgramMarkersChangedPositionCode}>
         </CustomCodeEditor>
@@ -107,6 +114,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramAdjacent'
+          functionDocumentationString='Called when a program becomes adjacent to another program in one of the cardinal directions.'
           codeStringProperty={program.customCodeContainer.onProgramAdjacentCodeProperty}
           codeStateString={onProgramAdjacentCode}>
         </CustomCodeEditor>
@@ -115,6 +123,7 @@ export default function CreateCustomCodeForm( props ) {
       <div>
         <CustomCodeEditor
           title='onProgramSeparated'
+          functionDocumentationString='Called when a program becomes separated from another program.'
           codeStringProperty={program.customCodeContainer.onProgramSeparatedCodeProperty}
           codeStateString={onProgramSeparatedCode}>
         </CustomCodeEditor>
@@ -129,10 +138,24 @@ const CustomCodeEditor = props => {
   const codeStringProperty = props.codeStringProperty;
   const codeStateString = props.codeStateString;
 
+  // a string that describes the overall function
+  const functionDocumentationString = props.functionDocumentationString || '';
+
+  // an array of strings that will describe each parameter available in the function call
+  const functionParametersStrings = props.functionParametersStrings || [];
+
   return (
     <>
       <hr></hr>
       <h4>{title}:</h4>
+      <p>{functionDocumentationString}</p>
+      <ListGroup>
+        {functionParametersStrings.map( ( parameterString, index ) => {
+          return (
+            <ListGroup.Item key={index}>{parameterString}</ListGroup.Item>
+          );
+        } )}
+      </ListGroup>
       <CreatorMonacoEditor
         controlFunctionString={codeStateString}
         handleChange={newCode => {codeStringProperty.value = newCode;}}>
