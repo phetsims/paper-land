@@ -3,17 +3,21 @@ const ListenerComponentTemplates = {
     onProgramAdded: `
       const {{NAME}}AnimationListener = dt => {
       
-        // A reference to the elapsed time so it is usable in the function
-        const elapsedTime = phet.paperLand.elapsedTimeProperty.value;
+        // listener only runs if all declared dependencies are available in the model
+        if ( phet.paperLand.hasAllModelComponents( {{DEPENDENCY_NAMES_ARRAY}} ) ) {
+               
+          // A reference to the elapsed time so it is usable in the function
+          const elapsedTime = phet.paperLand.elapsedTimeProperty.value;
+          
+          // references to each model component controlled by this listener
+          {{COMPONENT_REFERENCES}}
         
-        // references to each model component controlled by this listener
-        {{COMPONENT_REFERENCES}}
-      
-        // the functions create in the local scope to manipulate the controlled components
-        {{CONTROL_FUNCTIONS}}
-        
-        // the function that that the user wrote
-        {{CONTROL_FUNCTION}}
+          // the functions create in the local scope to manipulate the controlled components
+          {{CONTROL_FUNCTIONS}}
+          
+          // the function that that the user wrote
+          {{CONTROL_FUNCTION}} 
+        }
       };
       scratchpad.{{NAME}}AnimationListener = {{NAME}}AnimationListener;
       
@@ -28,7 +32,7 @@ const ListenerComponentTemplates = {
   },
   MultilinkListenerComponent: {
     onProgramAdded: `
-      scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         // the functions that are available to the client from their selected dependencies
         {{CONTROL_FUNCTIONS}}
@@ -38,7 +42,7 @@ const ListenerComponentTemplates = {
       } );
     `,
     onProgramRemoved: `
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES}}, scratchpad.{{NAME}}MultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}MultilinkId );
       delete scratchpad.{{NAME}}MultilinkId;
     `
   }

@@ -497,6 +497,14 @@ paperLand.removeModelPropertyMultilink = ( componentNames, linkId ) => {
 };
 
 /**
+ * Returns true if every name in the provided list is currently in the model.
+ * @param {string[]} componentNames
+ */
+paperLand.hasAllModelComponents = componentNames => {
+  return componentNames.every( name => boardModel.has( name ) );
+};
+
+/**
  * Adds a function that sets a Property value once when the value exists or is added to the model.
  * @param componentName {string} - the name of the component to control
  * @param controllerAttach {function(component)} - called with the component to set its value

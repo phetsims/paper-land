@@ -63,6 +63,19 @@ export default class ProgramCodeGenerator {
   }
 
   /**
+   * Given an array of dependency string names, returns a single string containing each name in quotes,
+   * to be used in other code.
+   *
+   * [ 'bool', 'number', 'value' ] => "'bool', 'number', 'value'"
+   *
+   * @param {string[]} dependencyNames
+   * @returns {string}
+   */
+  static dependencyNamesToStringList( dependencyNames ) {
+    return dependencyNames.map( name => `'${name}'` ).join( ', ' );
+  }
+
+  /**
    * Converts an array of string names to a string that separates them by commas. Uesful
    * for code generation when dependency names are to be used in a callback function.
    *
@@ -138,7 +151,7 @@ export default class ProgramCodeGenerator {
 
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: viewComponent.nameProperty.value,
-          DEPENDENCY_NAMES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( viewComponent.modelComponentNames ),
+          DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( viewComponent.modelComponentNames ),
           DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( viewComponent.modelComponentNames ),
           CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( viewComponent.controlFunctionString ),
           ...componentData
@@ -377,12 +390,13 @@ export default class ProgramCodeGenerator {
 
     if ( componentType === 'AnimationListenerComponent' ) {
       data = {
-        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames )
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames )
       };
     }
     else if ( componentType === 'MultilinkListenerComponent' ) {
       data = {
-        DEPENDENCY_NAMES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
         DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames )
       };
     }
