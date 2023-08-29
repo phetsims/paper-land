@@ -34,11 +34,19 @@ const ListenerComponentTemplates = {
     onProgramAdded: `
       scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
-        // the functions that are available to the client from their selected dependencies
-        {{CONTROL_FUNCTIONS}}
+        // We have behavior with components outside of the multilink that may not exist yet, we only do this
+        // work if all are available
+        if ( phet.paperLand.hasAllModelComponents( {{CONTROLLED_NAMES_ARRAY}} ) ) {
+        
+          // references to each model component controlled by this listener
+          {{COMPONENT_REFERENCES}}
       
-        // the code block that the user wrote to change controlled Properties
-        {{CONTROL_FUNCTION}}
+          // the functions that are available to the client from their selected dependencies
+          {{CONTROL_FUNCTIONS}}
+      
+          // the code block that the user wrote to change controlled Properties
+          {{CONTROL_FUNCTION}}   
+        }
       } );
     `,
     onProgramRemoved: `

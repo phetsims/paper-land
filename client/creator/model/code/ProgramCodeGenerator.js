@@ -396,7 +396,12 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'MultilinkListenerComponent' ) {
       data = {
+
+        // The dependencies will be made available by the multilink dependency names arguments. But it is important
+        // to have access to the current values of the controlled components as well.
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
         DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
+        CONTROLLED_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames ),
         DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames )
       };
     }

@@ -16,7 +16,7 @@ class ListenerCodeGenerator {
 
   static getComponentReferences( controlledPropertyNames ) {
     return controlledPropertyNames.map( controlledPropertyName => {
-      return `const ${controlledPropertyName} = phet.paperLand.getModelComponent( '${controlledPropertyName}' )?.value;`;
+      return `const ${controlledPropertyName} = phet.paperLand.getModelComponent( '${controlledPropertyName}' ).value;`;
     } ).join( '\n' );
   }
 }

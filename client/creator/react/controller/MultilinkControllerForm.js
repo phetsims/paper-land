@@ -105,7 +105,11 @@ export default function MultilinkControllerForm( props ) {
         }}
       />
       <VariableDocumentationList
-        components={selectedModelComponents}
+        components={
+
+          // In the custom code block, the user has access to all dependency and controlled components
+          selectedModelComponents.concat( selectedControlledComponents )
+        }
       ></VariableDocumentationList>
       <hr></hr>
       <ComponentSetterList
