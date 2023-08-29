@@ -57,7 +57,11 @@ export default function MultilinkControllerForm( props ) {
 
   const createComponent = () => {
     if ( props.activeEdit && props.activeEdit.component instanceof MultilinkListenerComponent ) {
-      throw new Error( 'Edit of MultilinkController not yet implemented.' );
+      const component = props.activeEdit.component;
+      component.nameProperty.value = props.componentName;
+      component.setDependencies( selectedModelComponents );
+      component.setControlledProperties( selectedControlledComponents );
+      component.controlFunctionString = formData.controlFunctionString;
     }
     else {
       const multilinkController = new MultilinkListenerComponent(
