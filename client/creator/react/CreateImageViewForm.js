@@ -37,9 +37,6 @@ export default function CreateImageViewForm( props ) {
         if ( response.body && response.body.imageFiles ) {
           if ( Array.isArray( response.body.imageFiles ) ) {
             setImageFiles( response.body.imageFiles );
-
-            // set the first image file as the default
-            handleChange( { imageFileName: response.body.imageFiles[ 0 ] } );
           }
         }
       }
