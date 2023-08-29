@@ -36,4 +36,11 @@ export default class ImageViewComponent extends ViewComponent {
       stateObject.imageFileName
     );
   }
+
+  static getStateSchema() {
+    return {
+      ...ViewComponent.getStateSchema(),
+      imageFileName: ''
+    };
+  }
 }

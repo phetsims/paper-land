@@ -21,7 +21,11 @@ export default function CreateDerivedForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    proposedData => {
+
+      // valid as long as at least one dependency is selected
+      return proposedData.dependencyNames.length > 0;
+    },
     props.getFormData,
     NamedDerivedProperty
   );

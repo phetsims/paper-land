@@ -151,7 +151,7 @@ const ViewComponentTemplates = {
   ImageViewComponent: {
     onProgramAdded: `
       // Create an image and add it to the view.
-      const {{NAME}}ImageElement = document.createElement( 'img' );
+      let {{NAME}}ImageElement = document.createElement( 'img' );
       {{NAME}}ImageElement.src = 'media/images/{{FILE_NAME}}';
       const {{NAME}}Image = new phet.scenery.Image( {{NAME}}ImageElement );
       
@@ -166,6 +166,10 @@ const ViewComponentTemplates = {
         };
         const setScale = ( scale ) => {
           {{NAME}}Image.setScaleMagnitude( scale );
+        };
+        const setImage = imageName => {
+          let {{NAME}}ImageElement = document.createElement( 'img' );
+          {{NAME}}ImageElement.src = 'media/images/' + imageName;
         };
       
         {{CONTROL_FUNCTION}}

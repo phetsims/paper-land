@@ -18,9 +18,7 @@ export default function CreateImageViewForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.modelComponentNames.length > 0 &&
-             componentData.imageFileName.length > 0 &&
-             componentData.controlFunctionString.length > 0;
+      return componentData.imageFileName.length > 0;
     },
     getFormData,
     ImageViewComponent
@@ -41,7 +39,7 @@ export default function CreateImageViewForm( props ) {
             setImageFiles( response.body.imageFiles );
 
             // set the first image file as the default
-            props.getImageFormData( { imageFileName: response.body.imageFiles[ 0 ] } );
+            handleChange( { imageFileName: response.body.imageFiles[ 0 ] } );
           }
         }
       }
@@ -53,7 +51,7 @@ export default function CreateImageViewForm( props ) {
       <Form.Label>Select image file:</Form.Label>
       <Form.Select
         onChange={event => {
-          props.getImageFormData( { imageFileName: event.target.value } );
+          handleChange( { imageFileName: event.target.value } );
         }}
       >
         {
@@ -76,6 +74,7 @@ export default function CreateImageViewForm( props ) {
       <ListGroup>
         <ListGroup.Item className={styles.listGroupItem}>setCenter() - Sets image center in the board, takes a Vector2 position.</ListGroup.Item>
         <ListGroup.Item className={styles.listGroupItem}>setScale() - Sets image scale.</ListGroup.Item>
+        <ListGroup.Item className={styles.listGroupItem}>setImage() - Sets to a new image. Takes the name of an image.</ListGroup.Item>
       </ListGroup>
     </div>
   );

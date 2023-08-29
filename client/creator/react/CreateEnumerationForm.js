@@ -9,7 +9,11 @@ export default function CreateEnumerationForm( props ) {
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
-    () => {},
+    proposedData => {
+
+      // as long as there is at least one value and they are all unique, the form is valid
+      return proposedData.values.length > 0 && new Set( proposedData.values ).size === proposedData.values.length;
+    },
     props.getFormData,
     NamedEnumerationProperty
   );
