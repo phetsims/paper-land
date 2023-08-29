@@ -67,7 +67,7 @@ const boardUtils = {
    */
   getProgramCenter( points ) {
     const topLeft = points[ 0 ];
-    const bottomRight = points[ 3 ];
+    const bottomRight = points[ 2 ];
     return new phet.dot.Vector2( ( topLeft.x + bottomRight.x ) / 2, ( topLeft.y + bottomRight.y ) / 2 );
   },
 
@@ -92,6 +92,7 @@ const boardUtils = {
   getBoardPositionFromPoints( points, displaySize ) {
     const width = displaySize.width;
     const height = displaySize.height;
+
     return boardUtils.paperToBoardCoordinates( boardUtils.getProgramCenter( points ), width, height );
   },
 
