@@ -37,8 +37,15 @@ export default class ProgramCodeGenerator {
   static fillInTemplate( template, data ) {
     return template.replace( /\{\{(\w+)\}\}/g, ( match, placeholder ) => {
 
-      // Use the nullish coalescing operator to check if the value exists and is not null/undefined
-      return data[ placeholder ] ?? '';
+      // For translation, we want to insert undefined so that there isn't an unexpected translation to the origin
+      if ( placeholder === 'CENTER_X' || placeholder === 'CENTER_Y' ) {
+        return data[ placeholder ] || 'undefined';
+      }
+      else {
+
+        // Use the nullish coalescing operator to check if the value exists and is not null/undefined
+        return data[ placeholder ] ?? '';
+      }
     } );
   }
 
@@ -313,7 +320,8 @@ export default class ProgramCodeGenerator {
     let data = {};
     if ( componentType === 'SoundViewComponent' ) {
       data = {
-        FILE_NAME: viewComponent.soundFileName
+        FILE_NAME: viewComponent.soundFileName,
+        LOOP: viewComponent.loop
       };
     }
     else if ( componentType === 'DescriptionViewComponent' ) {
@@ -325,8 +333,8 @@ export default class ProgramCodeGenerator {
 
       // No extra data for shape components yet.
       data = {
-        SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.defaultShapeOptions ),
-        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType ),
+        SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.nameProperty.value, viewComponent.defaultShapeOptions ),
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value ),
         FILL_COLOR: viewComponent.defaultShapeOptions.fill,
         STROKE_COLOR: viewComponent.defaultShapeOptions.stroke,
         LINE_WIDTH: viewComponent.defaultShapeOptions.lineWidth,
@@ -367,9 +375,10 @@ export default class ProgramCodeGenerator {
     const componentType = listenerComponent.constructor.name;
     let data = {};
 
-
     if ( componentType === 'AnimationListenerComponent' ) {
-      data = {};
+      data = {
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames )
+      };
     }
     else if ( componentType === 'MultilinkListenerComponent' ) {
       data = {

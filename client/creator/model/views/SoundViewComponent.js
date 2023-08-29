@@ -8,10 +8,14 @@ export default class SoundViewComponent extends ViewComponent {
    * @param {NamedProperty[]} modelComponents - names of the model components this represents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
    * @param {string} soundFileName - a sound file that exists in www/media/sounds
+   * @param {boolean} loop - whether or not to loop the sound
    */
-  constructor( name, modelComponents, controlFunctionString, soundFileName ) {
+  constructor( name, modelComponents, controlFunctionString, soundFileName, loop ) {
     super( name, modelComponents, controlFunctionString );
     this.soundFileName = soundFileName;
+
+    // may be undefined when loading
+    this.loop = loop || false;
   }
 
   /**
@@ -20,7 +24,8 @@ export default class SoundViewComponent extends ViewComponent {
   save() {
     return {
       ...super.save(),
-      soundFileName: this.soundFileName
+      soundFileName: this.soundFileName,
+      loop: this.loop
     };
   }
 
@@ -33,14 +38,16 @@ export default class SoundViewComponent extends ViewComponent {
       stateObject.name,
       dependencies,
       stateObject.controlFunctionString,
-      stateObject.soundFileName
+      stateObject.soundFileName,
+      stateObject.loop
     );
   }
 
   static getStateSchema() {
     return {
       ...ViewComponent.getStateSchema(),
-      soundFileName: ''
+      soundFileName: '',
+      loop: false
     };
   }
 }

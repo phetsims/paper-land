@@ -5,6 +5,9 @@ const ListenerComponentTemplates = {
       
         // A reference to the elapsed time so it is usable in the function
         const elapsedTime = phet.paperLand.elapsedTimeProperty.value;
+        
+        // references to each model component controlled by this listener
+        {{COMPONENT_REFERENCES}}
       
         // the functions create in the local scope to manipulate the controlled components
         {{CONTROL_FUNCTIONS}}

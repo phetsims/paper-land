@@ -74,6 +74,16 @@ export default function CreateSoundViewForm( props ) {
           } )
         }
       </Form.Select>
+      <div className={styles.controlElement}>
+        <Form.Check
+          type='checkbox'
+          label='Loop sound'
+          checked={formData.loop}
+          onChange={event => {
+            handleChange( { loop: event.target.checked } );
+          }}
+        />
+      </div>
     </div>
   );
 
@@ -84,6 +94,7 @@ export default function CreateSoundViewForm( props ) {
       <ListGroup>
         <ListGroup.Item className={styles.listGroupItem}>setPlaybackRate() - takes a value that must be larger than 0</ListGroup.Item>
         <ListGroup.Item className={styles.listGroupItem}>setOutputLevel() - takes a value between 0 and 1</ListGroup.Item>
+        <ListGroup.Item className={styles.listGroupItem}>play() - play the selected sound</ListGroup.Item>
       </ListGroup>
     </div>
   );

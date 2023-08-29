@@ -7,10 +7,17 @@ class ListenerCodeGenerator {
       const controlledPropertyNameCapitalized = controlledPropertyName.charAt( 0 ).toUpperCase() + controlledPropertyName.slice( 1 );
 
       return `const set${controlledPropertyNameCapitalized} = newValue => {
-        phet.paperLand.getModelComponent( '${controlledPropertyName}' ).value = newValue;  
+        const modelComponent = phet.paperLand.getModelComponent( '${controlledPropertyName}' );
+        modelComponent.value = newValue;  
       }
       `;
     } );
+  }
+
+  static getComponentReferences( controlledPropertyNames ) {
+    return controlledPropertyNames.map( controlledPropertyName => {
+      return `const ${controlledPropertyName} = phet.paperLand.getModelComponent( '${controlledPropertyName}' )?.value;`;
+    } ).join( '\n' );
   }
 }
 

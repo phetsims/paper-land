@@ -10,8 +10,8 @@ export default class NodeViewComponent extends ViewComponent {
     super( name, modelComponents, controlFunctionString );
 
     const viewOptions = {
-      centerX: 0,
-      centerY: 0,
+      centerX: null,
+      centerY: null,
       scale: 1,
       rotation: 0,
       opacity: 1,
@@ -33,8 +33,8 @@ export default class NodeViewComponent extends ViewComponent {
     return {
       ...ViewComponent.getStateSchema(),
       defaultViewOptions: {
-        centerX: 0,
-        centerY: 0,
+        centerX: null,
+        centerY: null,
         scale: 1,
         rotation: 0,
         opacity: 1,

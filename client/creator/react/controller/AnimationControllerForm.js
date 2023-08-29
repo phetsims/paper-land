@@ -7,6 +7,7 @@ import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
 import useEditableForm from '../useEditableForm.js';
+import VariableDocumentationList from '../VariableDocumentationList.js';
 
 export default function AnimationControllerForm( props ) {
   const allModelComponents = props.allModelComponents;
@@ -83,6 +84,9 @@ export default function AnimationControllerForm( props ) {
         helperPrompt={'Use "dt" and "elapsedTime" in milliseconds to update values with the following functions.'}
         components={selectedControlledComponents}
       ></ComponentSetterList>
+      <VariableDocumentationList
+        components={selectedControlledComponents}
+      ></VariableDocumentationList>
       <CreatorMonacoEditor
         controlFunctionString={formData.controlFunctionString}
         handleChange={newValue => {

@@ -3,72 +3,114 @@
  */
 
 export default class ViewCodeGenerator {
-  static getSetterFunctionsForViewType( viewType ) {
 
+  /**
+   * Get a consistent name for a component based on its type and the user defined name.
+   */
+  static getComponentNameString( viewType, componentName ) {
+
+    return viewType === 'ShapeViewComponent' ? `${componentName}Path` :
+           viewType === 'TextViewComponent' ? `${componentName}Text` :
+           viewType === 'ImageViewComponent' ? `${componentName}Image` :
+           viewType === 'SoundViewComponent' ? `${componentName}Sound` :
+           viewType === 'DescriptionViewComponent' ? `${componentName}Description` :
+           `${componentName}Background`;
+  }
+
+  static getSetterFunctionsForViewType( viewType, componentName ) {
+    const componentNameString = ViewCodeGenerator.getComponentNameString( viewType, componentName );
     const codeStrings = [];
 
     // The setters that are available for all Node types.
     codeStrings.push( `
       const setCenterX = ( x ) => {
-        {{NAME}}Path.centerX = x;
+        ${componentNameString}.centerX = x;
+        ${componentNameString}.centerX = x;
       };
       
       const setCenterY = ( y ) => {
-        {{NAME}}Path.centerY = y;
+        ${componentNameString}.centerY = y;
       };
       
-      const setScale( scale ) => {
-        {{NAME}}Path.scaleMagnitude = scale;
+      const setScale = ( scale ) => {
+        ${componentNameString}.scaleMagnitude = scale;
       };
       
       const setOpacity = ( opacity ) => {
-        {{NAME}}Path.opacity = opacity;
+        ${componentNameString}.opacity = opacity;
       };
       
       const setVisible = ( visible ) => {
-        {{NAME}}Path.visible = visible;
+        ${componentNameString}.visible = visible;
       };
       
       const setRotation = ( rotation ) => {
-        {{NAME}}Path.rotation = rotation;
+        ${componentNameString}.rotation = rotation;
       };`
     );
 
     if ( viewType === 'ShapeViewComponent' ) {
       codeStrings.push( `
         const setStroke = ( color ) => {
-          {{NAME}}Path.stroke = color;
+          ${componentNameString}.stroke = color;
         };
         
         const setLineWidth = ( width ) => {
-          {{NAME}}Path.lineWidth = width;
+          ${componentNameString}.lineWidth = width;
         };
         
         const setFill = ( color ) => {
-          {{NAME}}Path.fill = color;
-        };`
+          ${componentNameString}.fill = color;
+        };
+        
+        // for a line
+        const setX1 = ( newX1 ) => {
+          x1 = newX1;
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+        };
+        
+        const setY1 = ( newY1 ) => {
+          y1 = newY1;
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+        };
+
+        const setX2 = ( newX2 ) => {
+          x2 = newX2;
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+        };
+        
+        const setY2 = ( newY2 ) => {
+          y2 = newY2;
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+        };
+        
+        // for a circle
+        const setRadius = ( radius ) => {
+          ${componentNameString}.radius = radius;
+        };
+        `
       );
     }
     else if ( viewType === 'TextViewComponent' ) {
       codeStrings.push( `
         const setString = ( string ) => {
-          {{NAME}}Text.string = string;
+          ${componentNameString}.string = string;
         };
         
         const setFontSize = ( size ) => {
-          {{NAME}}Text.fontSize = size;
+          ${componentNameString}.fontSize = size;
         };
         
         const setTextColor = ( color ) => {
-          {{NAME}}Text.fill = color;
+          ${componentNameString}.fill = color;
         };
         
         const setFontFamily = ( family ) => {
-          {{NAME}}Text.fontFamily = family;
+          ${componentNameString}.fontFamily = family;
         };
       ` );
     }
 
-    return codeStrings;
+    return codeStrings.join( '\n' );
   }
 }

@@ -3,7 +3,7 @@ const ViewComponentTemplates = {
     onProgramAdded: `
       const {{NAME}}WrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/{{FILE_NAME}}' );
       const {{NAME}}SoundClip = new phet.tambo.SoundClip( {{NAME}}WrappedAudioBuffer, {
-        loop: true
+        loop: {{LOOP}}
        } );
       phet.tambo.soundManager.addSoundGenerator( {{NAME}}SoundClip );
       
@@ -24,21 +24,34 @@ const ViewComponentTemplates = {
           const playbackRate = Math.max( 0, rate );
           {{NAME}}SoundClip.setPlaybackRate( playbackRate );
         };
+        
+        // a function the user can call to play the sound
+        const play = () => {
+          // Play the sound - if looping, we don't want to start playing again if already playing
+          if ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) {
+            {{NAME}}SoundClip.play();
+            
+            // Set a timer to turn off the sound when the value stops changing.
+            if ( {{NAME}}StopSoundTimeout ){
+              window.clearTimeout( {{NAME}}StopSoundTimeout );
+            }
+            
+            {{NAME}}StopSoundTimeout = window.setTimeout( () => {
+              {{NAME}}SoundClip.stop();
+            }, 5000 );  
+          }
+        };
+        
+        const stop = () => {
+          // Set a timer to turn off the sound when the value stops changing.
+          if ( {{NAME}}StopSoundTimeout ){
+            window.clearTimeout( {{NAME}}StopSoundTimeout );
+          }
+          {{NAME}}SoundClip.stop();
+        };
       
         {{CONTROL_FUNCTION}}
-        
-        // Play the sound
-        if ( !{{NAME}}SoundClip.isPlaying ) {
-          {{NAME}}SoundClip.play();
-        }
-        
-        // Set a timer to turn off the sound when the value stops changing.
-        if ( {{NAME}}StopSoundTimeout ){
-          window.clearTimeout( {{NAME}}StopSoundTimeout );
-        }
-        {{NAME}}StopSoundTimeout = window.setTimeout( () => {
-          {{NAME}}SoundClip.stop();
-        }, 5000 );        
+            
       } );       
       
       // Assign the sound to the scratchpad so that we can remove it later
@@ -166,7 +179,7 @@ const ViewComponentTemplates = {
     onProgramAdded: `
 
       // Create a shape with kite.
-      const {{NAME}}Shape = {{SHAPE_CREATOR_CODE}}
+      {{SHAPE_CREATOR_CODE}}
       
       // create a path for the shape
       const {{NAME}}Path = new phet.scenery.Path( {{NAME}}Shape, {
@@ -174,6 +187,7 @@ const ViewComponentTemplates = {
         stroke: '{{STROKE_COLOR}}',
         lineWidth: {{LINE_WIDTH}},
         
+        // if initial position is zero, do not set that explicitly because it will break shape points 
         centerX: {{CENTER_X}},
         centerY: {{CENTER_Y}},
         scale: {{SCALE}},

@@ -156,13 +156,15 @@ export default function CreateViewComponentForm( props ) {
       // component specific data
       if ( selectedTab === 'sounds' ) {
         editingComponent.soundFileName = soundsDataRef.current.soundFileName;
+        editingComponent.loop = soundsDataRef.current.loop;
       }
     }
     else {
 
       if ( selectedTab === 'sounds' ) {
         const soundFileName = soundsDataRef.current.soundFileName;
-        const soundViewComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName );
+        const loop = soundsDataRef.current.loop;
+        const soundViewComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop );
         activeProgram.viewContainer.addSoundView( soundViewComponent );
       }
       else if ( selectedTab === 'description' ) {

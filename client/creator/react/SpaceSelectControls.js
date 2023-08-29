@@ -37,7 +37,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'creator-tests' );
 
               setTimeout( () => {
-                setSelectedSystemName( 'controller-test' );
+                setSelectedSystemName( 'audio-pendulum' );
               }, 500 );
             }, 500 );
           }

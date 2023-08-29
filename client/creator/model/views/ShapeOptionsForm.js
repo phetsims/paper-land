@@ -204,7 +204,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                type='number'
                                                value={formData.defaultShapeOptions.radius}
                                                onChange={event => {
-                                                 setShapeOption( 'radius', event.target.value );
+                                                 setShapeOption( 'circleRadius', event.target.value );
                                                }}
                                              ></Form.Control>
                                            </div>

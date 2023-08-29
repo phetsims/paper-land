@@ -1,13 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
-import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 import styles from './../CreatorMain.css';
+import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 
-const PAPER_NUMBER_DOCUMENTATION = '`paperProgramNumber` - The number of the paper program.';
-const OTHER_PAPER_NUMBER_DOCUMENTATION = '`otherPaperProgramNumber` - The number of the other paper program.';
-const DIRECTION_DOCUMENTATION = '`direction` - - The direction of the adjacency. One of `left`, `right`, `up`, `down`.';
-const SCRATCHPAD_DOCUMENTATION = '`scratchpad` - A JavaScript object that is unique to the program but shared between all event listeners.';
-const SHARED_DATA_DOCUMENTATION = 'sharedData` - A JavaScript object with global variables of paper-land.';
+const PAPER_NUMBER_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{number} paperProgramNumber'}</code> - The number of the paper program.
+    </p>
+  </>
+);
+
+const OTHER_PAPER_NUMBER_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{number} otherPaperProgramNumber'}</code> - The number of the other paper program.
+    </p>
+  </>
+);
+
+const DIRECTION_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{string} direction'}</code> - The direction of the adjacency. One of `left`, `right`, `up`, `down`.
+    </p>
+  </>
+);
+
+const SCRATCHPAD_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{Object} scratchpad'}</code> - A JavaScript object that is unique to the program but shared between all event listeners.
+    </p>
+  </>
+);
+
+const SHARED_DATA_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{Object} sharedData'}</code> - A JavaScript object with global variables of paper-land.
+    </p>
+  </>
+);
+
+const PAPER_POINTS_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{{x: number, y: number}[]} paperPoints'}</code> - Array of points, one for each corner of the paper. Order is left top, right top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
+    </p>
+  </>
+);
+
+const MARKERS_ON_PROGRAM_DOCUMENTATION = (
+  <>
+    <p>
+      <code>{'{Object[]} markersOnProgram'}</code> - A list of all the markers on the program. See {' '}
+      <a href='https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points'>Markers API</a>{' '}
+      for information on each marker.
+    </p>
+  </>
+);
 
 export default function CreateCustomCodeForm( props ) {
   const program = props.activeEdit.program;
@@ -84,7 +136,12 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramRemoved'
           functionDocumentationString='The function called when your program is no longer detected by the camera.'
           codeStringProperty={program.customCodeContainer.onProgramRemovedCodeProperty}
-          codeStateString={onProgramRemovedCode}>
+          codeStateString={onProgramRemovedCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -93,7 +150,13 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramChangedPosition'
           functionDocumentationString='The function called when your program changes position (move or rotate).'
           codeStringProperty={program.customCodeContainer.onProgramChangedPositionCodeProperty}
-          codeStateString={onProgramChangedPositionCode}>
+          codeStateString={onProgramChangedPositionCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            PAPER_POINTS_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -102,7 +165,14 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramMarkersAdded'
           functionDocumentationString='The function called when one or more markers are placed inside the program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersAddedCodeProperty}
-          codeStateString={onProgramMarkersAddedCode}>
+          codeStateString={onProgramMarkersAddedCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            PAPER_POINTS_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION,
+            MARKERS_ON_PROGRAM_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -111,7 +181,13 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramMarkersRemoved'
           functionDocumentationString='The function called when one or more markers are removed from a program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersRemovedCodeProperty}
-          codeStateString={onProgramMarkersRemovedCode}>
+          codeStateString={onProgramMarkersRemovedCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION,
+            MARKERS_ON_PROGRAM_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -120,7 +196,14 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramMarkersChangedPosition'
           functionDocumentationString='The function called when one or more markers change their position inside this program.'
           codeStringProperty={program.customCodeContainer.onProgramMarkersChangedPositionCodeProperty}
-          codeStateString={onProgramMarkersChangedPositionCode}>
+          codeStateString={onProgramMarkersChangedPositionCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            PAPER_POINTS_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION,
+            MARKERS_ON_PROGRAM_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -129,7 +212,14 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramAdjacent'
           functionDocumentationString='Called when a program becomes adjacent to another program in one of the cardinal directions.'
           codeStringProperty={program.customCodeContainer.onProgramAdjacentCodeProperty}
-          codeStateString={onProgramAdjacentCode}>
+          codeStateString={onProgramAdjacentCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            OTHER_PAPER_NUMBER_DOCUMENTATION,
+            DIRECTION_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
 
@@ -138,7 +228,14 @@ export default function CreateCustomCodeForm( props ) {
           title='onProgramSeparated'
           functionDocumentationString='Called when a program becomes separated from another program.'
           codeStringProperty={program.customCodeContainer.onProgramSeparatedCodeProperty}
-          codeStateString={onProgramSeparatedCode}>
+          codeStateString={onProgramSeparatedCode}
+          functionParameterStrings={[
+            PAPER_NUMBER_DOCUMENTATION,
+            OTHER_PAPER_NUMBER_DOCUMENTATION,
+            DIRECTION_DOCUMENTATION,
+            SCRATCHPAD_DOCUMENTATION,
+            SHARED_DATA_DOCUMENTATION
+          ]}>
         </CustomCodeEditor>
       </div>
     </>
