@@ -8,6 +8,9 @@ const ViewComponentTemplates = {
       phet.tambo.soundManager.addSoundGenerator( {{NAME}}SoundClip );
       
       let {{NAME}}StopSoundTimeout = null;
+      
+      // as a safety measure, sound can only be played every 0.25 seconds
+      let {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
 
       // Play the sound when any dependencies change value.
       scratchpad.{{NAME}}SoundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
@@ -27,9 +30,12 @@ const ViewComponentTemplates = {
         
         // a function the user can call to play the sound
         const play = () => {
-          // Play the sound - if looping, we don't want to start playing again if already playing
-          if ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) {
+        
+          // Play the sound - if looping, we don't want to start playing again if already playing. The sound
+          // can only be played at a limited interval for safety.
+          if ( ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) && phet.paperLand.elapsedTimeProperty.value - {{NAME}}LastPlayTime > 0.25 ) {
             {{NAME}}SoundClip.play();
+            {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
             
             // Set a timer to turn off the sound when the value stops changing.
             if ( {{NAME}}StopSoundTimeout ){
