@@ -170,6 +170,7 @@ const ViewComponentTemplates = {
         const setImage = imageName => {
           let {{NAME}}ImageElement = document.createElement( 'img' );
           {{NAME}}ImageElement.src = 'media/images/' + imageName;
+          {{NAME}}Image.image = {{NAME}}ImageElement; 
         };
       
         {{CONTROL_FUNCTION}}
