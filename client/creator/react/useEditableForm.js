@@ -58,7 +58,7 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
   const handleChange = newData => {
 
     // So that the client doesn't have to provide every key, we merge the change into the previous state
-    const totalData = { ...formData, ...newData };
+    const totalData = _.merge( {}, formData, newData );
 
     // Make sure that the change function provided the correct data for this component
     validateSchema( componentStateSchema, totalData );

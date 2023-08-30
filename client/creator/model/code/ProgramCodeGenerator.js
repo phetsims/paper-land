@@ -432,7 +432,9 @@ export default class ProgramCodeGenerator {
       data = {
         PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getBooleanControllerChangedPositionCode( controllerComponent.controlType, controlledName ),
         PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersAddedCode( controllerComponent.controlType, controlledName ),
-        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName )
+        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName ),
+        PROGRAM_ADJACENT_CODE: ControllerCodeGenerator.getBooleanControllerAdjacentCode( controllerComponent.controlType, controlledName, controllerComponent.whiskerConfiguration.otherPaperNumber ),
+        PROGRAM_SEPARATED_CODE: ControllerCodeGenerator.getBooleanControllerSeparatedCode( controllerComponent.controlType, controlledName, controllerComponent.whiskerConfiguration.otherPaperNumber )
       };
     }
     else if ( componentType === 'Vector2PropertyController' ) {

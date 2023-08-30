@@ -113,6 +113,46 @@ class ControllerCodeGenerator {
     return '';
   }
 
+  static getBooleanControllerAdjacentCode( booleanControlType, controlledName, otherProgramNumber ) {
+    if ( booleanControlType === BooleanPropertyController.ControlType.WHISKER ) {
+      const computeValueCode = () => {
+        if ( otherProgramNumber ) {
+
+          // if another paper is provided, value is true when adjacent to that paper
+          return `otherPaperNumber === ${otherProgramNumber}`;
+        }
+        else {
+
+          // always true when adjacent to another program
+          return 'true';
+        }
+      };
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, computeValueCode );
+    }
+    return '';
+  }
+
+  static getBooleanControllerSeparatedCode( booleanControlType, controlledName, otherProgramNumber ) {
+    if ( booleanControlType === BooleanPropertyController.ControlType.WHISKER ) {
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, modelPropertyName => {
+
+        if ( otherProgramNumber ) {
+
+          // if the other program is equal to the provide one, value becomes false on separation, otherwise
+          // the value stays the same
+          return `otherPaperNumber === ${otherProgramNumber} ? false : ${modelPropertyName}.value`;
+        }
+        else {
+
+          // no program number to compare against, value always becomes falseon separation
+          return 'false';
+        }
+
+      } );
+    }
+    return '';
+  }
+
   static getEnumerationControllerChangedPositionCode( controlType, controlledName, enumerationValues ) {
     if ( controlType === EnumerationPropertyController.ControlType.ROTATION ) {
 

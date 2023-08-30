@@ -9,6 +9,7 @@ import EnumerationPropertyController from '../../model/controllers/EnumerationPr
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
 import PropertyController from '../../model/controllers/PropertyController.js';
 import Vector2PropertyController from '../../model/controllers/Vector2PropertyController.js';
+import WhiskerConfiguration from '../../model/controllers/WhiskerConfiguration.js';
 import Utils from '../../Utils.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import styles from './../../CreatorMain.css';
@@ -128,6 +129,7 @@ export default function PaperControllerForm( props ) {
       }
       else if ( selectedComponentType === 'BooleanProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
+        editingComponent.whiskerConfiguration = new WhiskerConfiguration( booleanDataRef.current.whiskerConfiguration );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.NumberPropertyControlType );
@@ -143,7 +145,10 @@ export default function PaperControllerForm( props ) {
         activeProgram.controllerContainer.addVector2PropertyController( vector2PropertyController );
       }
       else if ( selectedComponentType === 'BooleanProperty' ) {
-        const booleanController = new BooleanPropertyController( componentName, selectedComponent, booleanDataRef.current.controlType );
+        const whiskerConfiguration = booleanDataRef.current.whiskerConfiguration;
+        const booleanController = new BooleanPropertyController( componentName, selectedComponent, booleanDataRef.current.controlType, {
+          whiskerConfiguration: whiskerConfiguration
+        } );
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
