@@ -230,3 +230,7 @@ a {
 code {
   color: #A4B7C3; /* Light gray */
 }
+
+:local(.aiResponse) {
+  white-space: pre-line;
+}

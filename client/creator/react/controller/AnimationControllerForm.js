@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { isNameValid } from '../../../utils.js';
 import Component from '../../model/Component.js';
 import AnimationListenerComponent from '../../model/controllers/AnimationListenerComponent.js';
+import AIHelperChat from '../AIHelperChat.js';
 import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
@@ -92,6 +93,11 @@ export default function AnimationControllerForm( props ) {
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>
+      <AIHelperChat
+        settableComponents={selectedControlledComponents}
+        variableComponents={selectedControlledComponents}
+        additionalPromptContent={'I also have the following variables for animation. They cannot be changed.\ndt - the time step, in seconds\n"elapsedTime" - How long the application has been running, in seconds'}
+      ></AIHelperChat>
       <CreateComponentButton
         createComponent={createComponent}
         selectedTabFormValid={formValid}

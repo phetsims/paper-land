@@ -2,6 +2,7 @@ const express = require( 'express' );
 const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
 const fs = require( 'fs' );
+const OpenAI = require( 'openai' );
 
 const router = express.Router();
 router.use( express.json() );
@@ -486,4 +487,46 @@ router.get( '/api/creator/imageFiles', ( req, res ) => {
     }
   } );
 } );
-module.exports = router;
+
+//--------------------------------------------------------------------------------------------------
+// Routes for the OpenAI API
+//--------------------------------------------------------------------------------------------------
+const openAIRouter = express.Router();
+openAIRouter.use( express.json() );
+openAIRouter.use( require( 'nocache' )() );
+
+// The default value for apiKey is process.env["OPENAI_API_KEY"], which is what we use.
+const openai = new OpenAI( {
+  apiKey: process.env.OPENAI_API_KEY
+} );
+
+// Make a post to the OpenAI router. Recall that the path through this router is /openai.
+openAIRouter.post( '/', async ( req, res ) => {
+
+  const promptString = req.body.promptString;
+  console.log( promptString );
+
+  try {
+    const completion = await openai.chat.completions.create( {
+      messages: [ { role: 'user', content: promptString } ],
+
+      // slow but maybe better?
+      // model: 'gpt-4'
+
+      // faster
+      model: 'gpt-3.5-turbo'
+    } );
+
+    const response = completion.choices[ 0 ];
+    console.log( response );
+
+    res.json( { response: response } );
+  }
+  catch( error ) {
+    if ( error.response ) {
+      res.json( error.response.data );
+    }
+  }
+} );
+
+module.exports = { router, openAIRouter };

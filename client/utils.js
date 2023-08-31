@@ -312,6 +312,37 @@ export function getComponentDocumentation( namedProperty ) {
   return `${namedProperty.nameProperty.value} - ${usabilityDocumentation}`;
 }
 
+
+/**
+ * Create documentation for a component.
+ * @param {Component} component
+ * @return {string}
+ */
+export function createSetterFunctionString( component ) {
+  const componentName = component.nameProperty.value;
+  const type = component.propertyType;
+
+  let argumentDocumentation = '';
+  if ( type === 'Vector2Property' ) {
+    argumentDocumentation = 'Pass in a new point with `new phet.dot.Vector2( x, y )`';
+  }
+  else if ( type === 'NumberProperty' ) {
+    argumentDocumentation = 'Pass in a new number.';
+  }
+  else if ( type === 'BooleanProperty' ) {
+    argumentDocumentation = 'Provide a new boolean value, true or false.';
+  }
+  else if ( type === 'StringProperty' ) {
+    argumentDocumentation = 'Provide a new string.';
+  }
+  else {
+    throw new Error( `Unhandled property type: ${type}` );
+  }
+
+  const capitalizedComponentName = componentName.charAt( 0 ).toUpperCase() + componentName.slice( 1 );
+  return `set${capitalizedComponentName}( value ) - ${argumentDocumentation}`;
+}
+
 /**
  * Reusable function that returns true if the provided component name is valid.
  * @param {ActiveEdit|null} activeEdit - The state for the actively edited component, if any.

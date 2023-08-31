@@ -1,11 +1,7 @@
 import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { createSetterFunctionString } from '../../utils.js';
 import styles from './../CreatorMain.css';
-
-const createSetterFunctionString = componentName => {
-  const capitalizedComponentName = componentName.charAt( 0 ).toUpperCase() + componentName.slice( 1 );
-  return `set${capitalizedComponentName}( value )`;
-};
 
 export default function ComponentSetterList( props ) {
 
@@ -24,7 +20,7 @@ export default function ComponentSetterList( props ) {
               <ListGroup.Item
                 key={`component-documentation-${index}`}
                 className={styles.listGroupItem}
-              >{createSetterFunctionString( selectedComponent.nameProperty.value )}</ListGroup.Item>
+              >{createSetterFunctionString( selectedComponent )}</ListGroup.Item>
             );
           } )
         }
