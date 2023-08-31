@@ -56,7 +56,7 @@ ${additionalContent}
 
 ${userPrompt}
 
-Just give the body of a function in JavaScript, don't wrap any code in a new function declaration. Then, can you briefly explain each line as if I were a novice developer?
+Just give the body of a function in JavaScript. Please make the code as simple and short as possible. Then, can you briefly explain each line as if I were a novice developer?
   `;
 };
 
@@ -103,13 +103,13 @@ const AIHelperChat = props => {
       // Add the user message to the decorated messages array
       updatedDecoratedMessages.push( inputText );
     }
-    setDecoratedMessages( updatedDecoratedMessages );
 
     // Clear the text input right away
     setInputText( '' );
 
     // combine all decorated messages into a single string to send to OpenAI
     const prompt = updatedDecoratedMessages.join( '\n' );
+    console.log( updatedDecoratedMessages );
 
     // Set the waiting for response flag
     setWaitingForResponse( true );
@@ -121,6 +121,12 @@ const AIHelperChat = props => {
     const updatedResponseMessage = { text: response, isUser: false };
     const updatedMessagesWithResponse = [ ...updatedMessages, updatedResponseMessage ];
     setMessages( updatedMessagesWithResponse );
+
+    // add the response to decorated messages, since that is what we feed to the AI
+    updatedDecoratedMessages.push( response );
+
+    // set state for updated decorated messages
+    setDecoratedMessages( updatedDecoratedMessages );
 
     // no longer waiting for a response
     setWaitingForResponse( false );
@@ -175,13 +181,18 @@ const AIHelperChat = props => {
                 <strong>Thinking...</strong>
                 <hr></hr>
               </div>
-              <Form.Control
-                type='text'
-                value={inputText}
-                placeholder='How can I help you?'
-                disabled={waitingForResponse}
-                onChange={event => setInputText( event.target.value )}
-              />
+              <Form onSubmit={async event => {
+                event.preventDefault();
+                await handleSendMessage();
+              }}>
+                <Form.Control
+                  type='text'
+                  value={inputText}
+                  placeholder='How can I help you?'
+                  disabled={waitingForResponse}
+                  onChange={event => setInputText( event.target.value )}
+                />
+              </Form>
               <div>
                 <StyledButton
                   name='Send'
