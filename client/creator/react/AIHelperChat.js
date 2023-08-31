@@ -25,7 +25,7 @@ const generateChatResponse = async inputString => {
       return data.response.message.content;
     }
     else {
-      return 'Failure to get response (received but with unexpected data).';
+      return 'Failure to get response. Make sure your OpenAI key is correct.';
     }
   }
   catch( error ) {

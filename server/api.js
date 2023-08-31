@@ -497,16 +497,20 @@ openAIRouter.use( require( 'nocache' )() );
 
 // The default value for apiKey is process.env["OPENAI_API_KEY"], which is what we use.
 const openai = new OpenAI( {
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.OPENAI_API_KEY || 'no-available-key'
 } );
 
 // Make a post to the OpenAI router. Recall that the path through this router is /openai.
 openAIRouter.post( '/', async ( req, res ) => {
 
   const promptString = req.body.promptString;
-  console.log( promptString );
 
   try {
+    if ( !process.env.OPENAI_API_KEY ) {
+      throw new Error( 'No OpenAI API key available.' );
+    }
+    console.log( process.env.OPENAI_API_KEY );
+
     const completion = await openai.chat.completions.create( {
       messages: [ { role: 'user', content: promptString } ],
 
@@ -518,13 +522,15 @@ openAIRouter.post( '/', async ( req, res ) => {
     } );
 
     const response = completion.choices[ 0 ];
-    console.log( response );
 
     res.json( { response: response } );
   }
   catch( error ) {
     if ( error.response ) {
       res.json( error.response.data );
+    }
+    else {
+      res.json( { error: error.message } );
     }
   }
 } );
