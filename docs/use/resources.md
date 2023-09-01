@@ -1,9 +1,5 @@
 # Resources
 
-!!! warning "Under Construction" 
-      
-      We are working on updating our documentation - more details coming soon!
-
 ## Paper Program Blank Template
 
 Don't have a color printer, but do have markers/colored pencils? Use this template to fill in the color dot sequences for your paper programs on the fly.

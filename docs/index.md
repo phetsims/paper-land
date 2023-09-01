@@ -1,7 +1,7 @@
-# Paper Playground 
+# Paper Playground
 
 <!-- https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types -->
-!!! warning "Under Construction" 
+!!! warning "Under Construction"
       
     We are working on updating our documentation - more details coming soon!
 
@@ -13,12 +13,12 @@ We aim to support a community interested in bringing physical interaction as a m
 
 Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the library stack used by [PhET Interactive Simulations](https://www.github.com/phetsims/) as a convenient 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
 
-The ideas behind Paper Playground are simple, but the possibilities are infinite. 
+The ideas behind Paper Playground are simple, but the possibilities are infinite.
 
-1. Create programs, as many as you would like, to represent your project. 
-2. Print out the dot-covered papers that belong to those programs. 
-3. Put those *paper programs* in front of a webcam. 
-4. Watch and interact with the output of that code in your browser. 
+1. Create programs, as many as you would like, to represent your project.
+2. Print out the dot-covered papers that belong to those programs.
+3. Put those *paper programs* in front of a webcam.
+4. Watch and interact with the output of that code in your browser.
 5. Move programs around and trigger the mappings between your papers position in space and your code!
 6. Change your program code and keep the creativity going!
 
@@ -77,9 +77,11 @@ However, there are **many other areas** that the project can be expanded (see be
 ## Roadmap
 
 ### Docs
+
 :books:  Updated setup and tutorial!
 
 ### Tool
+
 :page_with_curl:  More examples in the hosted database highlighting the power of multimodal design!
 
 :computer:  A UI for creating basic Papers without deep JavaScript knowledge!
@@ -89,21 +91,3 @@ However, there are **many other areas** that the project can be expanded (see be
 ## License
 
 This software is licensed under the MIT license. For more information, see the [LICENSE](https://github.com/phetsims/paper-land/blob/main/LICENSE) file.
-
-<!-- Features
-If Paper Playground has specific features that set it apart or provide unique functionality, you can include a section that highlights these features. For example, if it supports real-time collaboration or has a comprehensive library of pre-built components, you can describe those features in this section.
-
-Demo or Screenshots
-Including a section with a demo or screenshots can provide visual context and help users understand the capabilities of Paper Playground. You can showcase examples of paper prototypes created using the tool or provide screenshots of the user interface.
-
-Roadmap
-If you have a roadmap for the future development of Paper Playground, it can be useful to share it with users and contributors. This section can outline upcoming features, improvements, or bug fixes that you plan to work on.
-
-Dependencies
-If there are specific dependencies or external libraries that Paper Playground relies on, it can be helpful to list them in a dedicated section. Provide instructions on how to install or set up these dependencies if necessary.
-
-API Documentation
-If Paper Playground has an API that developers can utilize, you may consider providing API documentation. This can include details about available endpoints, request/response examples, and authentication mechanisms.
-
-Troubleshooting or FAQs
-Including a section with common troubleshooting tips or frequently asked questions can assist users in resolving common issues. Provide solutions to known problems or direct users to relevant resources such as forums or support channels. -->
