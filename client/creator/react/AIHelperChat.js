@@ -37,19 +37,25 @@ const generateChatResponse = async inputString => {
 const createInitialPromptString = ( settableComponents, variableComponents, additionalContent, userPrompt ) => {
 
   // The setter functions, combined into a single string separated by new lines
-  const setterFunctionDocumentation = settableComponents.map( component => {
-    return createSetterFunctionString( component );
-  } ).join( '\n' );
+  let setterFunctionDocumentation = 'NONE_AVAILABLE';
+  if ( settableComponents.length > 0 ) {
+    setterFunctionDocumentation = settableComponents.map( component => {
+      return createSetterFunctionString( component );
+    } ).join( '\n' );
+  }
 
   // The variable documentation, combined into a single string separated by new lines
-  const variableFunctionDocumentation = variableComponents.map( component => {
-    return getComponentDocumentation( component );
-  } ).join( '\n' );
+  let variableFunctionDocumentation = 'NONE_AVAILABLE';
+  if ( variableComponents.length > 0 ) {
+    variableFunctionDocumentation = variableComponents.map( component => {
+      return getComponentDocumentation( component );
+    } ).join( '\n' );
+  }
 
   return `I have the following functions.
 ${setterFunctionDocumentation}
 
-And the following variables. These  cannot be set or changed directly. You must use the setter functions above. But they give the current values that can be used to compute new ones.
+And the following variables, which can be used in your implementation. But they cannot be changed directly.
 ${variableFunctionDocumentation}
 
 ${additionalContent}

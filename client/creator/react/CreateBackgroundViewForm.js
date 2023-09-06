@@ -22,8 +22,9 @@ export default function CreateBackgroundViewForm( props ) {
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
-        functionPrompt={'Write a function with the provided variables to return a color string. Can be any CSS color.'}
+        functionPrompt={'I need to write a JavaScript function with the provided variables that returns a color string.'}
         componentsPrompt={'Background color will change when any of the selected components change.'}
+        additionalPromptContent={'The function should return a string that that defines the background color.'}
       ></ViewComponentControls>
     </div>
   );
