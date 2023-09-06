@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { getComponentDocumentation } from '../../utils.js';
 import Component from '../model/Component.js';
 import styles from './../CreatorMain.css';
+import AIHelperChat from './AIHelperChat.js';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 import ModelComponentSelector from './ModelComponentSelector.js';
 
@@ -73,16 +74,10 @@ export default function ViewComponentControls( props ) {
                 handleChange={newValue => {
                   props.handleChange( { controlFunctionString: newValue } );
                 }}></CreatorMonacoEditor>
-              <Accordion>
-                <Accordion.Item eventKey='0'>
-                  <Accordion.Header>AI Support</Accordion.Header>
-                  <Accordion.Body>
-                    <div>
-                      <p>Potentially insert AI chat here! Would have access to the above functions and documentation and could easily write code snippets for the user.</p>
-                    </div>
-                  </Accordion.Body>
-                </Accordion.Item>
-              </Accordion>
+              <AIHelperChat
+                variableComponents={selectedModelComponents}
+                additionalPromptContent={props.additionalPromptContent || ''}
+              ></AIHelperChat>
             </div>
           </Accordion.Body>
         </Accordion.Item>

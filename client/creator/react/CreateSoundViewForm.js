@@ -7,6 +7,13 @@ import styles from './../CreatorMain.css';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
+// For documentation displayed to the user and to provide to the AI assistant.
+const SOUND_FUNCTIONS = [
+  'setPlaybackRate() - takes a value that must be larger than 0',
+  'setOutputLevel() - takes a value between 0 and 1',
+  'play() - play the selected sound'
+];
+
 export default function CreateSoundViewForm( props ) {
 
   // State for the available sounds files from the server.
@@ -92,9 +99,16 @@ export default function CreateSoundViewForm( props ) {
     <div className={styles.controlElement}>
       <p>Available functions:</p>
       <ListGroup>
-        <ListGroup.Item className={styles.listGroupItem}>setPlaybackRate() - takes a value that must be larger than 0</ListGroup.Item>
-        <ListGroup.Item className={styles.listGroupItem}>setOutputLevel() - takes a value between 0 and 1</ListGroup.Item>
-        <ListGroup.Item className={styles.listGroupItem}>play() - play the selected sound</ListGroup.Item>
+        {
+          SOUND_FUNCTIONS.map( ( functionString, index ) => {
+            return (
+              <ListGroup.Item
+                key={`function-${index}`}
+                className={styles.listGroupItem}
+              >{functionString}</ListGroup.Item>
+            );
+          } )
+        }
       </ListGroup>
     </div>
   );
@@ -109,6 +123,7 @@ export default function CreateSoundViewForm( props ) {
         handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the sound.'}
         componentsPrompt={'Function is called and sound is played whenever a component changes.'}
+        additionalPromptContent={SOUND_FUNCTIONS.join( '\n' )}
       ></ViewComponentControls>
     </div>
   );

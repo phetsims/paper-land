@@ -56,7 +56,9 @@ ${additionalContent}
 
 ${userPrompt}
 
-Just give the body of a function in JavaScript. Please make the code as simple and short as possible. Then, can you briefly explain each line as if I were a novice developer?
+I can only write code inside of a function body so if you have to use new variables, please assign them to the 'window' object.
+
+Please make the code as simple and short as possible and only use the functions and variables that you need. Then, can you briefly explain each line as if I were a novice developer?
   `;
 };
 
@@ -90,8 +92,8 @@ const AIHelperChat = props => {
     const updatedDecoratedMessages = [ ...decoratedMessages ];
     if ( decoratedMessages.length === 0 ) {
       const initialPrompt = ( createInitialPromptString(
-        props.settableComponents,
-        props.variableComponents,
+        props.settableComponents || [],
+        props.variableComponents || [],
         props.additionalPromptContent || '',
         inputText
       ) );
