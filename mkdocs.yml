@@ -13,7 +13,7 @@ repo_url: https://github.com/phetsims/paper-land
 # Configuration
 theme:
   name: material
-  # custom_dir: material/.overrides
+  custom_dir: docs/overrides
   features:
     - announce.dismiss
     - content.action.edit
@@ -43,14 +43,14 @@ theme:
   name: material
   palette:
   - media: '(prefers-color-scheme: light)'
-    primary: teal
+    primary: black
     accent: deep purple
     scheme: default
     toggle:
       icon: material/brightness-7
       name: Switch to dark mode
   - media: '(prefers-color-scheme: dark)'
-    primary: teal
+    primary: black
     accent: deep purple
     scheme: slate
     toggle:

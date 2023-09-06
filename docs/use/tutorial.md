@@ -17,21 +17,25 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 3. Board.html
 4. (future) Creator.html
 
-## What is the Camera screen?
+## What is the Camera page?
 
 ++shift+"Wheel Up/Down"++
 
 ++shift+"Mouse Drag"++
 
+
+## Organizing your code: Spaces and Projects
 ### What is a Space?
 A space is way of organizing your programs. All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well.
 
+#### What is a Project?
 
-## What is the Board screen?
 
-## What is the Projector screen?
+## What is the Board page?
 
-Given the current structure of the client, all of the code detected in the Camera is run through the Projector. However, in the latest iteration, we have focused all development on code outputting to the Board. The Projector must be opened to run the code, but the tab or window does not need to be visible. 
+## What is the Projector page?
+
+Given the current structure of the client, all of the code detected in the Camera is run through the Projector. However, in the latest iteration, we have focused all development on paper code outputting to the Board. The Projector page must be opened to run the code, but the tab or window does not need to be visible. 
 
 If you would like to use vanilla Web Canvas or make use of the projection overlay feature of the legacy Paper Programs project, then this is the page where the code will output. See [https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md) for more on this.
 
@@ -52,7 +56,13 @@ In the real world, you should see "Hello World" and the blue dot superimposed on
 
 You should be able to move the page and have the superimposed image move with it.
 
-## Editing the program and creating new ones
+## Creating and Editing Programs
+
+### Creator: Building programs visually
+
+
+
+### Editor: If you're comfortable with JavaScript and reading API documents
 
 On the camera page you'll find a link to the program editor for your space (this is a good link to share with other people who are collaborating on your space).
 
