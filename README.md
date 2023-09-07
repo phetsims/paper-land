@@ -11,7 +11,7 @@
 
 Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping JavaScript* code to real pieces of paper and manipulating the code in your **physical space**.
 
-(*for now, optional simplification incoming)
+(*written directly or using a no/low-code component-style interface!)
 
 **We aim to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning virtual technology**.
 
@@ -41,11 +41,9 @@ Our team is focused on a few large initiatives for integrating other projects in
 
 ⭐ If these projects interest you, please [join our community](https://phetsims.github.io/paper-land/community/) and take part in the development and discussion!
 
-1. :robot: Using LLMs to support a user answer the question: "How do I turn my idea for a multimodal interactive into data variables, functions, and entire programs?". We are exploring generative models to support user creativity and engage iteratively toward output of the full suite of programs for their project.
-
-2. :unlock: Abstracting the JavaScript code through means of an interface that assembles the data components of your programs and highlights the relationships between your programs (e.g., At a quick glance, what information is needed and passed between programs?).
-
-3. :outbox_tray: Easier API integration for paper programs to control or output to other browser displays (besides our [scenery](https://github.com/phetsims/scenery)-focused Board and the legacy canvas-focused Projector), as well as new inputs such as microcontroller integration via Bluetooth and WebSockets.
+1. :unlock: Creator Interface: Abstracting the JavaScript code through means of a no/low-code component style interface that assembles the data components of your programs and highlights the relationships between your programs (e.g., At a quick glance, what information is needed and passed between programs?). **Check out our progress by opening the Creator page in the tool!**
+2. :robot: AI Support: Using LLMs to support a user answer the question: "How do I turn my idea for a multimodal interactive into data variables, functions, and entire programs?". **We are working toward this goal by adding an optional AI assistant inside the Creator page to help generate custom JavaScript code for more complex functions!**
+3. :outbox_tray: Easier API integration for paper programs to control or output to other browser displays (besides our [scenery](https://github.com/phetsims/scenery)-focused Board and the legacy canvas-focused Projector), as well as new inputs such as microcontroller integration via Bluetooth and WebSockets. See our [example with the Weavly educational coding project](https://youtu.be/eZo0asFXJz4?si=xiexw7O04gPZW_Sc)!
 
 However, there are **many other areas** that the project can be expanded (see Community below for Contributing guidelines and suggestions)!
 
