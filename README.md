@@ -1,5 +1,10 @@
 # Paper Playground 
 
+[![Documentation](https://img.shields.io/badge/documentation-website-yellow?logo=markdown&logoColor=yellow)](https://phetsims.github.io/paper-land/)
+[![Matrix Server](https://img.shields.io/badge/matrix-chat-green?logo=matrix&logoColor=green)](https://matrix.to/#/#interactive-paper-programming:matrix.org)
+[![Youtube Channel](https://img.shields.io/badge/youtube-channel-red?logo=youtube&logoColor=red)](https://www.youtube.com/@PaperPlaygroundCommunity/)
+[![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](./LICENSE)
+
 ![logo](docs/assets/hand-with-dots.png)
 
 ## Interactive Play Meets Multimodal Web Experience
