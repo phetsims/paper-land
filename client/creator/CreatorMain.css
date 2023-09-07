@@ -234,3 +234,26 @@ code {
 :local(.aiResponse) {
   white-space: pre-line;
 }
+
+
+:local(.dropZone) {
+  flex: 1;
+  display: flex;
+  max-width: 300px;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  border-width: 2px;
+  border-radius: 4px;
+  border-color: #eeeeee;
+  border-style: dashed;
+  background-color: backgroundColor;
+  color: textColor;
+  transition: border .24s ease-in-out;
+}
+
+:local(.dropZoneContainer) {
+  display: flex;
+  justify-content: center; /* Horizontally center content */
+  align-items: center; /* Vertically center content */
+}

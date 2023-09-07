@@ -2,6 +2,8 @@ const express = require( 'express' );
 const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
 const fs = require( 'fs' );
+const path = require( 'path' );
+const multer = require( 'multer' );
 const OpenAI = require( 'openai' );
 
 const router = express.Router();
@@ -15,6 +17,26 @@ const knex = require( 'knex' )( require( '../knexfile' )[ process.env.NODE_ENV |
 const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
 
 const editorHandleDuration = 1500;
+
+// Storage managers for the image and sound uploads
+const imageStorage = multer.diskStorage( {
+  destination: ( req, file, cb ) => {
+    cb( null, path.join( 'www', 'media', 'images', 'uploads' ) );
+  },
+  filename: ( req, file, cb ) => {
+    cb( null, file.originalname );
+  }
+} );
+const soundStorage = multer.diskStorage( {
+  destination: ( req, file, cb ) => {
+    cb( null, path.join( 'www', 'media', 'sounds', 'uploads' ) );
+  },
+  filename: ( req, file, cb ) => {
+    cb( null, file.originalname );
+  }
+} );
+const uploadImage = multer( { storage: imageStorage } );
+const uploadSound = multer( { storage: soundStorage } );
 
 /**
  * Get the current code for the specified space name and program number.
@@ -467,7 +489,11 @@ router.get( '/api/creator/soundFiles', ( req, res ) => {
       res.status( 500 ).send( 'Error reading sound files' );
     }
     else {
-      res.json( { soundFiles: files } );
+      const soundFiles = files.filter( file => {
+        const extension = path.extname( file ).toLowerCase();
+        return [ '.mp3', '.wav', '.ogg' ].includes( extension );
+      } );
+      res.json( { soundFiles: soundFiles } );
     }
   } );
 } );
@@ -483,9 +509,39 @@ router.get( '/api/creator/imageFiles', ( req, res ) => {
       res.status( 500 ).send( 'Error reading image files' );
     }
     else {
-      res.json( { imageFiles: files } );
+      const imageFiles = files.filter( file => {
+        const extension = path.extname( file ).toLowerCase();
+        return [ '.jpg', '.jpeg', '.png' ].includes( extension );
+      } );
+
+      res.json( { imageFiles: imageFiles } );
     }
   } );
+} );
+
+/**
+ * Upload an image file to the server so that it can be used in various applications.
+ */
+router.post( '/api/creator/uploadImage', uploadImage.single( 'file' ), async ( req, res ) => {
+
+  // Check if a file was provided
+  if ( !req.file ) {
+    throw new Error( 'No file provided' );
+  }
+
+  // Multer should have been successful in the upload if we made it to this point.
+  try {
+
+    // Respond with a success message and the location/name of the file
+    res.status( 200 ).json( {
+      message: 'File uploaded and processed successfully',
+      imageFileName: `/uploads/${req.file.originalname}`
+    } );
+  }
+  catch( error ) {
+    console.error( 'Error processing the uploaded file:', error );
+    res.status( 500 ).json( { message: 'Failed to process the uploaded file' } );
+  }
 } );
 
 //--------------------------------------------------------------------------------------------------

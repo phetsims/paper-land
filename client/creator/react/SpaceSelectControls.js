@@ -37,7 +37,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'creator-tests' );
 
               setTimeout( () => {
-                setSelectedSystemName( 'audio-pendulum' );
+                setSelectedSystemName( 'upload-test' );
               }, 500 );
             }, 500 );
           }

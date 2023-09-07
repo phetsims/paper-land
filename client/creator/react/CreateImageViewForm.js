@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import xhr from 'xhr';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import styles from './../CreatorMain.css';
+import FileUploader from './FileUploader.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
@@ -37,31 +40,60 @@ export default function CreateImageViewForm( props ) {
         if ( response.body && response.body.imageFiles ) {
           if ( Array.isArray( response.body.imageFiles ) ) {
             setImageFiles( response.body.imageFiles );
+
+            // If we are editing the image files, we already have a file selected, so don't overwrite it.
+            const editingSelection = props.activeEdit && props.activeEdit.component && props.activeEdit.component && props.activeEdit.component.imageFileName;
+            if ( !editingSelection ) {
+              handleChange( { imageFileName: response.body.imageFiles[ 0 ] } );
+            }
           }
         }
       }
     } );
   }, [] );
 
+  // Specific form components for the Image components - A select for the built-in images and a place to upload custom
+  // files
   const imageFileSelector = (
     <div>
-      <Form.Label>Select image file:</Form.Label>
-      <Form.Select
-        onChange={event => {
-          handleChange( { imageFileName: event.target.value } );
-        }}
+      <Tabs
+        className={styles.tabs}
+        justify
       >
-        {
-          imageFiles.map( ( imageFile, index ) => {
-            return (
-              <option
-                key={`image-file-${index}`}
-                value={imageFile}
-              >{imageFile}</option>
-            );
-          } )
-        }
-      </Form.Select>
+        <Tab eventKey='build-in' title='Paper Playground Images' tabClassName={styles.tab}>
+          <div className={styles.controlElement}>
+            <Form.Label>Select image file:</Form.Label>
+            <Form.Select
+              onChange={event => {
+                handleChange( { imageFileName: event.target.value } );
+              }}
+              value={formData.imageFileName}
+            >
+              {
+                imageFiles.map( ( imageFile, index ) => {
+                  return (
+                    <option
+                      key={`image-file-${index}`}
+                      value={imageFile}
+                    >{imageFile}</option>
+                  );
+                } )
+              }
+            </Form.Select>
+          </div>
+        </Tab>
+        <Tab eventKey='upload' title='Upload Image' tabClassName={styles.tab}>
+          <div className={`${styles.controlElement}`}>
+            <FileUploader
+              fileType='image'
+              handleChange={fileName => {
+                handleChange( { imageFileName: fileName } );
+              }}
+            ></FileUploader>
+            <p className={styles.controlElement}>{`Currently using image: ${formData.imageFileName}`}</p>
+          </div>
+        </Tab>
+      </Tabs>
     </div>
   );
 

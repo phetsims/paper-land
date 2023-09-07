@@ -158,6 +158,9 @@ export default function CreateViewComponentForm( props ) {
         editingComponent.soundFileName = soundsDataRef.current.soundFileName;
         editingComponent.loop = soundsDataRef.current.loop;
       }
+      else if ( selectedTab === 'images' ) {
+        editingComponent.imageFileName = imagesDataRef.current.imageFileName;
+      }
     }
     else {
 
