@@ -27,8 +27,9 @@ export default function FileUploader( props ) {
       else {
         if ( response.body ) {
           const bodyObject = JSON.parse( response.body );
-          if ( bodyObject && bodyObject.imageFileName ) {
-            handleChange( bodyObject.imageFileName );
+          const fileNameKey = fileType === 'image' ? 'imageFileName' : 'soundFileName';
+          if ( bodyObject && bodyObject[ fileNameKey ] ) {
+            handleChange( bodyObject[ fileNameKey ] );
           }
         }
       }

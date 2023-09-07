@@ -544,6 +544,31 @@ router.post( '/api/creator/uploadImage', uploadImage.single( 'file' ), async ( r
   }
 } );
 
+/**
+ * Upload a sound file to the server so that it can be used in various applications.
+ */
+router.post( '/api/creator/uploadSound', uploadSound.single( 'file' ), async ( req, res ) => {
+
+  // Check if a file was provided
+  if ( !req.file ) {
+    throw new Error( 'No file provided' );
+  }
+
+  // Multer should have been successful in the upload if we made it to this point.
+  try {
+
+    // Respond with a success message and the location/name of the file
+    res.status( 200 ).json( {
+      message: 'File uploaded and processed successfully',
+      soundFileName: `/uploads/${req.file.originalname}`
+    } );
+  }
+  catch( error ) {
+    console.error( 'Error processing the uploaded file:', error );
+    res.status( 500 ).json( { message: 'Failed to process the uploaded file' } );
+  }
+} );
+
 //--------------------------------------------------------------------------------------------------
 // Routes for the OpenAI API
 //--------------------------------------------------------------------------------------------------

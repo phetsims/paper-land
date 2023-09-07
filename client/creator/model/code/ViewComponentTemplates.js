@@ -42,9 +42,12 @@ const ViewComponentTemplates = {
               window.clearTimeout( {{NAME}}StopSoundTimeout );
             }
             
-            {{NAME}}StopSoundTimeout = window.setTimeout( () => {
-              {{NAME}}SoundClip.stop();
-            }, 5000 );  
+            // only stop if looping
+            if ( {{LOOP}} ) {
+              {{NAME}}StopSoundTimeout = window.setTimeout( () => {
+                {{NAME}}SoundClip.stop();
+              }, 5000 );
+            }  
           }
         };
         

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import xhr from 'xhr';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
+import FileUploader from './FileUploader.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
@@ -62,25 +65,42 @@ export default function CreateSoundViewForm( props ) {
   // A select UI component to use a particular sound.
   const soundFileSelector = (
     <div>
-      <Form.Label>Select sound file:</Form.Label>
-      <Form.Select
-        value={formData.soundFileName}
-        onChange={event => {
-          handleChange( { soundFileName: event.target.value } );
-          props.getSoundFormData( { soundFileName: event.target.value } );
-        }}
-      >
-        {
-          soundFiles.map( ( soundFile, index ) => {
-            return (
-              <option
-                key={`sound-file-${index}`}
-                value={soundFile}
-              >{soundFile}</option>
-            );
-          } )
-        }
-      </Form.Select>
+      <Tabs className={styles.tabs} justify>
+        <Tab eventKey='built-in' title='Paper Playground Sounds'>
+          <div className={styles.controlElement}>
+            <Form.Label>Select sound file:</Form.Label>
+            <Form.Select
+              value={formData.soundFileName}
+              onChange={event => {
+                handleChange( { soundFileName: event.target.value } );
+                props.getSoundFormData( { soundFileName: event.target.value } );
+              }}
+            >
+              {
+                soundFiles.map( ( soundFile, index ) => {
+                  return (
+                    <option
+                      key={`sound-file-${index}`}
+                      value={soundFile}
+                    >{soundFile}</option>
+                  );
+                } )
+              }
+            </Form.Select>
+          </div>
+        </Tab>
+        <Tab eventKey='upload' title='Upload Sound'>
+          <div className={`${styles.controlElement}`}>
+            <FileUploader
+              fileType='sound'
+              handleChange={fileName => {
+                handleChange( { soundFileName: fileName } );
+              }}
+            ></FileUploader>
+            <p className={styles.controlElement}>{`Currently using sound: ${formData.soundFileName}`}</p>
+          </div>
+        </Tab>
+      </Tabs>
       <div className={styles.controlElement}>
         <Form.Check
           type='checkbox'
