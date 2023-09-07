@@ -15,7 +15,7 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 1. Camera.html
 2. Projector.html
 3. Board.html
-4. (future) Creator.html
+4. Creator.html
 
 ## What is the Camera page?
 

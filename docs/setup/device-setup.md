@@ -1,41 +1,48 @@
 !!! warning "Under Construction" 
       
-      We are working on updating our documentation - more details coming soon!
+      We're currently updating our documentation. Stay tuned for more details!
 
-!!! Danger "Legacy Documentation" 
-      
-      This documentation reflects the setup for the original [Paper Programs](https://paperprograms.org/) project and may not be accurate for the current version of the tool.
+## Required Hardware for Paper Control
 
-## Hardware Required
+- **Computer**: Any desktop or laptop computer should work. Performance will increase with better computer specifications (CPU, GPU, RAM, etc.). All major operating systems and browsers should also work, though most testing has been done with Windows/MacOS and Chrome/Firefox.
+- **Webcam**: 720p is adequate, but be cautious with cameras having low-quality sensors, as they might not perform well under all lighting conditions.
+- **Color Printer**: Alternatively, a black and white printer with colored markers will do. Check [Resources](../use/resources.md) for templates.
+  - A simple piece of paper and a steady hand can also be effective! 
 
-- A computer
-- A projector - ideally 2000 lumens and 1080p. A 1000 lumens projector can work under some conditions, but the low light needed to see the projections may be too dark for your camera to detect the programs in the space.
-- A webcam - 720p works, but be wary that cameras with poor quality sensors may not work well in all lighting conditions.
-- A color printer - Any color printer will do.
-- A way to mount the projector - This is a tough one, whatever you do, bear in mind that projectors are heavy enough that they need to be connected to something load-bearing like a beam or a stud. Command Strips or screws in drywall will not be enough. (Note that you can project onto a wall and tape your programs to the wall if you just want to try this out, but it's not quite the same).
-- Optional: Depending on how you set up your space, you may need unusually long HDMI and USB cables to connect the camera/projector to the computer.
-- Optional: A solid black rug or mat to project onto. Bear in mind: a projector's whites can only be as bright as the projector's bulb, and its blacks can only be as black as the surface it is projecting onto.
 
-## Setting up the camera
+## Required Hardware for Projector Use
 
-The projector page uses the experimental OffscreenCanvas API, so you'll need to enable `chrome://flags/#enable-experimental-web-platform-features` (this will require you to restart chrome).
+- **Projector**: Ideally, 2000 lumens and 1080p. A 1000 lumens projector might suffice in certain conditions, but the dim light required for projections might be too dark for your camera to detect programs.
+- **Projector Mount**: If your projector is large, ensure the projector is secured to a load-bearing structure like a beam or stud. Command Strips or screws in drywall may not suffice. Note: You can project onto a wall and tape your programs there for a vertical setup. It is also possible to [use mirrors for an optical trick]()!
+- **Optional**: Depending on your setup, you might need extended HDMI and USB cables to connect the camera and projector to the computer.
+- **Optional**: A solid black rug or mat for projection. Remember, a projector's brightness is limited by its bulb, and its darkness is determined by the surface it projects onto.
 
-Once you have all the hardware in place, go to [https://paperprograms.org/camera.html](https://paperprograms.org/camera.html) to start calibrating the camera. Make sure to hit "Allow" when the browser asks for camera access.
+## Camera Setup
 
-![The camera screen when first launched](img/camera-screen.png)
+An external USB webcam (at least 720p) is the best to use in order to vertically orient the webcam so you can naturally move papers around without worrying about working against gravity. Horizontal configurations are possible, especially using tape, sticky tack, or magnets (in the case of a whiteboard).
 
-Turn on your projector and have it project something that is screen-filling and vibrant. In the corners of the camera view you should see 4 red circles. Drag those circles to the corners of where the projection is in the camera image. These boundaries will be used by the camera and the projector to figure out how to transform the coordinates of the programs from the camera's view to the projector's "view". If your camera or projector moves, you'll need to adjust these boundaries.
+Many configurations are possible! The farther away the webcam from the surface you'll be moving the papers, the larger you will want your papers/dots to be. From a typical ceiling, you will want full letter or A5. However, from lower positions, you can scale down the papers quite successfully.
 
-![The camera screen with boundaries](img/camera-boundaries.png)
+![Example configuration 1](placeholder.html)
+![Example configuration 2](placeholder.html)
+![Example configuration 3](placeholder.html)
 
-Next we'll need to print a calibration page to calibrate the camera's color detection. Click "print calibration page", and place the printed page roughly in the center of the projector's space. To make calibration easier, you may want to turn off the projector or have it project a totally black screen.
+After setting up the hardware, navigate to [http://localhost:3000/camera.html](http://localhost:3000/camera.html) for camera calibration. Grant the browser permission when prompted for camera access.
 
-On the camera view you should see a bunch of circles appearing on top of the circles on the piece of paper. You'll need to calibrate each color (R, O, G, B, P) one at a time. Click the color's button in the sidebar, then click on the circle corresponding to that color in the camera view.
+![Initial camera screen view](img/camera-screen.png)
 
-![The camera while calibrating](img/camera-calibrating.png)
+Switch on your projector and project a vibrant, full-screen image. In the camera view, you'll notice 4 red circles at the corners (TL, TR, BR, BL). Drag these circles to align with the projection's corners. This helps synchronize the camera and projector views. If either the camera or projector is moved, you'll need to recalibrate.
 
-When you're done the colors in the sidebar may be slightly different than they were before. This is because the camera now knows what each of the colors we printed looks like in the lighting conditions of your space. If the lighting conditions change you'll need to perform this calibration again.
+![Camera screen with set boundaries](img/camera-boundaries.png)
 
-## Setting up the projector
+For color calibration, print one of your paper programs and position the printed page within the projector's space. It might be easier to turn off the projector or project a black screen during this step. 
 
-Turn the projector back on. In Google Chrome, visit [https://paperprograms.org/projector.html](https://paperprograms.org/projector.html). Drag that window over to the projector's screen and make it fullscreen (Ctrl/Cmd+Shift+F). If you run into issues with the projector screen (e.g. if it isn't showing a program you recently created) refreshing the page will usually solve the problem.
+On the camera view, circles will overlay the printed ones. Calibrate each color (R, G, B, D) individually by selecting the color from the sidebar and then clicking its corresponding circle in the camera view. When selecting the color on the sidebar, the circle will highlight. The highlight will disappear when it successfully calibrates. You may need to click a few times on the circle in the Camera view depending on page performance.
+
+![Camera view during calibration](img/camera-calibrating.png)
+
+Post-calibration, the sidebar colors might slightly differ, reflecting the camera's adaptation to your space's lighting. If lighting changes, recalibrate. It's important to maintain steady light conditions. Sunlight changes rapidly, especially with passing clouds! If you can, find a room with steady, uniform illumination.
+
+## Projector Setup
+
+Power on the projector and, using Google Chrome, access [http://localhost:3000/projector.html](http://localhost:3000/projector.html). Move this window to the projector's display and enter fullscreen mode (Ctrl/Cmd+Shift+F). If you encounter issues (e.g., a recently created program not displaying), refreshing the page should help.
