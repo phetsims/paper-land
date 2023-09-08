@@ -114,11 +114,16 @@ export default class CreatorView extends phet.scenery.Node {
             console.error( error );
           }
           else {
-            model.load( body.systemData );
+            try {
+              model.load( body.systemData );
 
-            // pan to the first program so something is in view
-            if ( programLayerNode.children.length > 0 ) {
-              phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
+              // pan to the first program so something is in view
+              if ( programLayerNode.children.length > 0 ) {
+                phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
+              }
+            }
+            catch( error ) {
+              model.errorOccurredEmitter.emit( 'Error loading system: ' + error.message );
             }
           }
         } );

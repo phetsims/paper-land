@@ -11,7 +11,7 @@ const ModelComponentTemplates = {
   },
   NumberProperty: {
     onProgramAdded: `
-      const {{NAME}} = new phet.axon.NumberProperty({{DEFAULT_VALUE}}, {
+      const {{NAME}} = new phet.axon.NumberProperty( {{DEFAULT_VALUE}}, {
         range: new phet.dot.Range( {{MIN}}, {{MAX}} )
       });
       phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );

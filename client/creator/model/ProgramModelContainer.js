@@ -1,6 +1,7 @@
 /**
  * Collection of model components for a single program, with functions to create them.
  */
+import { enforceKeys, keysDefined } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
@@ -170,12 +171,14 @@ export default class ProgramModelContainer extends ComponentContainer {
    */
   loadDependencyModelComponents( stateObject ) {
     stateObject.namedBooleanProperties.forEach( namedBooleanPropertyData => {
+      enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
       this.addBooleanProperty(
         namedBooleanPropertyData.name,
         namedBooleanPropertyData.defaultValue
       );
     } );
     stateObject.namedVector2Properties.forEach( namedVector2PropertyData => {
+      enforceKeys( namedVector2PropertyData, [ 'name', 'defaultX', 'defaultY' ], `Error during load for Vector2Property, ${namedVector2PropertyData.name}` );
       this.addVector2Property(
         namedVector2PropertyData.name,
         namedVector2PropertyData.defaultX,
@@ -183,6 +186,7 @@ export default class ProgramModelContainer extends ComponentContainer {
       );
     } );
     stateObject.namedNumberProperties.forEach( namedNumberPropertyData => {
+      enforceKeys( namedNumberPropertyData, [ 'name', 'min', 'max', 'defaultValue' ], `Error during load for NumberProperty, ${namedNumberPropertyData.name}` );
       this.addNumberProperty(
         namedNumberPropertyData.name,
         namedNumberPropertyData.min,
@@ -191,6 +195,7 @@ export default class ProgramModelContainer extends ComponentContainer {
       );
     } );
     stateObject.namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
+      enforceKeys( namedEnumerationPropertyData, [ 'name', 'values' ], `Error during load for EnumerationProperty, ${namedEnumerationPropertyData.name}` );
       this.addEnumerationProperty(
         namedEnumerationPropertyData.name,
         namedEnumerationPropertyData.values

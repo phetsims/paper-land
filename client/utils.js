@@ -361,8 +361,25 @@ export function isNameValid( activeEdit, creatorModel, componentName ) {
   return hasLength && unique;
 }
 
+/**
+ * Returns true if the provided object has a value in each of the provided keys.
+ */
+export function keysDefined( object, keys ) {
+  return keys.every( key => object.hasOwnProperty( key ) );
+}
+
+/**
+ * Throws an error if the provided object does not have all the required keys.
+ */
+export function enforceKeys( object, keys, message ) {
+  if ( !keysDefined( object, keys ) ) {
+    throw new Error( message );
+  }
+}
+
 //------------------------------------------------------
 // query parameters
+// TODO: This should ideally use QueryStringMachine
 //------------------------------------------------------
 export function inDevMode() {
 

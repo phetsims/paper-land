@@ -44,9 +44,9 @@ export default class CreatorModel {
     // to the selected space.
     this.sendConfirmedEmitter = new phet.axon.Emitter();
 
-    // {Emitter} - Emits an event when a confirmed save request fails, either due to network, code generation, or
-    // other server error.
-    this.sendFailedEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );
+    // {Emitter} - Emits when some error happens that the user should be aware of, such as error during code
+    // generation, load, or a failed request to the server.
+    this.errorOccurredEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );
 
     this.sendConfirmedEmitter.addListener( async () => {
       this.sendProgramsToPlayground()
@@ -57,7 +57,7 @@ export default class CreatorModel {
 
         } )
         .catch( error => {
-          this.sendFailedEmitter.emit( error.message );
+          this.errorOccurredEmitter.emit( error.message );
 
           // Show an error dialog if the request fails.
           console.error( 'ERROR:', error.message );

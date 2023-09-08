@@ -3,9 +3,9 @@ import Modal from 'react-bootstrap/Modal';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
-export default function SaveFailureDialog( props ) {
+export default function ErrorDialog( props ) {
   if ( !props.creatorModel ) {
-    throw new Error( 'SaveFailureDialog requires a reference to the creatorModel.' );
+    throw new Error( 'ErrorDialog requires a reference to the creatorModel.' );
   }
   const creatorModel = props.creatorModel;
 
@@ -25,11 +25,11 @@ export default function SaveFailureDialog( props ) {
       setErrorMessage( value );
       setShow( true );
     };
-    creatorModel.sendFailedEmitter.addListener( sendRequestedListener );
+    creatorModel.errorOccurredEmitter.addListener( sendRequestedListener );
 
     // returning a function tells useEffect to dispose of this component when it is time
     return function cleanup() {
-      creatorModel.sendFailedEmitter.removeListener( sendRequestedListener );
+      creatorModel.errorOccurredEmitter.removeListener( sendRequestedListener );
     };
   } );
 
@@ -37,7 +37,7 @@ export default function SaveFailureDialog( props ) {
     <>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header className={styles.dialog}>
-          <Modal.Title>{'\u26A0 Error sending to playground'}</Modal.Title>
+          <Modal.Title>{'\u26A0 Error!'}</Modal.Title>
         </Modal.Header>
         <Modal.Body className={styles.dialog}>{errorMessage}</Modal.Body>
         <Modal.Footer className={styles.dialog}>
