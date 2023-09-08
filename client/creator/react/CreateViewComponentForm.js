@@ -161,6 +161,10 @@ export default function CreateViewComponentForm( props ) {
       else if ( selectedTab === 'images' ) {
         editingComponent.imageFileName = imagesDataRef.current.imageFileName;
       }
+      else if ( selectedTab === 'shapes' ) {
+        editingComponent.defaultShapeOptions = shapesDataRef.current.defaultShapeOptions;
+        editingComponent.defaultViewOptions = shapesDataRef.current.defaultViewOptions;
+      }
     }
     else {
 
