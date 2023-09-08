@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import clientConstants from '../clientConstants';
+import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 
 import ProjectorMain from './ProjectorMain';
-import clientConstants from '../clientConstants';
 
 const element = document.createElement( 'div' );
 document.body.appendChild( element );

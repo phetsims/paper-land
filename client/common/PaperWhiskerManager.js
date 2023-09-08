@@ -43,8 +43,18 @@ const PaperWhiskerManager = {
    */
   updatePaperWhiskerMap( programs ) {
     programs.forEach( program => {
-      const whiskerLines = PaperWhiskerManager.getWhiskerLinesForPaper( program.points, program.number );
-      this.paperWhiskerMap.set( program.number, whiskerLines );
+
+      // The Projector page updates paperProgramsDataByProgramNumber while Camera updates whisker data. Because
+      // of this, the paper data might not be available to get the lines for whiskers yet. In that case, wait
+      // until Projector has completed an update. See
+      // https://github.com/phetsims/paper-land/issues/114
+      if ( getProgramDataFromNumber( program.number ) !== null ) {
+        const whiskerLines = PaperWhiskerManager.getWhiskerLinesForPaper( program.points, program.number );
+        this.paperWhiskerMap.set( program.number, whiskerLines );
+      }
+      else {
+        console.warn( 'Skipping update because Projector screen hasnt updated paperProgramsDataByProgramNumber yet' );
+      }
     } );
   },
 
@@ -55,6 +65,10 @@ const PaperWhiskerManager = {
    */
   getWhiskerLengthsForPaper( paperNumber ) {
     const programSpecificData = getProgramDataFromNumber( paperNumber );
+
+    if ( !programSpecificData ) {
+      throw new Error( 'No program data found for paper number: ' + paperNumber );
+    }
 
     // Get and update whisker length data for this particular paper
     const whiskerLength = programSpecificData.paperPlaygroundData.whiskerLength || clientConstants.defaultWhiskerLength;
