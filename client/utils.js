@@ -377,6 +377,16 @@ export function enforceKeys( object, keys, message ) {
   }
 }
 
+/**
+ * Converts a string to a number. If the string is not a valid number, returns NaN. If the string is empty, returns 0.
+ * Forms work with strings so this is used when we need to convert the value back to a number.
+ * @param value
+ * @return {number}
+ */
+export function stringToNumber( value ) {
+  return Number( value );
+}
+
 //------------------------------------------------------
 // query parameters
 // TODO: This should ideally use QueryStringMachine

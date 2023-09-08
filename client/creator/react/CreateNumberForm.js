@@ -1,5 +1,6 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
+import { stringToNumber } from '../../utils.js';
 import NamedNumberProperty from '../model/NamedNumberProperty.js';
 import styles from './../CreatorMain.css';
 import useEditableForm from './useEditableForm.js';
@@ -15,8 +16,8 @@ export default function CreateNumberForm( props ) {
                          newData.max !== '' &&
                          newData.defaultValue !== '';
 
-      const rangesCorrect = newData.min <= newData.defaultValue &&
-                            newData.defaultValue <= newData.max;
+      const rangesCorrect = stringToNumber( newData.min ) <= stringToNumber( newData.defaultValue ) &&
+                            stringToNumber( newData.defaultValue ) <= stringToNumber( newData.max );
 
       return allDefined && rangesCorrect;
     },
