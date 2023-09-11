@@ -42,6 +42,7 @@
 
   /*so that this column is centered horizontally under rowContainer*/
   flex-grow: 1;
+  align-items: center;
 
   /*This component is a column with child contents*/
   display: flex;
