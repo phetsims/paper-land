@@ -35,8 +35,6 @@ export default function PaperLandControls( props ) {
           // re-apply styling for development
           props.sceneryDisplay.domElement.classList.add( styles.simDisplayPanel );
           props.sceneryDisplay.domElement.classList.add( styles.boardPanel );
-
-          // TODO: Why do we have to add the pading values here?
           props.sceneryDisplay.setWidthHeight( 640, 480 );
         }
       }
