@@ -2,8 +2,8 @@ import React from 'react';
 import ComponentFunctionsList from './ComponentFunctionsList.js';
 
 const NODE_COMPONENT_FUNCTIONS = [
-  'setCenterX() - A number. Sets the horizontal position in the board.',
-  'setCenterY() - A number. Sets the vertical position in the board.',
+  'setCenterX() - A number. Sets the horizontal position in the board, in pixels.',
+  'setCenterY() - A number. Sets the vertical position in the board, in pixels.',
   'setScale() - A number. Sets the size, relative to 1.',
   'setRotation() - A number. Sets the rotation in radians.',
   'setOpacity() - A number between 0 and 1.',
