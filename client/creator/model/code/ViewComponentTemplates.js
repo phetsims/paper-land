@@ -83,7 +83,13 @@ const ViewComponentTemplates = {
       
       scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
-        phet.scenery.voicingUtteranceQueue.addToBack( descriptionString );
+        
+        if ( descriptionString && descriptionString.length > 0 ) {
+        
+          // Utterances should not cancel others by default in this context
+          const utterance = new phet.utteranceQueue.Utterance( { alert: descriptionString, announcerOptions: { cancelOther: false } } );
+          phet.scenery.voicingUtteranceQueue.addToBack( utterance );
+        }
       } ); 
     `,
     onProgramRemoved: `
