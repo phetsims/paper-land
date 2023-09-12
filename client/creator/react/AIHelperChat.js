@@ -62,7 +62,7 @@ ${additionalContent}
 
 ${userPrompt}
 
-I can only write code inside of a function body so if you have to use new variables, please assign them to the 'window' object.
+I can only write code inside of a function body so if you have to use new variables, please assign them to the 'window' object. DO NOT assign provided variables to the window.
 
 Please make the code as simple and short as possible and only use the functions and variables that you need. Then, can you briefly explain each line as if I were a novice developer?
   `;
