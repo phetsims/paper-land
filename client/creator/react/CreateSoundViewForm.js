@@ -54,8 +54,10 @@ export default function CreateSoundViewForm( props ) {
           if ( Array.isArray( response.body.soundFiles ) ) {
             setSoundFiles( response.body.soundFiles );
 
-            // set the first sound file as the default
-            props.getSoundFormData( { soundFileName: response.body.soundFiles[ 0 ] } );
+            // If there is already a value for the sound file name, or the active edit has one, don't overwrite it
+            if ( formData.soundFileName === '' && props.activeEdit.component === null ) {
+              handleChange( { soundFileName: response.body.soundFiles[ 0 ] } );
+            }
           }
         }
       }

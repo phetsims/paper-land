@@ -41,9 +41,8 @@ export default function CreateImageViewForm( props ) {
           if ( Array.isArray( response.body.imageFiles ) ) {
             setImageFiles( response.body.imageFiles );
 
-            // If we are editing the image files, we already have a file selected, so don't overwrite it.
-            const editingSelection = props.activeEdit && props.activeEdit.component && props.activeEdit.component && props.activeEdit.component.imageFileName;
-            if ( !editingSelection ) {
+            // If there is already a value for the image file name, or the active edit has one, don't overwrite it
+            if ( formData.imageFileName === '' && props.activeEdit.component === null ) {
               handleChange( { imageFileName: response.body.imageFiles[ 0 ] } );
             }
           }
