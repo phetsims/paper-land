@@ -1,11 +1,11 @@
-// Planetary Gravity from List - Markers
+// Radio Group - Markers - Copy
 // Keywords: radio, buttons, markers, example, voicing
 // =============================== //
-// Program Dependencies:
+// Program Dependencies: N/A
 // Recommended Programs:
-// Program Description: Creates a "radio group" that controls gravity. The value is controlled by the
-//                      number of markers on this program. 0 markers sets to first value, 1 markers sets
-//                      to second value, and so on.                          
+// Program Description: Creates a "radio group" that lets user select a value from a number of values. The
+//                      number of markers controls the value. 0 markers sets to first value, 1 markers sets
+//                      to second value, and so on.                                
 
 importScripts('paper.js');
 
@@ -15,8 +15,24 @@ importScripts('paper.js');
   // Board code
   //----------------------------------------------------------------------
 
+  // Get the paper number of this piece of paper (which should not change).
+  const myPaperNumber = await paper.get('number');
+
   // Called when the program is detected or changed.
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
+
+    // Values for the group. This list can have any number of values. The values of 
+    // this example are strings, but they can be any kind of type. They must all
+    // be different.
+    const values = [
+      'VALUE_A',
+      'VALUE_B',
+      'VALUE_C',
+      'VALUE_D'
+    ];
+
+    // Create an axon.Property for the model that any program can observe and control.
+    phet.paperLand.addModelComponent( 'radioProperty', new phet.axon.Property( values[ 0 ] ) );
 
     // This is the function we want to call whenever a marker is added or removed from the program. You
     // could copy/paste the body of this function right into onProgramMarkersAdded/Removed functions,
@@ -24,32 +40,36 @@ importScripts('paper.js');
     // takes a single argument, the current number of markers contained in the program.
     scratchpad.handleMarkersChanged = currentMarkers => {
 
-      // get a reference to the Property to control
-      const planetNameProperty = sharedData.model.get( 'planetNameProperty' );
-      const planetNames = sharedData.model.get( 'planetNames' );
-      if ( planetNameProperty && planetNames ) {
-        
-        // The number of markers control the current value.
-        const numberOfMarkers = currentMarkers.length;
-        if ( numberOfMarkers < planetNames.length ) {
-          planetNameProperty.value = planetNames[ numberOfMarkers ];
-        }
-        else {
-            
-          // There are more markers in the program than there are values, just set to the last
-          // possible value
-          planetNameProperty.value = planetNames[ planetNames.length - 1 ];
-        }
+      // If the model doesn't have the Property we created when the program was added,
+      // something went wrong and this function will fail!
+      if ( !sharedData.model.has( 'radioProperty' ) ) {
+        phet.paperLand.console.error( 'radioProperty does not exist in the model!' );
+        return;
+      }
+
+      // get a reference to the Property now that we know it exists
+      const radioProperty = sharedData.model.get( 'radioProperty' );
+
+      // The number of markers control the current value.
+      const numberOfMarkers = currentMarkers.length;
+      if ( numberOfMarkers < values.length ) {
+        radioProperty.value = values[ numberOfMarkers ];
       }
       else {
-        phet.paperLand.console.warn( 'No planetNameProperty to control yet. Add the World program.' );
+        
+        // There are more markers in the program than there are values, just set to the last
+        // possible value
+        radioProperty.value = values[ values.length - 1 ];
       }
     }
 
-    // Observe the changing Property. addModelPropertyLink returns a uniqueID which is saved to the
-    // scratchpad so it can be easily unlinked later.
-    scratchpad.linkId = phet.paperLand.addModelPropertyLink( 'planetNameProperty', value => {
-      phet.paperLand.console.log( `New radio value: ${value}` );
+    // Observe the changing Property - this function just prints the new value to the console, but
+    // you could do anything in this function or put this function in a different program. addModelPropertyLink
+    // returns a uniqueID which is saved to the scratchpad so it can be easily unlinked later.
+    scratchpad.linkId = phet.paperLand.addModelPropertyLink( 'radioProperty', value => {
+      phet.paperLand.console.warn( `New radio value: ${value}` );
+
+
     } );
   };
 
@@ -57,8 +77,11 @@ importScripts('paper.js');
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
 
     // unlink the Property listener that was logging the new value to the console
-    scratchpad.linkId = phet.paperLand.removeModelPropertyLink( 'planetNameProperty', scratchpad.linkId );
+    scratchpad.linkId = phet.paperLand.removeModelPropertyLink( 'radioProperty', scratchpad.linkId );
     delete scratchpad.linkId;
+
+    // remove the Property from the model
+    phet.paperLand.removeModelComponent( 'radioProperty' );
 
     // we are done with our Property controller function
     delete scratchpad.handleMarkersChanged;

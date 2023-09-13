@@ -1,10 +1,9 @@
-// IDRC test
-// Keywords: start, begin, new, hello world
+// Program: Draw a Square
+// Keywords: weavly
 // =============================== //
 // Program Dependencies: N/A
 // Recommended Programs: General Template (templates)
 // Program Description: Example program with functioning Board and Projector code!
-// !!!UPDATE ME WITH A BETTER BOARD EXAMPLE!!!
 
 importScripts('paper.js');
 
@@ -19,31 +18,51 @@ importScripts('paper.js');
 
   // Called when the program is detected or changed.
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
-    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/loonCall.mp3' );
+    const iframe = phet.paperLand.getModelComponent( 'weavlyFrame' );
 
-    const soundClip = new phet.tambo.SoundClip( wrappedAudioBuffer );
-    phet.tambo.soundManager.addSoundGenerator( soundClip );
-    setTimeout( () => {
-      soundClip.play();
-      console.log( 'Just played sound clip, did you hear it?' );
-    }, 1000 );
-    
-    // Assign the sound to the scratchpad so that we can remove it later
-    scratchpad.soundClip = soundClip;
+    if ( iframe ) {
+
+      // Send a message to Weavly to create a program with one forward block.
+      phet.paperLand.console.log( 'Sending message to Weavly' );
+      iframe.contentWindow.postMessage( {
+
+        // We will probably want different message types.
+        // For example, this is an 'update' message, we might want to signify that.
+        type: 'paper-playground-weavly-message',
+        message: {
+          program: [
+            {
+              block: 'forward1'
+            },
+            {
+              block: 'left90'
+            },
+            {
+              block: 'forward1'
+            },
+            {
+              block: 'left90'
+            },
+            {
+              block: 'forward1'
+            },
+            {
+              block: 'left90'
+            },
+            {
+              block: 'forward1'
+            },
+            {
+              block: 'left90'
+            }
+          ]
+        }
+      }, '*' );
+    }
   };
-
-  // Called when the paper positions change.
-  // const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchPad, sharedData ) => {
-    
-    // Behavior that changes with paper position here.
-    // Global model for all programs
-    // const model = sharedData.modelProperty.value;
-  // };
 
   // Called when the program is changed or no longer detected.
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
-    phet.tambo.soundManager.removeSoundGenerator( scratchpad.soundClip );
-    scratchpad.soundClip = null;
   };
 
   // Add the state change handler defined above as data for this paper.
