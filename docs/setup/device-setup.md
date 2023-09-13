@@ -19,9 +19,9 @@
 
 ## Camera Setup
 
-An external USB webcam (at least 720p) is the best to use in order to vertically orient the webcam so you can naturally move papers around without worrying about working against gravity. Horizontal configurations are possible, especially using tape, sticky tack, or magnets (in the case of a whiteboard).
+An external USB webcam (at least 720p) is the best to use for flexibility in your paper-moving play space. Try pointing the webcam down so you can naturally move papers around without worrying about working against gravity. Camera/Projector configurations parallel to the floor (e.g., pointing at a wall) are possible, especially using tape, sticky tack, or magnets (in the case of e.g., a whiteboard).
 
-Many configurations are possible! The farther away the webcam from the surface you'll be moving the papers, the larger you will want your papers/dots to be. From a typical ceiling, you will want full letter or A5. However, from lower positions, you can scale down the papers quite successfully.
+Many configurations are possible! The farther away the webcam from the surface you'll be moving the papers, the larger you will want your papers/dots to be. You may also notice a difference in detection accuracy with higher resolution cameras (1080p and above). 
 
 ![Example configuration 1](placeholder.html)
 ![Example configuration 2](placeholder.html)
