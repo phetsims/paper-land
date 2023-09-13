@@ -48,7 +48,7 @@ export default class ProgramNode extends phet.scenery.Node {
     this.titleText = new phet.scenery.Text( '', {
       maxWidth: this.background.width - 5
     } );
-    this.programNumber = new phet.scenery.Text( model.number, {
+    this.programNumber = new phet.scenery.Text( model.numberProperty.value, {
       maxWidth: this.background.width - 5
     } );
 
@@ -189,7 +189,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     // When the ActiveEdit is working with this program, draw a highlight indicator around this rectangle
     activeEditProperty.link( activeEdit => {
-      if ( activeEdit && activeEdit.program && activeEdit.program.number === model.number ) {
+      if ( activeEdit && activeEdit.program && activeEdit.program.numberProperty.value === model.numberProperty.value ) {
         this.background.lineWidth = 5;
         this.background.lineDash = [ 10, 5 ];
         this.background.stroke = '#6C8EAC';

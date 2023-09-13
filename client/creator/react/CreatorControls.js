@@ -35,7 +35,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
   return (
     <div className={styles.scrollable} ref={ref}>
       <SpaceSelectControls creatorModel={model}></SpaceSelectControls>
-      <h3>{activeEdit ? activeEdit.program.number : ''}</h3>
+      <h3>{activeEdit ? activeEdit.program.numberProperty.value : ''}</h3>
       {activeEdit && activeEdit.editType === EditType.METADATA ?
        <ProgramMetadataForm
          activeEdit={activeEdit}

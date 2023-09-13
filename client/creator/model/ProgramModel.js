@@ -19,7 +19,7 @@ export default class ProgramModel {
   constructor( initialPosition, initialNumber, activeEditProperty ) {
 
     // @public (read-only) - the number of this program
-    this.number = initialNumber === undefined ? Math.floor( Math.random() * MAX_PROGRAM_NUMBER ) : initialNumber;
+    this.numberProperty = new phet.axon.NumberProperty( initialNumber === undefined ? Math.floor( Math.random() * MAX_PROGRAM_NUMBER ) : initialNumber );
 
     // @public (read-only)
     this.activeEditProperty = activeEditProperty;
@@ -80,7 +80,7 @@ export default class ProgramModel {
 
   save() {
     return {
-      number: this.number,
+      number: this.numberProperty.value,
       title: this.titleProperty.value,
       keywords: this.keywordsProperty.value,
       description: this.descriptionProperty.value,
@@ -102,7 +102,7 @@ export default class ProgramModel {
    * @param stateObject
    */
   loadMetadata( stateObject ) {
-    this.number = stateObject.number;
+    this.numberProperty.value = stateObject.number;
     this.titleProperty.value = stateObject.title;
     this.keywordsProperty.value = stateObject.keywords;
     this.descriptionProperty.value = stateObject.description;

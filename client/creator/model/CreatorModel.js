@@ -182,13 +182,13 @@ export default class CreatorModel {
 
       // then load DerivedProperty components once dependencies are in place
       json.programs.forEach( programJSON => {
-        const program = this.programs.find( program => program.number === programJSON.number );
+        const program = this.programs.find( program => program.numberProperty.value === programJSON.number );
         program.loadDependentModelComponents( programJSON, this.allModelComponents );
       } );
 
       // then load controller/view components once model components are in place
       json.programs.forEach( programJSON => {
-        const program = this.programs.find( program => program.number === programJSON.number );
+        const program = this.programs.find( program => program.numberProperty.value === programJSON.number );
         program.loadControllerComponents( programJSON, this.allModelComponents );
         program.loadViewComponents( programJSON, this.allModelComponents );
       } );
@@ -207,7 +207,7 @@ export default class CreatorModel {
     const programStrings = [];
     this.programs.forEach( program => {
       programStrings.push( {
-        number: program.number,
+        number: program.numberProperty.value,
         code: program.convertToProgramString()
       } );
     } );
