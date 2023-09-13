@@ -362,10 +362,8 @@ export default class ProgramCodeGenerator {
       };
     }
     else if ( componentType === 'TextViewComponent' ) {
-
-      // no extra data for text components yet.
       data = {
-        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType )
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value )
       };
     }
     else if ( componentType === 'BackgroundViewComponent' ) {
