@@ -57,6 +57,11 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
 
   const handleChange = newData => {
 
+    // The change should only happen for the matching component type
+    if ( !( activeEdit.component instanceof ComponentClass ) ) {
+      return;
+    }
+
     // So that the client doesn't have to provide every key, we merge the change into the previous state
     const totalData = _.merge( {}, formData, newData );
 
