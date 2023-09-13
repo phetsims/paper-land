@@ -57,8 +57,8 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
 
   const handleChange = newData => {
 
-    // The change should only happen for the matching component type or when creating new components
-    if ( activeEdit === null || activeEdit.component instanceof ComponentClass ) {
+    // The change should only happen for the matching component type
+    if ( !( activeEdit.component instanceof ComponentClass ) ) {
       return;
     }
 
