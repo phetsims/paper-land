@@ -124,6 +124,7 @@ export default class ProgramCodeGenerator {
       }
       const template = ModelComponentTemplates[ componentType ][ eventName ];
       if ( template ) {
+        console.log( componentType, componentData.DEFAULT_VALUE );
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: componentName,
           ...componentData
