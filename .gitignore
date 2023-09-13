@@ -6,4 +6,7 @@ site/
 notes.md
 
 # Ignore all files in the uploads directories
-**/uploads/
+**/uploads/*
+
+# exception to the rule
+!**/uploads/.gitkeep
