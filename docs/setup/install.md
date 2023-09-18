@@ -15,23 +15,34 @@ The Paper Playground client runs locally and can utilize a remote database for c
 5. Start the tool: `npm start`
 6. Open [localhost:3000](http://localhost:3000/) in your browser and follow the links on the landing page.
 
+
+You should be good to go! Move on to [setting up your devices](device-setup.md) or straight to the [overview and tutorial](..\use\tutorial.md).
+
 ### Recommended Start Up
 
 Currently, Paper Playground must be run from the command line. If you're following the development of Paper Playground, it is recommended to regularly execute the following commands:
 
 1. `git pull`
-2. `npm update`
+2. `npm install`
 3. `npm start`
 
 ### Remote Database
 
-- If you are using a remote program database, create a `.env` file in the root of paper-land and provide the database address under `DATABASE_URL`.
+If you are using a remote program database: 
+
+1. create a `.env` file in the root of paper-land and 
+2. Write a key:value pair on a new line to provide Paper Playground with a remote database address under `DATABASE_URL`.
   - Example: `DATABASE_URL=postgres://someDatabaseAddressFromSomeHostingService`
-- Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
+
+!!! note
+
+      Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
 
 ### Local Database
 
-- You need to install [PostgreSQL](https://www.postgresql.org/download/) and set up a local database.
+If you do not have access to a remote database, you'll need to host a local database on your computer.
+
+- You will need to install [PostgreSQL](https://www.postgresql.org/download/).
 
 !!! warning
       The following instructions have not been verified in the latest version of Paper Playground, but may prove informative for troubleshooting. Also see [Paper Programs tutorial documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md#optional-setting-up-the-server-locally)

@@ -19,10 +19,23 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 
 ## What is the Camera page?
 
-++shift+"Wheel Up/Down"++
+The Camera page is where all the action happens for turning your paper programs interactive!
 
-++shift+"Mouse Drag"++
+On this page you will find the preview of your webcam, a preview of the full JavaScript for your currently selected paper program, and a plethora of options in the sidebar. Explore the headings in the sidebar to create and navigate between [spaces](#what-is-a-space), [calibrate your webcam](../setup/device-setup.md#color-calibrating-your-webcam-for-program-detection) to detect paper programs, print and [virtually preview programs and markers](#what-are-preview-papers-eye), and [fine-tune your detection](../setup/device-setup.md#fine-tuning-program-detection).
 
+You'll use this page to match up where your papers are in space with visuals on a projector. Think of it as your play space.
+
+### What are Preview Papers? :eye:
+
+If you are quickly iterating or just not in a position to print physical papers, you can still see how your code runs! Preview paper programs can be placed into the camera view at any time and the code will run as through you put a physical paper in view.
+
+While a lot more can be done to help the preview papers mimic how you can move a physical piece of paper, there are a few features currently in place to help.
+
+- Move the papers by dragging inside boundaries of the preview.
+- Resize the papers by dragging an edge.
+- Drag the green square to rotate the paper.
+- Select the scissors to break the paper into four independently moveable corners.
+- Preview papers can be removed at any time by selecting the red square.
 
 ## Organizing your code: Spaces and Projects
 ### What is a Space?
@@ -32,6 +45,20 @@ A space is way of organizing your programs. All of the programs in a space can b
 
 
 ## What is the Board page?
+
+The display! This page is where your visuals and sounds will be displayed.
+
+There are a few helpful additions to this page to help with your creation and play.
+
+### Controls
+
+You can adjust the sensitivity of your programs to paper movement (in the event of detection jitter)
+
+### Console
+
+If you use the `phet.paperland.console.log/warn` functionality in any custom code section of your programs, that code will display here. See the [Board API](board-api.md) for more information.
+
+Regular JavaScript usage of `console.log` will display in your browser's developer console as usual, but will not display in the Board Console.
 
 ## What is the Projector page?
 
@@ -60,7 +87,7 @@ You should be able to move the page and have the superimposed image move with it
 
 ### Creator: Building programs visually
 
-
+See [the Creator tutorial](creator.md).
 
 ### Editor: If you're comfortable with JavaScript and reading API documents
 
