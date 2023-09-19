@@ -39,20 +39,39 @@ While a lot more can be done to help the preview papers mimic how you can move a
 
 ## Organizing your code: Spaces and Projects
 ### What is a Space?
-A space is way of organizing your programs. All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well.
+A space is way of organizing your programs and how you'll locate your programs in the Camera interface to run them. Some software might refer to this as a "workspace", but we prefer to think of it as a playspace!
 
-#### What is a Project?
+!!! warning
 
+      At the time of writing, Spaces can only be created from the Camera interface ("Add New Space" button). You can select, but not create, Spaces in the Creator interface.
+
+All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well. 
+
+You might create your own personal space "my-space" :wink: and fill it with ideas you have or create a "frogger-game" space and collect all of the paper programs that will work together to create your project.
+
+#### What is a Creator Project?
+
+When working from the Creator interface, you may notice you can create Projects after selecting space. This is one level deeper than a Space and allows you to have multiple version or different sets of programs that you can send to the selected Space in the Camera interface via the **Send to Playground** button.
+
+!!! danger "Don't lose your programs!"
+
+      If you select **Send to Playground** for your current project, it will OVERWRITE the programs in the Space. This introduces some incompatibility between editing programs directly in the JavaScript Editor (editor.html) and in Creator. If you only work in Creator and regularly **Save Project**, then you can always select your project and your work will be there.
+
+     ** If you'd like to use direct JavaScript and Creator, use the Custom Code button on your paper program in Creator.**
 
 ## What is the Board page?
 
-The display! This page is where your visuals and sounds will be displayed.
+The main display! This page is where your visuals and sounds will be displayed and if you're using a projector, the page you'll want to put onto your projector to overlay visuals in your play area!
 
 There are a few helpful additions to this page to help with your creation and play.
 
 ### Controls
 
-You can adjust the sensitivity of your programs to paper movement (in the event of detection jitter)
+You can adjust the sensitivity of your programs to paper movement (in the event of detection jitter) by moving the interval slider to the right of the Board display. 
+
+!!! warning
+
+      Keep this value as low as you can. At high values, your paper will be able to move A LOT without the program recognizing it has moved. Values as low as 0.1-0.2 work in many cases.
 
 ### Console
 
@@ -66,23 +85,6 @@ Given the current structure of the client, all of the code detected in the Camer
 
 If you would like to use vanilla Web Canvas or make use of the projection overlay feature of the legacy Paper Programs project, then this is the page where the code will output. See [https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md](https://github.com/janpaul123/paperprograms/blob/master/docs/tutorial.md) for more on this.
 
-
-## Printing your first program
-
-Select the "Create New Program" button. Create a new program from the "Hello World" template. From your  Once it has finished printing, click "done" next to its name. Place that program somewhere in the projector's space. If you have all the overlay checkboxes checked, you should see a blue rectangle in the camera view indicating that the program has been detected. If you don't see this, it may mean some of the dots aren't being recognized and you need to try calibrating again (you may also want to adjust the lighting in the room).
-
-![The camera recognizing a program]()
-
-The projector.html page should have the words "Hello World" and a blue dot somewhere on it.
-
-![The projector's page when Hello World is in view](img/projector-hello-world.png)
-
-In the real world, you should see "Hello World" and the blue dot superimposed on the paper:
-
-![The projected program in the real world](img/)
-
-You should be able to move the page and have the superimposed image move with it.
-
 ## Creating and Editing Programs
 
 ### Creator: Building programs visually
@@ -91,14 +93,21 @@ See [the Creator tutorial](creator.md).
 
 ### Editor: If you're comfortable with JavaScript and reading API documents
 
-On the camera page you'll find a link to the program editor for your space (this is a good link to share with other people who are collaborating on your space).
+Create new paper programs from the Camera interface (Spaces and Programs on the sidebar). You can copy an existing program from any other Space or start from a fresh template.
 
-Open that link (make sure you keep the camera page open at all times) and select Hello World from the drop down menu. If that page is in the projector's view, it will now have a rectangular border around it that matches the "Editor color" you see on your editor page. This is a useful indicator in situations where many people have editors open simultaneously.
+Once created, you can edit them in the Editor!
+
+On the Camera interface you'll find a link to the Editor for your space (this is a good link to share with other people who are collaborating on your Space). Each space will need its own Editor window opened. You can tell which space you are in from the query parameter at the end of the Editor page URL (e.g., `../editor.html?my-space`)
+
+Open that link (make sure you keep the Camera page open at all times) and select your Program from the list.
 
 ![The program editor](../assets/camera-view.png)
 
-Make some changes in the editor (try changing what text gets drawn on the canvas for starters) and click the "save" button. The changes should now be reflected in the output of the projector.
+Make some changes in the editor (try changing what text gets drawn on the canvas for starters) and click the "save" button. The changes should now be reflected in the output of the Board or Projector pages.
 
-If you want to make a new program, click "print as new paper" and place the newly printed paper in the projector's view. Also note that Paper Programs looks for a comment on the first line of the file and uses that as the program's name.
+When you're ready to print that program as a real piece of paper, click the Printer icon beside the program name on the Camera page. Place the newly printed paper in your webcam's view. 
 
-At this point you should have everything you need to build a collborative Paper Programs workspace. Look at the API reference (available on the editor page) for more information about the APIs available to your programs.
+!!! note 
+      Paper Playground looks for a comment on the first line of the file and uses that as the program's name. It will use the keywords on the second line for search purposes.
+
+At this point you should have everything you need to start building a collaborative Paper Playground "play" Space and a working interactive paper program experience! Look at the [Board API reference](board-api.md) for more information about the functions available to your programs.

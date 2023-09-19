@@ -128,11 +128,12 @@ nav:
       - Tutorial: use/tutorial.md
       - Creator Tutorial: use/creator.md
       - Board API: use/board-api.md
-      - Design Tips: use/designing-programs.md
-      - Example JavaScript Paper Programs: use/example-program.md
       - Model-View-Controller Framework: use/mvc.md
+      - Design Tips: use/designing-programs.md
+      - Example JavaScript Papers: use/example-program.md
       - Resources: use/resources.md
-      # - Legacy Paper API: use/paper-api.md
+    - Media:
+      - Gallery: media-gallery.md
     - Community:
       - Join Us: community.md 
       - Contribute: CONTRIBUTING.md
