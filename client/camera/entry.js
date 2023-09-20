@@ -28,7 +28,17 @@ const defaultConfig = {
   selectedSpaceName,
   freezeDetection: false,
   showPrintedInQueue: false,
+
+  // detection parameters
   scaleFactor: 4,
+  faster: false,
+  thresholdStep: 10,
+  minThreshold: 50,
+  maxThreshold: 230,
+  minArea: 25,
+  maxArea: 500,
+  minDistBetweenBlobs: 10,
+
   selectedCameraDeviceId: ''
 };
 

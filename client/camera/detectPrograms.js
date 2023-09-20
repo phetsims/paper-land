@@ -205,13 +205,22 @@ export default function detectPrograms( {
 
   const videoROI = knobPointsToROI( config.knobPoints, videoMat );
   const clippedVideoMat = videoMat.roi( videoROI );
+
   const allPoints = simpleBlobDetector( clippedVideoMat, {
     filterByCircularity: true,
     minCircularity: 0.9,
-    minArea: 25,
     filterByInertia: false,
-    faster: true,
-    scaleFactor
+
+    // values that are controlled by the interface
+    faster: config.faster,
+    thresholdStep: config.thresholdStep,
+    minThreshold: config.minThreshold,
+    maxThreshold: config.maxThreshold,
+    minArea: config.minArea,
+    maxArea: config.maxArea,
+    minDistBetweenBlobs: config.minDistBetweenBlobs
+
+    // scaleFactor
   } );
 
   clippedVideoMat.delete();
