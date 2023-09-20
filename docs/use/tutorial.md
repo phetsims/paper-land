@@ -21,6 +21,8 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 
 The Camera page is where all the action happens for turning your paper programs interactive!
 
+![Camera Interface](../assets/camera-page.png)
+
 On this page you will find the preview of your webcam, a preview of the full JavaScript for your currently selected paper program, and a plethora of options in the sidebar. Explore the headings in the sidebar to create and navigate between [spaces](#what-is-a-space), [calibrate your webcam](../setup/device-setup.md#color-calibrating-your-webcam-for-program-detection) to detect paper programs, print and [virtually preview programs and markers](#what-are-preview-papers-eye), and [fine-tune your detection](../setup/device-setup.md#fine-tuning-program-detection).
 
 You'll use this page to match up where your papers are in space with visuals on a projector. Think of it as your play space.
@@ -28,6 +30,8 @@ You'll use this page to match up where your papers are in space with visuals on 
 ### What are Preview Papers? :eye:
 
 If you are quickly iterating or just not in a position to print physical papers, you can still see how your code runs! Preview paper programs can be placed into the camera view at any time and the code will run as through you put a physical paper in view.
+
+![Previews in the Camera interface](../assets/camera-spaces-preview-print.png)
 
 While a lot more can be done to help the preview papers mimic how you can move a physical piece of paper, there are a few features currently in place to help.
 
@@ -37,6 +41,12 @@ While a lot more can be done to help the preview papers mimic how you can move a
 - Select the scissors to break the paper into four independently moveable corners.
 - Preview papers can be removed at any time by selecting the red square.
 
+#### Preview Markers
+
+Just like preview papers, you can simulate physical paper markers under the Preview Markers sidebar menu. Select the eye icon to place a draggable marker into the camera view that triggers marker-related code in your paper programs.
+
+![Marker Previews](../assets/camera-preview-markers.png)
+
 ## Organizing your code: Spaces and Projects
 ### What is a Space?
 A space is way of organizing your programs and how you'll locate your programs in the Camera interface to run them. Some software might refer to this as a "workspace", but we prefer to think of it as a playspace!
@@ -45,11 +55,15 @@ A space is way of organizing your programs and how you'll locate your programs i
 
       At the time of writing, Spaces can only be created from the Camera interface ("Add New Space" button). You can select, but not create, Spaces in the Creator interface.
 
+![Camera Spaces](../assets/camera-spaces-tab.png)
+
 All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well. 
 
 You might create your own personal space "my-space" :wink: and fill it with ideas you have or create a "frogger-game" space and collect all of the paper programs that will work together to create your project.
 
 #### What is a Creator Project?
+
+
 
 When working from the Creator interface, you may notice you can create Projects after selecting space. This is one level deeper than a Space and allows you to have multiple version or different sets of programs that you can send to the selected Space in the Camera interface via the **Send to Playground** button.
 
@@ -62,6 +76,8 @@ When working from the Creator interface, you may notice you can create Projects 
 ## What is the Board page?
 
 The main display! This page is where your visuals and sounds will be displayed and if you're using a projector, the page you'll want to put onto your projector to overlay visuals in your play area!
+
+![Board Interface with example visuals](../assets/board-example.png)
 
 There are a few helpful additions to this page to help with your creation and play.
 
@@ -91,6 +107,7 @@ If you would like to use vanilla Web Canvas or make use of the projection overla
 
 See [the Creator tutorial](creator.md).
 
+[![Creator interface example](../assets/creator-create-component.png)](creator.md)
 ### Editor: If you're comfortable with JavaScript and reading API documents
 
 Create new paper programs from the Camera interface (Spaces and Programs on the sidebar). You can copy an existing program from any other Space or start from a fresh template.
@@ -101,7 +118,7 @@ On the Camera interface you'll find a link to the Editor for your space (this is
 
 Open that link (make sure you keep the Camera page open at all times) and select your Program from the list.
 
-![The program editor](../assets/camera-view.png)
+![The program editor](../assets/editor-example.png)
 
 Make some changes in the editor (try changing what text gets drawn on the canvas for starters) and click the "save" button. The changes should now be reflected in the output of the Board or Projector pages.
 

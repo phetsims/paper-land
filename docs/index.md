@@ -1,9 +1,13 @@
-# Paper Playground
-
 <!-- https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types -->
 !!! warning "Under Construction"
-      
-    We are working on updating our documentation - more details coming soon!
+
+    We are constantly working on updating our documentation!
+# Paper Playground
+
+[![GitHub](https://img.shields.io/badge/github-repo-yellow?logo=github&logoColor=white)](https://www.github.com/phetsims/paper-land/)
+[![Matrix Chat](https://img.shields.io/badge/matrix-chat-green?logo=matrix&logoColor=green)](https://matrix.to/#/#interactive-paper-programming:matrix.org)
+[![Youtube Channel](https://img.shields.io/badge/youtube-channel-red?logo=youtube&logoColor=red)](https://www.youtube.com/@PaperPlaygroundCommunity/)
+[![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](./LICENSE)
 
 ## Interactive Play Meets Multimodal Web Development
 
@@ -72,7 +76,7 @@ Our team is focused on a few large initiatives for integrating other projects in
 
 However, there are **many other areas** that the project can be expanded (see below for Contributing guidelines and suggestions)!
 
-## Please, join our [Community](/docs/community.md)!
+## Please, join our [Community](/docs/community.md)
 
 ## Roadmap
 
