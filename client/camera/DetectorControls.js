@@ -3,7 +3,7 @@
  * https://github.com/phetsims/paper-land/issues/127 for notes.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from './CameraMain.css';
 
@@ -18,6 +18,16 @@ export default function DetectorControls( props ) {
 
   // state for 'faster' in the config, which controls 'averaging dot centers'
   const [ faster, setFaster ] = useState( props.config.faster );
+
+  // state for validation
+  const [ areaValid, setAreaValid ] = useState( true );
+  const [ thresholdValid, setThresholdValid ] = useState( true );
+
+  // update validity state when config changes
+  useEffect( () => {
+    setAreaValid( props.config.maxArea > props.config.minArea );
+    setThresholdValid( props.config.maxThreshold > props.config.minThreshold );
+  }, [ props.config ] );
 
   // For the rest of the sliders state is managed by the inner component SliderWithLabel.
   return (
@@ -142,6 +152,12 @@ export default function DetectorControls( props ) {
             } );
           }}
         />
+      </div>
+      <div className={styles.detectionControlValidation}>
+        <ul>
+          <li hidden={areaValid}>Maximum dot area should be larger than minimum dot area.</li>
+          <li hidden={thresholdValid}>Maximum pixel value should be larger than minimum pixel value.</li>
+        </ul>
       </div>
     </div>
   );

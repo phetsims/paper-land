@@ -354,3 +354,7 @@
 :local(.detectionControlInput) {
   padding: 5px;
 }
+
+:local(.detectionControlValidation) {
+  color: #FFA500;
+}
