@@ -12,6 +12,7 @@ import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
 import CreateProgramsDialog from './CreateProgramsDialog.js';
+import DetectorControls from './DetectorControls.js';
 import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
 
@@ -632,7 +633,7 @@ export default class CameraMain extends React.Component {
             setSearchString={str => this.setState( { copyProgramListFilterString: str } )}
           />
 
-          {/*The "save alert" element, which is briefly shown after a program is successfully saved to the server.*/}
+          {/*The 'save alert' element, which is briefly shown after a program is successfully saved to the server.*/}
           <SaveAlert
             success={this.state.saveSuccess}
             show={this.state.showSaveModal}
@@ -978,7 +979,7 @@ export default class CameraMain extends React.Component {
                     <div className={styles.sidebarSection}>
                       To print a program, click the print icon (
                       <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
-                      ) next to that program in the "Spaces & Programs" area.
+                      ) next to that program in the 'Spaces & Programs' area.
                       <br/><br/>
                       <div className={styles.sidebarSubSection}>
                         <span>Paper Size: </span>
@@ -1038,22 +1039,10 @@ export default class CameraMain extends React.Component {
                       </div>
 
                       <div className={styles.sidebarSubSection}>
-                        <span>Accuracy</span>
-                        <input
-                          name='scaleFactor'
-                          type='range'
-                          min='1'
-                          max='10'
-                          step='1'
-                          value={this.props.config.scaleFactor}
-                          onChange={event => {
-                            this.props.onConfigChange( {
-                              ...this.props.config,
-                              scaleFactor: event.target.valueAsNumber
-                            } );
-                          }}
-                        />
-                        <span>Performance</span>
+                        <DetectorControls
+                          config={this.props.config}
+                          onConfigChange={this.props.onConfigChange}
+                        ></DetectorControls>
                       </div>
                       <div className={styles.sidebarSubSection}>
                         Framerate <strong>{this.state.framerate}</strong>

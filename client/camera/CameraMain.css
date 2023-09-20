@@ -350,3 +350,7 @@
   color: white;
   background-color: #405B72;
 }
+
+:local(.detectionControlInput) {
+  padding: 5px;
+}
