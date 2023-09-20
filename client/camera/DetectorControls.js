@@ -128,6 +128,21 @@ export default function DetectorControls( props ) {
           }}
         />
       </div>
+      <div>
+        <SliderWithLabel
+          min={1}
+          max={6}
+          step={1}
+          defaultValue={props.config.scaleFactor || 1}
+          label='Scale Factor (generally keep at 1, this changes many values)'
+          handleChange={value => {
+            props.onConfigChange( {
+              ...props.config,
+              scaleFactor: value
+            } );
+          }}
+        />
+      </div>
     </div>
   );
 }

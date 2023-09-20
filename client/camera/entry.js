@@ -30,7 +30,7 @@ const defaultConfig = {
   showPrintedInQueue: false,
 
   // detection parameters
-  scaleFactor: 4,
+  scaleFactor: 1,
   faster: false,
   thresholdStep: 10,
   minThreshold: 50,
