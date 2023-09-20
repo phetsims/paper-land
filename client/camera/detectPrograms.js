@@ -218,9 +218,8 @@ export default function detectPrograms( {
     maxThreshold: config.maxThreshold,
     minArea: config.minArea,
     maxArea: config.maxArea,
-    minDistBetweenBlobs: config.minDistBetweenBlobs
-
-    // scaleFactor
+    minDistBetweenBlobs: config.minDistBetweenBlobs,
+    scaleFactor: scaleFactor
   } );
 
   clippedVideoMat.delete();
