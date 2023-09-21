@@ -48,7 +48,7 @@ export default class CameraMain extends React.Component {
       showSaveModal: false,
       saveSuccess: false,
 
-      // {InputDeviceInfo[]} - a list of the cameras that are available on the current system
+      // {InputDeviceInfo[]} - a list of the cameras that are available on the current project
       availableCameras: [],
 
       // {string} - the deviceId of the currently selected camera
@@ -263,7 +263,7 @@ export default class CameraMain extends React.Component {
           }
         }
         else {
-          console.warn( 'No cameras detected on this system.' );
+          console.warn( 'No cameras detected on this project.' );
         }
       } );
 

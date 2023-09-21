@@ -385,61 +385,61 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
 } );
 
 /**
- * Get the existing system names for the provided space name.
+ * Get the existing project names for the provided space name.
  */
-router.get( '/api/creator/systemNames/:spaceName', ( req, res ) => {
+router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
   knex
-    .select( 'systemName' )
+    .select( 'projectName' )
     .from( 'creator-data' )
     .where( { spaceName } )
     .then( selectResult => {
-      res.json( { systemNames: selectResult.map( resultObject => resultObject.systemName ) } );
+      res.json( { projectNames: selectResult.map( resultObject => resultObject.projectName ) } );
     } );
 } );
 
 /**
- * Create a new system name at the provided space name.
+ * Create a new project name at the provided space name.
  */
-router.post( '/api/creator/systemNames/:spaceName/:systemName', ( req, res ) => {
-  const { spaceName, systemName } = req.params;
+router.post( '/api/creator/projectNames/:spaceName/:projectName', ( req, res ) => {
+  const { spaceName, projectName } = req.params;
 
   knex
-    .select( 'systemName' )
+    .select( 'projectName' )
     .from( 'creator-data' )
     .where( { spaceName } )
     .then( selectResult => {
-      const existingNames = selectResult.map( result => result.systemName );
+      const existingNames = selectResult.map( result => result.projectName );
 
       console.log( 'EXISTING NAMES', existingNames );
-      if ( existingNames.includes( systemName ) ) {
+      if ( existingNames.includes( projectName ) ) {
         res.status( 400 ).send( 'Name already exists for this space.' );
       }
       else {
         knex( 'creator-data' )
           .insert( {
-            spaceName, systemName, systemData: {}, editing: false
+            spaceName, projectName, projectData: {}, editing: false
           } )
           .then( () => {
-            res.json( { systemName: systemName } );
+            res.json( { projectName: projectName } );
           } );
       }
     } );
 } );
 
 /**
- * Save the system data to the provided space and system name.
+ * Save the project data to the provided space and project name.
  */
-router.put( '/api/creator/:spaceName/:systemName', ( req, res ) => {
-  const { spaceName, systemName } = req.params;
-  const { systemData } = req.body;
-  if ( !systemData ) {
-    res.status( 400 ).send( 'Missing system data' );
+router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
+  const { spaceName, projectName } = req.params;
+  const { projectData } = req.body;
+  if ( !projectData ) {
+    res.status( 400 ).send( 'Missing project data' );
   }
   else {
     knex( 'creator-data' )
-      .update( { systemData: systemData } )
-      .where( { spaceName, systemName } )
+      .update( { projectData: projectData } )
+      .where( { spaceName, projectName } )
       .then( () => {
         res.json( {} );
       } );
@@ -447,31 +447,31 @@ router.put( '/api/creator/:spaceName/:systemName', ( req, res ) => {
 } );
 
 /**
- * Get the system data at the provided space and system name.
+ * Get the project data at the provided space and project name.
  */
-router.get( '/api/creator/:spaceName/:systemName', ( req, res ) => {
-  const { spaceName, systemName } = req.params;
+router.get( '/api/creator/:spaceName/:projectName', ( req, res ) => {
+  const { spaceName, projectName } = req.params;
   knex
-    .select( 'systemData' )
+    .select( 'projectData' )
     .from( 'creator-data' )
-    .where( { spaceName, systemName } )
+    .where( { spaceName, projectName } )
     .then( selectResult => {
       if ( selectResult.length === 0 ) {
         res.status( 404 );
       }
       else {
-        res.json( { systemData: selectResult[ 0 ].systemData } );
+        res.json( { projectData: selectResult[ 0 ].projectData } );
       }
     } );
 } );
 
 /**
- * Delete the specified system at the provided space name.
+ * Delete the specified project at the provided space name.
  */
-router.get( '/api/creator/:spaceName/delete/:systemName', ( req, res ) => {
-  const { spaceName, systemName } = req.params;
+router.get( '/api/creator/:spaceName/delete/:projectName', ( req, res ) => {
+  const { spaceName, projectName } = req.params;
   knex( 'creator-data' )
-    .where( { spaceName, systemName: systemName } )
+    .where( { spaceName, projectName: projectName } )
     .del()
     .then( numberOfProgramsDeleted => {
       res.json( { numberOfProgramsDeleted } );

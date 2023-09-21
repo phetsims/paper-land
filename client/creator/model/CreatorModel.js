@@ -29,13 +29,13 @@ export default class CreatorModel {
     // {Property.<boolean>} - The Space name that is currently being worked on
     this.spaceNameProperty = new phet.axon.Property( '' );
 
-    // {Property.<boolean>} - The System name that is currently being worked on
-    this.systemNameProperty = new phet.axon.Property( '' );
+    // {Property.<boolean>} - The Project name that is currently being worked on
+    this.projectNameProperty = new phet.axon.Property( '' );
 
     // {CreatorVisibilityModel}
     this.visibilityModel = new CreatorVisibilityModel();
 
-    // {Emitter} - Emits an event when the user would like to save the current system as programs
+    // {Emitter} - Emits an event when the user would like to save the current project as programs
     // to the selected space. This will clear existing programs in the space, so we first move
     // to a confirmation dialog to confirm the action.
     this.sendRequestedEmitter = new phet.axon.Emitter();
@@ -200,7 +200,7 @@ export default class CreatorModel {
   }
 
   /**
-   * Returns an array of strings for the code of this system. Used to move code to the paper-playground database of
+   * Returns an array of strings for the code of this project. Used to move code to the paper-playground database of
    * programs.
    */
   convertToProgramData() {
@@ -239,8 +239,8 @@ export default class CreatorModel {
           reject( error );
         }
         else {
-          resolve( 'System Created!' );
-          console.log( 'System created!' );
+          resolve( 'Project Created!' );
+          console.log( 'Project created!' );
 
           // Set a flag on the appliation storage to indicate that programs were just created with Creator
           localStorage.paperProgramsCreatedWithCreator = true;

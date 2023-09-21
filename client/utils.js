@@ -246,27 +246,27 @@ export function getProgramDataFromNumber( programNumber ) {
 }
 
 /**
- * Returns true when the proposed system name is valid. Checks include uniqueness and usability in the database.
- * @param systemName - proposed name for the system
+ * Returns true when the proposed project name is valid. Checks include uniqueness and usability in the database.
+ * @param projectName - proposed name for the project
  * @param otherNames - current list of other names
  * @param alertError - alert to the user that something is wrong?
  * @return {boolean}
  */
-export function isValidSystemName( systemName, otherNames, alertError = true ) {
+export function isValidProjectName( projectName, otherNames, alertError = true ) {
   let isValid = true;
   let errorMessage = '';
-  if ( isValid && systemName.length === 0 ) {
+  if ( isValid && projectName.length === 0 ) {
     isValid = false;
     errorMessage = 'Name too short.';
   }
-  if ( isValid && systemName.match( /[^A-Za-z0-9\-_]+/ ) !== null ) {
+  if ( isValid && projectName.match( /[^A-Za-z0-9\-_]+/ ) !== null ) {
     isValid = false;
     errorMessage = 'Invalid characters in name.';
     errorMessage += '\n\nNames can contain upper- and lower-case letters, numbers, dashes, and/or underscores.';
   }
-  if ( isValid && otherNames.includes( systemName ) ) {
+  if ( isValid && otherNames.includes( projectName ) ) {
     isValid = false;
-    errorMessage = `Value ${systemName} already exists.`;
+    errorMessage = `Value ${projectName} already exists.`;
   }
 
   if ( errorMessage.length ) {
