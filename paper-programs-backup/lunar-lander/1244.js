@@ -47,11 +47,11 @@ importScripts('paper.js');
     // Create a visualization for the lander itself
     // Create a Scenery image node.
     const imageElement = document.createElement( 'img' );
-    // imageElement.setAttribute( 'src', 'media/images/lunarLander.png' );
-    imageElement.setAttribute( 'src', 'media/images/hotairballoon.png' );    
+    imageElement.setAttribute( 'src', 'media/images/lunarLander.png' );
+    // imageElement.setAttribute( 'src', 'media/images/hotairballoon.png' );    
     scratchpad.imageNode = new phet.scenery.Image( imageElement, {
-      minWidth: 75,
-      maxWidth: 75
+      minWidth: 150,
+      maxWidth: 150
     } );
     sharedData.scene.addChild( scratchpad.imageNode );
 
@@ -204,7 +204,7 @@ importScripts('paper.js');
   ctx.font = '20px sans-serif';
   ctx.textAlign = 'center';
   ctx.fillStyle = 'rgb(255,0,0)';
-  ctx.fillText('Altitude', canvas.width / 2, canvas.height / 2 - 10);
+  ctx.fillText('Lander', canvas.width / 2, canvas.height / 2 - 10);
   ctx.fillStyle = 'rgb(0,255,0)';
   ctx.fillText('Model', canvas.width / 2, canvas.height / 2 + 20);
 })();

@@ -1,4 +1,4 @@
-// IDRC test
+// Hello World Template
 // Keywords: start, begin, new, hello world
 // =============================== //
 // Program Dependencies: N/A

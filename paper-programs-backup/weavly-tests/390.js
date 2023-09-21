@@ -1,10 +1,9 @@
-// IDRC test
-// Keywords: start, begin, new, hello world
+// Right 90
+// Keywords: weavly
 // =============================== //
-// Program Dependencies: N/A
-// Recommended Programs: General Template (templates)
-// Program Description: Example program with functioning Board and Projector code!
-// !!!UPDATE ME WITH A BETTER BOARD EXAMPLE!!!
+// Program Dependencies:
+// Recommended Programs: 
+// Program Description: 
 
 importScripts('paper.js');
 
@@ -18,32 +17,45 @@ importScripts('paper.js');
   const myPaperNumber = await paper.get('number');
 
   // Called when the program is detected or changed.
-  const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
-    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/loonCall.mp3' );
+  const onProgramAdded = ( programNumber, scratchpad, sharedData ) => {
+      const connectionElement = new phet.paperLand.SingleChildConnectionElement();
+      phet.paperLand.addModelComponent( `${programNumber}-connectionElement`, connectionElement );
+      phet.paperLand.setProgramData( programNumber, 'connectionElement', connectionElement );
 
-    const soundClip = new phet.tambo.SoundClip( wrappedAudioBuffer );
-    phet.tambo.soundManager.addSoundGenerator( soundClip );
-    setTimeout( () => {
-      soundClip.play();
-      console.log( 'Just played sound clip, did you hear it?' );
-    }, 1000 );
-    
-    // Assign the sound to the scratchpad so that we can remove it later
-    scratchpad.soundClip = soundClip;
+      connectionElement.setElementData( 'right90' );
   };
 
-  // Called when the paper positions change.
-  // const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchPad, sharedData ) => {
-    
-    // Behavior that changes with paper position here.
-    // Global model for all programs
-    // const model = sharedData.modelProperty.value;
-  // };
-
   // Called when the program is changed or no longer detected.
-  const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
-    phet.tambo.soundManager.removeSoundGenerator( scratchpad.soundClip );
-    scratchpad.soundClip = null;
+  const onProgramRemoved = ( programNumber, scratchpad, sharedData ) => {
+    phet.paperLand.removeModelComponent( `${programNumber}-connectionElement` );
+    phet.paperLand.removeProgramData( programNumber, 'connectionElement' );
+  };
+
+  const onProgramAdjacent = ( programNumber, otherProgramNumber, direction, scratchpad, sharedData ) => {
+    phet.paperLand.console.log( `${otherProgramNumber} ${direction} of ${programNumber}` );
+
+    // Look at the other program and see if it has a ConnectionElement to connect to
+    const otherConnectionElement = phet.paperLand.getProgramData( otherProgramNumber, 'connectionElement' );
+
+    if ( otherConnectionElement ) {
+
+      // if it does, add this connection element as a child
+      otherConnectionElement.addChild( phet.paperLand.getModelComponent( `${programNumber}-connectionElement` ) );
+    }
+  };
+
+  const onProgramSeparated = ( programNumber, otherProgramNumber, direction, scratchpad, sharedData ) => {
+    phet.paperLand.console.log( `${otherProgramNumber} detached from ${programNumber} ${direction}` );
+
+    // Look at the other program and see if it has a ConnectionElement that we are attached to
+    const otherConnectionElement = phet.paperLand.getProgramData( otherProgramNumber, 'connectionElement' );
+    if ( otherConnectionElement ) {
+      const thisElement = phet.paperLand.getModelComponent( `${programNumber}-connectionElement` );
+
+      if ( otherConnectionElement.children.includes( thisElement ) ) {
+        otherConnectionElement.removeChild( thisElement );
+      }
+    }
   };
 
   // Add the state change handler defined above as data for this paper.
@@ -52,7 +64,9 @@ importScripts('paper.js');
       updateTime: Date.now(),
       eventHandlers: {
         onProgramAdded: onProgramAdded.toString(),
-        onProgramRemoved: onProgramRemoved.toString()
+        onProgramRemoved: onProgramRemoved.toString(),
+        onProgramAdjacent: onProgramAdjacent.toString(),
+        onProgramSeparated: onProgramSeparated.toString()
       }
     }
   } );
@@ -106,3 +120,7 @@ importScripts('paper.js');
     });
   }, 100);
 })();
+
+
+
+

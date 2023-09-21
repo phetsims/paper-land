@@ -1,10 +1,9 @@
-// IDRC test
-// Keywords: start, begin, new, hello world
+// Program Start
+// Keywords: weavly
 // =============================== //
 // Program Dependencies: N/A
-// Recommended Programs: General Template (templates)
-// Program Description: Example program with functioning Board and Projector code!
-// !!!UPDATE ME WITH A BETTER BOARD EXAMPLE!!!
+// Recommended Programs:
+// Program Description: 
 
 importScripts('paper.js');
 
@@ -19,31 +18,56 @@ importScripts('paper.js');
 
   // Called when the program is detected or changed.
   const onProgramAdded = ( paperProgramNumber, scratchpad, sharedData ) => {
-    const wrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/loonCall.mp3' );
 
-    const soundClip = new phet.tambo.SoundClip( wrappedAudioBuffer );
-    phet.tambo.soundManager.addSoundGenerator( soundClip );
-    setTimeout( () => {
-      soundClip.play();
-      console.log( 'Just played sound clip, did you hear it?' );
-    }, 1000 );
+      // create a root
+      const rootElement = new phet.paperLand.SingleChildConnectionElement();
+      phet.paperLand.addModelComponent( 'rootElement', rootElement );
+
+      // Add this element to the program data itself so that adjacent programs can find it
+      phet.paperLand.setProgramData( paperProgramNumber, 'connectionElement', rootElement );
+
+      // Update the program data whenever the tree changes
+      rootElement.subtreeChangedEmitter.addListener( () => {
+
+          const actionBlockSequence = [];
+          rootElement.walkDownTree( ( connectionElement ) => {
+            const actionType = connectionElement.getElementData();
+            actionBlockSequence.push( { block: actionType } );
+          } );
+
+          phet.paperLand.console.log( JSON.stringify( actionBlockSequence ) );
+
+        const iframe = phet.paperLand.getModelComponent( 'weavlyFrame' );
+        if ( iframe ) {
     
-    // Assign the sound to the scratchpad so that we can remove it later
-    scratchpad.soundClip = soundClip;
+            // Send a message to Weavly to create a program with one forward block.
+            phet.paperLand.console.log( 'Sending message to Weavly' );
+            iframe.contentWindow.postMessage( {
+    
+            // We will probably want different message types.
+            // For example, this is an 'update' message, we might want to signify that.
+            type: 'paper-playground-weavly-message',
+            message: {
+                program: actionBlockSequence
+            }
+            }, '*' );
+        }
+        else {
+            phet.paperLand.console.warn( 'Please add the Weavly connect program first.' );
+        }
+      } );
   };
 
   // Called when the paper positions change.
-  // const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchPad, sharedData ) => {
-    
-    // Behavior that changes with paper position here.
-    // Global model for all programs
-    // const model = sharedData.modelProperty.value;
-  // };
+  const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchPad, sharedData ) => {
+
+      
+  };
 
   // Called when the program is changed or no longer detected.
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
-    phet.tambo.soundManager.removeSoundGenerator( scratchpad.soundClip );
-    scratchpad.soundClip = null;
+    phet.paperLand.removeModelComponent( 'rootElement' );
+    phet.paperLand.removeProgramData( paperProgramNumber, 'connectionElement' );
   };
 
   // Add the state change handler defined above as data for this paper.
@@ -52,7 +76,8 @@ importScripts('paper.js');
       updateTime: Date.now(),
       eventHandlers: {
         onProgramAdded: onProgramAdded.toString(),
-        onProgramRemoved: onProgramRemoved.toString()
+        onProgramRemoved: onProgramRemoved.toString(),
+        onProgramChangedPosition: onProgramChangedPosition()
       }
     }
   } );

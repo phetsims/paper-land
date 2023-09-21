@@ -28,7 +28,7 @@ importScripts('paper.js');
     phet.paperLand.addModelComponent( 'target', scratchpad.targetBody );
 
     // The view component for the target
-    scratchpad.targetRectangle = new phet.scenery.Rectangle( 0, 0, 150, 15, {
+    scratchpad.targetRectangle = new phet.scenery.Rectangle( 0, 0, 250, 45, {
       fill: '#1E90FF'
     } );
 
