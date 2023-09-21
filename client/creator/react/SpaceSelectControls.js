@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import xhr from 'xhr';
-import { isValidSystemName } from '../../utils.js';
+import { isValidProjectName } from '../../utils.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -13,10 +13,10 @@ const SpaceSelectControls = props => {
 
   const [ availableSpaces, setAvailableSpaces ] = useState( [] );
   const [ selectedSpaceName, setSelectedSpaceName ] = useState( '' );
-  const [ creatingNewSystem, setCreatingNewSystem ] = useState( false );
-  const [ newSystemName, setNewSystemName ] = useState( '' );
-  const [ selectedSystemName, setSelectedSystemName ] = useState( '' );
-  const [ availableSystems, setAvailableSystems ] = useState( [] );
+  const [ creatingNewProject, setCreatingNewProject ] = useState( false );
+  const [ newProjectName, setNewProjectName ] = useState( '' );
+  const [ selectedProjectName, setSelectedProjectName ] = useState( '' );
+  const [ availableProjects, setAvailableProjects ] = useState( [] );
 
   // Only called on mount, gets the list of available spaces.
   useEffect( () => {
@@ -31,13 +31,13 @@ const SpaceSelectControls = props => {
         if ( Array.isArray( response.body ) ) {
           setAvailableSpaces( response.body );
 
-          // FOR DEBUGGING - initialize to jg-tests with system lab
+          // FOR DEBUGGING - initialize to jg-tests with project lab
           if ( window.dev ) {
             setTimeout( () => {
               setSelectedSpaceName( 'creator-tests' );
 
               setTimeout( () => {
-                setSelectedSystemName( 'upload-test' );
+                setSelectedProjectName( 'upload-test' );
               }, 500 );
             }, 500 );
           }
@@ -46,48 +46,48 @@ const SpaceSelectControls = props => {
     } );
   }, [] );
 
-  // Update state to include the list of available systems.
+  // Update state to include the list of available projects.
   const updateProjectNames = () => {
     if ( selectedSpaceName ) {
-      const systemsList = new URL( `api/creator/projectNames/${selectedSpaceName}`, window.location.origin ).toString();
-      xhr.get( systemsList, { json: true }, ( error, response ) => {
+      const projectsList = new URL( `api/creator/projectNames/${selectedSpaceName}`, window.location.origin ).toString();
+      xhr.get( projectsList, { json: true }, ( error, response ) => {
         if ( error ) {
           console.error( error );
         }
         else {
           if ( Array.isArray( response.body.projectNames ) ) {
-            setAvailableSystems( response.body.projectNames );
+            setAvailableProjects( response.body.projectNames );
           }
         }
       } );
     }
     else {
-      setAvailableSystems( [] );
+      setAvailableProjects( [] );
     }
   };
 
-  // Handle a request to delete a system.
-  const handleSystemDelete = () => {
+  // Handle a request to delete a project.
+  const handleProjectDelete = () => {
     if ( selectedSpaceName && selectedSpaceName ) {
       xhr.get(
-        new URL( `api/creator/${selectedSpaceName}/delete/${selectedSystemName}`, window.location.origin ).toString(),
+        new URL( `api/creator/${selectedSpaceName}/delete/${selectedProjectName}`, window.location.origin ).toString(),
         {
           json: {}
         },
         ( error, response ) => {
           if ( error ) {
-            console.log( 'Error deleting system: ' + error );
+            console.log( 'Error deleting project: ' + error );
           }
           else {
             updateProjectNames();
-            setSelectedSystemName( '' );
+            setSelectedProjectName( '' );
           }
         }
       );
     }
   };
 
-  // Whenever the selectedSpaceName changes, make a request to the database to get existing systems for that space.
+  // Whenever the selectedSpaceName changes, make a request to the database to get existing projects for that space.
   useEffect( () => {
     updateProjectNames();
 
@@ -95,10 +95,10 @@ const SpaceSelectControls = props => {
     model.spaceNameProperty.value = selectedSpaceName;
   }, [ selectedSpaceName ] );
 
-  // Whenever the system name changes, notify scenery side that there is a new system.
+  // Whenever the project name changes, notify scenery side that there is a new project.
   useEffect( () => {
-    model.systemNameProperty.value = selectedSystemName;
-  }, [ selectedSystemName ] );
+    model.projectNameProperty.value = selectedProjectName;
+  }, [ selectedProjectName ] );
 
   return (
     <div>
@@ -113,7 +113,7 @@ const SpaceSelectControls = props => {
               value={selectedSpaceName}
               onChange={event => {
                 setSelectedSpaceName( event.target.value );
-                setSelectedSystemName( '' );
+                setSelectedProjectName( '' );
               }}
             >
               <option>Select Space</option>
@@ -126,52 +126,52 @@ const SpaceSelectControls = props => {
           </Col>
           <Col>
             <Col>
-              <h2>System Name:</h2>
+              <h2>Project Name:</h2>
               <Form.Select
                 name='spaces'
                 id='spaces'
-                value={selectedSystemName}
+                value={selectedProjectName}
                 onChange={event => {
-                  setSelectedSystemName( event.target.value );
+                  setSelectedProjectName( event.target.value );
                 }}
               >
-                <option value={''}>Select System</option>
-                {availableSystems.map( ( option, index ) => {
+                <option value={''}>Select Project</option>
+                {availableProjects.map( ( option, index ) => {
                   return <option key={index} value={option}>
                     {option}
                   </option>;
                 } )}
               </Form.Select>
               {
-                creatingNewSystem ? (
+                creatingNewProject ? (
                   <div className={styles.controlElement}>
                     <Form onSubmit={event => {
                       event.preventDefault();
 
-                      if ( selectedSpaceName && isValidSystemName( newSystemName, availableSystems ) ) {
+                      if ( selectedSpaceName && isValidProjectName( newProjectName, availableProjects ) ) {
 
                         // name valid, create a new one in the db
-                        xhr.post( new URL( `api/creator/projectNames/${selectedSpaceName}/${newSystemName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
+                        xhr.post( new URL( `api/creator/projectNames/${selectedSpaceName}/${newProjectName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
                           if ( error ) {
                             console.error( error );
                           }
                           else {
 
-                            // on success, update system names with the new UI
+                            // on success, update project names with the new UI
                             updateProjectNames();
 
-                            // use the new system
-                            setSelectedSystemName( newSystemName );
+                            // use the new project
+                            setSelectedProjectName( newProjectName );
                           }
                         } );
                       }
-                      setCreatingNewSystem( false );
+                      setCreatingNewProject( false );
                     }}>
                       <label>
                         Name:&nbsp;
                         <input
                           type='text'
-                          onChange={event => { setNewSystemName( event.target.value ); }}
+                          onChange={event => { setNewProjectName( event.target.value ); }}
                         />
                       </label>
                       <br/>
@@ -180,17 +180,17 @@ const SpaceSelectControls = props => {
                           <StyledButton name={'Confirm'} type='submit'></StyledButton>
                         </Col>
                         <Col>
-                          <StyledButton name={'Cancel'} onClick={() => setCreatingNewSystem( false )}></StyledButton>
+                          <StyledButton name={'Cancel'} onClick={() => setCreatingNewProject( false )}></StyledButton>
                         </Col>
                       </Row>
                     </Form>
                   </div>
                 ) : <Row>
                   <Col>
-                    <StyledButton name={'New System'} onClick={() => setCreatingNewSystem( true )}></StyledButton>
+                    <StyledButton name={'New Project'} onClick={() => setCreatingNewProject( true )}></StyledButton>
                   </Col>
                   <Col>
-                    <StyledButton name={'Delete System'} hidden={!selectedSystemName} onClick={handleSystemDelete}></StyledButton>
+                    <StyledButton name={'Delete Project'} hidden={!selectedProjectName} onClick={handleProjectDelete}></StyledButton>
                   </Col>
                 </Row>
               }
