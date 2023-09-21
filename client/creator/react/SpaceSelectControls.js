@@ -47,16 +47,16 @@ const SpaceSelectControls = props => {
   }, [] );
 
   // Update state to include the list of available systems.
-  const updateSystemNames = () => {
+  const updateProjectNames = () => {
     if ( selectedSpaceName ) {
-      const systemsList = new URL( `api/creator/systemNames/${selectedSpaceName}`, window.location.origin ).toString();
+      const systemsList = new URL( `api/creator/projectNames/${selectedSpaceName}`, window.location.origin ).toString();
       xhr.get( systemsList, { json: true }, ( error, response ) => {
         if ( error ) {
           console.error( error );
         }
         else {
-          if ( Array.isArray( response.body.systemNames ) ) {
-            setAvailableSystems( response.body.systemNames );
+          if ( Array.isArray( response.body.projectNames ) ) {
+            setAvailableSystems( response.body.projectNames );
           }
         }
       } );
@@ -79,7 +79,7 @@ const SpaceSelectControls = props => {
             console.log( 'Error deleting system: ' + error );
           }
           else {
-            updateSystemNames();
+            updateProjectNames();
             setSelectedSystemName( '' );
           }
         }
@@ -89,7 +89,7 @@ const SpaceSelectControls = props => {
 
   // Whenever the selectedSpaceName changes, make a request to the database to get existing systems for that space.
   useEffect( () => {
-    updateSystemNames();
+    updateProjectNames();
 
     // Notify the scenery side that the space has changed.
     model.spaceNameProperty.value = selectedSpaceName;
@@ -151,14 +151,14 @@ const SpaceSelectControls = props => {
                       if ( selectedSpaceName && isValidSystemName( newSystemName, availableSystems ) ) {
 
                         // name valid, create a new one in the db
-                        xhr.post( new URL( `api/creator/systemNames/${selectedSpaceName}/${newSystemName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
+                        xhr.post( new URL( `api/creator/projectNames/${selectedSpaceName}/${newSystemName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
                           if ( error ) {
                             console.error( error );
                           }
                           else {
 
                             // on success, update system names with the new UI
-                            updateSystemNames();
+                            updateProjectNames();
 
                             // use the new system
                             setSelectedSystemName( newSystemName );
