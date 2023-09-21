@@ -387,21 +387,21 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
 /**
  * Get the existing system names for the provided space name.
  */
-router.get( '/api/creator/systemNames/:spaceName', ( req, res ) => {
+router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
   knex
     .select( 'systemName' )
     .from( 'creator-data' )
     .where( { spaceName } )
     .then( selectResult => {
-      res.json( { systemNames: selectResult.map( resultObject => resultObject.systemName ) } );
+      res.json( { projectNames: selectResult.map( resultObject => resultObject.systemName ) } );
     } );
 } );
 
 /**
  * Create a new system name at the provided space name.
  */
-router.post( '/api/creator/systemNames/:spaceName/:systemName', ( req, res ) => {
+router.post( '/api/creator/projectNames/:spaceName/:systemName', ( req, res ) => {
   const { spaceName, systemName } = req.params;
 
   knex
