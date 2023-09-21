@@ -29,7 +29,7 @@ export default class CreatorView extends phet.scenery.Node {
     // @public (reado-only) - All program views will be layered inside of this Node
     const programLayerNode = new phet.scenery.Node();
 
-    // Fades in using twixt when the system is successfully saved to the database
+    // Fades in using twixt when the project is successfully saved to the database
     this.savedRectangle = new SavedRectangle();
 
     this.visibilityControls = new CreatorVisibilityControls( model.visibilityModel );
@@ -45,12 +45,12 @@ export default class CreatorView extends phet.scenery.Node {
         model.createProgram( this.applicationLayerNode.globalToLocalPoint( this.newProgramButton.leftBottom ) );
       }
     } ) );
-    this.saveSystemButton = new phet.sun.TextPushButton( 'Save System', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+    this.saveProjectButton = new phet.sun.TextPushButton( 'Save Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
         const json = model.save();
 
-        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.systemNameProperty.value}`, window.location.origin ).toString();
-        xhr.put( url, { json: { systemData: json } }, ( error, response ) => {
+        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.projectNameProperty.value}`, window.location.origin ).toString();
+        xhr.put( url, { json: { projectData: json } }, ( error, response ) => {
           if ( error ) {
             console.error( error );
           }
@@ -74,7 +74,7 @@ export default class CreatorView extends phet.scenery.Node {
     this.applicationLayerNode.addChild( this.connectionsNode );
 
     controlLayerNode.addChild( this.newProgramButton );
-    controlLayerNode.addChild( this.saveSystemButton );
+    controlLayerNode.addChild( this.saveProjectButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.visibilityControls );
@@ -104,18 +104,18 @@ export default class CreatorView extends phet.scenery.Node {
       model.programRemovedEmitter.addListener( removalListener );
     } );
 
-    // When the space or system names are changed, we try to load the new system. If either are empty,
+    // When the space or project names are changed, we try to load the new project. If either are empty,
     // we clear model programs and disable the save/send buttons.
-    const updateSystem = () => {
-      if ( model.spaceNameProperty.value && model.systemNameProperty.value ) {
-        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.systemNameProperty.value}`, window.location.origin ).toString();
+    const updateProject = () => {
+      if ( model.spaceNameProperty.value && model.projectNameProperty.value ) {
+        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.projectNameProperty.value}`, window.location.origin ).toString();
         xhr.get( url, { json: true }, ( error, response, body ) => {
           if ( error ) {
             console.error( error );
           }
           else {
             try {
-              model.load( body.systemData );
+              model.load( body.projectData );
 
               // pan to the first program so something is in view
               if ( programLayerNode.children.length > 0 ) {
@@ -123,24 +123,24 @@ export default class CreatorView extends phet.scenery.Node {
               }
             }
             catch( error ) {
-              model.errorOccurredEmitter.emit( 'Error loading system: ' + error.message );
+              model.errorOccurredEmitter.emit( 'Error loading project: ' + error.message );
             }
           }
         } );
 
-        this.saveSystemButton.enabled = true;
+        this.saveProjectButton.enabled = true;
         this.sendToPaperLandButton.enabled = true;
         this.newProgramButton.enabled = true;
       }
       else {
         model.clear();
 
-        this.saveSystemButton.enabled = false;
+        this.saveProjectButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
         this.newProgramButton.enabled = false;
       }
     };
-    phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.systemNameProperty ], updateSystem );
+    phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty ], updateProject );
 
     display.addInputListener( {
       down: event => {
@@ -159,9 +159,9 @@ export default class CreatorView extends phet.scenery.Node {
    */
   layout( width, height ) {
     this.newProgramButton.leftTop = new phet.dot.Vector2( 5, 5 );
-    this.saveSystemButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
-    this.sendToPaperLandButton.rightTop = this.saveSystemButton.rightBottom.plusXY( 0, 5 );
-    this.savedRectangle.rightCenter = this.saveSystemButton.leftCenter.plusXY( -5, 0 );
+    this.saveProjectButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
+    this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
+    this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 
     this.connectionsNode.layout( width, height );
