@@ -1,4 +1,5 @@
 /**
+ * This migration renames the 'systemName' and 'systemData' columns to 'projectName' and 'projectData' respectively.
  * @param { import('knex').Knex } knex
  * @returns { Promise<void> }
  */
