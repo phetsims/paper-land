@@ -103,11 +103,6 @@ export default class ProgramNode extends phet.scenery.Node {
       font: HEADING_FONT
     } );
 
-    this.listenerComponentList = new phet.scenery.VBox( {
-      align: 'left',
-      spacing: MARGIN
-    } );
-
     this.listenerSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
       stroke: 'rgb(100,100,100)'
     } );
@@ -146,11 +141,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
         this.viewHeading,
         this.viewComponentList,
-        this.viewSeparator,
-
-        this.listenerHeading,
-        this.listenerComponentList,
-        this.listenerSeparator
+        this.viewSeparator
       ]
     } );
 
@@ -274,7 +265,7 @@ export default class ProgramNode extends phet.scenery.Node {
     registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
     registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
     registerComponentListListener( model.viewContainer.allComponents, this.viewComponentList );
-    registerComponentListListener( model.listenerContainer.allComponents, this.listenerComponentList );
+    registerComponentListListener( model.listenerContainer.allComponents, this.controllerComponentList );
 
     // initial layout
     this.layout();
