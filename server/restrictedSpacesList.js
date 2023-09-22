@@ -15,7 +15,8 @@ const restrictedSpacesList = [
   'lunar-lander',
   'idrc-design-crit-2023',
   'simple-demos',
-  'quadrilateral-sim-demo'
+  'quadrilateral-sim-demo',
+  'creator-tests'
 ];
 
 module.exports = restrictedSpacesList;

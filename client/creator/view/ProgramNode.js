@@ -34,8 +34,9 @@ export default class ProgramNode extends phet.scenery.Node {
   /**
    * @param {ProgramModel} model
    * @param {Property<null|ActiveEdit>} activeEditProperty
+   * @param {Property<boolean>} editEnabledProperty
    */
-  constructor( model, activeEditProperty ) {
+  constructor( model, activeEditProperty, editEnabledProperty ) {
     super();
     this.model = model;
 
@@ -115,7 +116,8 @@ export default class ProgramNode extends phet.scenery.Node {
     this.createComponentButton = new phet.sun.TextPushButton( 'Create Component', _.merge( {}, BUTTON_OPTIONS, {
       listener: () => {
         activeEditProperty.value = new ActiveEdit( model, EditType.COMPONENT );
-      }
+      },
+      enabledProperty: editEnabledProperty
     } ) );
 
     // Creates a new "listener" to a paper event
@@ -178,7 +180,8 @@ export default class ProgramNode extends phet.scenery.Node {
       } );
       const button = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => model.deleteEmitter.emit()
+        listener: () => model.deleteEmitter.emit(),
+        enabledProperty: editEnabledProperty
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
       this.deleteButtonParent.addChild( button );
@@ -234,7 +237,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     const registerComponentListListener = ( observableArray, parentNode ) => {
       observableArray.elementAddedEmitter.addListener( addedComponent => {
-        const newItemNode = new ComponentListItemNode( model, addedComponent, WIDTH, model.activeEditProperty );
+        const newItemNode = new ComponentListItemNode( model, addedComponent, WIDTH, model.activeEditProperty, editEnabledProperty );
         parentNode.addChild( newItemNode );
 
         this.allListItemNodes.push( newItemNode );

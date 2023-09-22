@@ -29,6 +29,9 @@ export default class CreatorModel {
     // {Property.<boolean>} - The Space name that is currently being worked on
     this.spaceNameProperty = new phet.axon.Property( '' );
 
+    // {Property.<boolean>} - Whether the space is restricted to the current user, and many controls are disabled.
+    this.spaceRestrictedProperty = new phet.axon.BooleanProperty( false );
+
     // {Property.<boolean>} - The Project name that is currently being worked on
     this.projectNameProperty = new phet.axon.Property( '' );
 

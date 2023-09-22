@@ -189,18 +189,21 @@ const AIHelperChat = props => {
                 <strong>Thinking...</strong>
                 <hr></hr>
               </div>
-              <Form onSubmit={async event => {
-                event.preventDefault();
-                await handleSendMessage();
-              }}>
-                <Form.Control
-                  type='text'
-                  value={inputText}
-                  placeholder='How can I help you?'
-                  disabled={waitingForResponse}
-                  onChange={event => setInputText( event.target.value )}
-                />
-              </Form>
+              <Form.Control
+                type='text'
+                value={inputText}
+                placeholder='How can I help you?'
+                disabled={waitingForResponse}
+                onChange={event => setInputText( event.target.value )}
+                onKeyDown={async event => {
+
+                  // We are using a custom key event listener instead of a form because the entire component
+                  // creator is a form (nested forms are not allowed)
+                  if ( event.key === 'Enter' ) {
+                    await handleSendMessage();
+                  }
+                }}
+              />
               <div>
                 <StyledButton
                   name='Send'

@@ -147,9 +147,9 @@
 }
 
 :local(.customButton:disabled) {
-  background-color: rgb(60, 60, 60);
-  color: rgb(189, 203, 218);
-  border-color: black;
+  background-color: rgb(60, 60, 60) !important;
+  color: rgb(189, 203, 218) !important;
+  border-color: black !important;
 }
 
 /*Styling for toggles (radio, checkbox, toggle)*/

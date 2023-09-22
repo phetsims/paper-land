@@ -7,8 +7,8 @@ import SceneryDisplay from '../common/SceneryDisplay.js';
 import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
 import CreatorControls from './react/CreatorControls.js';
-import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
 import ErrorDialog from './react/ErrorDialog.js';
+import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
 import CreatorView from './view/CreatorView.js';
 import ViewConstants from './view/ViewConstants.js';
 

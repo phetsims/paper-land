@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import xhr from 'xhr';
-import { isValidProjectName } from '../../utils.js';
+import { getApiUrl, isValidProjectName } from '../../utils.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -45,6 +45,33 @@ const SpaceSelectControls = props => {
       }
     } );
   }, [] );
+
+  // When the space changes, update the state of whether it is restricted.
+  useEffect( () => {
+
+    // Set the enableEdit when the axon Property for project name changes
+    const spaceNameListener = spaceName => {
+      if ( !spaceName ) {
+        return;
+      }
+
+      // use the API to determine if the project name is restricted
+      const url = getApiUrl( spaceName, '/restricted' );
+      xhr.get( url, { json: true }, ( error, response ) => {
+        if ( error ) {
+          console.error( 'Error retrieving whether space is restricted.' );
+        }
+        else {
+          model.spaceRestrictedProperty.value = response.body.restricted;
+        }
+      } );
+    };
+    model.spaceNameProperty.link( spaceNameListener );
+
+    return function cleanup() {
+      model.spaceNameProperty.unlink( spaceNameListener );
+    };
+  } );
 
   // Update state to include the list of available projects.
   const updateProjectNames = () => {

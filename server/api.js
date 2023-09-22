@@ -153,6 +153,15 @@ router.get( '/api/spaces/:spaceName', ( req, res ) => {
 } );
 
 /**
+ * Returns whether the provided space name is restricted. If the .env variable indicates full access, none of the
+ * spaces are restricted.
+ */
+router.get( '/api/spaces/:spaceName/restricted', ( req, res ) => {
+  const { spaceName } = req.params;
+  res.json( { restricted: !ALLOW_ACCESS_TO_RESTRICTED_FILES && restrictedSpacesList.includes( spaceName ) } );
+} );
+
+/**
  * Adds a new program to the database, assigning it a new unique number for the spacename.
  *
  * @param spaceName - The space to save the program to.

@@ -17,18 +17,27 @@ const CreatorControls = forwardRef( ( props, ref ) => {
 
   // state variables
   const [ activeEdit, setActiveEdit ] = useState( null );
+  const [ enableEdit, setEnableEdit ] = useState( false );
 
   // see https://legacy.reactjs.org/docs/hooks-effect.html for example of register and cleanup
   useEffect( () => {
 
+    // Update the activeEdit state from the axon Property
     const selectedProgramListener = selectedProgram => {
       setActiveEdit( selectedProgram );
     };
     model.activeEditProperty.link( selectedProgramListener );
 
+    // Update whether editing is enabled from the axon Property
+    const restrictedListener = restricted => {
+      setEnableEdit( !restricted );
+    };
+    model.spaceRestrictedProperty.link( restrictedListener );
+
     // returning a function tells useEffect to dispose of this component when it is time
     return function cleanup() {
       model.activeEditProperty.unlink( selectedProgramListener );
+      model.spaceRestrictedProperty.unlink( restrictedListener );
     };
   } );
 
@@ -36,20 +45,31 @@ const CreatorControls = forwardRef( ( props, ref ) => {
     <div className={styles.scrollable} ref={ref}>
       <SpaceSelectControls creatorModel={model}></SpaceSelectControls>
       <h3>{activeEdit ? activeEdit.program.numberProperty.value : ''}</h3>
-      {activeEdit && activeEdit.editType === EditType.METADATA ?
-       <ProgramMetadataForm
-         activeEdit={activeEdit}
-       ></ProgramMetadataForm> : ''}
-      {activeEdit && activeEdit.editType === EditType.COMPONENT ?
-       <CreateComponentForm
-         activeEdit={activeEdit}
-         allModelComponents={model.allModelComponents}
-         model={model}
-       ></CreateComponentForm> : ''}
-      {activeEdit && activeEdit.editType === EditType.CUSTOM_CODE ?
-       <CreateCustomCodeForm
-         activeEdit={activeEdit}
-       ></CreateCustomCodeForm> : ''}
+      <form
+        onSubmit={event => {
+
+          // This is a form so that we can easily disable everything within. But there is no submission,
+          // and we wnat to be sure to prevent the browser from doing anything with submit.
+          event.preventDefault();
+        }}
+      >
+        <fieldset disabled={!enableEdit}>
+          {activeEdit && activeEdit.editType === EditType.METADATA ?
+           <ProgramMetadataForm
+             activeEdit={activeEdit}
+           ></ProgramMetadataForm> : ''}
+          {activeEdit && activeEdit.editType === EditType.COMPONENT ?
+           <CreateComponentForm
+             activeEdit={activeEdit}
+             allModelComponents={model.allModelComponents}
+             model={model}
+           ></CreateComponentForm> : ''}
+          {activeEdit && activeEdit.editType === EditType.CUSTOM_CODE ?
+           <CreateCustomCodeForm
+             activeEdit={activeEdit}
+           ></CreateCustomCodeForm> : ''}
+        </fieldset>
+      </form>
     </div>
   );
 } );

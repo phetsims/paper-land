@@ -1,6 +1,7 @@
 import CustomButtonAppearanceStrategy from './CustomButtonAppearanceStrategy.js';
 
 const TEXT_FONT = new phet.scenery.Font( { size: 16 } );
+const TEXT_FONT_LARGE = new phet.scenery.Font( { size: 24 } );
 const TEXT_FILL_COLOR = new phet.scenery.Color( 189, 203, 218 );
 const BUTTON_FILL_COLOR = new phet.scenery.Color( 89, 93, 94 );
 const BUTTON_STROKE_COLOR = new phet.scenery.Color( 80, 80, 80 );
@@ -69,6 +70,7 @@ const ViewConstants = {
 
   // fonts for buttons and other things
   TEXT_FONT: TEXT_FONT,
+  TEXT_FONT_LARGE: TEXT_FONT_LARGE,
 
   // color for all text
   textFillColor: TEXT_FILL_COLOR,

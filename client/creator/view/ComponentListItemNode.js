@@ -10,8 +10,9 @@ export default class ComponentListItemNode extends phet.scenery.Node {
    * @param {Component} component
    * @param programWidth
    * @param {Property<ActiveEdit|null>} activeEditProperty
+   * @param {Property<boolean>} editEnabledProperty
    */
-  constructor( program, component, programWidth, activeEditProperty ) {
+  constructor( program, component, programWidth, activeEditProperty, editEnabledProperty ) {
     super();
 
     // @public (read-only) - to identify this ItemNode
@@ -59,7 +60,8 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       } );
       const deleteButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => component.deleteEmitter.emit()
+        listener: () => component.deleteEmitter.emit(),
+        enabledProperty: editEnabledProperty
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
       itemButtons.addChild( deleteButton );

@@ -8,6 +8,7 @@ import xhr from 'xhr';
 import ConnectionsCanvasNode from './ConnectionsCanvasNode.js';
 import CreatorVisibilityControls from './CreatorVisibilityControls.js';
 import ProgramNode from './ProgramNode.js';
+import RestrictedWarningNode from './RestrictedWarningNode.js';
 import SavedRectangle from './SavedRectangle.js';
 import ViewConstants from './ViewConstants.js';
 
@@ -19,6 +20,9 @@ export default class CreatorView extends phet.scenery.Node {
    */
   constructor( model, display ) {
     super();
+
+    // Editing of components is enabled when the space is not restricted
+    const editEnabledProperty = phet.axon.DerivedProperty.not( model.spaceRestrictedProperty );
 
     // The control layer will NOT zoom
     const controlLayerNode = new phet.scenery.Node();
@@ -39,6 +43,9 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Displays connections between all programs
     this.connectionsNode = new ConnectionsCanvasNode( model, this.allProgramNodes );
+
+    // Displays a warning when we are in "readonly" mode.
+    this.restrictedWarningNode = new RestrictedWarningNode();
 
     this.newProgramButton = new phet.sun.TextPushButton( 'New Program', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
@@ -78,10 +85,11 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.visibilityControls );
+    controlLayerNode.addChild( this.restrictedWarningNode );
 
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
-      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty );
+      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty, editEnabledProperty );
       this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 
@@ -128,9 +136,10 @@ export default class CreatorView extends phet.scenery.Node {
           }
         } );
 
-        this.saveProjectButton.enabled = true;
+        // You can only save or create programs if the space is not restricted
+        this.saveProjectButton.enabled = editEnabledProperty.value;
+        this.newProgramButton.enabled = editEnabledProperty.value;
         this.sendToPaperLandButton.enabled = true;
-        this.newProgramButton.enabled = true;
       }
       else {
         model.clear();
@@ -140,7 +149,7 @@ export default class CreatorView extends phet.scenery.Node {
         this.newProgramButton.enabled = false;
       }
     };
-    phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty ], updateProject );
+    phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );
 
     display.addInputListener( {
       down: event => {
@@ -148,6 +157,16 @@ export default class CreatorView extends phet.scenery.Node {
         if ( !_.some( event.trail.nodes, node => node instanceof ProgramNode ) ) {
           model.activeEditProperty.value = null;
         }
+      }
+    } );
+
+    // Show the warning node when the space becomes restricted.
+    model.spaceRestrictedProperty.link( spaceRestricted => {
+      if ( spaceRestricted ) {
+        this.restrictedWarningNode.show();
+      }
+      else {
+        this.restrictedWarningNode.hide();
       }
     } );
   }
@@ -163,6 +182,8 @@ export default class CreatorView extends phet.scenery.Node {
     this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
     this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
+
+    this.restrictedWarningNode.leftCenter = this.newProgramButton.rightCenter.plusXY( 5, 0 );
 
     this.connectionsNode.layout( width, height );
   }
