@@ -14,7 +14,10 @@ const MARGIN = 2;
 // margin between all components in the program and the background rectangle
 const OUTER_MARGIN = 5;
 const BACKGROUND_LINE_WIDTH = 1;
-const SEPARATOR_LINE_WIDTH = WIDTH - MARGIN - BACKGROUND_LINE_WIDTH;
+const SEPARATOR_LINE_WIDTH = WIDTH - OUTER_MARGIN * 2 - BACKGROUND_LINE_WIDTH * 2;
+
+const TITLE_FONT = new phet.scenery.Font( { size: 12 } );
+const HEADING_FONT = new phet.scenery.Font( { size: 9 } );
 
 const BUTTON_OPTIONS = _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
   font: ViewConstants.PROGRAM_FONT,
@@ -46,10 +49,12 @@ export default class ProgramNode extends phet.scenery.Node {
     } );
 
     this.titleText = new phet.scenery.Text( '', {
-      maxWidth: this.background.width - 5
+      maxWidth: this.background.width - 5,
+      font: TITLE_FONT
     } );
     this.programNumber = new phet.scenery.Text( model.numberProperty.value, {
-      maxWidth: this.background.width - 5
+      maxWidth: this.background.width - 5,
+      font: TITLE_FONT
     } );
 
     // Displays all of the model components of this program
@@ -67,6 +72,10 @@ export default class ProgramNode extends phet.scenery.Node {
       stroke: 'rgb(100,100,100)'
     } );
 
+    this.modelHeading = new phet.scenery.Text( 'Model', {
+      font: HEADING_FONT
+    } );
+
     this.controllerComponentList = new phet.scenery.VBox( {
       align: 'left',
       spacing: MARGIN
@@ -75,6 +84,10 @@ export default class ProgramNode extends phet.scenery.Node {
     // A separator after the controller components
     this.controllerSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
       stroke: 'rgb(100,100,100)'
+    } );
+
+    this.controllerHeading = new phet.scenery.Text( 'Controller', {
+      font: HEADING_FONT
     } );
 
     this.viewComponentList = new phet.scenery.VBox( {
@@ -86,6 +99,10 @@ export default class ProgramNode extends phet.scenery.Node {
       stroke: 'rgb(100,100,100)'
     } );
 
+    this.viewHeading = new phet.scenery.Text( 'View', {
+      font: HEADING_FONT
+    } );
+
     this.listenerComponentList = new phet.scenery.VBox( {
       align: 'left',
       spacing: MARGIN
@@ -93,6 +110,10 @@ export default class ProgramNode extends phet.scenery.Node {
 
     this.listenerSeparator = new phet.scenery.Line( 0, 0, SEPARATOR_LINE_WIDTH, 0, {
       stroke: 'rgb(100,100,100)'
+    } );
+
+    this.listenerHeading = new phet.scenery.Text( 'Listener', {
+      font: HEADING_FONT
     } );
 
     // Creates a new "component"
@@ -114,12 +135,20 @@ export default class ProgramNode extends phet.scenery.Node {
       align: 'left',
       children: [
         this.topSeparator,
+
+        this.modelHeading,
         this.modelComponentList,
         this.modelSeparator,
+
+        this.controllerHeading,
         this.controllerComponentList,
         this.controllerSeparator,
+
+        this.viewHeading,
         this.viewComponentList,
         this.viewSeparator,
+
+        this.listenerHeading,
         this.listenerComponentList,
         this.listenerSeparator
       ]
@@ -270,12 +299,6 @@ export default class ProgramNode extends phet.scenery.Node {
     }, 0 );
     const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
     this.background.setRectHeight( backgroundHeight );
-
-    // Visibility of lists toggles visibility of separators (scenery dynamic layout feature)
-    this.modelSeparator.visible = this.modelComponentList.children.length > 0;
-    this.controllerSeparator.visible = this.controllerComponentList.children.length > 0;
-    this.viewSeparator.visible = this.viewComponentList.children.length > 0;
-    this.listenerSeparator.visible = this.listenerComponentList.children.length > 0;
 
     this.programNumber.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
     this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
