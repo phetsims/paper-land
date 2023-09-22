@@ -62,6 +62,8 @@ const SpaceSelectControls = props => {
           console.error( 'Error retrieving whether space is restricted.' );
         }
         else {
+
+          // Update the axon Model when the user requests a new space from React
           model.spaceRestrictedProperty.value = response.body.restricted;
         }
       } );
@@ -214,10 +216,19 @@ const SpaceSelectControls = props => {
                   </div>
                 ) : <Row>
                   <Col>
-                    <StyledButton name={'New Project'} onClick={() => setCreatingNewProject( true )}></StyledButton>
+                    <StyledButton
+                      name={'New Project'}
+                      disabled={!props.enableEdit}
+                      onClick={() => setCreatingNewProject( true )}
+                    ></StyledButton>
                   </Col>
                   <Col>
-                    <StyledButton name={'Delete Project'} hidden={!selectedProjectName} onClick={handleProjectDelete}></StyledButton>
+                    <StyledButton
+                      name={'Delete Project'}
+                      disabled={!props.enableEdit}
+                      hidden={!selectedProjectName}
+                      onClick={handleProjectDelete}
+                    ></StyledButton>
                   </Col>
                 </Row>
               }

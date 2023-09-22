@@ -43,7 +43,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
 
   return (
     <div className={styles.scrollable} ref={ref}>
-      <SpaceSelectControls creatorModel={model}></SpaceSelectControls>
+      <SpaceSelectControls creatorModel={model} enableEdit={enableEdit}></SpaceSelectControls>
       <h3>{activeEdit ? activeEdit.program.numberProperty.value : ''}</h3>
       <form
         onSubmit={event => {
