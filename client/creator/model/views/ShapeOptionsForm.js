@@ -27,8 +27,6 @@ export default function ShapeOptionsForm( props ) {
     handleChange( { defaultShapeOptions: shapeOptions } );
   };
 
-  console.log( formData );
-
   return (
     <>
       <Accordion defaultActiveKey={[ '0' ]} alwaysOpen>
