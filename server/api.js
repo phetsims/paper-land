@@ -18,6 +18,13 @@ const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_
 
 const editorHandleDuration = 1500;
 
+// Response codes that may need to be handled
+const SUCCESS = 200;
+const SPACE_RESTRICTED = 401;
+const PROJECT_ALREADY_EXISTS = 402;
+const BAD_PARAMETERS = 403;
+const PROJECT_DOES_NOT_EXIST = 404;
+
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
   destination: ( req, file, cb ) => {
@@ -102,6 +109,23 @@ router.get( '/api/spaces-list', ( req, res ) => {
     .pluck( 'spaceName' )
     .then( spaceNames => {
       res.json( spaceNames );
+    } )
+    .catch( error => {
+      console.log( `Error getting spaces list: ${error}` );
+    } );
+} );
+
+// Get a list of all the spaces available in the DB that are NOT restricted to the current user.
+router.get( '/api/spaces-list-not-restricted', ( req, res ) => {
+  knex
+    .distinct()
+    .from( 'programs' )
+    .pluck( 'spaceName' )
+    .then( spaceNames => {
+
+      // filter out the restricted spaces
+      const filteredSpaceNames = spaceNames.filter( spaceName => !restrictedSpacesList.includes( spaceName ) );
+      res.json( filteredSpaceNames );
     } )
     .catch( error => {
       console.log( `Error getting spaces list: ${error}` );
@@ -435,6 +459,56 @@ router.post( '/api/creator/projectNames/:spaceName/:projectName', ( req, res ) =
       }
     } );
 } );
+
+/**
+ * Copy a project from one space into another space. The source space/project are copied into the destination
+ * space/project.
+ */
+router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:destinationSpaceName/:destinationProjectName', ( req, res ) => {
+  const {
+    sourceSpaceName,
+    sourceProjectName,
+    destinationSpaceName,
+    destinationProjectName
+  } = req.params;
+
+  knex
+    .select( 'projectData' )
+    .from( 'creator-data' )
+    .where( { spaceName: sourceSpaceName, projectName: sourceProjectName } )
+    .then( sourceProjectResult => {
+      if ( sourceProjectResult.length === 0 ) {
+        res.status( PROJECT_DOES_NOT_EXIST ).send( 'Source project does not exist' );
+      }
+      else {
+        knex
+          .select( 'projectName' )
+          .from( 'creator-data' )
+          .where( { spaceName: destinationSpaceName } )
+          .then( destinationSpaceResult => {
+            const existingNames = destinationSpaceResult.map( result => result.projectName );
+            if ( existingNames.includes( destinationProjectName ) ) {
+              res.status( PROJECT_ALREADY_EXISTS ).send( 'Destination project already exists' );
+            }
+            else if ( restrictedSpacesList.includes( destinationSpaceName ) ) {
+              res.status( SPACE_RESTRICTED ).send( 'Destination space is restricted' );
+            }
+            else {
+              knex( 'creator-data' )
+                .insert( {
+                  spaceName: destinationSpaceName,
+                  projectName: destinationProjectName,
+                  projectData: sourceProjectResult[ 0 ].projectData,
+                  editing: false
+                } )
+                .then( () => {
+                  res.status( SUCCESS ).json( {} );
+                } );
+            }
+          } );
+      }
+    } );
+} )
 
 /**
  * Save the project data to the provided space and project name.

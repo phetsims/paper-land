@@ -11,12 +11,35 @@ import StyledButton from './StyledButton.js';
 const SpaceSelectControls = props => {
   const model = props.creatorModel;
 
+  // All spaces available in the project
   const [ availableSpaces, setAvailableSpaces ] = useState( [] );
+
+  // The list of spaces available to the user that are not restricted to them
+  const [ availableUnrestrictedSpaces, setAvailableUnrestrictedSpaces ] = useState( [] );
+
+  // The space that the user has chosen to work with projects
   const [ selectedSpaceName, setSelectedSpaceName ] = useState( '' );
+
+  // Are we creating a new project in the selected space?
   const [ creatingNewProject, setCreatingNewProject ] = useState( false );
+
+  // The new project name when we are creating a new project
   const [ newProjectName, setNewProjectName ] = useState( '' );
+
+  // The project that we are currently working with
   const [ selectedProjectName, setSelectedProjectName ] = useState( '' );
+
+  // A list of all available projects selectedSpaceName
   const [ availableProjects, setAvailableProjects ] = useState( [] );
+
+  // Are we currently copying a project?
+  const [ copyingProject, setCopyingProject ] = useState( false );
+
+  // While copying a project, this is where we are going to copy a project to
+  const [ destinationSpaceName, setDestinationSpaceName ] = useState( '' );
+
+  // While copying a project, this is the new name for the project
+  const [ destinationProjectName, setDestinationProjectName ] = useState( '' );
 
   // Only called on mount, gets the list of available spaces.
   useEffect( () => {
@@ -44,6 +67,32 @@ const SpaceSelectControls = props => {
         }
       }
     } );
+
+    // Get the list of available unrestricted spaces
+    const unrestrictedSpacesUrl = new URL( 'api/spaces-list-not-restricted', window.location.origin ).toString();
+    xhr.get( unrestrictedSpacesUrl, { json: true }, ( error, response ) => {
+      if ( error ) {
+        console.error( error );
+      }
+      else {
+        if ( Array.isArray( response.body ) ) {
+          setAvailableUnrestrictedSpaces( response.body );
+        }
+      }
+    } );
+
+    // When the user selects a new active edit, clear the copy form and hide it
+    const activeEditListener = () => {
+      if ( model.activeEditProperty.value ) {
+        setCopyingProject( false );
+      }
+    };
+    model.activeEditProperty.link( activeEditListener );
+
+    // Unlink the listener when this component is unmounted
+    return function cleanup() {
+      model.activeEditProperty.unlink( activeEditListener );
+    };
   }, [] );
 
   // When the space changes, update the state of whether it is restricted.
@@ -159,6 +208,7 @@ const SpaceSelectControls = props => {
               <Form.Select
                 name='spaces'
                 id='spaces'
+                size='lg'
                 value={selectedProjectName}
                 onChange={event => {
                   setSelectedProjectName( event.target.value );
@@ -172,54 +222,153 @@ const SpaceSelectControls = props => {
                 } )}
               </Form.Select>
               {
+                copyingProject ? (
+                                 <div className={styles.controlElement}>
+                                   <Form onSubmit={event => {
+                                     event.preventDefault();
+                                   }}>
+                                     <Col>
+                                       <label>
+                                         Destination Space:
+                                         <Form.Select
+                                           name='destinationSpace'
+                                           id='destinationSpace'
+                                           value={destinationSpaceName}
+                                           onChange={event => {setDestinationSpaceName( event.target.value );}}
+                                         >
+                                           <option value={''}>Choose a space</option>
+                                           {availableUnrestrictedSpaces.map( ( option, index ) => {
+                                             return <option key={index}>
+                                               {option}
+                                             </option>;
+                                           } )}
+                                         </Form.Select>
+                                       </label>
+                                       <div>
+                                         <Form.Label htmlFor='destinationProjectName'>New project name:</Form.Label>
+                                         <Form.Control
+                                           id='destinationProjectName'
+                                           type='text'
+                                           onChange={event => { setDestinationProjectName( event.target.value ); }}
+                                           value={destinationProjectName}
+                                         />
+                                       </div>
+                                     </Col>
+                                   </Form>
+                                   <Row>
+                                     <Col>
+                                       <StyledButton
+                                         disabled={!( selectedSpaceName && selectedProjectName && destinationSpaceName && destinationProjectName )}
+                                         name={'Confirm'}
+                                         onClick={() => {
+
+                                           // Make the request to the server to copy this project
+                                           xhr.post(
+                                             new URL( `api/creator/copyProject/${selectedSpaceName}/${selectedProjectName}/${destinationSpaceName}/${destinationProjectName}`, window.location.origin ).toString(),
+                                             { json: true },
+                                             ( error, response ) => {
+                                               if ( error ) {
+                                                 alert( 'Sorry, unknown error copying project.' );
+                                               }
+                                               else {
+                                                 if ( response.statusCode === 401 ) {
+                                                   alert( 'Sorry, that space is restricted.' );
+                                                 }
+                                                 else if ( response.statusCode === 402 ) {
+                                                   alert( 'A project with that name already exists in the destination space.' );
+                                                 }
+                                                 else if ( response.statusCode === 404 ) {
+                                                   alert( 'That project and space could not be found.' );
+                                                 }
+                                                 else if ( response.statusCode === 403 ) {
+                                                   alert( 'Please provide project and space names.' );
+                                                 }
+                                                 else if ( response.statusCode === 200 ) {
+
+                                                   // Copy was successful, stop copying and display the new copied project
+                                                   setCopyingProject( false );
+
+                                                   // use the new project right away
+                                                   setSelectedSpaceName( destinationSpaceName );
+                                                   setSelectedProjectName( destinationProjectName );
+
+                                                   // clear destination space and project names for next time
+                                                   setDestinationSpaceName( '' );
+                                                   setDestinationProjectName( '' );
+                                                 }
+                                                 else {
+                                                   alert( 'Sorry, Unknown error copying project.' );
+                                                 }
+                                               }
+                                             } );
+                                         }}></StyledButton>
+                                     </Col>
+                                     <Col>
+                                       <StyledButton name={'Cancel'} onClick={() => setCopyingProject( false )}></StyledButton>
+                                     </Col>
+                                   </Row>
+                                 </div>
+                               ) :
                 creatingNewProject ? (
-                  <div className={styles.controlElement}>
-                    <Form onSubmit={event => {
-                      event.preventDefault();
+                                     <div className={styles.controlElement}>
+                                       <Form onSubmit={event => {
+                                         event.preventDefault();
 
-                      if ( selectedSpaceName && isValidProjectName( newProjectName, availableProjects ) ) {
+                                         if ( selectedSpaceName && isValidProjectName( newProjectName, availableProjects ) ) {
 
-                        // name valid, create a new one in the db
-                        xhr.post( new URL( `api/creator/projectNames/${selectedSpaceName}/${newProjectName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
-                          if ( error ) {
-                            console.error( error );
-                          }
-                          else {
+                                           // name valid, create a new one in the db
+                                           xhr.post( new URL( `api/creator/projectNames/${selectedSpaceName}/${newProjectName}`, window.location.origin ).toString(), { json: true }, ( error, response ) => {
+                                             if ( error ) {
+                                               console.error( error );
+                                             }
+                                             else {
 
-                            // on success, update project names with the new UI
-                            updateProjectNames();
+                                               // on success, update project names with the new UI
+                                               updateProjectNames();
+                                             }
+                                           } );
 
-                            // use the new project
-                            setSelectedProjectName( newProjectName );
-                          }
-                        } );
-                      }
-                      setCreatingNewProject( false );
-                    }}>
-                      <label>
-                        Name:&nbsp;
-                        <input
-                          type='text'
-                          onChange={event => { setNewProjectName( event.target.value ); }}
-                        />
-                      </label>
-                      <br/>
-                      <Row>
-                        <Col>
-                          <StyledButton name={'Confirm'} type='submit'></StyledButton>
-                        </Col>
-                        <Col>
-                          <StyledButton name={'Cancel'} onClick={() => setCreatingNewProject( false )}></StyledButton>
-                        </Col>
-                      </Row>
-                    </Form>
-                  </div>
-                ) : <Row>
+                                           setCreatingNewProject( false );
+                                         }
+                                       }}>
+                                         <label>
+                                           Name:&nbsp;
+                                           <input
+                                             type='text'
+                                             onChange={event => { setNewProjectName( event.target.value ); }}
+                                           />
+                                         </label>
+                                         <br/>
+                                         <Row>
+                                           <Col>
+                                             <StyledButton name={'Confirm'} type='submit'></StyledButton>
+                                           </Col>
+                                           <Col>
+                                             <StyledButton name={'Cancel'} onClick={() => setCreatingNewProject( false )}></StyledButton>
+                                           </Col>
+                                         </Row>
+                                       </Form>
+                                     </div>
+                                   ) :
+                <Row>
                   <Col>
                     <StyledButton
                       name={'New Project'}
                       disabled={!props.enableEdit}
+                      hidden={!selectedSpaceName}
                       onClick={() => setCreatingNewProject( true )}
+                    ></StyledButton>
+                  </Col>
+                  <Col>
+                    <StyledButton
+                      name={'Copy Project'}
+                      hidden={!selectedProjectName}
+                      onClick={() => {
+                        setCopyingProject( true );
+
+                        // When we start to copy a project, clear the active edit if there is one
+                        model.activeEditProperty.value = null;
+                      }}
                     ></StyledButton>
                   </Col>
                   <Col>

@@ -15,29 +15,10 @@ export default class RestrictedWarningNode extends phet.scenery.Node {
     this.addChild( warningText );
 
     const panel = new phet.sun.Panel( warningText, {
-      fill: ViewConstants.BACKGROUND_COLOR,
+      fill: ViewConstants.buttonDisabledColor,
       stroke: 'black'
     } );
     this.addChild( panel );
-
-    // Set up tween animation
-    this.inAnimation = new phet.twixt.Animation( {
-      property: warningText.opacityProperty,
-      duration: 0.5,
-      to: 1,
-      easing: phet.twixt.Easing.QUADRATIC_IN_OUT
-    } );
-
-    this.outAnimation = new phet.twixt.Animation( {
-      property: warningText.opacityProperty,
-      duration: 0.5,
-      to: 0.75,
-      delay: 2,
-      easing: phet.twixt.Easing.QUADRATIC_IN_OUT
-    } );
-
-    // These animations will chain
-    this.inAnimation.then( this.outAnimation ).then( this.inAnimation );
 
     // Initially hidden until the client requests it.
     this.hide();
@@ -45,17 +26,9 @@ export default class RestrictedWarningNode extends phet.scenery.Node {
 
   show() {
     this.visible = true;
-
-    this.inAnimation.stop();
-    this.outAnimation.stop();
-
-    this.inAnimation.start();
   }
 
   hide() {
     this.visible = false;
-
-    this.inAnimation.stop();
-    this.outAnimation.stop();
   }
 }
