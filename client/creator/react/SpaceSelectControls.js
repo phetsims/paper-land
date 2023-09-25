@@ -23,6 +23,9 @@ const SpaceSelectControls = props => {
   // Are we creating a new project in the selected space?
   const [ creatingNewProject, setCreatingNewProject ] = useState( false );
 
+  // Are we about to delete an existing project?
+  const [ deletingProject, setDeletingProject ] = useState( false );
+
   // The new project name when we are creating a new project
   const [ newProjectName, setNewProjectName ] = useState( '' );
 
@@ -85,6 +88,7 @@ const SpaceSelectControls = props => {
     const activeEditListener = () => {
       if ( model.activeEditProperty.value ) {
         setCopyingProject( false );
+        setDeletingProject( false );
       }
     };
     model.activeEditProperty.link( activeEditListener );
@@ -309,6 +313,28 @@ const SpaceSelectControls = props => {
                                    </Row>
                                  </div>
                                ) :
+                deletingProject ? (
+                                  <div className={styles.controlElement}>
+                                    <p>Are you sure you want to delete this project?</p>
+                                    <Row>
+                                      <Col>
+                                        <StyledButton
+                                          name={'Confirm'}
+                                          onClick={() => {
+                                            handleProjectDelete();
+                                            setDeletingProject( false );
+                                          }}
+                                        ></StyledButton>
+                                      </Col>
+                                      <Col>
+                                        <StyledButton
+                                          name={'Cancel'}
+                                          onClick={() => setDeletingProject( false )}
+                                        ></StyledButton>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                ) :
                 creatingNewProject ? (
                                      <div className={styles.controlElement}>
                                        <Form onSubmit={event => {
@@ -376,7 +402,7 @@ const SpaceSelectControls = props => {
                       name={'Delete Project'}
                       disabled={!props.enableEdit}
                       hidden={!selectedProjectName}
-                      onClick={handleProjectDelete}
+                      onClick={() => setDeletingProject( true )}
                     ></StyledButton>
                   </Col>
                 </Row>
