@@ -74,7 +74,7 @@ class ControllerCodeGenerator {
       return ControllerCodeGenerator.getModelControllerCode(
         controlledName,
 
-        // The value is only true when the program is rotated
+        // The value is only true when the program is rotated between 0.25 and 0.75 (roughly upside down)
         () => 'phet.paperLand.utils.getNormalizedProgramRotation( points ) > 0.25 && phet.paperLand.utils.getNormalizedProgramRotation( points ) < 0.75'
       );
     }
