@@ -39,6 +39,10 @@ const RECTANGULAR_BUTTON_OPTIONS = {
 
 const ViewConstants = {
 
+  // This value comes from the paper-land API. I am not sure why this value is used. It exists in server files so
+  // I am not sure how best to share it.
+  MAX_PROGRAM_NUMBER: 8400 / 4,
+
   PROGRAM_FONT: PROGRAM_FONT,
 
   // color for buttons

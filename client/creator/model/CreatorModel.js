@@ -129,6 +129,13 @@ export default class CreatorModel {
     return !this.programs.some( program => program.isNameUsed( name ) );
   }
 
+  /**
+   * Returns true if the provided number is not used by any of the other programs.
+   */
+  isNumberAvailable( number ) {
+    return !this.programs.some( program => program.numberProperty.value === number );
+  }
+
   deleteProgram( program ) {
     assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
     this.programs.splice( this.programs.indexOf( program ), 1 );

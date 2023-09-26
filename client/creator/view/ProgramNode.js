@@ -206,6 +206,10 @@ export default class ProgramNode extends phet.scenery.Node {
       this.titleText.string = title;
     } );
 
+    model.numberProperty.link( number => {
+      this.programNumber.string = number;
+    } );
+
     model.customCodeContainer.hasCustomCodeProperty.link( hasCustomCode => {
       this.customCodeIconParent.visible = hasCustomCode;
     } );

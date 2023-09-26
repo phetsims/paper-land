@@ -9,6 +9,7 @@ import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import CreateCustomCodeForm from './CreateCustomCodeForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
+import ProgramNumberForm from './ProgramNumberForm.js';
 import SpaceSelectControls from './SpaceSelectControls.js';
 
 // eslint-disable-next-line react/display-name
@@ -44,7 +45,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
   return (
     <div className={styles.scrollable} ref={ref}>
       <SpaceSelectControls creatorModel={model} enableEdit={enableEdit}></SpaceSelectControls>
-      <h3>{activeEdit ? activeEdit.program.numberProperty.value : ''}</h3>
+      {activeEdit ? <ProgramNumberForm activeEdit={activeEdit} creatorModel={model}></ProgramNumberForm> : ''}
       <form
         onSubmit={event => {
 
