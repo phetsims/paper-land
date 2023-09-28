@@ -71,6 +71,12 @@ const CreatorControls = forwardRef( ( props, ref ) => {
            ></CreateCustomCodeForm> : ''}
         </fieldset>
       </form>
+      {
+
+        // So that the floating 'create' button can be seen at the bottom of the screen without occluding
+        // other components
+      }
+      <div className={styles.htmlSpacer}></div>
     </div>
   );
 } );

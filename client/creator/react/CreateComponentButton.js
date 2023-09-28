@@ -1,5 +1,6 @@
 import React from 'react';
 import StyledButton from './StyledButton.js';
+import styles from './../CreatorMain.css';
 
 export default function CreateComponentButton( props ) {
   const formValid = props.selectedTabFormValid;
@@ -20,6 +21,7 @@ export default function CreateComponentButton( props ) {
   return (
     <StyledButton
       disabled={!formValid}
+      otherClassNames={styles.createComponentButton}
       name={editingComponent ? 'Save Changes' : 'Create Component'}
       onClick={handleClick}>
     </StyledButton>

@@ -257,3 +257,17 @@ code {
   justify-content: center; /* Horizontally center content */
   align-items: center; /* Vertically center content */
 }
+
+:local(.createComponentButton) {
+  position: fixed;
+  bottom: 5px;
+  right: 30px;
+  z-index: 10; /*puts the component above other bootstrap accordions*/
+}
+
+/* Mostly useful for the fixed 'floating' button, allows the user to scroll all the way to the
+   bottom of the page to see it without obscuring other UI components.
+ */
+:local(.htmlSpacer) {
+  height: 60px;
+}
