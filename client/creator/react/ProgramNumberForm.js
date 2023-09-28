@@ -3,8 +3,9 @@
  * taken.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import EditType from '../model/EditType.js';
 import ViewConstants from '../view/ViewConstants.js';
 
 export default function ProgramNumberForm( props ) {
@@ -16,10 +17,16 @@ export default function ProgramNumberForm( props ) {
   const [ numberInRange, setNumberInRange ] = useState( true );
   const [ numberValid, setNumberValid ] = useState( true );
 
+  // Only true if we are currently editing the metadata for the program
+  const [ metadataVisible, setMetadataVisible ] = useState( false );
+
   const minValue = 1;
   const maxValue = ViewConstants.MAX_PROGRAM_NUMBER;
 
   useEffect( () => {
+
+    // We are editing metadata when there is an active edit but the component is null
+    setMetadataVisible( activeEdit && activeEdit.editType === EditType.METADATA );
 
     // If the activeEdit changes to a program, update the field to display the selected value right away
     if ( activeEdit && activeEdit.program ) {
@@ -52,17 +59,21 @@ export default function ProgramNumberForm( props ) {
 
   return (
     <div>
-      <Form.Label>Program Number: {programNumber}</Form.Label>
-      <Form.Control
-        type='number'
-        value={programNumber}
-        onChange={handleChange}
-      />
-      <div>
-        {!numberAvailable ? <div><Form.Text className='text-danger'>This number is already used by another program.</Form.Text></div> : ''}
-        {!numberInRange ? <div><Form.Text className='text-danger'>The number must be between {minValue} and {maxValue}.</Form.Text></div> : ''}
-        {!numberValid ? <div><Form.Text className='text-danger'>The number must be defined.</Form.Text></div> : ''}
-      </div>
+      <h3>Program Number: {programNumber}</h3>
+      {
+        metadataVisible ? <div>
+          <Form.Control
+            type='number'
+            value={programNumber}
+            onChange={handleChange}
+          />
+          <div>
+            {!numberAvailable ? <div><Form.Text className='text-danger'>This number is already used by another program.</Form.Text></div> : ''}
+            {!numberInRange ? <div><Form.Text className='text-danger'>The number must be between {minValue} and {maxValue}.</Form.Text></div> : ''}
+            {!numberValid ? <div><Form.Text className='text-danger'>The number must be defined.</Form.Text></div> : ''}
+          </div>
+        </div> : ''
+      }
     </div>
   );
 }
