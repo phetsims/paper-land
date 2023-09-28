@@ -3,7 +3,8 @@ const ViewComponentTemplates = {
     onProgramAdded: `
       const {{NAME}}WrappedAudioBuffer = createAndLoadWrappedAudioBuffer( 'media/sounds/{{FILE_NAME}}' );
       const {{NAME}}SoundClip = new phet.tambo.SoundClip( {{NAME}}WrappedAudioBuffer, {
-        loop: {{LOOP}}
+        loop: {{LOOP}},
+        initialOutputLevel: 0.5
        } );
       phet.tambo.soundManager.addSoundGenerator( {{NAME}}SoundClip );
       
