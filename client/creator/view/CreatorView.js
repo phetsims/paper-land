@@ -53,18 +53,8 @@ export default class CreatorView extends phet.scenery.Node {
       }
     } ) );
     this.saveProjectButton = new phet.sun.TextPushButton( 'Save Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
-      listener: () => {
-        const json = model.save();
-
-        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.projectNameProperty.value}`, window.location.origin ).toString();
-        xhr.put( url, { json: { projectData: json } }, ( error, response ) => {
-          if ( error ) {
-            console.error( error );
-          }
-          else {
-            this.savedRectangle.showSaved();
-          }
-        } );
+      listener: async () => {
+        await model.sendSaveRequest();
       }
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
@@ -168,6 +158,11 @@ export default class CreatorView extends phet.scenery.Node {
       else {
         this.restrictedWarningNode.hide();
       }
+    } );
+
+    // Display the success message whenever a save is successful.
+    model.saveSuccessfulEmitter.addListener( () => {
+      this.savedRectangle.showSaved();
     } );
   }
 

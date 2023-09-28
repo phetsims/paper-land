@@ -51,7 +51,14 @@ export default class CreatorModel {
     // generation, load, or a failed request to the server.
     this.errorOccurredEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );
 
+    // {Emitter} - Emits when the save request to the server is successful.
+    this.saveSuccessfulEmitter = new phet.axon.Emitter();
+
     this.sendConfirmedEmitter.addListener( async () => {
+
+      // Save programs to the server whenever we send to the playground (users expected this to be automatic).
+      await this.sendSaveRequest();
+
       this.sendProgramsToPlayground()
         .then( () => {
 
@@ -254,6 +261,29 @@ export default class CreatorModel {
 
           // Set a flag on the appliation storage to indicate that programs were just created with Creator
           localStorage.paperProgramsCreatedWithCreator = true;
+        }
+      } );
+    } );
+  }
+
+  /**
+   * Send a save request to the server, and emit an event when it succeeds.
+   * @return {Promise<unknown>}
+   */
+  async sendSaveRequest() {
+
+    return new Promise( ( resolve, reject ) => {
+      const json = this.save();
+
+      const url = new URL( `api/creator/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
+      xhr.put( url, { json: { projectData: json } }, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+          reject( error );
+        }
+        else {
+          this.saveSuccessfulEmitter.emit();
+          resolve();
         }
       } );
     } );

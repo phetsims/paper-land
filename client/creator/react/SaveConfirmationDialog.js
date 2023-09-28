@@ -42,7 +42,12 @@ export default function SaveConfirmationDialog( props ) {
         <Modal.Header className={styles.dialog}>
           <Modal.Title>Send to playground?</Modal.Title>
         </Modal.Header>
-        <Modal.Body className={styles.dialog}>{`Warning! This will delete all existing programs in ${activeSpaceName}`}.</Modal.Body>
+        <Modal.Body className={styles.dialog}>{
+          <div>
+            <p>{`Warning! This will delete all existing programs in ${activeSpaceName}.`}</p>
+            <p>This project will also be saved.</p>
+          </div>
+        }</Modal.Body>
         <Modal.Footer className={styles.dialog}>
           <StyledButton variant='secondary' onClick={handleCancel} name={'Cancel'}></StyledButton>
           <StyledButton variant='primary' onClick={handleSave} name={'Send to Playground'}></StyledButton>
