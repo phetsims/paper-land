@@ -20,7 +20,7 @@ export default function CreateComponentButton( props ) {
   return (
     <StyledButton
       disabled={!formValid}
-      name={editingComponent ? 'Edit Component' : 'Create Component'}
+      name={editingComponent ? 'Save Changes' : 'Create Component'}
       onClick={handleClick}>
     </StyledButton>
   );
