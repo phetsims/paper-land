@@ -293,6 +293,14 @@ export default class ProgramCodeGenerator {
         DEFAULT_Y: modelComponent.defaultY
       };
     }
+    else if ( modelComponent.propertyType === 'Bounds2Property' ) {
+      data = {
+        DEFAULT_MIN_X: modelComponent.defaultMinX,
+        DEFAULT_MIN_Y: modelComponent.defaultMinY,
+        DEFAULT_MAX_X: modelComponent.defaultMaxX,
+        DEFAULT_MAX_Y: modelComponent.defaultMaxY
+      };
+    }
     else if ( modelComponent.propertyType === 'StringProperty' ) {
       data = {
         DEFAULT_VALUE: modelComponent.defaultValue,

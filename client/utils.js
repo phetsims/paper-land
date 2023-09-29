@@ -305,6 +305,9 @@ export function getComponentDocumentation( namedProperty ) {
     const valuesList = namedProperty.values.join( ', ' );
     usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
   }
+  else if ( type === 'Bounds2Property' ) {
+    usabilityDocumentation = `This is a Bounds2 object. Access min and max values with \`${name}.minX\`, \`${name}.minY\`, \`${name}.maxX\`, and \`${name}.maxY\`. Easily determine if a position is inside these bounds with \`${name}.containsPoint( yourPositionComponent )\``;
+  }
   else {
     throw new Error( `Unhandled property type: ${type}` );
   }
@@ -334,6 +337,9 @@ export function createSetterFunctionString( component ) {
   }
   else if ( type === 'StringProperty' ) {
     argumentDocumentation = 'Provide a new string.';
+  }
+  else if ( type === 'Bounds2Property' ) {
+    argumentDocumentation = 'Pass in a new Bounds2 object with `new phet.dot.Bounds2( minX, minY, maxX, maxY )`';
   }
   else {
     throw new Error( `Unhandled property type: ${type}` );

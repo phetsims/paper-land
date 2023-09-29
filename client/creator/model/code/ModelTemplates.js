@@ -63,6 +63,18 @@ const ModelComponentTemplates = {
       // Remove the component from the model
       phet.paperLand.removeModelComponent( '{{NAME}}' );
     `
+  },
+  Bounds2Property: {
+    onProgramAdded: `
+      const {{NAME}} = new phet.dot.Property(
+        new phet.dot.Bounds2( {{DEFAULT_MIN_X}}, {{DEFAULT_MIN_Y}}, {{DEFAULT_MAX_X}}, {{DEFAULT_MAX_Y}} )
+      );
+      phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
+    `,
+    onProgramRemoved: `
+      // Remove the component from the model
+      phet.paperLand.removeModelComponent( '{{NAME}}' );
+    `
   }
 };
 
