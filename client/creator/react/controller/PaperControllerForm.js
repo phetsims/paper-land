@@ -60,9 +60,10 @@ export default function PaperControllerForm( props ) {
 
   /**
    * Get a list of all model components, except for DerivedProperty components. Those cannot be controlled directly.
+   * Also excluding Bounds2Property because there are currently no ways to control that data structure.
    */
   function getComponentsExcludingDerived() {
-    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' );
+    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' && component.propertyType !== 'Bounds2Property' );
   }
 
   // Update state when a new model component is created (receiving new data from a phet.axon component)

@@ -16,8 +16,7 @@ const SHAPE_COMPONENT_FUNCTIONS = [
 ];
 
 const RECTANGLE_COMPONENT_FUNCTIONS = [
-  'setRectWidth() - A number. Sets the width of the rectangle in pixels.',
-  'setRectHeight() - A number. Sets the height of the rectangle in pixels.'
+  'setRectBounds() - Takes a bounds component. Sets the dimensions of the rectangle in pixels.',
 ];
 
 const CIRCLE_COMPONENT_FUNCTIONS = [

@@ -23,6 +23,14 @@ export default class ViewCodeGenerator {
 
     // The setters that are available for all Node types.
     codeStrings.push( `
+      const unitBoundsToDisplayBounds = ( bounds ) => {
+        return phet.paperLand.utils.paperToBoardBounds( bounds, sharedData.displaySize.width, sharedData.displaySize.height );
+      };
+      
+      const unitPositionToDisplayPosition = ( position ) => {
+        return phet.paperLand.utils.paperToBoardCoordinates( position, sharedData.displaySize.width, sharedData.displaySize.height );
+      };
+    
       const setCenterX = ( x ) => {
         ${componentNameString}.centerX = x;
         ${componentNameString}.centerX = x;
@@ -30,6 +38,14 @@ export default class ViewCodeGenerator {
       
       const setCenterY = ( y ) => {
         ${componentNameString}.centerY = y;
+      };
+      
+      const setLeft = ( left ) => {
+        ${componentNameString}.left = left;
+      };
+      
+      const setTop = ( top ) => {
+        ${componentNameString}.top = top;
       };
       
       const setScale = ( scale ) => {
@@ -88,7 +104,11 @@ export default class ViewCodeGenerator {
         const setRadius = ( radius ) => {
           ${componentNameString}.radius = radius;
         };
-        `
+        
+        // for a rectangle
+        const setRectBounds = ( bounds ) => {
+          ${componentNameString}.shape = phet.kite.Shape.bounds( bounds );
+        };`
       );
     }
     else if ( viewType === 'TextViewComponent' ) {
@@ -100,11 +120,11 @@ export default class ViewCodeGenerator {
         const setFontSize = ( size ) => {
           ${componentNameString}.fontSize = size;
         };
-        
+
         const setTextColor = ( color ) => {
           ${componentNameString}.fill = color;
         };
-        
+
         const setFontFamily = ( family ) => {
           ${componentNameString}.fontFamily = family;
         };

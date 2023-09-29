@@ -96,6 +96,15 @@ const boardUtils = {
     return boardUtils.paperToBoardCoordinates( boardUtils.getProgramCenter( points ), width, height );
   },
 
+  paperToBoardBounds( paperBounds, boardWidth, boardHeight ) {
+    return new phet.dot.Bounds2(
+      paperBounds.minX * boardWidth,
+      paperBounds.minY * boardHeight,
+      paperBounds.maxX * boardWidth,
+      paperBounds.maxY * boardHeight
+    );
+  },
+
   /**
    * Turns a point into a dot.Vector2 instance.
    * @param point

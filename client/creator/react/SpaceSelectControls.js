@@ -349,8 +349,9 @@ const SpaceSelectControls = props => {
                                              }
                                              else {
 
-                                               // on success, update project names with the new UI
+                                               // on success, update project names with the new UI and go right to it
                                                updateProjectNames();
+                                               setSelectedProjectName( newProjectName );
                                              }
                                            } );
 

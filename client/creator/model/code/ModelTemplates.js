@@ -66,7 +66,7 @@ const ModelComponentTemplates = {
   },
   Bounds2Property: {
     onProgramAdded: `
-      const {{NAME}} = new phet.dot.Property(
+      const {{NAME}} = new phet.axon.Property(
         new phet.dot.Bounds2( {{DEFAULT_MIN_X}}, {{DEFAULT_MIN_Y}}, {{DEFAULT_MAX_X}}, {{DEFAULT_MAX_Y}} )
       );
       phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );

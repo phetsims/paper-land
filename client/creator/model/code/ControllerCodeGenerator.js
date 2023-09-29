@@ -57,9 +57,9 @@ class ControllerCodeGenerator {
   static getVector2ControllerChangedPositionCode( controlType, controlledName ) {
     const createComputeValueCode = modelPropertyName => {
       const currentValue = `${modelPropertyName}.value`;
-      return controlType === Vector2PropertyController.ControlType.MATCH_CENTER ? 'phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize )' :
-             controlType === Vector2PropertyController.ControlType.MATCH_X ? `new phet.dot.Vector2( phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize ).x, ${currentValue}.y )` :
-             controlType === Vector2PropertyController.ControlType.MATCH_Y ? `new phet.dot.Vector2( ${currentValue}.x, phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize ).y )` :
+      return controlType === Vector2PropertyController.ControlType.MATCH_CENTER ? 'phet.paperLand.utils.getProgramCenter( points )' :
+             controlType === Vector2PropertyController.ControlType.MATCH_X ? `new phet.dot.Vector2( phet.paperLand.utils.getProgramCenter( points ).x, ${currentValue}.y )` :
+             controlType === Vector2PropertyController.ControlType.MATCH_Y ? `new phet.dot.Vector2( ${currentValue}.x, phet.paperLand.utils.getProgramCenter( points ).y )` :
              `throw new Error( 'Unknown Vector2 control type from controller code generator' - ${controlType} )`;
     };
     return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
