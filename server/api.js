@@ -508,7 +508,7 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
           } );
       }
     } );
-} )
+} );
 
 /**
  * Save the project data to the provided space and project name.
@@ -650,6 +650,84 @@ router.post( '/api/creator/uploadSound', uploadSound.single( 'file' ), async ( r
     console.error( 'Error processing the uploaded file:', error );
     res.status( 500 ).json( { message: 'Failed to process the uploaded file' } );
   }
+} );
+
+/**
+ * An endpoint for maintenance on creator project JSON in the database schema. Change the implementation of this
+ * function as needed to handle your needs. You can call this from the Chrome developer console with something like
+ * this:
+ *
+ fetch(new URL( `api/creator/maintenance/updateSchema`, window.location.origin ).toString(), {
+     method: 'POST',
+     headers: {
+       'Content-Type': 'application/json',
+     },
+     body: JSON.stringify({ key1: 'value1', key2: 'value2'})
+  })
+ .then(response => response.json())
+ .then(data => console.log(data))
+ .catch(error => console.error('Error:', error));
+ */
+router.post( '/api/creator/maintenance/updateSchema', ( req, res ) => {
+
+  function modifyProjectData( oldData ) {
+
+    // create a copy of the data
+    const newData = { ...oldData };
+
+    if ( newData.programs ) {
+      newData.programs.forEach( programData => {
+        programData.modelContainer.namedBounds2Properties = [];
+      } );
+    }
+
+    return newData;
+  }
+
+  // For every project in creator-data, update the project data to a modified JSON object.
+  knex
+    .select( [ 'projectData', 'spaceName', 'projectName' ] )
+    .from( 'creator-data' )
+    .then( selectResult => {
+      if ( selectResult.length === 0 ) {
+        return res.status( 404 ).json( { error: 'No projects found' } );
+      }
+
+      // Process each project's data
+      const updatedProjects = selectResult.map( project => {
+        const oldData = project.projectData;
+        console.log( project.spaceName, project.projectName );
+
+        // Modify the oldData to create the newData
+        const newData = modifyProjectData( oldData );
+
+        // Return an object with the id and the modified data
+        return {
+          spaceName: project.spaceName,
+          projectName: project.projectName,
+          projectData: newData
+        };
+      } );
+
+      // Update the records in the 'creator-data' table
+      const updatePromises = updatedProjects.map( updatedProject => {
+        console.log( updatedProject.spaceName, updatedProject.projectName );
+
+        return knex( 'creator-data' )
+          .update( { projectData: updatedProject.projectData } )
+          .where( { spaceName: updatedProject.spaceName, projectName: updatedProject.projectName } );
+      } );
+
+      // Execute all update queries using Promise.all
+      return Promise.all( updatePromises );
+    } )
+    .then( () => {
+      res.json( { message: 'Schema update completed' } );
+    } )
+    .catch( error => {
+      console.error( 'Error:', error );
+      res.status( 500 ).json( { error: 'Internal server error' } );
+    } );
 } );
 
 //--------------------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@ class NamedProperty extends Component {
 
   /**
    * @param {string} name
-   * @param {'BooleanProperty'|'NumberProperty'|'StringProperty'|'Vector2Property'|'DerivedProperty'} propertyType - A name for the type of Property this is, to categorize UI controls
+   * @param {'BooleanProperty'|'NumberProperty'|'StringProperty'|'Vector2Property'|'DerivedProperty'|'Bounds2Property'} propertyType - A name for the type of Property this is, to categorize UI controls
    */
   constructor( name, propertyType ) {
     super( name );

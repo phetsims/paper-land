@@ -4,6 +4,7 @@
 import { enforceKeys, keysDefined } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
+import NamedBounds2Property from './NamedBounds2Property.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
 import NamedEnumerationProperty from './NamedEnumerationProperty.js';
 import NamedNumberProperty from './NamedNumberProperty.js';
@@ -19,6 +20,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedNumberProperties = phet.axon.createObservableArray();
     this.namedEnumerationProperties = phet.axon.createObservableArray();
     this.namedDerivedProperties = phet.axon.createObservableArray();
+    this.namedBounds2Properties = phet.axon.createObservableArray();
   }
 
   /**
@@ -63,6 +65,27 @@ export default class ProgramModelContainer extends ComponentContainer {
     const index = this.namedVector2Properties.indexOf( namedProperty );
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedVector2Properties.splice( index, 1 );
+    this.removeFromAllComponents( namedProperty );
+  }
+
+  /**
+   * Add a new NamedBounds2Property to this container.
+   */
+  addBounds2Property( name, minX, minY, maxX, maxY ) {
+    const newNamedProperty = new NamedBounds2Property( name, minX, minY, maxX, maxY );
+    this.namedBounds2Properties.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
+
+    this.registerChangeListeners( newNamedProperty, this.removeBounds2Property.bind( this ) );
+  }
+
+  /**
+   * Removes a NamedBounds2Property from this container.
+   */
+  removeBounds2Property( namedProperty ) {
+    const index = this.namedBounds2Properties.indexOf( namedProperty );
+    assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
+    this.namedBounds2Properties.splice( index, 1 );
     this.removeFromAllComponents( namedProperty );
   }
 
@@ -161,7 +184,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedVector2Properties: this.namedVector2Properties.map( namedProperty => namedProperty.save() ),
       namedNumberProperties: this.namedNumberProperties.map( namedProperty => namedProperty.save() ),
       namedEnumerationProperties: this.namedEnumerationProperties.map( namedProperty => namedProperty.save() ),
-      namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() )
+      namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() ),
+      namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() )
     };
   }
 
@@ -170,14 +194,22 @@ export default class ProgramModelContainer extends ComponentContainer {
    * in isolation and must be available before creating DerivedProperty components.
    */
   loadDependencyModelComponents( stateObject ) {
-    stateObject.namedBooleanProperties.forEach( namedBooleanPropertyData => {
+
+    // We need to be graceful in loading, because
+    const namedBooleanProperties = stateObject.namedBooleanProperties || [];
+    const namedVector2Properties = stateObject.namedVector2Properties || [];
+    const namedNumberProperties = stateObject.namedNumberProperties || [];
+    const namedEnumerationProperties = stateObject.namedEnumerationProperties || [];
+    const namedBounds2Properties = stateObject.namedBounds2Properties || [];
+
+    namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
       this.addBooleanProperty(
         namedBooleanPropertyData.name,
         namedBooleanPropertyData.defaultValue
       );
     } );
-    stateObject.namedVector2Properties.forEach( namedVector2PropertyData => {
+    namedVector2Properties.forEach( namedVector2PropertyData => {
       enforceKeys( namedVector2PropertyData, [ 'name', 'defaultX', 'defaultY' ], `Error during load for Vector2Property, ${namedVector2PropertyData.name}` );
       this.addVector2Property(
         namedVector2PropertyData.name,
@@ -185,7 +217,7 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedVector2PropertyData.defaultY
       );
     } );
-    stateObject.namedNumberProperties.forEach( namedNumberPropertyData => {
+    namedNumberProperties.forEach( namedNumberPropertyData => {
       enforceKeys( namedNumberPropertyData, [ 'name', 'min', 'max', 'defaultValue' ], `Error during load for NumberProperty, ${namedNumberPropertyData.name}` );
       this.addNumberProperty(
         namedNumberPropertyData.name,
@@ -194,11 +226,21 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedNumberPropertyData.defaultValue
       );
     } );
-    stateObject.namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
+    namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
       enforceKeys( namedEnumerationPropertyData, [ 'name', 'values' ], `Error during load for EnumerationProperty, ${namedEnumerationPropertyData.name}` );
       this.addEnumerationProperty(
         namedEnumerationPropertyData.name,
         namedEnumerationPropertyData.values
+      );
+    } );
+    namedBounds2Properties.forEach( namedBounds2PropertyData => {
+      enforceKeys( namedBounds2PropertyData, [ 'name', 'defaultMinX', 'defaultMinY', 'defaultMaxX', 'defaultMaxY' ], `Error during load for Bounds2Property, ${namedBounds2PropertyData.name}` );
+      this.addBounds2Property(
+        namedBounds2PropertyData.name,
+        namedBounds2PropertyData.defaultMinX,
+        namedBounds2PropertyData.defaultMinY,
+        namedBounds2PropertyData.defaultMaxX,
+        namedBounds2PropertyData.defaultMaxY
       );
     } );
   }
@@ -238,6 +280,8 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedVector2Properties.dispose();
     this.namedNumberProperties.dispose();
     this.namedEnumerationProperties.dispose();
+    this.namedDerivedProperties.dispose();
+    this.namedBounds2Properties.dispose();
 
     super.dispose();
   }

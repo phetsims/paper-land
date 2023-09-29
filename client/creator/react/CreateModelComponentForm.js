@@ -4,6 +4,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import { isNameValid } from '../../utils.js';
 import Component from '../model/Component.js';
 import NamedBooleanProperty from '../model/NamedBooleanProperty.js';
+import NamedBounds2Property from '../model/NamedBounds2Property.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import NamedNumberProperty from '../model/NamedNumberProperty.js';
@@ -11,6 +12,7 @@ import NamedProperty from '../model/NamedProperty.js';
 import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
 import CreateBooleanForm from './CreateBooleanForm.js';
+import CreateBoundsForm from './CreateBoundsForm.js';
 import CreateComponentButton from './CreateComponentButton.js';
 import CreateDerivedForm from './CreateDerivedForm.js';
 import CreateEnumerationForm from './CreateEnumerationForm.js';
@@ -45,12 +47,14 @@ export default function CreateModelComponentForm( props ) {
   const [ positionFormValid, setPositionFormValid ] = useState( true );
   const [ enumerationFormValid, setEnumerationFormValid ] = useState( false );
   const [ derivedFormValid, setDerivedFormValid ] = useState( false );
+  const [ bounds2FormValid, setBoundsFormValid ] = useState( false );
 
   const getIsBooleanFormValid = isValid => setBooleanFormValid( isValid );
   const getIsNumberFormValid = isValid => setNumberFormValid( isValid );
   const getIsEnumerationFormValid = isValid => setEnumerationFormValid( isValid );
   const getIsPositionFormValid = isValid => setPositionFormValid( isValid );
   const getIsDerivedFormValid = isValid => setDerivedFormValid( isValid );
+  const getIsBoundsFormValid = isValid => setBoundsFormValid( isValid );
 
   // An object with { defaultValue: 'true' | 'false' }
   const booleanDataRef = useRef( {} );
@@ -67,12 +71,16 @@ export default function CreateModelComponentForm( props ) {
   // An object with { dependencies: NamedProperty[], derivation: string }
   const derivedDataRef = useRef( {} );
 
+  // An object with { defaultMinY: number, defaultMaxY: number, defaultMinX: number, defaultMaxX: number }
+  const boundsDataRef = useRef( {} );
+
   // to be called every change so that we can use this data to create
   const getDataForNumber = data => { numberDataRef.current = data; };
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
   const getDataForPosition = data => { positionDataRef.current = data; };
   const getDataForDerived = data => { derivedDataRef.current = data; };
+  const getDataForBounds = data => { boundsDataRef.current = data; };
 
   const isComponentNameValid = () => {
     return isNameValid( activeEdit, model, componentName );
@@ -94,10 +102,13 @@ export default function CreateModelComponentForm( props ) {
     else if ( selectedTab === 'derived' ) {
       setSelectedTabFormValid( derivedFormValid && isComponentNameValid() );
     }
+    else if ( selectedTab === 'bounds' ) {
+      setSelectedTabFormValid( bounds2FormValid && isComponentNameValid() );
+    }
     else {
       setSelectedTabFormValid( false );
     }
-  }, [ props.componentName, selectedTab, booleanFormValid, numberFormValid, enumerationFormValid, derivedFormValid ] );
+  }, [ props.componentName, selectedTab, booleanFormValid, numberFormValid, enumerationFormValid, derivedFormValid, bounds2FormValid ] );
 
   const createComponent = () => {
 
@@ -130,6 +141,13 @@ export default function CreateModelComponentForm( props ) {
         component.dependencies = derivedData.dependencies;
         component.derivation = derivedData.derivation;
       }
+      else if ( selectedTab === 'bounds' ) {
+        const boundsData = boundsDataRef.current;
+        component.defaultMinX = boundsData.defaultMinX;
+        component.defaultMinY = boundsData.defaultMinY;
+        component.defaultMaxX = boundsData.defaultMaxX;
+        component.defaultMaxY = boundsData.defaultMaxY;
+      }
     }
     else {
       if ( selectedTab === 'boolean' ) {
@@ -154,6 +172,10 @@ export default function CreateModelComponentForm( props ) {
         const dependencies = Component.findComponentsByName( allModelComponents, dependencyNames );
         const derivation = derivedDataRef.current.derivation;
         activeProgram.modelContainer.addDerivedProperty( componentName, dependencies, derivation );
+      }
+      else if ( selectedTab === 'bounds' ) {
+        const boundsData = boundsDataRef.current;
+        activeProgram.modelContainer.addBounds2Property( componentName, boundsData.defaultMinX, boundsData.defaultMinY, boundsData.defaultMaxX, boundsData.defaultMaxY );
       }
       else {
         throw new Error( 'Cannot create component for selected tab.' );
@@ -180,6 +202,9 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( component instanceof NamedDerivedProperty ) {
         return 'derived';
+      }
+      else if ( component instanceof NamedBounds2Property ) {
+        return 'bounds';
       }
       else {
         throw new Error( 'Unknown component type.' );
@@ -226,6 +251,9 @@ export default function CreateModelComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='derived' title='Derived' tabClassName={styles.tab}>
           <CreateDerivedForm allModelComponents={allModelComponents} activeEdit={activeEdit} isFormValid={getIsDerivedFormValid} getFormData={getDataForDerived}></CreateDerivedForm>
+        </Tab>
+        <Tab disabled={tabDisabled} eventKey='bounds' title='Bounds' tabClassName={styles.tab}>
+          <CreateBoundsForm activeEdit={activeEdit} isFormValid={getIsBoundsFormValid} getFormData={getDataForBounds}></CreateBoundsForm>
         </Tab>
       </Tabs>
       <CreateComponentButton
