@@ -17,8 +17,35 @@ export default class ViewCodeGenerator {
            `${componentName}Background`;
   }
 
-  static getSetterFunctionsForViewType( viewType, componentName ) {
+  /**
+   * Returns the code to convert a value to the view coordinate frame. If the user is working view coordinates, the
+   * value is used directly. Otherwise, the value is wrapped in a utility function to do the conversion.
+   * @param value
+   * @param inModelCoordinates
+   * @param dimension
+   * @return {*|string}
+   */
+  static valueStringInViewUnits( value, inModelCoordinates, dimension ) {
+    if ( !inModelCoordinates ) {
+
+      // values are specified in pixels and can be used directly
+      return value;
+    }
+    else {
+
+      // values were specified in model coordinates and need to be converted to pixels
+      if ( dimension === 'x' ) {
+        return `phet.paperLand.utils.paperToBoardX( ${value}, sharedData.displaySize.width )`;
+      }
+      else {
+        return `phet.paperLand.utils.paperToBoardY( ${value}, sharedData.displaySize.height )`;
+      }
+    }
+  }
+
+  static getSetterFunctionsForViewType( viewType, componentName, viewOptions ) {
     const componentNameString = ViewCodeGenerator.getComponentNameString( viewType, componentName );
+    const inModelCoordinates = viewOptions.viewUnits === 'model';
     const codeStrings = [];
 
     // The setters that are available for all Node types.
@@ -32,20 +59,19 @@ export default class ViewCodeGenerator {
       };
     
       const setCenterX = ( x ) => {
-        ${componentNameString}.centerX = x;
-        ${componentNameString}.centerX = x;
+        ${componentNameString}.centerX = ${ViewCodeGenerator.valueStringInViewUnits( 'x', inModelCoordinates, 'x' )};
       };
       
       const setCenterY = ( y ) => {
-        ${componentNameString}.centerY = y;
+        ${componentNameString}.centerY = ${ViewCodeGenerator.valueStringInViewUnits( 'y', inModelCoordinates, 'y' )};
       };
       
       const setLeft = ( left ) => {
-        ${componentNameString}.left = left;
+        ${componentNameString}.left = ${ViewCodeGenerator.valueStringInViewUnits( 'left', inModelCoordinates, 'x' )};
       };
       
       const setTop = ( top ) => {
-        ${componentNameString}.top = top;
+        ${componentNameString}.top = ${ViewCodeGenerator.valueStringInViewUnits( 'top', inModelCoordinates, 'y' )};
       };
       
       const setScale = ( scale ) => {
@@ -81,33 +107,38 @@ export default class ViewCodeGenerator {
         
         // for a line
         const setX1 = ( newX1 ) => {
-          x1 = newX1;
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          // x1 = newX1;
+          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          phet.paperLand.console.warn( 'setX1 not implemented' );
         };
         
         const setY1 = ( newY1 ) => {
-          y1 = newY1;
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          // y1 = newY1;
+          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          phet.paperLand.console.warn( 'setY1 not implemented' );
         };
 
         const setX2 = ( newX2 ) => {
-          x2 = newX2;
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          // x2 = newX2;
+          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          phet.paperLand.console.warn( 'setX2 not implemented' );
         };
         
         const setY2 = ( newY2 ) => {
-          y2 = newY2;
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          // y2 = newY2;
+          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          phet.paperLand.console.warn( 'setY2 not implemented' );
         };
         
         // for a circle
         const setRadius = ( radius ) => {
-          ${componentNameString}.radius = radius;
+          ${componentNameString}.radius = ${ViewCodeGenerator.valueStringInViewUnits( 'radius', inModelCoordinates, 'x' )};
         };
         
         // for a rectangle
         const setRectBounds = ( bounds ) => {
-          ${componentNameString}.shape = phet.kite.Shape.bounds( bounds );
+          const transformedBounds = ${inModelCoordinates ? 'unitBoundsToDisplayBounds( bounds )' : 'bounds'};
+          ${componentNameString}.shape = phet.kite.Shape.bounds( transformedBounds );
         };`
       );
     }

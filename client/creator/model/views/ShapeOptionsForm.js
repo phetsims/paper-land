@@ -65,7 +65,7 @@ const GeneralAccordionItem = ( { formData, handleChange } ) => {
       <Accordion.Header className={styles.cardHeader}>General Options</Accordion.Header>
       <Accordion.Body className={styles.cardBody}>
         <div className={styles.controlElement}>
-          <Form.Label>Center X (in pixels):</Form.Label>
+          <Form.Label>Center X:</Form.Label>
           <Form.Control
             type='number'
             value={formData.defaultViewOptions.centerX}
@@ -75,7 +75,7 @@ const GeneralAccordionItem = ( { formData, handleChange } ) => {
           ></Form.Control>
         </div>
         <div className={styles.controlElement}>
-          <Form.Label>Center Y (in pixels):</Form.Label>
+          <Form.Label>Center Y:</Form.Label>
           <Form.Control
             type='number'
             value={formData.defaultViewOptions.centerY}
@@ -148,7 +148,7 @@ const ShapeOptionsAccordionItem = ( { formData, handleChange, setShapeOption } )
           ></Form.Control>
         </div>
         <div className={styles.controlElement}>
-          <Form.Label>Shape line width (in pixels):</Form.Label>
+          <Form.Label>Shape line width:</Form.Label>
           <Form.Control
             type='number'
             value={formData.defaultShapeOptions.lineWidth}
@@ -177,7 +177,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
           // Rectangle defaults
           selectedShapeType === 'rectangle' ? (
                                               <div className={styles.controlElement}>
-                                                <Form.Label>Rectangle width (in pixels):</Form.Label>
+                                                <Form.Label>Rectangle width:</Form.Label>
                                                 <Form.Control
                                                   type='number'
                                                   value={formData.defaultShapeOptions.rectWidth}
@@ -185,7 +185,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                     setShapeOption( 'rectWidth', event.target.value );
                                                   }}
                                                 ></Form.Control>
-                                                <Form.Label>Rectangle height (in pixels):</Form.Label>
+                                                <Form.Label>Rectangle height:</Form.Label>
                                                 <Form.Control
                                                   type='number'
                                                   value={formData.defaultShapeOptions.rectHeight}
@@ -199,10 +199,10 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
             // Circle defaults
           selectedShapeType === 'circle' ? (
                                            <div className={styles.controlElement}>
-                                             <Form.Label>Circle radius (in pixels):</Form.Label>
+                                             <Form.Label>Circle radius:</Form.Label>
                                              <Form.Control
                                                type='number'
-                                               value={formData.defaultShapeOptions.radius}
+                                               value={formData.defaultShapeOptions.circleRadius}
                                                onChange={event => {
                                                  setShapeOption( 'circleRadius', event.target.value );
                                                }}
@@ -213,7 +213,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
             // Line defaults
           selectedShapeType === 'line' ? (
                                          <div className={styles.conttrolElement}>
-                                           <Form.Label>Line start X (in pixels):</Form.Label>
+                                           <Form.Label>Line start X:</Form.Label>
                                            <Form.Control
                                              type='number'
                                              value={formData.defaultShapeOptions.lineStartX}
@@ -221,7 +221,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                setShapeOption( 'lineStartX', event.target.value );
                                              }}
                                            ></Form.Control>
-                                           <Form.Label>Line start Y (in pixels):</Form.Label>
+                                           <Form.Label>Line start Y:</Form.Label>
                                            <Form.Control
                                              type='number'
                                              value={formData.defaultShapeOptions.lineStartY}
@@ -229,7 +229,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                setShapeOption( 'lineStartY', event.target.value );
                                              }}
                                            ></Form.Control>
-                                           <Form.Label>Line end X (in pixels):</Form.Label>
+                                           <Form.Label>Line end X:</Form.Label>
                                            <Form.Control
                                              type='number'
                                              value={formData.defaultShapeOptions.lineEndX}
@@ -237,7 +237,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                setShapeOption( 'lineEndX', event.target.value );
                                              }}
                                            ></Form.Control>
-                                           <Form.Label>Line end Y (in pixels):</Form.Label>
+                                           <Form.Label>Line end Y:</Form.Label>
                                            <Form.Control
                                              type='number'
                                              value={formData.defaultShapeOptions.lineEndY}
@@ -249,7 +249,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                        ) :
           selectedShapeType === 'triangle' ? (
                                              <div className={styles.controlElement}>
-                                               <Form.Label>Triangle base width (in pixels):</Form.Label>
+                                               <Form.Label>Triangle base width:</Form.Label>
                                                <Form.Control
                                                  type='number'
                                                  value={formData.defaultShapeOptions.triangleBaseWidth}
@@ -257,7 +257,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                    setShapeOption( 'triangleBaseWidth', event.target.value );
                                                  }}
                                                ></Form.Control>
-                                               <Form.Label>Triangle height (in pixels):</Form.Label>
+                                               <Form.Label>Triangle height:</Form.Label>
                                                <Form.Control
                                                  type='number'
                                                  value={formData.defaultShapeOptions.triangleHeight}
@@ -269,7 +269,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                            ) :
           selectedShapeType === 'ellipse' ? (
                                             <div className={styles.controlElement}>
-                                              <Form.Label>Ellipse radius X (in pixels):</Form.Label>
+                                              <Form.Label>Ellipse radius X:</Form.Label>
                                               <Form.Control
                                                 type='number'
                                                 value={formData.defaultShapeOptions.ellipseRadiusX}
@@ -277,7 +277,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                                   setShapeOption( 'ellipseRadiusX', event.target.value );
                                                 }}
                                               ></Form.Control>
-                                              <Form.Label>Ellipse radius Y (in pixels):</Form.Label>
+                                              <Form.Label>Ellipse radius Y:</Form.Label>
                                               <Form.Control
                                                 type='number'
                                                 value={formData.defaultShapeOptions.ellipseRadiusY}
@@ -289,7 +289,7 @@ const GeometryOptionsAccordionItem = ( { formData, handleChange, setShapeOption 
                                           ) :
           selectedShapeType === 'polygon' ? (
             <div className={styles.controlElement}>
-              <Form.Label>Polygon points (all values in pixels):</Form.Label>
+              <Form.Label>Polygon points:</Form.Label>
               <div>
                 <StyledButton
                   name={'Add Point'}

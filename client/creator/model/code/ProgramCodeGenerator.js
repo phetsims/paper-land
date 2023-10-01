@@ -354,8 +354,8 @@ export default class ProgramCodeGenerator {
 
       // No extra data for shape components yet.
       data = {
-        SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.nameProperty.value, viewComponent.defaultShapeOptions ),
-        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value ),
+        SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.nameProperty.value, viewComponent.defaultShapeOptions, viewComponent.defaultViewOptions ),
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions ),
         FILL_COLOR: viewComponent.defaultShapeOptions.fill,
         STROKE_COLOR: viewComponent.defaultShapeOptions.stroke,
         LINE_WIDTH: viewComponent.defaultShapeOptions.lineWidth,
@@ -365,12 +365,13 @@ export default class ProgramCodeGenerator {
         CENTER_Y: viewComponent.defaultViewOptions.centerY,
         SCALE: viewComponent.defaultViewOptions.scale,
         ROTATION: viewComponent.defaultViewOptions.rotation,
-        OPACITY: viewComponent.defaultViewOptions.opacity
+        OPACITY: viewComponent.defaultViewOptions.opacity,
+        VIEW_UNITS: viewComponent.defaultViewOptions.viewUnits
       };
     }
     else if ( componentType === 'TextViewComponent' ) {
       data = {
-        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value )
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions )
       };
     }
     else if ( componentType === 'BackgroundViewComponent' ) {

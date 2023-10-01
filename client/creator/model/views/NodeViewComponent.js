@@ -15,7 +15,9 @@ export default class NodeViewComponent extends ViewComponent {
       scale: 1,
       rotation: 0,
       opacity: 1,
-      visible: true
+      visible: true,
+
+      viewUnits: 'model' // 'model' or 'pixels'
     };
 
     const options = _.merge( {}, viewOptions, providedOptions );
@@ -38,7 +40,8 @@ export default class NodeViewComponent extends ViewComponent {
         scale: 1,
         rotation: 0,
         opacity: 1,
-        visible: true
+        visible: true,
+        viewUnits: 'model'
       }
     };
   }

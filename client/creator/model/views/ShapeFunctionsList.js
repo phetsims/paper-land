@@ -16,32 +16,32 @@ const SHAPE_COMPONENT_FUNCTIONS = [
 ];
 
 const RECTANGLE_COMPONENT_FUNCTIONS = [
-  'setRectBounds() - Takes a bounds component. Sets the dimensions of the rectangle in pixels.',
+  'setRectBounds() - Takes a bounds component. Sets the dimensions of the rectangle in selected view coordinates.',
 ];
 
 const CIRCLE_COMPONENT_FUNCTIONS = [
-  'setRadius() - A number. Sets the radius of the circle in pixels.'
+  'setRadius() - A number. Sets the radius of the circle in selected view coordinates.'
 ];
 
 const ELLIPSE_COMPONENT_FUNCTIONS = [
-  'setRadiusX() - A number. Sets the x radius of the ellipse in pixels.',
-  'setRadiusY() - A number. Sets the y radius of the ellipse in pixels.'
+  'setRadiusX() - A number. Sets the x radius of the ellipse.',
+  'setRadiusY() - A number. Sets the y radius of the ellipse.'
 ];
 
 const LINE_COMPONENT_FUNCTIONS = [
-  'setX1() - A number. Sets the x coordinate of the first point of the line in pixels.',
-  'setY1() - A number. Sets the y coordinate of the first point of the line in pixels.',
-  'setX2() - A number. Sets the x coordinate of the second point of the line in pixels.',
-  'setY2() - A number. Sets the y coordinate of the second point of the line in pixels.'
+  'setX1() - A number. Sets the x coordinate of the first point of the line.',
+  'setY1() - A number. Sets the y coordinate of the first point of the line.',
+  'setX2() - A number. Sets the x coordinate of the second point of the line.',
+  'setY2() - A number. Sets the y coordinate of the second point of the line.'
 ];
 
 const TRIANGLE_COMPONENT_FUNCTIONS = [
-  'setBaseWidth() - A number. Sets the width of the triangle\'s base in pixels.',
-  'setHeight() - A number. Sets the height of the triangle in pixels.'
+  'setBaseWidth() - A number. Sets the width of the triangle\'s base.',
+  'setHeight() - A number. Sets the height of the triangle.'
 ];
 
 const POLYGON_COMPONENT_FUNCTIONS = [
-  'setPoints() - An array of points. Each point is a { x, y } pair. For example, [{x: 0, y:0}, {x: 100, y:0}, {x: 50, y: 100}] would be a triangle with vertices at (0, 0), (100, 0), and (50, 100). Values in pixels.'
+  'setPoints() - An array of points. Each point is a { x, y } pair. For example, [{x: 0, y:0}, {x: 100, y:0}, {x: 50, y: 100}] would be a triangle with vertices at (0, 0), (100, 0), and (50, 100).'
 ];
 
 export default function ShapeFunctionsList( props ) {

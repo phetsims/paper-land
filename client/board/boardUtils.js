@@ -83,6 +83,20 @@ const boardUtils = {
   },
 
   /**
+   * Converts the X coordinate of a point in paper coordinates (normalized) to the same position in board coordinates.
+   */
+  paperToBoardX( paperX, boardWidth ) {
+    return paperX * boardWidth;
+  },
+
+  /**
+   * Converts the Y coordinate of a point in paper coordinates (normalized) to the same position in board coordinates.
+   */
+  paperToBoardY( paperY, boardHeight ) {
+    return paperY * boardHeight;
+  },
+
+  /**
    * Returns the center of a paper in board coordinates. Useful for controlling the position of a
    * component from paper center.
    * @param {{x: number, y: number}[]}points

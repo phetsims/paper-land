@@ -47,20 +47,26 @@ const ModelComponentTemplates = {
   },
   DerivedProperty: {
     onProgramAdded: `
-      const {{NAME}} = new phet.axon.DerivedProperty(
-        [ {{DEPENDENCIES}} ],
-        ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      // DerivedProperties are actually implemented with Multilink for now because paper-land has a nice abstraction
+      // for it.
+      const {{NAME}} = new phet.axon.Property( null );
+      scratchpad.{{NAME}}DerivedPropertyObserverId = phet.paperLand.addModelPropertyMultilink( [ {{DEPENDENCIES}} ], ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        const derivationFunction = () => {
+        
+          // should return a value based on the dependencies
           {{DERIVATION}}
-        }
-      );
+        };
+        {{NAME}}.value = derivationFunction();
+      } );
       phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
     `,
     onProgramRemoved: `
-    
-      // Dispose of the component, so that it is no longer linked to other Properties.
-      phet.paperLand.getModelComponent( '{{NAME}}' ).dispose();
+
+      // remove the multilink updating the value    
+      phet.paperLand.removeModelPropertyMultilink( [ {{DEPENDENCIES}}], scratchpad.{{NAME}}DerivedPropertyObserverId );
+      delete scratchpad.{{NAME}}DerivedPropertyObserverId;
       
-      // Remove the component from the model
+      // remove the derived Property from the model
       phet.paperLand.removeModelComponent( '{{NAME}}' );
     `
   },

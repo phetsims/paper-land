@@ -10,6 +10,7 @@ import styles from './../../CreatorMain.css';
 import ShapeFunctionsList from './ShapeFunctionsList.js';
 import ShapeOptionsForm from './ShapeOptionsForm.js';
 import ShapeViewComponent from './ShapeViewComponent.js';
+import ViewUnitsSelector from './ViewUnitsSelector.js';
 
 export default function CreateShapeViewForm( props ) {
 
@@ -54,6 +55,7 @@ export default function CreateShapeViewForm( props ) {
           } )}
         </Form.Select>
       </div>
+      <ViewUnitsSelector formData={formData} handleChange={handleChange}></ViewUnitsSelector>
       <div className={styles.controlElement}>
         <ShapeOptionsForm
           formData={formData}
