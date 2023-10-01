@@ -170,18 +170,9 @@ const ViewComponentTemplates = {
       
       // Update the image when a dependency changes.
       scratchpad.{{NAME}}ImageMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        // in a local scope, define the functions that the user can use to manipulate the sound
-        const setCenter = ( position ) => {
-          {{NAME}}Image.center = position;
-        };
-        const setScale = ( scale ) => {
-          {{NAME}}Image.setScaleMagnitude( scale );
-        };
-        const setImage = imageName => {
-          let {{NAME}}ImageElement = document.createElement( 'img' );
-          {{NAME}}ImageElement.src = 'media/images/' + imageName;
-          {{NAME}}Image.image = {{NAME}}ImageElement; 
-        };
+        
+        // the functions that are available for this view type
+        {{CONTROL_FUNCTIONS}}
       
         {{CONTROL_FUNCTION}}
       } );

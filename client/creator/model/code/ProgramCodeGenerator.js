@@ -371,7 +371,9 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'TextViewComponent' ) {
       data = {
-        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions )
+
+        // TODO: TextVieCOmponent should extend NodeViewComponent so that it can use the same setters and have a defaultViewOptions
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions || {} )
       };
     }
     else if ( componentType === 'BackgroundViewComponent' ) {
@@ -381,7 +383,8 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'ImageViewComponent' ) {
       data = {
-        FILE_NAME: viewComponent.imageFileName
+        FILE_NAME: viewComponent.imageFileName,
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions )
       };
     }
     else {

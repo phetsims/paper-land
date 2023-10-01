@@ -5,8 +5,10 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import xhr from 'xhr';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
+import ViewUnitsSelector from '../model/views/ViewUnitsSelector.js';
 import styles from './../CreatorMain.css';
 import FileUploader from './FileUploader.js';
+import NodeComponentFunctionsList from './NodeComponentFunctionsList.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
@@ -93,15 +95,17 @@ export default function CreateImageViewForm( props ) {
           </div>
         </Tab>
       </Tabs>
+      <ViewUnitsSelector formData={formData} handleChange={handleChange}></ViewUnitsSelector>
     </div>
   );
 
   const imageFunctions = (
     <div className={styles.controlElement}>
-      <p>Available functions:</p>
+      <hr/>
+      <NodeComponentFunctionsList></NodeComponentFunctionsList>
+      <hr/>
+      <p>Image functions:</p>
       <ListGroup>
-        <ListGroup.Item className={styles.listGroupItem}>setCenter() - Sets image center in the board, takes a Vector2 position.</ListGroup.Item>
-        <ListGroup.Item className={styles.listGroupItem}>setScale() - Sets image scale.</ListGroup.Item>
         <ListGroup.Item className={styles.listGroupItem}>setImage() - Sets to a new image. Takes the name of an image.</ListGroup.Item>
       </ListGroup>
     </div>

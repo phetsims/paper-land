@@ -161,6 +161,15 @@ export default class ViewCodeGenerator {
         };
       ` );
     }
+    else if ( viewType === 'ImageViewComponent' ) {
+      codeStrings.push( `
+        const setImage = imageName => {
+          let ${componentNameString}ImageElement = document.createElement( 'img' );
+          ${componentNameString}ImageElement.src = 'media/images/' + imageName;
+          ${componentNameString}.image = ${componentNameString}ImageElement; 
+        };
+      ` );
+    }
 
     return codeStrings.join( '\n' );
   }

@@ -132,7 +132,7 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'shapes' ) {
       setSelectedTabFormValid( shapesFormValid && isComponentNameValid() );
     }
-  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid, shapesFormValid ] );
+  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid, shapesFormValid, textFormValid ] );
 
   // Set the selected tab when the active edit changes
   useEffect( () => {
@@ -160,6 +160,7 @@ export default function CreateViewComponentForm( props ) {
       }
       else if ( selectedTab === 'images' ) {
         editingComponent.imageFileName = imagesDataRef.current.imageFileName;
+        editingComponent.defaultViewOptions = imagesDataRef.current.defaultViewOptions;
       }
       else if ( selectedTab === 'shapes' ) {
         editingComponent.defaultShapeOptions = shapesDataRef.current.defaultShapeOptions;
@@ -184,7 +185,8 @@ export default function CreateViewComponentForm( props ) {
       }
       else if ( selectedTab === 'images' ) {
         const imageFileName = imagesDataRef.current.imageFileName;
-        const imageViewComponent = new ImageViewComponent( componentName, selectedModelComponents, controlFunctionString, imageFileName );
+        const options = imagesDataRef.current.defaultShapeOptions;
+        const imageViewComponent = new ImageViewComponent( componentName, selectedModelComponents, controlFunctionString, imageFileName, options );
         activeProgram.viewContainer.addImageView( imageViewComponent );
       }
       else if ( selectedTab === 'text' ) {

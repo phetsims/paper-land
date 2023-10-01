@@ -1,16 +1,17 @@
 import Component from '../Component.js';
-import ViewComponent from './ViewComponent.js';
+import NodeViewComponent from './NodeViewComponent.js';
 
-export default class ImageViewComponent extends ViewComponent {
+export default class ImageViewComponent extends NodeViewComponent {
 
   /**
    * @param {string} name - name of this component
    * @param {NamedProperty[]} modelComponents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
    * @param {string} imageFileName - an image file that exists in www/media/images
+   * @param {Object} options - options for the NodeViewComponent
    */
-  constructor( name, modelComponents, controlFunctionString, imageFileName ) {
-    super( name, modelComponents, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString, imageFileName, options ) {
+    super( name, modelComponents, controlFunctionString, options );
     this.imageFileName = imageFileName;
   }
 
@@ -33,13 +34,14 @@ export default class ImageViewComponent extends ViewComponent {
       stateObject.name,
       dependencies,
       stateObject.controlFunctionString,
-      stateObject.imageFileName
+      stateObject.imageFileName,
+      stateObject.defaultViewOptions
     );
   }
 
   static getStateSchema() {
     return {
-      ...ViewComponent.getStateSchema(),
+      ...NodeViewComponent.getStateSchema(),
       imageFileName: ''
     };
   }

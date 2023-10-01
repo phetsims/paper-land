@@ -37,6 +37,7 @@ export default function CreateTextViewForm( props ) {
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificFunctions={typeSpecificFunctions}
+        isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Write a function using the variables to control the Text.'}
