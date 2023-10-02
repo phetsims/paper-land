@@ -261,7 +261,8 @@ code {
 :local(.createComponentButton) {
   position: fixed;
   bottom: 5px;
-  right: 30px;
+  right: 50px;
+  scale: 125%;
   z-index: 10; /*puts the component above other bootstrap accordions*/
 }
 
