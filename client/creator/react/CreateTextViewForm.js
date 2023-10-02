@@ -40,7 +40,7 @@ export default function CreateTextViewForm( props ) {
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
-        functionPrompt={'Write a function using the variables to control the Text.'}
+        functionPrompt={'Write a function using the variables to control the Text. All view coordinates in pixels.'}
         componentsPrompt={'Function is called when selected components change.'}
       ></ViewComponentControls>
     </div>
