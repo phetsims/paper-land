@@ -43,10 +43,8 @@ export default function CreateImageViewForm( props ) {
         if ( response.body && response.body.imageFiles ) {
           if ( Array.isArray( response.body.imageFiles ) ) {
             setImageFiles( response.body.imageFiles );
-            console.log( response.body.imageFiles );
 
             // If there is already a value for the image file name, or the active edit has one, don't overwrite it
-            console.log( selectedFileName );
             if ( formData.imageFileName === '' && props.activeEdit.component === null ) {
               handleChange( { imageFileName: selectedFileName || response.body.imageFiles[ 0 ] } );
             }
@@ -63,7 +61,6 @@ export default function CreateImageViewForm( props ) {
 
   // Specific form components for the Image components - A select for the built-in images and a place to upload custom
   // files
-  console.log( formData.imageFileName );
   const imageFileSelector = (
     <div>
       <Form.Label>Select from available files:</Form.Label>

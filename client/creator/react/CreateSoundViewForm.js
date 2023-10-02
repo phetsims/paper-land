@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 import xhr from 'xhr';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
@@ -42,8 +40,7 @@ export default function CreateSoundViewForm( props ) {
     SoundViewComponent
   );
 
-  // Load available sound files on mount (load)
-  useEffect( () => {
+  const refreshSoundFiles = selectedFileName => {
     const soundFilesListUrl = new URL( 'api/creator/soundFiles', window.location.origin ).toString();
     xhr.get( soundFilesListUrl, { json: true }, ( error, response ) => {
       if ( error ) {
@@ -56,53 +53,50 @@ export default function CreateSoundViewForm( props ) {
 
             // If there is already a value for the sound file name, or the active edit has one, don't overwrite it
             if ( formData.soundFileName === '' && props.activeEdit.component === null ) {
-              handleChange( { soundFileName: response.body.soundFiles[ 0 ] } );
+              handleChange( { soundFileName: selectedFileName || response.body.soundFiles[ 0 ] } );
             }
           }
         }
       }
     } );
+  };
+
+  // Load available sound files on mount (load)
+  useEffect( () => {
+    refreshSoundFiles( formData.soundFileName );
   }, [] );
 
   // A select UI component to use a particular sound.
   const soundFileSelector = (
     <div>
-      <Tabs className={styles.tabs} justify>
-        <Tab eventKey='built-in' title='Paper Playground Sounds'>
-          <div className={styles.controlElement}>
-            <Form.Label>Select sound file:</Form.Label>
-            <Form.Select
-              value={formData.soundFileName}
-              onChange={event => {
-                handleChange( { soundFileName: event.target.value } );
-                props.getSoundFormData( { soundFileName: event.target.value } );
-              }}
-            >
-              {
-                soundFiles.map( ( soundFile, index ) => {
-                  return (
-                    <option
-                      key={`sound-file-${index}`}
-                      value={soundFile}
-                    >{soundFile}</option>
-                  );
-                } )
-              }
-            </Form.Select>
-          </div>
-        </Tab>
-        <Tab eventKey='upload' title='Upload Sound'>
-          <div className={`${styles.controlElement}`}>
-            <FileUploader
-              fileType='sound'
-              handleChange={fileName => {
-                handleChange( { soundFileName: fileName } );
-              }}
-            ></FileUploader>
-            <p className={styles.controlElement}>{`Currently using sound: ${formData.soundFileName}`}</p>
-          </div>
-        </Tab>
-      </Tabs>
+      <Form.Label>Select from available files:</Form.Label>
+      <Form.Select
+        value={formData.soundFileName}
+        onChange={event => {
+          handleChange( { soundFileName: event.target.value } );
+          props.getSoundFormData( { soundFileName: event.target.value } );
+        }}
+      >
+        {
+          soundFiles.map( ( soundFile, index ) => {
+            return (
+              <option
+                key={`sound-file-${index}`}
+                value={soundFile}
+              >{soundFile}</option>
+            );
+          } )
+        }
+      </Form.Select>
+      <div className={`${styles.controlElement}`}>
+        <FileUploader
+          fileType='sound'
+          handleChange={fileName => {
+            refreshSoundFiles( fileName );
+            handleChange( { soundFileName: fileName } );
+          }}
+        ></FileUploader>
+      </div>
       <div className={styles.controlElement}>
         <Form.Check
           type='checkbox'

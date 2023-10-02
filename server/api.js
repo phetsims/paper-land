@@ -565,20 +565,26 @@ router.get( '/api/creator/:spaceName/delete/:projectName', ( req, res ) => {
  * Gets the list of sound files available to use.
  */
 router.get( '/api/creator/soundFiles', ( req, res ) => {
+  const soundDirectories = [ './www/media/sounds', './www/media/sounds/uploads' ];
 
-  // use fs to get the list of files in the www/media/sounds directory
-  fs.readdir( './www/media/sounds', ( err, files ) => {
-    if ( err ) {
-      res.status( 500 ).send( 'Error reading sound files' );
+  // use fs to get the list of files in the imageDirectories
+  const soundFiles = soundDirectories.reduce( ( accumulator, soundDirectory ) => {
+    const files = fs.readdirSync( soundDirectory );
+    const filtered = files.filter( file => {
+      const extension = path.extname( file ).toLowerCase();
+      return [ '.mp3', '.wav', '.ogg' ].includes( extension );
+    } );
+
+    // if from the uplaods directory, prepend the directory name
+    if ( soundDirectory === './www/media/sounds/uploads' ) {
+      return accumulator.concat( filtered.map( file => `/uploads/${file}` ) );
     }
     else {
-      const soundFiles = files.filter( file => {
-        const extension = path.extname( file ).toLowerCase();
-        return [ '.mp3', '.wav', '.ogg' ].includes( extension );
-      } );
-      res.json( { soundFiles: soundFiles } );
+      return accumulator.concat( filtered );
     }
-  } );
+  }, [] );
+
+  res.json( { soundFiles: soundFiles } );
 } );
 
 /**
@@ -605,22 +611,6 @@ router.get( '/api/creator/imageFiles', ( req, res ) => {
   }, [] );
 
   res.json( { imageFiles: imageFiles } );
-
-  //
-  // // use fs to get the list of files in the www/media/images directory
-  // fs.readdir( './www/media/images', ( err, files ) => {
-  //   if ( err ) {
-  //     res.status( 500 ).send( 'Error reading image files' );
-  //   }
-  //   else {
-  //     const imageFiles = files.filter( file => {
-  //       const extension = path.extname( file ).toLowerCase();
-  //       return [ '.jpg', '.jpeg', '.png' ].includes( extension );
-  //     } );
-  //
-  //     res.json( { imageFiles: imageFiles } );
-  //   }
-  // } );
 } );
 
 /**
