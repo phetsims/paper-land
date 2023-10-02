@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
 import xhr from 'xhr';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import ViewUnitsSelector from '../model/views/ViewUnitsSelector.js';
@@ -31,8 +29,11 @@ export default function CreateImageViewForm( props ) {
 
   const [ imageFiles, setImageFiles ] = useState( [] );
 
-  // Load image files on mounts
-  useEffect( () => {
+  /**
+   * Updates the list of available files that the user can select from. Done on mount or if
+   * the user uploads a new file.
+   */
+  const refreshImageFiles = selectedFileName => {
     const imageFilesListUrl = new URL( 'api/creator/imageFiles', window.location.origin ).toString();
     xhr.get( imageFilesListUrl, { json: true }, ( error, response ) => {
       if ( error ) {
@@ -42,59 +43,56 @@ export default function CreateImageViewForm( props ) {
         if ( response.body && response.body.imageFiles ) {
           if ( Array.isArray( response.body.imageFiles ) ) {
             setImageFiles( response.body.imageFiles );
+            console.log( response.body.imageFiles );
 
             // If there is already a value for the image file name, or the active edit has one, don't overwrite it
+            console.log( selectedFileName );
             if ( formData.imageFileName === '' && props.activeEdit.component === null ) {
-              handleChange( { imageFileName: response.body.imageFiles[ 0 ] } );
+              handleChange( { imageFileName: selectedFileName || response.body.imageFiles[ 0 ] } );
             }
           }
         }
       }
     } );
+  };
+
+  // Load image files on mounts
+  useEffect( () => {
+    refreshImageFiles( formData.imageFileName );
   }, [] );
 
   // Specific form components for the Image components - A select for the built-in images and a place to upload custom
   // files
+  console.log( formData.imageFileName );
   const imageFileSelector = (
     <div>
-      <Tabs
-        className={styles.tabs}
-        justify
+      <Form.Label>Select from available files:</Form.Label>
+      <Form.Select
+        onChange={event => {
+          handleChange( { imageFileName: event.target.value } );
+        }}
+        value={formData.imageFileName}
       >
-        <Tab eventKey='build-in' title='Paper Playground Images' tabClassName={styles.tab}>
-          <div className={styles.controlElement}>
-            <Form.Label>Select image file:</Form.Label>
-            <Form.Select
-              onChange={event => {
-                handleChange( { imageFileName: event.target.value } );
-              }}
-              value={formData.imageFileName}
-            >
-              {
-                imageFiles.map( ( imageFile, index ) => {
-                  return (
-                    <option
-                      key={`image-file-${index}`}
-                      value={imageFile}
-                    >{imageFile}</option>
-                  );
-                } )
-              }
-            </Form.Select>
-          </div>
-        </Tab>
-        <Tab eventKey='upload' title='Upload Image' tabClassName={styles.tab}>
-          <div className={`${styles.controlElement}`}>
-            <FileUploader
-              fileType='image'
-              handleChange={fileName => {
-                handleChange( { imageFileName: fileName } );
-              }}
-            ></FileUploader>
-            <p className={styles.controlElement}>{`Currently using image: ${formData.imageFileName}`}</p>
-          </div>
-        </Tab>
-      </Tabs>
+        {
+          imageFiles.map( ( imageFile, index ) => {
+            return (
+              <option
+                key={`image-file-${index}`}
+                value={imageFile}
+              >{imageFile}</option>
+            );
+          } )
+        }
+      </Form.Select>
+      <div className={`${styles.controlElement}`}>
+        <FileUploader
+          fileType='image'
+          handleChange={ async fileName => {
+            refreshImageFiles( fileName );
+            handleChange( { imageFileName: fileName } );
+          }}
+        ></FileUploader>
+      </div>
       <ViewUnitsSelector formData={formData} handleChange={handleChange}></ViewUnitsSelector>
     </div>
   );

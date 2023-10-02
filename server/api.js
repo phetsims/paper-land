@@ -585,21 +585,42 @@ router.get( '/api/creator/soundFiles', ( req, res ) => {
  * Gets the list of image files available to use.
  */
 router.get( '/api/creator/imageFiles', ( req, res ) => {
+  const imageDirectories = [ './www/media/images', './www/media/images/uploads' ];
 
-  // use fs to get the list of files in the www/media/images directory
-  fs.readdir( './www/media/images', ( err, files ) => {
-    if ( err ) {
-      res.status( 500 ).send( 'Error reading image files' );
+  // use fs to get the list of files in the imageDirectories
+  const imageFiles = imageDirectories.reduce( ( accumulator, imageDirectory ) => {
+    const files = fs.readdirSync( imageDirectory );
+    const filtered = files.filter( file => {
+      const extension = path.extname( file ).toLowerCase();
+      return [ '.jpg', '.jpeg', '.png', '.gif' ].includes( extension );
+    } );
+
+    // if from the uplaods directory, prepend the directory name
+    if ( imageDirectory === './www/media/images/uploads' ) {
+      return accumulator.concat( filtered.map( file => `/uploads/${file}` ) );
     }
     else {
-      const imageFiles = files.filter( file => {
-        const extension = path.extname( file ).toLowerCase();
-        return [ '.jpg', '.jpeg', '.png' ].includes( extension );
-      } );
-
-      res.json( { imageFiles: imageFiles } );
+      return accumulator.concat( filtered );
     }
-  } );
+  }, [] );
+
+  res.json( { imageFiles: imageFiles } );
+
+  //
+  // // use fs to get the list of files in the www/media/images directory
+  // fs.readdir( './www/media/images', ( err, files ) => {
+  //   if ( err ) {
+  //     res.status( 500 ).send( 'Error reading image files' );
+  //   }
+  //   else {
+  //     const imageFiles = files.filter( file => {
+  //       const extension = path.extname( file ).toLowerCase();
+  //       return [ '.jpg', '.jpeg', '.png' ].includes( extension );
+  //     } );
+  //
+  //     res.json( { imageFiles: imageFiles } );
+  //   }
+  // } );
 } );
 
 /**
