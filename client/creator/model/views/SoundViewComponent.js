@@ -9,13 +9,17 @@ export default class SoundViewComponent extends ViewComponent {
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
    * @param {string} soundFileName - a sound file that exists in www/media/sounds
    * @param {boolean} loop - whether or not to loop the sound
+   * @param {boolean} autoplay - Does the sound play every component change or only from custom code?
    */
-  constructor( name, modelComponents, controlFunctionString, soundFileName, loop ) {
+  constructor( name, modelComponents, controlFunctionString, soundFileName, loop, autoplay ) {
     super( name, modelComponents, controlFunctionString );
     this.soundFileName = soundFileName;
 
     // may be undefined when loading
     this.loop = loop || false;
+
+    // In general, you want to play a sound every time your component changes.
+    this.autoplay = autoplay === undefined ? true : autoplay;
   }
 
   /**
@@ -25,7 +29,8 @@ export default class SoundViewComponent extends ViewComponent {
     return {
       ...super.save(),
       soundFileName: this.soundFileName,
-      loop: this.loop
+      loop: this.loop,
+      autoplay: this.autoplay
     };
   }
 
@@ -39,7 +44,8 @@ export default class SoundViewComponent extends ViewComponent {
       dependencies,
       stateObject.controlFunctionString,
       stateObject.soundFileName,
-      stateObject.loop
+      stateObject.loop,
+      stateObject.autoplay
     );
   }
 
@@ -47,7 +53,8 @@ export default class SoundViewComponent extends ViewComponent {
     return {
       ...ViewComponent.getStateSchema(),
       soundFileName: '',
-      loop: false
+      loop: false,
+      autoplay: true
     };
   }
 }

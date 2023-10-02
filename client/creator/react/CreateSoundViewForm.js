@@ -107,6 +107,17 @@ export default function CreateSoundViewForm( props ) {
           }}
         />
       </div>
+      <div className={styles.controlElement}>
+        <Form.Check
+          type='checkbox'
+          label='Autoplay sounds'
+          checked={formData.autoplay}
+          onChange={event => {
+            handleChange( { autoplay: event.target.checked } );
+          }}
+        />
+        <p>When checked, sounds play every component change. Uncheck for more custom control over when sounds play.</p>
+      </div>
     </div>
   );
 

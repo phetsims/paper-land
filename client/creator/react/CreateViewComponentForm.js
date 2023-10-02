@@ -157,6 +157,7 @@ export default function CreateViewComponentForm( props ) {
       if ( selectedTab === 'sounds' ) {
         editingComponent.soundFileName = soundsDataRef.current.soundFileName;
         editingComponent.loop = soundsDataRef.current.loop;
+        editingComponent.autoplay = soundsDataRef.current.autoplay;
       }
       else if ( selectedTab === 'images' ) {
         editingComponent.imageFileName = imagesDataRef.current.imageFileName;
@@ -172,7 +173,8 @@ export default function CreateViewComponentForm( props ) {
       if ( selectedTab === 'sounds' ) {
         const soundFileName = soundsDataRef.current.soundFileName;
         const loop = soundsDataRef.current.loop;
-        const soundViewComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop );
+        const autoplay = soundsDataRef.current.autoplay;
+        const soundViewComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay );
         activeProgram.viewContainer.addSoundView( soundViewComponent );
       }
       else if ( selectedTab === 'description' ) {
