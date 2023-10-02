@@ -59,6 +59,10 @@ const ViewComponentTemplates = {
           }
           {{NAME}}SoundClip.stop();
         };
+        
+        if ( {{AUTOPLAY}} ) {
+          play();
+        }
       
         {{CONTROL_FUNCTION}}
             

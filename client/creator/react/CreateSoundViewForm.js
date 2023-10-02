@@ -33,8 +33,7 @@ export default function CreateSoundViewForm( props ) {
     props.isFormValid,
     componentData => {
       return componentData.modelComponentNames.length > 0 &&
-             componentData.soundFileName.length > 0 &&
-             componentData.controlFunctionString.length > 0;
+             componentData.soundFileName.length > 0;
     },
     getFormData,
     SoundViewComponent

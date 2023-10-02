@@ -342,7 +342,8 @@ export default class ProgramCodeGenerator {
     if ( componentType === 'SoundViewComponent' ) {
       data = {
         FILE_NAME: viewComponent.soundFileName,
-        LOOP: viewComponent.loop
+        LOOP: viewComponent.loop,
+        AUTOPLAY: viewComponent.autoplay
       };
     }
     else if ( componentType === 'DescriptionViewComponent' ) {
