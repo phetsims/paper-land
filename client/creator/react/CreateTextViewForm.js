@@ -11,8 +11,15 @@ export default function CreateTextViewForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.modelComponentNames.length > 0 &&
-             componentData.controlFunctionString.length > 0;
+      const invalidReasons = [];
+
+      if ( componentData.modelComponentNames.length === 0 ) {
+        invalidReasons.push( 'No model components selected.' );
+      }
+      else if ( componentData.controlFunctionString.length === 0 ) {
+        invalidReasons.push( 'Control function has no content.' );
+      }
+      return invalidReasons;
     },
     props.getGeneralFormData,
     TextViewComponent

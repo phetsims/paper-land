@@ -9,10 +9,20 @@ export default function CreateBoundsForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.defaultMinX !== undefined && componentData.defaultMinY !== undefined &&
-             componentData.defaultMaxX !== undefined && componentData.defaultMaxY !== undefined &&
-              componentData.defaultMinX < componentData.defaultMaxX &&
-              componentData.defaultMinY < componentData.defaultMaxY;
+      const invalidReasons = [];
+
+      if ( componentData.defaultMinX === undefined || componentData.defaultMinY === undefined ||
+           componentData.defaultMaxX === undefined || componentData.defaultMaxY === undefined ) {
+        invalidReasons.push( 'Bounds min and max values are not defined.' );
+      }
+      else if ( componentData.defaultMinX >= componentData.defaultMaxX ) {
+        invalidReasons.push( 'Min X is greater than or equal to max X.' );
+      }
+      else if ( componentData.defaultMinY >= componentData.defaultMaxY ) {
+        invalidReasons.push( 'Min Y is greater than or equal to max Y.' );
+      }
+
+      return invalidReasons;
     },
     props.getFormData,
     NamedBounds2Property

@@ -11,13 +11,21 @@ export default function CreateNumberControllerForm( props ) {
     props.isFormValid,
     componentData => {
 
+      const invalidReasons = [];
+
       // For paper control, the relationship control type is required
       if ( componentData.controlTypeFamily === 'PAPER_MOVEMENT' ) {
-        return ( !!componentData.controlType && !!componentData.relationshipControlType );
+        if ( !componentData.controlType || !componentData.relationshipControlType ) {
+          invalidReasons.push( 'No control type selected.' );
+        }
       }
       else {
-        return ( !!componentData.controlType );
+        if ( !componentData.controlType ) {
+          invalidReasons.push( 'No control type selected.' );
+        }
       }
+
+      return invalidReasons;
     },
     props.getFormData,
     NumberPropertyController

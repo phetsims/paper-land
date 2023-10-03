@@ -9,7 +9,11 @@ export default function CreatePositionForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.defaultX !== undefined && componentData.defaultY !== undefined;
+      const invalidReasons = [];
+      if ( componentData.defaultX === undefined || componentData.defaultY === undefined ) {
+        invalidReasons.push( 'X or Y value is not defined.' );
+      }
+      return invalidReasons;
     },
     props.getFormData,
     NamedVector2Property

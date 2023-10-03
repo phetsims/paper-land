@@ -32,8 +32,14 @@ export default function CreateSoundViewForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.modelComponentNames.length > 0 &&
-             componentData.soundFileName.length > 0;
+      const invalidReasons = [];
+      if ( componentData.soundFileName.length === 0 ) {
+        invalidReasons.push( 'No sound file selected.' );
+      }
+      if ( componentData.modelComponentNames.length === 0 ) {
+        invalidReasons.push( 'No model components selected.' );
+      }
+      return invalidReasons;
     },
     getFormData,
     SoundViewComponent

@@ -9,7 +9,9 @@ export default function CreateBooleanForm( props ) {
     props.activeEdit,
     props.isFormValid,
     () => {
-      return true;
+
+      // Always valid.
+      return [];
     },
     props.getFormData,
     NamedBooleanProperty

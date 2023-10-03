@@ -75,12 +75,13 @@ export default function CreateViewComponentForm( props ) {
   // component state
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
-  const [ soundsFormValid, setSoundsFormValid ] = useState( false );
-  const [ descriptionFormValid, setDescriptionFormValid ] = useState( false );
-  const [ textFormValid, setTextFormValid ] = useState( false );
-  const [ shapesFormValid, setShapesFormValid ] = useState( false );
-  const [ backgroundFormValid, setBackgroundFormValid ] = useState( false );
-  const [ imagesFormValid, setImagesFormValid ] = useState( false );
+
+  const [ soundsFormValid, setSoundsFormValid ] = useState( [] );
+  const [ descriptionFormValid, setDescriptionFormValid ] = useState( [] );
+  const [ textFormValid, setTextFormValid ] = useState( [] );
+  const [ shapesFormValid, setShapesFormValid ] = useState( [] );
+  const [ backgroundFormValid, setBackgroundFormValid ] = useState( [] );
+  const [ imagesFormValid, setImagesFormValid ] = useState( [] );
 
   // refs to form data
   const generalDataRef = useRef( {} );
@@ -115,22 +116,22 @@ export default function CreateViewComponentForm( props ) {
 
   useEffect( () => {
     if ( selectedTab === 'sounds' ) {
-      setSelectedTabFormValid( soundsFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( soundsFormValid.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'description' ) {
-      setSelectedTabFormValid( descriptionFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( descriptionFormValid.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'background' ) {
-      setSelectedTabFormValid( backgroundFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( backgroundFormValid.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'images' ) {
-      setSelectedTabFormValid( imagesFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( imagesFormValid.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'text' ) {
-      setSelectedTabFormValid( textFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( textFormValid.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'shapes' ) {
-      setSelectedTabFormValid( shapesFormValid && isComponentNameValid() );
+      setSelectedTabFormValid( shapesFormValid.length === 0 && isComponentNameValid() );
     }
   }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid, shapesFormValid, textFormValid ] );
 

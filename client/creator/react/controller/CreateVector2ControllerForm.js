@@ -10,7 +10,12 @@ export default function CreateVector2ControllerForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.controlType;
+      if ( !componentData.controlType ) {
+        return [ 'No control type selected.' ];
+      }
+      else {
+        return [];
+      }
     },
     props.getFormData,
     Vector2PropertyController

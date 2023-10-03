@@ -11,6 +11,7 @@ export default function CreateNumberForm( props ) {
     props.activeEdit,
     props.isFormValid,
     newData => {
+      const invalidReasons = [];
 
       const allDefined = newData.min !== '' &&
                          newData.max !== '' &&
@@ -19,7 +20,20 @@ export default function CreateNumberForm( props ) {
       const rangesCorrect = stringToNumber( newData.min ) <= stringToNumber( newData.defaultValue ) &&
                             stringToNumber( newData.defaultValue ) <= stringToNumber( newData.max );
 
-      return allDefined && rangesCorrect;
+      if ( !allDefined ) {
+        invalidReasons.push( 'All values must be defined.' );
+      }
+      if ( stringToNumber( newData.min ) > stringToNumber( newData.max ) ) {
+        invalidReasons.push( 'Min value must be less than or equal to max value.' );
+      }
+      if ( stringToNumber( newData.min ) > stringToNumber( newData.defaultValue ) ) {
+        invalidReasons.push( 'Min value must be less than or equal to default value.' );
+      }
+      if ( !rangesCorrect ) {
+        invalidReasons.push( 'Default value must be between min and max values.' );
+      }
+
+      return invalidReasons;
     },
     props.getFormData,
     NamedNumberProperty

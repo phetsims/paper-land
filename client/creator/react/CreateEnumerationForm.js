@@ -11,8 +11,14 @@ export default function CreateEnumerationForm( props ) {
     props.isFormValid,
     proposedData => {
 
-      // as long as there is at least one value and they are all unique, the form is valid
-      return proposedData.values.length > 0 && new Set( proposedData.values ).size === proposedData.values.length;
+      const invalidReasons = [];
+      if ( proposedData.values.length === 0 ) {
+        invalidReasons.push( 'No values defined.' );
+      }
+      else if ( new Set( proposedData.values ).size !== proposedData.values.length ) {
+        invalidReasons.push( 'Values are not unique.' );
+      }
+      return invalidReasons;
     },
     props.getFormData,
     NamedEnumerationProperty

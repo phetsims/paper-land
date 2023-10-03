@@ -27,7 +27,7 @@ export default function CreateShapeViewForm( props ) {
     componentData => {
 
       // TODO: How should validation work for this component?
-      return true;
+      return [];
     },
     getFormData,
     ShapeViewComponent

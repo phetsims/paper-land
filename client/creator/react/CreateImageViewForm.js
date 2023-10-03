@@ -21,7 +21,12 @@ export default function CreateImageViewForm( props ) {
     props.activeEdit,
     props.isFormValid,
     componentData => {
-      return componentData.imageFileName.length > 0;
+      if ( componentData.imageFileName.length === 0 ) {
+        return [ 'No image selected.' ];
+      }
+      else {
+        return [];
+      }
     },
     getFormData,
     ImageViewComponent
@@ -84,7 +89,7 @@ export default function CreateImageViewForm( props ) {
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='image'
-          handleChange={ async fileName => {
+          handleChange={async fileName => {
             refreshImageFiles( fileName );
             handleChange( { imageFileName: fileName } );
           }}

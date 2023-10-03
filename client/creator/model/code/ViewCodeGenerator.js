@@ -75,7 +75,7 @@ export default class ViewCodeGenerator {
       };
       
       const setScale = ( scale ) => {
-        ${componentNameString}.scaleMagnitude = scale;
+        ${componentNameString}.setScaleMagnitude( scale );
       };
       
       const setOpacity = ( opacity ) => {

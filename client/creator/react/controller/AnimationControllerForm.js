@@ -25,7 +25,19 @@ export default function AnimationControllerForm( props ) {
     const nameGood = isNameValid( activeEditProperty.value, model, componentName );
     const controlledGood = currentFormData.controlledPropertyNames.length > 0;
     const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
-    return nameGood && controlledGood && controlFunctionGood;
+
+    const invalidReasons = [];
+    if ( !nameGood ) {
+      invalidReasons.push( 'Name is too short or is not unique.' );
+    }
+    if ( !controlledGood ) {
+      invalidReasons.push( 'No controlled properties selected.' );
+    }
+    if ( !controlFunctionGood ) {
+      invalidReasons.push( 'No control function defined.' );
+    }
+
+    return invalidReasons;
   };
 
   const [ formData, handleChange ] = useEditableForm(

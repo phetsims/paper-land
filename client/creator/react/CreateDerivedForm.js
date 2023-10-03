@@ -24,7 +24,12 @@ export default function CreateDerivedForm( props ) {
     proposedData => {
 
       // valid as long as at least one dependency is selected
-      return proposedData.dependencyNames.length > 0;
+      if ( proposedData.dependencyNames.length === 0 ) {
+        return [ 'No model components selected.' ];
+      }
+      else {
+        return [];
+      }
     },
     props.getFormData,
     NamedDerivedProperty

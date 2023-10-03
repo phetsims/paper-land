@@ -25,7 +25,21 @@ export default function MultilinkControllerForm( props ) {
     const dependenciesGood = currentFormData.dependencyNames.length > 0;
     const controlledGood = currentFormData.controlledPropertyNames.length > 0;
     const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
-    return nameGood && dependenciesGood && controlledGood && controlFunctionGood;
+
+    const invalidReasons = [];
+    if ( !nameGood ) {
+      invalidReasons.push( 'Name is too short or is not unique.' );
+    }
+    if ( !dependenciesGood ) {
+      invalidReasons.push( 'No dependency properties selected.' );
+    }
+    if ( !controlledGood ) {
+      invalidReasons.push( 'No controlled properties selected.' );
+    }
+    if ( !controlFunctionGood ) {
+      invalidReasons.push( 'No control function defined.' );
+    }
+    return invalidReasons;
   };
 
   const [ formData, handleChange ] = useEditableForm(
