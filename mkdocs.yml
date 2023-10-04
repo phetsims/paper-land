@@ -9,6 +9,7 @@ site_description: >-
 # Repository
 repo_name: paper-land
 repo_url: https://github.com/phetsims/paper-land
+edit_uri: edit/docs/docs
 
 # Configuration
 theme:
@@ -22,14 +23,14 @@ theme:
     - content.code.copy
     # - content.tabs.link
     - content.tooltips
-    # - header.autohide
-    # - navigation.expand
+    - header.autohide
+    - navigation.expand
     - navigation.footer
     - navigation.indexes
-    # - navigation.instant
+    - navigation.instant
     # - navigation.prune
     - navigation.sections
-    - navigation.tabs
+    # - navigation.tabs
     # - navigation.tabs.sticky
     - navigation.top
     - navigation.tracking

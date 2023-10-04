@@ -15,7 +15,7 @@ Paper Playground is an open-source project for collaboratively creating multimod
 
 We aim to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning technology.
 
-Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate the library stack used by [PhET Interactive Simulations](https://www.github.com/phetsims/) as a convenient 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
+Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [the library stack](https://github.com/scenerystack) used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
 
 The ideas behind Paper Playground are simple, but the possibilities are infinite.
 
