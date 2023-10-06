@@ -59,7 +59,14 @@ const FamilyTypeSelect = function( props ) {
       <Form.Select
         value={controlTypeFamily}
         onChange={event => {
-          handleChange( { controlTypeFamily: event.target.value } );
+          handleChange( {
+            controlTypeFamily: event.target.value,
+
+            // when changing the family, we need to clear related selections so they don't appear as entries during
+            // validation
+            controlType: '',
+            relationshipControlType: ''
+          } );
         }}
       >
         {familyKeys.map( controlTypeFamily => {

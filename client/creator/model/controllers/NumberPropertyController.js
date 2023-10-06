@@ -71,7 +71,10 @@ export default class NumberPropertyController extends PropertyController {
   static getStateSchema() {
     return {
       ...PropertyController.getStateSchema(),
-      relationshipControlType: ''
+      relationshipControlType: '',
+
+      // a type specific default needs to be provided
+      controlTypeFamily: 'PAPER_MOVEMENT'
     };
   }
 
