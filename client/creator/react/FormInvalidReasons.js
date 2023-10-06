@@ -7,7 +7,7 @@ export default function FormInvalidReasons( props ) {
   return (
     <div hidden={invalidReasons.length === 0 && componentNameValid} className={styles.validation}>
       <hr></hr>
-      <h4>️⚠ To Create Component:</h4>
+      <h4>️⚠ Required for component:</h4>
       <ul>
         {
           componentNameValid ? null :

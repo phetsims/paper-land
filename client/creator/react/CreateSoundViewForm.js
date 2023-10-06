@@ -39,6 +39,9 @@ export default function CreateSoundViewForm( props ) {
       if ( componentData.modelComponentNames.length === 0 ) {
         invalidReasons.push( 'No model components selected.' );
       }
+      if ( !componentData.autoplay && componentData.controlFunctionString === '' ) {
+        invalidReasons.push( 'Control function is required without autoplay.' );
+      }
       return invalidReasons;
     },
     getFormData,

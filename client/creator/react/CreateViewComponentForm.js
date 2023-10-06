@@ -17,6 +17,7 @@ import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
 import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
 import CreateTextViewForm from './CreateTextViewForm.js';
+import FormInvalidReasons from './FormInvalidReasons.js';
 
 const getTabForActiveEdit = activeEdit => {
   if ( activeEdit && activeEdit.component instanceof ViewComponent ) {
@@ -211,6 +212,30 @@ export default function CreateViewComponentForm( props ) {
     props.onComponentCreated();
   };
 
+  const getInvalidReasonsForSelectedTab = () => {
+    if ( selectedTab === 'shapes' ) {
+      return shapesFormValid;
+    }
+    else if ( selectedTab === 'sounds' ) {
+      return soundsFormValid;
+    }
+    else if ( selectedTab === 'description' ) {
+      return descriptionFormValid;
+    }
+    else if ( selectedTab === 'background' ) {
+      return backgroundFormValid;
+    }
+    else if ( selectedTab === 'images' ) {
+      return imagesFormValid;
+    }
+    else if ( selectedTab === 'text' ) {
+      return textFormValid;
+    }
+    else {
+      return [];
+    }
+  }
+
   // If there is an active edit, you cannot change tabs
   const tabDisabled = !!( activeEdit && activeEdit.component );
 
@@ -281,6 +306,7 @@ export default function CreateViewComponentForm( props ) {
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.
         </Tab>
       </Tabs>
+      <FormInvalidReasons invalidReasons={getInvalidReasonsForSelectedTab()} componentNameValid={isComponentNameValid()}></FormInvalidReasons>
       <CreateComponentButton
         selectedTabFormValid={selectedTabFormValid}
         createComponent={createComponent}
