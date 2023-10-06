@@ -24,9 +24,14 @@ export default class ProgramModel {
     // @public (read-only)
     this.activeEditProperty = activeEditProperty;
 
+    // Various metadata or configuration that applies to the entire program
     this.titleProperty = new phet.axon.StringProperty( '' );
     this.keywordsProperty = new phet.axon.StringProperty( '' );
     this.descriptionProperty = new phet.axon.StringProperty( '' );
+    this.topWhiskerLengthProperty = new phet.axon.NumberProperty( 0.2 );
+    this.bottomWhiskerLengthProperty = new phet.axon.NumberProperty( 0.2 );
+    this.leftWhiskerLengthProperty = new phet.axon.NumberProperty( 0.2 );
+    this.rightWhiskerLengthProperty = new phet.axon.NumberProperty( 0.2 );
 
     // @public - responsible for all 'model' components of this program
     this.modelContainer = new ProgramModelContainer( this, activeEditProperty );
@@ -85,6 +90,11 @@ export default class ProgramModel {
       keywords: this.keywordsProperty.value,
       description: this.descriptionProperty.value,
 
+      topWhiskerLength: this.topWhiskerLengthProperty.value,
+      rightWhiskerLength: this.rightWhiskerLengthProperty.value,
+      bottomWhiskerLength: this.bottomWhiskerLengthProperty.value,
+      leftWhiskerLength: this.leftWhiskerLengthProperty.value,
+
       // A built-in function available because of phet-io
       positionProperty: this.positionProperty.value.toStateObject(),
 
@@ -106,6 +116,14 @@ export default class ProgramModel {
     this.titleProperty.value = stateObject.title;
     this.keywordsProperty.value = stateObject.keywords;
     this.descriptionProperty.value = stateObject.description;
+
+    // These were added late in the game. We need to be graceful if someone is saving data without saving/loading
+    // these values.
+    // TODO: Someday, we should remove the fallback code.
+    this.topWhiskerLengthProperty.value = stateObject.topWhiskerLength || 0.2;
+    this.rightWhiskerLengthProperty.value = stateObject.rightWhiskerLength || 0.2;
+    this.bottomWhiskerLengthProperty.value = stateObject.bottomWhiskerLength || 0.2;
+    this.leftWhiskerLengthProperty.value = stateObject.leftWhiskerLength || 0.2;
   }
 
   /**

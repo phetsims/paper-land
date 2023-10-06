@@ -59,54 +59,6 @@ export default function CreateBooleanControllerForm( props ) {
             handleChange( { whiskerConfiguration: { otherPaperNumber: event.target.value } } );
           }}
         />
-
-        <Form.Label>Top whisker length</Form.Label>
-        <Form.Control
-          type={'number'}
-          min={0}
-          max={1}
-          step={0.1}
-          value={formData.whiskerConfiguration.topLength}
-          onChange={event => {
-            handleChange( { whiskerConfiguration: { topLength: event.target.value } } );
-          } }
-        />
-
-        <Form.Label>Right whisker length</Form.Label>
-        <Form.Control
-          type={'number'}
-          min={0}
-          max={1}
-          step={0.1}
-          value={formData.whiskerConfiguration.rightLength}
-          onChange={event => {
-            handleChange( { whiskerConfiguration: { rightLength: event.target.value } } );
-          } }
-        />
-
-        <Form.Label>Bottom whisker length</Form.Label>
-        <Form.Control
-          type={'number'}
-          min={0}
-          max={1}
-          step={0.1}
-          value={formData.whiskerConfiguration.bottomLength}
-          onChange={event => {
-            handleChange( { whiskerConfiguration: { bottomLength: event.target.value } } );
-          } }
-        />
-
-        <Form.Label>Left whisker length</Form.Label>
-        <Form.Control
-          type={'number'}
-          min={0}
-          max={1}
-          step={0.1}
-          value={formData.whiskerConfiguration.leftLength}
-          onChange={event => {
-            handleChange( { whiskerConfiguration: { leftLength: event.target.value } } );
-          } }
-        />
       </div>
     </>
   );
