@@ -236,6 +236,13 @@ export default class ProgramNode extends phet.scenery.Node {
     } );
     this.addInputListener( dragListener );
 
+    // Move this Node to the front after interaction with any of its components (so can't be in DragListener start)
+    this.addInputListener( {
+      down: () => {
+        this.moveToFront();
+      }
+    } );
+
     // Don't pan the view with the dragged program, I find that annoying in this context.
     dragListener.setCreatePanTargetBounds( () => { return null; } );
 
