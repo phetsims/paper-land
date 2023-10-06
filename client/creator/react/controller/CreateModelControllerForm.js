@@ -75,6 +75,7 @@ export default function CreateModelControllerForm( props ) {
             componentName={componentName}
             activeEditProperty={activeEditProperty}
             onComponentCreated={props.onComponentCreated}
+            model={model}
           />
         </Tab>
         <Tab eventKey='link' title='Link' tabClassName={styles.tab}>

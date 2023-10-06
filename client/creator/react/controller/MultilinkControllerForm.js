@@ -5,6 +5,7 @@ import MultilinkListenerComponent from '../../model/controllers/MultilinkListene
 import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
+import FormInvalidReasons from '../FormInvalidReasons.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
 import useEditableForm from '../useEditableForm.js';
 import VariableDocumentationList from '../VariableDocumentationList.js';
@@ -16,28 +17,24 @@ export default function MultilinkControllerForm( props ) {
   const model = props.model;
 
   // validity state for the form
-  const [ formValid, setFormValid ] = useState( false );
+  const [ formValid, setFormValid ] = useState( [] );
 
   // The function that determines if the form is valid, needs to be updated when formData and name
   // change
   const getIsFormValid = currentFormData => {
-    const nameGood = isNameValid( activeEditProperty.value, model, componentName );
     const dependenciesGood = currentFormData.dependencyNames.length > 0;
     const controlledGood = currentFormData.controlledPropertyNames.length > 0;
     const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
 
     const invalidReasons = [];
-    if ( !nameGood ) {
-      invalidReasons.push( 'Name is too short or is not unique.' );
-    }
     if ( !dependenciesGood ) {
-      invalidReasons.push( 'No dependency properties selected.' );
+      invalidReasons.push( 'Must use at least one dependency component.' );
     }
     if ( !controlledGood ) {
-      invalidReasons.push( 'No controlled properties selected.' );
+      invalidReasons.push( 'Must select some controlled components.' );
     }
     if ( !controlFunctionGood ) {
-      invalidReasons.push( 'No control function defined.' );
+      invalidReasons.push( 'The control function is required.' );
     }
     return invalidReasons;
   };
@@ -109,7 +106,7 @@ export default function MultilinkControllerForm( props ) {
         }}
       />
       <hr></hr>
-      <h4>Controlled Properties</h4>
+      <h4>Controlled Components</h4>
       <ModelComponentSelector
         allModelComponents={controllableComponents}
         selectedModelComponents={selectedControlledComponents}
@@ -135,9 +132,10 @@ export default function MultilinkControllerForm( props ) {
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>
+      <FormInvalidReasons invalidReasons={formValid} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formValid}
+        selectedTabFormValid={formValid.length === 0}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </div>

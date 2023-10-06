@@ -4,6 +4,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
+import { isNameValid } from '../../../utils.js';
 import BooleanPropertyController from '../../model/controllers/BooleanPropertyController.js';
 import EnumerationPropertyController from '../../model/controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
@@ -12,6 +13,7 @@ import Vector2PropertyController from '../../model/controllers/Vector2PropertyCo
 import WhiskerConfiguration from '../../model/controllers/WhiskerConfiguration.js';
 import Utils from '../../Utils.js';
 import CreateComponentButton from '../CreateComponentButton.js';
+import FormInvalidReasons from '../FormInvalidReasons.js';
 import styles from './../../CreatorMain.css';
 import CreateBooleanControllerForm from './CreateBooleanControllerForm.js';
 import CreateEnumerationControllerForm from './CreateEnumerationControllerForm.js';
@@ -23,6 +25,7 @@ export default function PaperControllerForm( props ) {
   const activeEdit = props.activeEdit;
   const componentName = props.componentName;
   const activeEditProperty = props.activeEditProperty;
+  const model = props.model;
 
   const activeProgram = props.activeEdit.program;
 
@@ -47,10 +50,10 @@ export default function PaperControllerForm( props ) {
   const [ componentFormValid, setComponentFormValid ] = useState( false );
 
   // State for whether a particular form is valid for creating a controller.
-  const [ positionFormValid, setPositionFormValid ] = useState( false );
-  const [ booleanFormValid, setBooleanFormValid ] = useState( false );
-  const [ numberFormValid, setNumberFormValid ] = useState( false );
-  const [ enumerationFormValid, setEnumerationFormValid ] = useState( false );
+  const [ positionFormValid, setPositionFormValid ] = useState( [] );
+  const [ booleanFormValid, setBooleanFormValid ] = useState( [] );
+  const [ numberFormValid, setNumberFormValid ] = useState( [] );
+  const [ enumerationFormValid, setEnumerationFormValid ] = useState( [] );
 
   // forwarded to each form for a controller type to make sure that entries are reasonable
   const getIsPositionFormValid = isValid => setPositionFormValid( isValid );
@@ -90,16 +93,16 @@ export default function PaperControllerForm( props ) {
   // Update valid form state when validity of a child form changes.
   useEffect( () => {
     if ( selectedComponentType === 'Vector2Property' ) {
-      setComponentFormValid( positionFormValid && componentName.length > 0 );
+      setComponentFormValid( positionFormValid.length === 0 && componentName.length > 0 );
     }
     else if ( selectedComponentType === 'BooleanProperty' ) {
-      setComponentFormValid( booleanFormValid && componentName.length > 0 );
+      setComponentFormValid( booleanFormValid.length === 0 && componentName.length > 0 );
     }
     else if ( selectedComponentType === 'NumberProperty' ) {
-      setComponentFormValid( numberFormValid && componentName.length > 0 );
+      setComponentFormValid( numberFormValid.length === 0 && componentName.length > 0 );
     }
     else if ( selectedComponentType === 'StringProperty' ) {
-      setComponentFormValid( enumerationFormValid && componentName.length > 0 );
+      setComponentFormValid( enumerationFormValid.length === 0 && componentName.length > 0 );
     }
     else {
       setComponentFormValid( false );
@@ -165,6 +168,24 @@ export default function PaperControllerForm( props ) {
     props.onComponentCreated();
   };
 
+  const getInvalidReasonsForPropertyType = () => {
+    if ( selectedComponentType === 'Vector2Property' ) {
+      return positionFormValid;
+    }
+    else if ( selectedComponentType === 'BooleanProperty' ) {
+      return booleanFormValid;
+    }
+    else if ( selectedComponentType === 'NumberProperty' ) {
+      return numberFormValid;
+    }
+    else if ( selectedComponentType === 'StringProperty' ) {
+      return enumerationFormValid;
+    }
+    else {
+      return [];
+    }
+  };
+
   return (
     <div>
       <div className={styles.controlElement}>
@@ -209,6 +230,7 @@ export default function PaperControllerForm( props ) {
        </CreateBooleanControllerForm> :
        <p className={styles.controlElement}>Create a Model Component to control.</p>
       }
+      <FormInvalidReasons invalidReasons={getInvalidReasonsForPropertyType()} componentNameValid={isNameValid( activeEdit, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
         selectedTabFormValid={componentFormValid}

@@ -6,6 +6,7 @@ import AIHelperChat from '../AIHelperChat.js';
 import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
+import FormInvalidReasons from '../FormInvalidReasons.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
 import useEditableForm from '../useEditableForm.js';
 import VariableDocumentationList from '../VariableDocumentationList.js';
@@ -17,24 +18,20 @@ export default function AnimationControllerForm( props ) {
   const model = props.model;
 
   // validity state for the form
-  const [ formValid, setFormValid ] = useState( false );
+  const [ formValid, setFormValid ] = useState( [] );
 
   // The function that determines if the form is valid, needs to be updated when formData and name
   // change
   const getIsFormValid = currentFormData => {
-    const nameGood = isNameValid( activeEditProperty.value, model, componentName );
     const controlledGood = currentFormData.controlledPropertyNames.length > 0;
     const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
 
     const invalidReasons = [];
-    if ( !nameGood ) {
-      invalidReasons.push( 'Name is too short or is not unique.' );
-    }
     if ( !controlledGood ) {
-      invalidReasons.push( 'No controlled properties selected.' );
+      invalidReasons.push( 'Must use at least one controlled component.' );
     }
     if ( !controlFunctionGood ) {
-      invalidReasons.push( 'No control function defined.' );
+      invalidReasons.push( 'The control function is required.' );
     }
 
     return invalidReasons;
@@ -84,7 +81,7 @@ export default function AnimationControllerForm( props ) {
   return (
     <>
       <hr></hr>
-      <h4>Controlled Properties</h4>
+      <h4>Controlled Components</h4>
       <ModelComponentSelector
         allModelComponents={allModelComponents}
         selectedModelComponents={selectedControlledComponents}
@@ -110,9 +107,10 @@ export default function AnimationControllerForm( props ) {
         variableComponents={selectedControlledComponents}
         additionalPromptContent={'I also have the following variables for animation. They cannot be changed.\ndt - the time step, in seconds\n"elapsedTime" - How long the application has been running, in seconds'}
       ></AIHelperChat>
+      <FormInvalidReasons invalidReasons={formValid} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formValid}
+        selectedTabFormValid={formValid.length === 0}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </>
