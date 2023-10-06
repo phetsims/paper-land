@@ -77,12 +77,12 @@ export default function CreateViewComponentForm( props ) {
   const [ selectedTabFormValid, setSelectedTabFormValid ] = useState( false );
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
 
-  const [ soundsFormValid, setSoundsFormValid ] = useState( [] );
-  const [ descriptionFormValid, setDescriptionFormValid ] = useState( [] );
-  const [ textFormValid, setTextFormValid ] = useState( [] );
-  const [ shapesFormValid, setShapesFormValid ] = useState( [] );
-  const [ backgroundFormValid, setBackgroundFormValid ] = useState( [] );
-  const [ imagesFormValid, setImagesFormValid ] = useState( [] );
+  const [ soundsFormInvalidReasons, setSoundsFormInvalidReasons ] = useState( [] );
+  const [ descriptionFormInvalidReasons, setDescriptionFormInvalidReasons ] = useState( [] );
+  const [ textFormInvalidReasons, setTextFormInvalidReasons ] = useState( [] );
+  const [ shapesFormInvalidReasons, setShapesFormInvalidReasons ] = useState( [] );
+  const [ backgroundFormInvalidReasons, setBackgroundFormInvalidReasons ] = useState( [] );
+  const [ imagesFormInvalidReasons, setImagesFormInvalidReasons ] = useState( [] );
 
   // refs to form data
   const generalDataRef = useRef( {} );
@@ -97,12 +97,12 @@ export default function CreateViewComponentForm( props ) {
   const getDataForShapes = data => {shapesDataRef.current = data;};
 
   // functions for subcomponents to set form validity
-  const getIsSoundsFormValid = isFormValid => setSoundsFormValid( isFormValid );
-  const getIsDescriptionFormValid = isFormValid => setDescriptionFormValid( isFormValid );
-  const getIsBackgroundFormValid = isFormValid => setBackgroundFormValid( isFormValid );
-  const getIsImagesFormValid = isFormValid => setImagesFormValid( isFormValid );
-  const getIsTextFormValid = isFormValid => setTextFormValid( isFormValid );
-  const getIsShapesFormValid = isFormValid => setShapesFormValid( isFormValid );
+  const getSoundsFormInvalidReasons = formInvalidReasons => setSoundsFormInvalidReasons( formInvalidReasons );
+  const getDescriptionFormInvalidReasons = formInvalidReasons => setDescriptionFormInvalidReasons( formInvalidReasons );
+  const getBackgroundFormInvalidReasons = formInvalidReasons => setBackgroundFormInvalidReasons( formInvalidReasons );
+  const getImagesFormInvalidReasons = formInvalidReasons => setImagesFormInvalidReasons( formInvalidReasons );
+  const getTextFormInvalidReasons = formInvalidReasons => setTextFormInvalidReasons( formInvalidReasons );
+  const getShapesFormInvalidReasons = formInvalidReasons => setShapesFormInvalidReasons( formInvalidReasons );
 
 
   const isComponentNameValid = () => {
@@ -117,24 +117,24 @@ export default function CreateViewComponentForm( props ) {
 
   useEffect( () => {
     if ( selectedTab === 'sounds' ) {
-      setSelectedTabFormValid( soundsFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( soundsFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'description' ) {
-      setSelectedTabFormValid( descriptionFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( descriptionFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'background' ) {
-      setSelectedTabFormValid( backgroundFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( backgroundFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'images' ) {
-      setSelectedTabFormValid( imagesFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( imagesFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'text' ) {
-      setSelectedTabFormValid( textFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( textFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'shapes' ) {
-      setSelectedTabFormValid( shapesFormValid.length === 0 && isComponentNameValid() );
+      setSelectedTabFormValid( shapesFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
-  }, [ props.componentName, selectedTab, soundsFormValid, descriptionFormValid, backgroundFormValid, imagesFormValid, shapesFormValid, textFormValid ] );
+  }, [ props.componentName, selectedTab, soundsFormInvalidReasons, descriptionFormInvalidReasons, backgroundFormInvalidReasons, imagesFormInvalidReasons, shapesFormInvalidReasons, textFormInvalidReasons ] );
 
   // Set the selected tab when the active edit changes
   useEffect( () => {
@@ -214,27 +214,27 @@ export default function CreateViewComponentForm( props ) {
 
   const getInvalidReasonsForSelectedTab = () => {
     if ( selectedTab === 'shapes' ) {
-      return shapesFormValid;
+      return shapesFormInvalidReasons;
     }
     else if ( selectedTab === 'sounds' ) {
-      return soundsFormValid;
+      return soundsFormInvalidReasons;
     }
     else if ( selectedTab === 'description' ) {
-      return descriptionFormValid;
+      return descriptionFormInvalidReasons;
     }
     else if ( selectedTab === 'background' ) {
-      return backgroundFormValid;
+      return backgroundFormInvalidReasons;
     }
     else if ( selectedTab === 'images' ) {
-      return imagesFormValid;
+      return imagesFormInvalidReasons;
     }
     else if ( selectedTab === 'text' ) {
-      return textFormValid;
+      return textFormInvalidReasons;
     }
     else {
       return [];
     }
-  }
+  };
 
   // If there is an active edit, you cannot change tabs
   const tabDisabled = !!( activeEdit && activeEdit.component );
@@ -253,7 +253,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='shapes' title='Shapes' tabClassName={styles.tab}>
           <CreateShapeViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsShapesFormValid}
+            isFormValid={getShapesFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             getShapeFormData={getDataForShapes}
             activeEdit={activeEdit}
@@ -262,7 +262,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='background' title='Background' tabClassName={styles.tab}>
           <CreateBackgroundViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsBackgroundFormValid}
+            isFormValid={getBackgroundFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           ></CreateBackgroundViewForm>
@@ -270,7 +270,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='images' title='Images' tabClassName={styles.tab}>
           <CreateImageViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsImagesFormValid}
+            isFormValid={getImagesFormInvalidReasons}
             getImageFormData={getDataForImages}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
@@ -279,7 +279,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='text' title='Text' tabClassName={styles.tab}>
           <CreateTextViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsTextFormValid}
+            isFormValid={getTextFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           ></CreateTextViewForm>
@@ -287,7 +287,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
           <CreateSoundViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsSoundsFormValid}
+            isFormValid={getSoundsFormInvalidReasons}
             getSoundFormData={getDataForSounds}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
@@ -296,7 +296,7 @@ export default function CreateViewComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='description' title='Description' tabClassName={styles.tab}>
           <CreateDescriptionViewForm
             allModelComponents={props.allModelComponents}
-            isFormValid={getIsDescriptionFormValid}
+            isFormValid={getDescriptionFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           >

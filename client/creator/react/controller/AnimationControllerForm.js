@@ -18,7 +18,7 @@ export default function AnimationControllerForm( props ) {
   const model = props.model;
 
   // validity state for the form
-  const [ formValid, setFormValid ] = useState( [] );
+  const [ formInvalidReasons, setFormInvalidReasons ] = useState( [] );
 
   // The function that determines if the form is valid, needs to be updated when formData and name
   // change
@@ -41,8 +41,8 @@ export default function AnimationControllerForm( props ) {
     props.activeEdit,
 
     // only the name controls validity for now
-    valid => {
-      setFormValid( valid );
+    validReasons => {
+      setFormInvalidReasons( validReasons );
     },
     data => {
       return getIsFormValid( data );
@@ -52,7 +52,7 @@ export default function AnimationControllerForm( props ) {
   );
 
   useEffect( () => {
-    setFormValid( getIsFormValid( formData ) );
+    setFormInvalidReasons( getIsFormValid( formData ) );
   }, [ componentName ] );
 
   const selectedControlledComponents = Component.findComponentsByName( props.allModelComponents, formData.controlledPropertyNames );
@@ -107,10 +107,10 @@ export default function AnimationControllerForm( props ) {
         variableComponents={selectedControlledComponents}
         additionalPromptContent={'I also have the following variables for animation. They cannot be changed.\ndt - the time step, in seconds\n"elapsedTime" - How long the application has been running, in seconds'}
       ></AIHelperChat>
-      <FormInvalidReasons invalidReasons={formValid} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
+      <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formValid.length === 0}
+        selectedTabFormValid={formInvalidReasons.length === 0}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </>

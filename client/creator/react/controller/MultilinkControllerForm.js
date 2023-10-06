@@ -17,7 +17,7 @@ export default function MultilinkControllerForm( props ) {
   const model = props.model;
 
   // validity state for the form
-  const [ formValid, setFormValid ] = useState( [] );
+  const [ formInvalidReasons, setFormInvalidReasons ] = useState( [] );
 
   // The function that determines if the form is valid, needs to be updated when formData and name
   // change
@@ -44,7 +44,7 @@ export default function MultilinkControllerForm( props ) {
 
     // only the name controls validity for now
     valid => {
-      setFormValid( valid );
+      setFormInvalidReasons( valid );
     },
     data => {
       return getIsFormValid( data );
@@ -54,7 +54,7 @@ export default function MultilinkControllerForm( props ) {
   );
 
   useEffect( () => {
-    setFormValid( getIsFormValid( formData ) );
+    setFormInvalidReasons( getIsFormValid( formData ) );
   }, [ componentName ] );
 
   // Get the references to the actual model components from selected form data (name strings)
@@ -132,10 +132,10 @@ export default function MultilinkControllerForm( props ) {
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>
-      <FormInvalidReasons invalidReasons={formValid} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
+      <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formValid.length === 0}
+        selectedTabFormValid={formInvalidReasons.length === 0}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </div>
