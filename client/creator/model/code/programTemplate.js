@@ -55,7 +55,13 @@ importScripts('paper.js');
         onProgramMarkersRemoved: onProgramMarkersRemoved.toString(),
         onProgramMarkersChangedPosition: onProgramMarkersChangedPosition.toString(),
         onProgramAdjacent: onProgramAdjacent.toString(),
-        onProgramSeparated: onProgramSeparated.toString()
+        onProgramSeparated: onProgramSeparated.toString(),
+      },
+      customWhiskerLengths: {
+        top: {{TOP_WHISKER_LENGTH}},
+        right: {{RIGHT_WHISKER_LENGTH}},
+        bottom: {{BOTTOM_WHISKER_LENGTH}},
+        left: {{LEFT_WHISKER_LENGTH}}
       }
     }
   } );

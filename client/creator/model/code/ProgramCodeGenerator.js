@@ -11,11 +11,19 @@ import ViewComponentTemplates from './ViewComponentTemplates.js';
 export default class ProgramCodeGenerator {
   static convertToCode( program ) {
     const data = {
+
+      // metadata
       TITLE: program.titleProperty.value,
       KEYWORDS: program.keywordsProperty.value,
       DESCRIPTION: program.descriptionProperty.value,
+      TOP_WHISKER_LENGTH: program.topWhiskerLengthProperty.value,
+      RIGHT_WHISKER_LENGTH: program.rightWhiskerLengthProperty.value,
+      BOTTOM_WHISKER_LENGTH: program.bottomWhiskerLengthProperty.value,
+      LEFT_WHISKER_LENGTH: program.leftWhiskerLengthProperty.value,
       NUMBER: program.number,
       NAME: program.titleProperty.value,
+
+      // generated code for components
       PROGRAM_ADDED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramAdded' ),
       PROGRAM_REMOVED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramRemoved' ),
       PROGRAM_CHANGED_POSITION_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramChangedPosition' ),
