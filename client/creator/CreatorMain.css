@@ -16,6 +16,8 @@
 
 @value textColor: #bdcbda;
 
+@value warningColor: #FFC080;
+
 /* The flex parent for the three columns of the board page */
 :local(.rowContainer) {
   display: flex;
@@ -271,4 +273,8 @@ code {
  */
 :local(.htmlSpacer) {
   height: 60px;
+}
+
+:local(.validation) {
+  color: warningColor;
 }

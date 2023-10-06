@@ -16,7 +16,18 @@ export default function CreateEnumerationForm( props ) {
         invalidReasons.push( 'No values defined.' );
       }
       else if ( new Set( proposedData.values ).size !== proposedData.values.length ) {
+
+        // don't show this one unless there are some values defined
         invalidReasons.push( 'Values are not unique.' );
+      }
+
+      if ( proposedData.values.some( value => value === '' ) ) {
+        invalidReasons.push( 'Values cannot be empty.' );
+      }
+
+      // values con only contain letters, numbers, and underscores
+      if ( proposedData.values.some( value => value.match( /[^a-zA-Z0-9_]/ ) ) ) {
+        invalidReasons.push( 'Values can only contain letters, numbers, and underscores.' );
       }
       return invalidReasons;
     },
