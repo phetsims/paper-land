@@ -25,6 +25,14 @@ const PROJECT_ALREADY_EXISTS = 402;
 const BAD_PARAMETERS = 403;
 const PROJECT_DOES_NOT_EXIST = 404;
 
+/**
+ * Returns true if the user has access to the space. Always true for those with permissions, otherwise only true
+ * for non-restricted spaces.
+ */
+const canAccessSpace = spaceName => {
+  return ALLOW_ACCESS_TO_RESTRICTED_FILES || !restrictedSpacesList.includes( spaceName );
+}
+
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
   destination: ( req, file, cb ) => {
@@ -124,7 +132,7 @@ router.get( '/api/spaces-list-not-restricted', ( req, res ) => {
     .then( spaceNames => {
 
       // filter out the restricted spaces
-      const filteredSpaceNames = spaceNames.filter( spaceName => !restrictedSpacesList.includes( spaceName ) );
+      const filteredSpaceNames = spaceNames.filter( spaceName => canAccessSpace( spaceName ) );
       res.json( filteredSpaceNames );
     } )
     .catch( error => {
@@ -490,7 +498,7 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
             if ( existingNames.includes( destinationProjectName ) ) {
               res.status( PROJECT_ALREADY_EXISTS ).send( 'Destination project already exists' );
             }
-            else if ( restrictedSpacesList.includes( destinationSpaceName ) ) {
+            else if ( !canAccessSpace( destinationSpaceName ) ) {
               res.status( SPACE_RESTRICTED ).send( 'Destination space is restricted' );
             }
             else {
