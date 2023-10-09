@@ -394,6 +394,18 @@ export function stringToNumber( value ) {
   return Number( value );
 }
 
+/**
+ * Prepares the provided function documentation list into a 'list' with newlines, which is better for the
+ * AI input (and for humans).
+ * @param functionList
+ * @return {*}
+ */
+export function formatFunctionListForPrompt( functionList ) {
+  return functionList.map( functionName => {
+    return `* ${functionName}`;
+  } ).join( '\n' );
+}
+
 //------------------------------------------------------
 // query parameters
 // TODO: This should ideally use QueryStringMachine

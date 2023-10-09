@@ -2,13 +2,19 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import xhr from 'xhr';
+import { formatFunctionListForPrompt } from '../../utils.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import ViewUnitsSelector from '../model/views/ViewUnitsSelector.js';
 import styles from './../CreatorMain.css';
 import FileUploader from './FileUploader.js';
-import NodeComponentFunctionsList from './NodeComponentFunctionsList.js';
+import NodeComponentFunctionsList, { NODE_COMPONENT_FUNCTIONS } from './NodeComponentFunctionsList.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
+
+// Image-specific functions available to the user.
+const IMAGE_FUNCTIONS = [
+  'setImage() - Sets to a new image. Takes the name of an image.'
+];
 
 export default function CreateImageViewForm( props ) {
 
@@ -122,6 +128,7 @@ export default function CreateImageViewForm( props ) {
         handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the image.'}
         componentsPrompt={'Function is called whenever a selected component changes.'}
+        additionalControlFunctions={`${formatFunctionListForPrompt( NODE_COMPONENT_FUNCTIONS )}\n${formatFunctionListForPrompt( IMAGE_FUNCTIONS )}`}
       ></ViewComponentControls>
     </div>
   );

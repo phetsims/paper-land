@@ -54,8 +54,14 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
 
   let finalPromptString = '';
 
+  if ( userPrompt.length > 0 ) {
+    finalPromptString += userPrompt;
+  }
+
+  finalPromptString += '\n\nI just need the code that would go inside of a JavaScript function. I will take care of the rest.';
+
   if ( setterFunctionDocumentation.length > 0 || additionalControlFunctions.length > 0 ) {
-    finalPromptString += 'I have the following functions available for the implementation.';
+    finalPromptString += '\n\nI have the following functions available for the implementation.';
     if ( setterFunctionDocumentation.length > 0 ) {
       finalPromptString += '\n' + setterFunctionDocumentation;
     }
@@ -73,12 +79,8 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
     finalPromptString += '\n' + additionalContent;
   }
 
-  if ( userPrompt.length > 0 ) {
-    finalPromptString += '\n' + userPrompt;
-  }
-
-  finalPromptString += '\n\nI can only write code inside of a function body so if you have to use new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
-  finalPromptString += '\n\nHere is an example of the output I might expect.';
+  finalPromptString += '\n\nIf you have to create new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
+  finalPromptString += '\n\nPLEASE DO NOT WRAP THE SOLUTION IN A NEW FUNCTION DECLARATION. Here is an example of the output I might expect.';
   finalPromptString += '\n\n```javascript\n' +
                        `if (someValue) {
     doSomethingForTrue();

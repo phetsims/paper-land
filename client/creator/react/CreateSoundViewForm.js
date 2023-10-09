@@ -158,7 +158,7 @@ export default function CreateSoundViewForm( props ) {
         handleChange={handleChange}
         functionPrompt={'Use the available functions and variables to control the sound.'}
         componentsPrompt={'Function is called and sound is played whenever a component changes.'}
-        additionalPromptContent={SOUND_FUNCTIONS.join( '\n' )}
+        additionalControlFunctions={SOUND_FUNCTIONS}
       ></ViewComponentControls>
     </div>
   );
