@@ -9,10 +9,11 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Row from 'react-bootstrap/Row';
-import MonacoEditor from 'react-monaco-editor';
 import { getComponentDocumentation } from '../../utils.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import styles from './../CreatorMain.css';
+import AIHelperChat from './AIHelperChat.js';
+import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 import useEditableForm from './useEditableForm.js';
 
 export default function CreateDerivedForm( props ) {
@@ -54,11 +55,6 @@ export default function CreateDerivedForm( props ) {
     else {
       handleChange( { dependencyNames: formData.dependencyNames.filter( name => name !== componentName ) } );
     }
-  };
-
-  // Handle a change to the code editor, saving state for the form
-  const handleCodeChange = newValue => {
-    handleChange( { derivation: newValue } );
   };
 
   return (
@@ -123,22 +119,15 @@ export default function CreateDerivedForm( props ) {
             } )
           }
         </ListGroup>
-        <div className={`${styles.editor} ${styles.controlElement}`}>
-          <MonacoEditor
-            language='javascript'
-            theme='vs-dark'
-            value={formData.derivation}
-            onChange={( newValue, event ) => {
-              handleCodeChange( newValue, event );
-            }}
-            options={{
-              tabSize: 2,
-              fontSize: '16px',
-              minimap: { enabled: false },
-              automaticLayout: true
-            }}
-          />
-        </div>
+        <CreatorMonacoEditor
+          controlFunctionString={formData.derivation}
+          handleChange={newValue => {
+            handleChange( { derivation: newValue } );
+          }}></CreatorMonacoEditor>
+        <AIHelperChat
+          variableComponents={formData.dependencyNames.map( name => findDependency( name ) )}
+          additionalPromptContent={'My function will compute a new value whenever any of my variables change. Can you please write a return statement for the function?'}
+        ></AIHelperChat>
       </div>
     </>
   );

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { isNameValid } from '../../../utils.js';
 import Component from '../../model/Component.js';
 import MultilinkListenerComponent from '../../model/controllers/MultilinkListenerComponent.js';
+import AIHelperChat from '../AIHelperChat.js';
 import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
@@ -87,6 +88,9 @@ export default function MultilinkControllerForm( props ) {
     props.onComponentCreated();
   };
 
+  // In the custom code block, the user has access to all dependency and controlled components
+  const allSelectedComponents = selectedModelComponents.concat( selectedControlledComponents )
+
   return (
     <div>
       <hr></hr>
@@ -116,11 +120,7 @@ export default function MultilinkControllerForm( props ) {
         }}
       />
       <VariableDocumentationList
-        components={
-
-          // In the custom code block, the user has access to all dependency and controlled components
-          selectedModelComponents.concat( selectedControlledComponents )
-        }
+        components={allSelectedComponents}
       ></VariableDocumentationList>
       <hr></hr>
       <ComponentSetterList
@@ -132,10 +132,14 @@ export default function MultilinkControllerForm( props ) {
         handleChange={newValue => {
           handleChange( { controlFunctionString: newValue } );
         }}></CreatorMonacoEditor>
+      <AIHelperChat
+        settableComponents={selectedControlledComponents}
+        variableComponents={allSelectedComponents}
+      ></AIHelperChat>
       <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formInvalidReasons.length === 0}
+        selectedTabFormValid={formInvalidReasons.length === 0 && isNameValid( activeEditProperty.value, model, componentName )}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </div>
