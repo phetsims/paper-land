@@ -6,7 +6,7 @@
 
 import React from 'react';
 import ComponentFunctionsList from '../../react/ComponentFunctionsList.js';
-import NodeComponentFunctionsList from '../../react/NodeComponentFunctionsList.js';
+import NodeComponentFunctionsList, { NODE_COMPONENT_FUNCTIONS } from '../../react/NodeComponentFunctionsList.js';
 import ShapeViewComponent from './ShapeViewComponent.js';
 
 const SHAPE_COMPONENT_FUNCTIONS = [
@@ -16,7 +16,7 @@ const SHAPE_COMPONENT_FUNCTIONS = [
 ];
 
 const RECTANGLE_COMPONENT_FUNCTIONS = [
-  'setRectBounds() - Takes a bounds component. Sets the dimensions of the rectangle in selected view coordinates.',
+  'setRectBounds() - Takes a bounds component. Sets the dimensions of the rectangle in selected view coordinates.'
 ];
 
 const CIRCLE_COMPONENT_FUNCTIONS = [
@@ -43,6 +43,36 @@ const TRIANGLE_COMPONENT_FUNCTIONS = [
 const POLYGON_COMPONENT_FUNCTIONS = [
   'setPoints() - An array of points. Each point is a { x, y } pair. For example, [{x: 0, y:0}, {x: 100, y:0}, {x: 50, y: 100}] would be a triangle with vertices at (0, 0), (100, 0), and (50, 100).'
 ];
+
+export function getFunctionListForShapeType( shapeType ) {
+
+  // All shapes support scenery Node and basic shape functions
+  const viewFunctions = [ ...NODE_COMPONENT_FUNCTIONS, ...SHAPE_COMPONENT_FUNCTIONS ];
+
+  if ( shapeType === 'rectangle' ) {
+    viewFunctions.push( ...RECTANGLE_COMPONENT_FUNCTIONS );
+  }
+  else if ( shapeType === 'circle' ) {
+    viewFunctions.push( ...CIRCLE_COMPONENT_FUNCTIONS );
+  }
+  else if ( shapeType === 'ellipse' ) {
+    viewFunctions.push( ...ELLIPSE_COMPONENT_FUNCTIONS );
+  }
+  else if ( shapeType === 'line' ) {
+    viewFunctions.push( ...LINE_COMPONENT_FUNCTIONS );
+  }
+  else if ( shapeType === 'triangle' ) {
+    viewFunctions.push( ...TRIANGLE_COMPONENT_FUNCTIONS );
+  }
+  else if ( shapeType === 'polygon' ) {
+    viewFunctions.push( ...POLYGON_COMPONENT_FUNCTIONS );
+  }
+  else {
+    throw new Error( `Unsupported shape type ${shapeType}` );
+  }
+
+  return viewFunctions;
+}
 
 export default function ShapeFunctionsList( props ) {
   const selectedShapeType = props.formData.defaultShapeOptions.shapeType;

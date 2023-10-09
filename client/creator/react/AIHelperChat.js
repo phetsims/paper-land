@@ -34,10 +34,10 @@ const generateChatResponse = async inputString => {
   }
 };
 
-const createInitialPromptString = ( settableComponents, variableComponents, additionalContent, userPrompt ) => {
+const createInitialPromptString = ( settableComponents, variableComponents, additionalControlFunctions, additionalContent, userPrompt ) => {
 
   // The setter functions, combined into a single string separated by new lines
-  let setterFunctionDocumentation = 'NONE_AVAILABLE';
+  let setterFunctionDocumentation = '';
   if ( settableComponents.length > 0 ) {
     setterFunctionDocumentation = settableComponents.map( component => {
       return createSetterFunctionString( component );
@@ -45,27 +45,51 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
   }
 
   // The variable documentation, combined into a single string separated by new lines
-  let variableFunctionDocumentation = 'NONE_AVAILABLE';
+  let variableFunctionDocumentation = '';
   if ( variableComponents.length > 0 ) {
     variableFunctionDocumentation = variableComponents.map( component => {
       return getComponentDocumentation( component );
     } ).join( '\n' );
   }
 
-  return `I have the following functions.
-${setterFunctionDocumentation}
+  let finalPromptString = '';
 
-And the following variables, which can be used in your implementation. But they cannot be changed directly.
-${variableFunctionDocumentation}
+  if ( setterFunctionDocumentation.length > 0 || additionalControlFunctions.length > 0 ) {
+    finalPromptString += 'I have the following functions available for the implementation.';
+    if ( setterFunctionDocumentation.length > 0 ) {
+      finalPromptString += '\n' + setterFunctionDocumentation;
+    }
+    if ( additionalControlFunctions.length > 0 ) {
+      finalPromptString += '\n' + additionalControlFunctions;
+    }
+  }
 
-${additionalContent}
+  if ( variableFunctionDocumentation.length > 0 ) {
+    finalPromptString += '\nI have the following variables, which can be used in your implementation. But they cannot be changed directly.';
+    finalPromptString += '\n' + variableFunctionDocumentation;
+  }
 
-${userPrompt}
+  if ( additionalContent.length > 0 ) {
+    finalPromptString += '\n' + additionalContent;
+  }
 
-I can only write code inside of a function body so if you have to use new variables, please assign them to the 'window' object. DO NOT assign provided variables to the window.
+  if ( userPrompt.length > 0 ) {
+    finalPromptString += '\n' + userPrompt;
+  }
 
-Please make the code as simple and short as possible and only use the functions and variables that you need. Then, can you briefly explain each line as if I were a novice developer?
-  `;
+  finalPromptString += '\n\nI can only write code inside of a function body so if you have to use new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
+  finalPromptString += '\n\nHere is an example of the output I might expect.';
+  finalPromptString += '\n\n```javascript\n' +
+                       `if (someValue) {
+    doSomethingForTrue();
+  } else {
+    doSomethingForFalse();
+  }`;
+  finalPromptString += '\n```';
+  finalPromptString += '\n\nNotice that I did not introduce a new function because all I need to do is fill in the function body.';
+  finalPromptString += '\n\nPlease make the code as simple and short as possible and only use the functions and variables that you need. Then, can you briefly explain each line as if I were a novice developer?';
+
+  return finalPromptString;
 };
 
 const AIHelperChat = props => {
@@ -100,19 +124,12 @@ const AIHelperChat = props => {
       const initialPrompt = ( createInitialPromptString(
         props.settableComponents || [],
         props.variableComponents || [],
+        props.additionalControlFunctions || '',
         props.additionalPromptContent || '',
         inputText
       ) );
 
       updatedDecoratedMessages.push( initialPrompt );
-
-      // If the prompt includes 'NONE_AVAILABLE', then something has gone wrong with the pre-prompting,
-      // warn the user that output will be strange.
-      if ( initialPrompt.includes( 'NONE_AVAILABLE' ) ) {
-        const warningMessage = 'Something went wrong with the pre-prompting. The output will likely not work.';
-        const warningMessageObject = { text: warningMessage, isUser: false };
-        updatedMessages.push( warningMessageObject );
-      }
     }
     else {
 

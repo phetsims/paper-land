@@ -75,6 +75,8 @@ export default function ViewComponentControls( props ) {
                   props.handleChange( { controlFunctionString: newValue } );
                 }}></CreatorMonacoEditor>
               <AIHelperChat
+                settableComponents={props.settableComponents}
+                additionalControlFunctions={props.additionalControlFunctions}
                 variableComponents={selectedModelComponents}
                 additionalPromptContent={props.additionalPromptContent || ''}
               ></AIHelperChat>

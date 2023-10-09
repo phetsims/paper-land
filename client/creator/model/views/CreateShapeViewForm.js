@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import useEditableForm from '../../react/useEditableForm.js';
 import ViewComponentControls from '../../react/ViewComponentControls.js';
 import styles from './../../CreatorMain.css';
-import ShapeFunctionsList from './ShapeFunctionsList.js';
+import ShapeFunctionsList, { getFunctionListForShapeType } from './ShapeFunctionsList.js';
 import ShapeOptionsForm from './ShapeOptionsForm.js';
 import ShapeViewComponent from './ShapeViewComponent.js';
 import ViewUnitsSelector from './ViewUnitsSelector.js';
@@ -69,6 +69,7 @@ export default function CreateShapeViewForm( props ) {
     <>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
+        additionalControlFunctions={getFunctionListForShapeType( formData.defaultShapeOptions.shapeType )}
         typeSpecificControls={shapeTypeSelector}
         typeSpecificFunctions={( <ShapeFunctionsList formData={formData}/> )}
         isFormValid={props.isFormValid}
