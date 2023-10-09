@@ -34,9 +34,6 @@ export default function ComponentNameControl( props ) {
             setComponentName( event.target.value );
           }}
         />
-        <Form.Control.Feedback type='invalid' className={styles.feedbackElement}>
-          That component name is already being used.
-        </Form.Control.Feedback>
       </Form.Group>
     </div>
   );

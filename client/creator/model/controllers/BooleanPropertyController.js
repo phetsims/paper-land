@@ -20,13 +20,19 @@ export default class BooleanPropertyController extends PropertyController {
   constructor( name, namedProperty, controlTypeValue, providedOptions ) {
 
     const options = _.merge( {
-      whiskerConfiguration: {}
+
+      // A collection of data that describes how whiskers will be used to control the Property.
+      whiskerConfiguration: {},
+
+      // If the control type is 'Marker', this is the color of the marker that will control the property.
+      // Values can be 'red', 'green', 'blue', 'black', or empty (for all colors).
+      markerColor: ''
     }, providedOptions );
 
     super( name, namedProperty, ControlType, controlTypeValue );
 
-    // A collection of data that describes how whiskers will be used to control the Property.
     this.whiskerConfiguration = new WhiskerConfiguration( options.whiskerConfiguration );
+    this.markerColor = options.markerColor;
   }
 
   /**
@@ -35,7 +41,8 @@ export default class BooleanPropertyController extends PropertyController {
   save() {
     return {
       ...super.save(),
-      whiskerConfiguration: this.whiskerConfiguration.save()
+      whiskerConfiguration: this.whiskerConfiguration.save(),
+      markerColor: this.markerColor
     };
   }
 
@@ -45,7 +52,8 @@ export default class BooleanPropertyController extends PropertyController {
   static getStateSchema() {
     return {
       ...PropertyController.getStateSchema(),
-      whiskerConfiguration: WhiskerConfiguration.getStateSchema()
+      whiskerConfiguration: WhiskerConfiguration.getStateSchema(),
+      markerColor: ''
     };
   }
 
@@ -62,7 +70,8 @@ export default class BooleanPropertyController extends PropertyController {
 
     const whiskerConfiguration = WhiskerConfiguration.fromData( data.whiskerConfiguration || {} );
     return new BooleanPropertyController( data.name, namedProperty, data.controlType, {
-      whiskerConfiguration: whiskerConfiguration
+      whiskerConfiguration: whiskerConfiguration,
+      markerColor: data.markerColor || ''
     } );
   }
 

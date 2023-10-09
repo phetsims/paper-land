@@ -134,6 +134,7 @@ export default function PaperControllerForm( props ) {
       else if ( selectedComponentType === 'BooleanProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
         editingComponent.whiskerConfiguration = new WhiskerConfiguration( booleanDataRef.current.whiskerConfiguration );
+        editingComponent.markerColor = booleanDataRef.current.markerColor;
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.NumberPropertyControlType );
@@ -151,7 +152,8 @@ export default function PaperControllerForm( props ) {
       else if ( selectedComponentType === 'BooleanProperty' ) {
         const whiskerConfiguration = booleanDataRef.current.whiskerConfiguration;
         const booleanController = new BooleanPropertyController( componentName, selectedComponent, booleanDataRef.current.controlType, {
-          whiskerConfiguration: whiskerConfiguration
+          whiskerConfiguration: whiskerConfiguration,
+          markerColor: booleanDataRef.current.markerColor
         } );
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }

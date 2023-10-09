@@ -85,13 +85,17 @@ class ControllerCodeGenerator {
    * If the control type for boolean is markers, code should be added to the onProgramMarkersAdded event
    * to update the value when a marker is added.
    */
-  static getBooleanControllerMarkersAddedCode( booleanControlType, controlledName ) {
+  static getBooleanControllerMarkersAddedCode( booleanControlType, controlledName, colorName ) {
     if ( booleanControlType === BooleanPropertyController.ControlType.MARKER ) {
+
+      // If a specific color is specified, count the number of markers of that color, otherwise count all markerss
+      const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length > 0` : 'markers.length > 0';
+
       return ControllerCodeGenerator.getModelControllerCode(
         controlledName,
 
         // When a marker is added, the value should be true
-        () => 'markers.length > 0'
+        () => calculateValueString
       );
     }
     return '';
@@ -101,13 +105,18 @@ class ControllerCodeGenerator {
    * If the control type for boolean is markers, code should be added to the onProgramMarkersRemoved event
    * to update the value when a marker is removed.
    */
-  static getBooleanControllerMarkersRemovedCode( booleanControlType, controlledName ) {
+  static getBooleanControllerMarkersRemovedCode( booleanControlType, controlledName, colorName ) {
     if ( booleanControlType === BooleanPropertyController.ControlType.MARKER ) {
+
+      // If a specific color is used, the value will be false when there are no more of that color. Otherwise it
+      // will be false when there are no more markers.
+      const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length > 0` : 'markers.length > 0';
+
       return ControllerCodeGenerator.getModelControllerCode(
         controlledName,
 
         // The value should be false when there are no more markers
-        () => 'markers.length > 0'
+        () => calculateValueString
       );
     }
     return '';

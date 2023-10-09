@@ -358,13 +358,14 @@ export function createSetterFunctionString( component ) {
  */
 export function isNameValid( activeEdit, creatorModel, componentName ) {
   const hasLength = componentName.length > 0;
+  const containsSpaces = componentName.includes( ' ' );
 
   // If editing a component, the name is valid if it is unused or if it matches the existing component name.
   // Otherwise, the name is valid if it is unused.
   const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.nameProperty.value ) :
                  creatorModel.isNameAvailable( componentName );
 
-  return hasLength && unique;
+  return hasLength && unique && !containsSpaces;
 }
 
 /**

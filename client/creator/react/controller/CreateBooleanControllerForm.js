@@ -49,6 +49,25 @@ export default function CreateBooleanControllerForm( props ) {
       </div>
       <div
         className={styles.controlElement}
+        hidden={formData.controlType !== BooleanPropertyController.ControlType.MARKER.toString()}
+      >
+        <Form.Label>Marker color - only this color will trigger events.</Form.Label>
+        <Form.Select
+          value={formData.markerColor}
+          onChange={event => {
+            handleChange( { markerColor: event.target.value } );
+
+          }}
+        >
+          <option value={''}>All colors</option>
+          <option value={'red'}>Red</option>
+          <option value={'green'}>Green</option>
+          <option value={'blue'}>Blue</option>
+          <option value={'black'}>Black</option>
+        </Form.Select>
+      </div>
+      <div
+        className={styles.controlElement}
         hidden={formData.controlType !== BooleanPropertyController.ControlType.WHISKER.toString()}
       >
         <Form.Label>Other paper number - only this paper will trigger events. Leave empty for all papers.</Form.Label>

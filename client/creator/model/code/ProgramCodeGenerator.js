@@ -450,8 +450,8 @@ export default class ProgramCodeGenerator {
       // Look up the code that should be used for each event for the provided control type.
       data = {
         PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getBooleanControllerChangedPositionCode( controllerComponent.controlType, controlledName ),
-        PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersAddedCode( controllerComponent.controlType, controlledName ),
-        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName ),
+        PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersAddedCode( controllerComponent.controlType, controlledName, controllerComponent.markerColor ),
+        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getBooleanControllerMarkersRemovedCode( controllerComponent.controlType, controlledName, controllerComponent.markerColor ),
         PROGRAM_ADJACENT_CODE: ControllerCodeGenerator.getBooleanControllerAdjacentCode( controllerComponent.controlType, controlledName, controllerComponent.whiskerConfiguration.otherPaperNumber ),
         PROGRAM_SEPARATED_CODE: ControllerCodeGenerator.getBooleanControllerSeparatedCode( controllerComponent.controlType, controlledName, controllerComponent.whiskerConfiguration.otherPaperNumber )
       };
