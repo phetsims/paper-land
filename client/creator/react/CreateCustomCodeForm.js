@@ -6,7 +6,7 @@ import CreatorMonacoEditor from './CreatorMonacoEditor.js';
 const PAPER_NUMBER_DOCUMENTATION = (
   <>
     <p>
-      <code>{'{number} paperProgramNumber'}</code> - The number of the paper program.
+      <code>{'{number} paperNumber'}</code> - The number of the paper program.
     </p>
   </>
 );
@@ -14,7 +14,7 @@ const PAPER_NUMBER_DOCUMENTATION = (
 const OTHER_PAPER_NUMBER_DOCUMENTATION = (
   <>
     <p>
-      <code>{'{number} otherPaperProgramNumber'}</code> - The number of the other paper program.
+      <code>{'{number} otherPaperNumber'}</code> - The number of the other paper program.
     </p>
   </>
 );
@@ -46,7 +46,7 @@ const SHARED_DATA_DOCUMENTATION = (
 const PAPER_POINTS_DOCUMENTATION = (
   <>
     <p>
-      <code>{'{{x: number, y: number}[]} paperPoints'}</code> - Array of points, one for each corner of the paper. Order is left top, right top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
+      <code>{'{{x: number, y: number}[]} points'}</code> - Array of points, one for each corner of the paper. Order is left top, right top, right bottom, left bottom. X,Y values are normalized relative to camera view dimensions.
     </p>
   </>
 );
