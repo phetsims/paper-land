@@ -89,7 +89,7 @@ export default function MultilinkControllerForm( props ) {
   };
 
   // In the custom code block, the user has access to all dependency and controlled components
-  const allSelectedComponents = selectedModelComponents.concat( selectedControlledComponents )
+  const allSelectedComponents = selectedModelComponents.concat( selectedControlledComponents );
 
   return (
     <div>
