@@ -105,6 +105,14 @@ const AIHelperChat = props => {
       ) );
 
       updatedDecoratedMessages.push( initialPrompt );
+
+      // If the prompt includes 'NONE_AVAILABLE', then something has gone wrong with the pre-prompting,
+      // warn the user that output will be strange.
+      if ( initialPrompt.includes( 'NONE_AVAILABLE' ) ) {
+        const warningMessage = 'Something went wrong with the pre-prompting. The output will likely not work.';
+        const warningMessageObject = { text: warningMessage, isUser: false };
+        updatedMessages.push( warningMessageObject );
+      }
     }
     else {
 
