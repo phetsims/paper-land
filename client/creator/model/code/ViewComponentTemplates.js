@@ -86,14 +86,16 @@ const ViewComponentTemplates = {
         {{CONTROL_FUNCTION}}
       }
       
+      // a reusable utterance for this description component so that only the latest value is spoken - in general
+      // it should not cancel other Utterances in this context but it should cancel itself
+      scratchpad.{{NAME}}DescriptionUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
+      
       scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
         
         if ( descriptionString && descriptionString.length > 0 ) {
-        
-          // Utterances should not cancel others by default in this context
-          const utterance = new phet.utteranceQueue.Utterance( { alert: descriptionString, announcerOptions: { cancelOther: false } } );
-          phet.scenery.voicingUtteranceQueue.addToBack( utterance );
+          scratchpad.{{NAME}}DescriptionUtterance.alert = descriptionString;
+          phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance );
         }
       } ); 
     `,
@@ -101,6 +103,9 @@ const ViewComponentTemplates = {
       // Remove the description multilink
       phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}DescriptionMultilinkId );
       delete scratchpad.{{NAME}}DescriptionMultilinkId;
+      
+      // Remove the utterance
+      delete scratchpad.{{NAME}}DescriptionUtterance;
     `
   },
   TextViewComponent: {

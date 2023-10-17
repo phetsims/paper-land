@@ -60,10 +60,10 @@ const SpaceSelectControls = props => {
           // FOR DEBUGGING - initialize to jg-tests with project lab
           if ( window.dev ) {
             setTimeout( () => {
-              setSelectedSpaceName( 'creator-tests' );
+              setSelectedSpaceName( 'ts-creator-tests' );
 
               setTimeout( () => {
-                setSelectedProjectName( 'upload-test' );
+                setSelectedProjectName( 'creator-tactiles' );
               }, 500 );
             }, 500 );
           }
