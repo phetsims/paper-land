@@ -36,22 +36,70 @@ class ControllerCodeGenerator {
     }`;
   }
 
-  static getNumberControllerChangedPositionCode( controlType, relationshipControlType, controlledName ) {
-    if ( relationshipControlType !== NumberPropertyController.RelationshipControlType.LINEAR ) {
-      throw new Error( `Sorry, only linear relationships are supported at this time. Can't generate code for ${relationshipControlType} control of ${controlledName}.` );
+  static getNumberControllerChangedPositionCode( controlTypeFamily, controlType, relationshipControlType, controlledName ) {
+    if ( controlTypeFamily === 'PAPER_MOVEMENT' ) {
+      if ( relationshipControlType !== NumberPropertyController.RelationshipControlType.LINEAR ) {
+        throw new Error( `Sorry, only linear relationships are supported at this time. Can't generate code for ${relationshipControlType} control of ${controlledName}.` );
+      }
+
+      const calculateValueCode = controlType === NumberPropertyController.NumberPropertyControlType.ROTATION ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
+                                 controlType === NumberPropertyController.NumberPropertyControlType.VERTICAL ? '( 1 - phet.paperLand.utils.getProgramCenter( points ).y )' :
+                                 controlType === NumberPropertyController.NumberPropertyControlType.HORIZONTAL ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
+                                 `throw new Error( 'Unknown direction control type from controller code generator' - ${controlType} )`;
+
+      // This gives us the normalized value of the control method, between zero and one. Multiplying by the length
+      // of model range gives us the resultant model value.
+      const createComputeValueCode = modelPropertyName => {
+        return `${modelPropertyName}.range.min + ${calculateValueCode} * ( ${modelPropertyName}.range.max - ${modelPropertyName}.range.min )`;
+      };
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
     }
+    else {
+      return '';
+    }
+  }
 
-    const calculateValueCode = controlType === NumberPropertyController.NumberPropertyControlType.ROTATION ? 'phet.paperLand.utils.getNormalizedProgramRotation( points )' :
-                               controlType === NumberPropertyController.NumberPropertyControlType.VERTICAL ? '( 1 - phet.paperLand.utils.getProgramCenter( points ).y )' :
-                               controlType === NumberPropertyController.NumberPropertyControlType.HORIZONTAL ? 'phet.paperLand.utils.getProgramCenter( points ).x' :
-                               `throw new Error( 'Unknown direction control type from controller code generator' - ${controlType} )`;
+  static getNumberControllerMarkersAddedCode( controlTypeFamily, controlType, relationshipControlType, controlledName, colorName ) {
+    if ( controlTypeFamily === 'MARKERS' ) {
+      if ( controlType === NumberPropertyController.NumberPropertyControlType.MARKER_COUNT ) {
 
-    // This gives us the normalized value of the control method, between zero and one. Multiplying by the length
-    // of model range gives us the resultant model value.
-    const createComputeValueCode = modelPropertyName => {
-      return `${modelPropertyName}.range.min + ${calculateValueCode} * ( ${modelPropertyName}.range.max - ${modelPropertyName}.range.min )`;
-    };
-    return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
+        // If a specific color is specified, count the number of markers of that color, otherwise count all markerss
+        const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
+
+        return ControllerCodeGenerator.getModelControllerCode(
+          controlledName,
+
+          // When a marker is added, the value should be true
+          () => calculateValueString
+        );
+      }
+      else {
+        throw new Error( `Sorry, only marker count control type is supported at this time. Can't generate code for ${controlType} control of ${controlledName}.` );
+      }
+    }
+    return '';
+  }
+
+  static getNumberControllerMarkersRemovedCode( controlTypeFamily, controlType, relationshipControlType, controlledName, colorName ) {
+    if ( controlTypeFamily === 'MARKERS' ) {
+      if ( controlType === NumberPropertyController.NumberPropertyControlType.MARKER_COUNT ) {
+
+        // If a specific color is used, the value will be false when there are no more of that color. Otherwise it
+        // will be false when there are no more markers.
+        const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
+
+        return ControllerCodeGenerator.getModelControllerCode(
+          controlledName,
+
+          // The value should be false when there are no more markers
+          () => calculateValueString
+        );
+      }
+      else {
+        throw new Error( 'Sorry, only marker count control type is supported at this time.' );
+      }
+    }
+    return '';
   }
 
   static getVector2ControllerChangedPositionCode( controlType, controlledName ) {

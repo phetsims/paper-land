@@ -138,6 +138,7 @@ export default function PaperControllerForm( props ) {
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.NumberPropertyControlType );
+        editingComponent.selectedControlTypeFamily = numberDataRef.current.controlTypeFamily;
         editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
       }
       else if ( selectedComponentType === 'StringProperty' ) {
@@ -158,7 +159,7 @@ export default function PaperControllerForm( props ) {
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
-        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.controlType, numberDataRef.current.relationshipControlType );
+        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.controlType, numberDataRef.current.relationshipControlType, numberDataRef.current.controlTypeFamily );
         activeProgram.controllerContainer.addNumberPropertyController( numberController );
       }
       else if ( selectedComponentType === 'StringProperty' ) {

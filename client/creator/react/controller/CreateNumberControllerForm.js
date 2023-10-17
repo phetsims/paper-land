@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from '../../CreatorMain.css';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';

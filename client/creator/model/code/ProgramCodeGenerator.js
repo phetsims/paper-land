@@ -438,9 +438,24 @@ export default class ProgramCodeGenerator {
     if ( componentType === 'NumberPropertyController' ) {
       data = {
         PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getNumberControllerChangedPositionCode(
+          controllerComponent.selectedControlTypeFamily,
           controllerComponent.controlType,
           controllerComponent.relationshipControlType,
           controlledName
+        ),
+        PROGRAM_MARKERS_ADDED_CODE: ControllerCodeGenerator.getNumberControllerMarkersAddedCode(
+          controllerComponent.selectedControlTypeFamily,
+          controllerComponent.controlType,
+          controllerComponent.relationshipControlType,
+          controlledName,
+          controllerComponent.markerColor
+        ),
+        PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getNumberControllerMarkersRemovedCode(
+          controllerComponent.selectedControlTypeFamily,
+          controllerComponent.controlType,
+          controllerComponent.relationshipControlType,
+          controlledName,
+          controllerComponent.markerColor
         )
       };
     }

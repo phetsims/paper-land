@@ -42,6 +42,11 @@ const FamilyToControlTypeMap = {
   ]
 };
 
+// controlType - one of NumberPropertyControlType
+// selectedControlTypeFamily - one of 'PAPER_MOVEMENT' or 'MARKERS'
+// relationshipControlType - one of RelationshipControlType
+
+
 export default class NumberPropertyController extends PropertyController {
   constructor( name, namedProperty, controlTypeValue, relationshipControlTypeValue ) {
 
@@ -49,7 +54,9 @@ export default class NumberPropertyController extends PropertyController {
     relationshipControlTypeValue = PropertyController.controlTypeStringToValue( relationshipControlTypeValue, RelationshipControlType );
 
     // get the control type family from teh provided control type
-    const controlTypeFamily = FamilyToControlTypeMap.MARKERS.includes( relationshipControlTypeValue ) ? 'MARKERS' : 'PAPER_MOVEMENT';
+
+    // only PAPER_MOVEMENT has relationship control types, so check for that one first and fall back to MARKERS
+    const controlTypeFamily = FamilyToControlTypeMap.PAPER_MOVEMENT.includes( relationshipControlTypeValue ) ? 'PAPER_MOVEMENT' : 'MARKERS';
 
     super( name, namedProperty, NumberPropertyControlType, controlTypeValue, controlTypeFamily );
 
@@ -64,6 +71,8 @@ export default class NumberPropertyController extends PropertyController {
   save() {
     return {
       ...super.save(),
+
+      // will only be defined for 'PAPER_MOVEMENT'
       relationshipControlType: this.relationshipControlType ? this.relationshipControlType.name : null
     };
   }
