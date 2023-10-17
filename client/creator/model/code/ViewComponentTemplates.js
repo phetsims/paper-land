@@ -91,7 +91,9 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}DescriptionUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
       
       scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
+      
+        // make sure content is a string (so that falsy values DO get spoken)
+        const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} ).toString();
         
         if ( descriptionString && descriptionString.length > 0 ) {
           scratchpad.{{NAME}}DescriptionUtterance.alert = descriptionString;
