@@ -67,6 +67,25 @@ const SceneryDisplay = props => {
       }
     } );
 
+    // a Node that reminds the user to click into the display to activate audio features
+    const clickToActivateNode = new phet.scenery.Node( {
+      center: new phet.dot.Vector2( 320, 240 ),
+      children: [
+        new phet.scenery.Text( 'Click to activate audio features.', {
+          font: new phet.scenery.Font( { size: 36 } ),
+          fill: 'white'
+        } )
+      ]
+    } );
+    props.scene.addChild( clickToActivateNode );
+
+    // remove the reminder once the user clicks in the display
+    sceneryDisplay.addInputListener( {
+      down: () => {
+        clickToActivateNode.dispose();
+      }
+    } );
+
     // All responses are enabled by default
     phet.utteranceQueue.responseCollector.nameResponsesEnabledProperty.value = true;
     phet.utteranceQueue.responseCollector.objectResponsesEnabledProperty.value = true;
