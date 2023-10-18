@@ -72,7 +72,7 @@ export default function CreatorMonacoEditor( props ) {
       </div>
       {hasError && (
         <div className={styles.validation}>
-          <h4>{`⚠ Syntax Error: Your code has a syntax error. ${errorMessage}`}</h4>
+          <h4>{`⚠ Your code has a syntax error: ${errorMessage}`}</h4>
         </div>
       )}
     </div>
