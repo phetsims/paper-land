@@ -23,7 +23,7 @@ export default function CreatorMonacoEditor( props ) {
     codeString.current = newValue;
   };
 
-  // Create a debounced version of the handleCodeChange function
+  // debounce the code change so that we don't report syntax errors on every keystroke
   const debouncedHandleCodeChange = useRef(
     _.debounce( ( newValue, event ) => {
       codeString.current = newValue;
