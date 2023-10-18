@@ -43,6 +43,10 @@ export default function CreatorMonacoEditor( props ) {
     }
   }, 2000 ), [] );
 
+  useEffect( () => {
+    debouncedHandleCodeChange( props.controlFunctionString );
+  }, [ props.controlFunctionString ] );
+
   // Clean up the debounced function when the component unmounts so we don't set state after
   // removal
   useEffect( () => {
@@ -66,7 +70,7 @@ export default function CreatorMonacoEditor( props ) {
             handleCodeChange( codeValue, event );
 
             // Call the debounced function instead of handleCodeChange
-            debouncedHandleCodeChange( codeValue, event );
+            // debouncedHandleCodeChange( codeValue, event );
 
             handleChange( codeValue );
           }}
