@@ -1,3 +1,4 @@
+import { parse } from 'acorn';
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ListenerCodeGenerator from './ListenerCodeGenerator.js';
@@ -34,7 +35,18 @@ export default class ProgramCodeGenerator {
       PROGRAM_SEPARATED_CODE: ProgramCodeGenerator.createProgramEventCode( program, 'onProgramSeparated' )
     };
 
-    return ProgramCodeGenerator.fillInTemplate( programTemplate, data );
+    const generatedCode = ProgramCodeGenerator.fillInTemplate( programTemplate, data );
+
+
+    // Use acorn to look for syntax errors before returning the generated code.
+    try {
+      parse( generatedCode, { ecmaVersion: 'latest' } );
+    }
+    catch( error ) {
+      throw new Error( `Sorry, syntax error in generated code for program ${program.numberProperty.value}. Inspect your custom code or please report an issue to the developer.` );
+    }
+
+    return generatedCode;
   }
 
   /**
