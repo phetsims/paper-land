@@ -69,9 +69,6 @@ export default function CreatorMonacoEditor( props ) {
 
             handleCodeChange( codeValue, event );
 
-            // Call the debounced function instead of handleCodeChange
-            // debouncedHandleCodeChange( codeValue, event );
-
             handleChange( codeValue );
           }}
           options={{
