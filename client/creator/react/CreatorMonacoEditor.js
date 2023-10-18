@@ -1,5 +1,5 @@
 import { parse } from 'acorn';
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import styles from './../CreatorMain.css';
 
@@ -23,25 +23,33 @@ export default function CreatorMonacoEditor( props ) {
     codeString.current = newValue;
   };
 
-  // debounce the code change so that we don't report syntax errors on every keystroke
-  const debouncedHandleCodeChange = useRef(
-    _.debounce( ( newValue, event ) => {
-      codeString.current = newValue;
+  // Debounce the code change so that we don't report syntax errors on every keystroke - wrapped
+  // in useCallback so we don't create a new function on every render and so the correct reference
+  // to the debounce is used for cleanup.
+  const debouncedHandleCodeChange = useCallback( _.debounce( ( newValue, event ) => {
+    codeString.current = newValue;
 
-      // Use acorn to report when there is a syntax error in the current code
-      try {
-        parse( newValue, { ecmaVersion: 'latest' } );
-        setHasError( false );
-      }
-      catch( error ) {
-        setHasError( true );
+    // Use acorn to report when there is a syntax error in the current code
+    try {
+      parse( newValue, { ecmaVersion: 'latest' } );
+      setHasError( false );
+    }
+    catch( error ) {
+      setHasError( true );
 
-        if ( error.message ) {
-          setErrorMessage( error.message );
-        }
+      if ( error.message ) {
+        setErrorMessage( error.message );
       }
-    }, 2000 )
-  ).current;
+    }
+  }, 2000 ), [] );
+
+  // Clean up the debounced function when the component unmounts so we don't set state after
+  // removal
+  useEffect( () => {
+    return () => {
+      debouncedHandleCodeChange.cancel();
+    };
+  }, [] );
 
   return (
     <div>
