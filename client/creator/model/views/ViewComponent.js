@@ -16,33 +16,35 @@ export default class ViewComponent extends Component {
     this._modelComponents = modelComponents;
     this.controlFunctionString = controlFunctionString;
 
-    this.setModelComponents( modelComponents );
+    this.boundUpdateDependencyNames = this.updateDependencyNames.bind( this );
 
-    // A multilink that will update the list of dependency names whenever one of the depencies changes its name.
-    this._nameChangeMultilink = null;
+    this.setModelComponents( modelComponents );
   }
 
   setModelComponents( components ) {
-    if ( this._nameChangeMultilink ) {
-      this._nameChangeMultilink.dispose();
-      this._nameChangeMultilink = null;
-    }
+    this._modelComponents.forEach( component => {
+      if ( component.nameProperty.hasListener( this.boundUpdateDependencyNames ) ) {
+        component.nameProperty.unlink( this.boundUpdateDependencyNames );
+      }
+    } );
 
     this._modelComponents = components;
     this.updateDependencyNames();
 
-    // Createa multilink that updates dependency names whenever any dependency has a name change
-    this._nameChangeMultilink = phet.axon.Multilink.multilink(
-      components.map( component => component.nameProperty ),
-      () => this.updateDependencyNames()
-    );
+    components.forEach( component => {
+      component.nameProperty.link( this.boundUpdateDependencyNames );
+    } );
   }
 
   /**
    * Updates the list of dependency names when we have a name change.
    */
-  updateDependencyNames() {
+  updateDependencyNames( newName, oldName ) {
     this.modelComponentNames = this._modelComponents.map( component => component.nameProperty.value );
+
+    if ( newName && oldName && this.controlFunctionString ) {
+      this.controlFunctionString = this.controlFunctionString.replaceAll( oldName, newName );
+    }
   }
 
   /**

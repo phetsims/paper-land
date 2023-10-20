@@ -147,7 +147,7 @@ export default class CreatorModel {
   }
 
   /**
-   * From the provided name, add a "_COPY_1" suffix, or increment the number if that copy value until we find an
+   * From the provided name, add a "_copy1" suffix, or increment the number if that copy value until we find an
    * available name.
    *
    * @param {string} name - The name we want to copy.
@@ -159,7 +159,7 @@ export default class CreatorModel {
 
     let copyNumber = 1;
     while ( copyNumber < maxAttempts ) {
-      const copyName = `${name}_COPY_${copyNumber}`;
+      const copyName = `${name}_copy${copyNumber}`;
       if ( this.isNameAvailable( copyName ) ) {
         return copyName;
       }
