@@ -147,6 +147,30 @@ export default class CreatorModel {
   }
 
   /**
+   * From the provided name, add a "_COPY_1" suffix, or increment the number if that copy value until we find an
+   * available name.
+   *
+   * @param {string} name - The name we want to copy.
+   */
+  getUniqueCopyName( name ) {
+
+    // As a safety precaution, we will only try a certain number of times to find a unique name.
+    const maxAttempts = 1000;
+
+    let copyNumber = 1;
+    while ( copyNumber < maxAttempts ) {
+      const copyName = `${name}_COPY_${copyNumber}`;
+      if ( this.isNameAvailable( copyName ) ) {
+        return copyName;
+      }
+      copyNumber++;
+    }
+
+    // If we get here, we have tried too many times and should throw an error.
+    throw new Error( `Could not find a unique name for ${name}` );
+  }
+
+  /**
    * Returns true if the provided number is not used by any of the other programs.
    */
   isNumberAvailable( number ) {
@@ -165,9 +189,9 @@ export default class CreatorModel {
     const newPosition = program.positionProperty.value.plusXY( 20, 20 );
     const newProgram = this.createProgram( newPosition );
     newProgram.copyMetadataFromOther( program );
+    newProgram.copyCustomCodeFromOther( program );
+    newProgram.copyComponentsFromOther( program, this.getUniqueCopyName.bind( this ), this.allModelComponents );
 
-    // newProgram.copyComponentsFromOther( program );
-    // newProgram.copyCustomCodeFromOther( program );
     return newProgram;
   }
 

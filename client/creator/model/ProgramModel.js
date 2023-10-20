@@ -78,7 +78,7 @@ export default class ProgramModel {
    */
   copyMetadataFromOther( program ) {
     this.titleProperty.value = `${program.titleProperty.value}_COPY`;
-    this.descriptionProperty.value = `${program.descriptionProperty.value}\n\nCOPY OF: ${program.numberProperty.value} - ${program.titleProperty.value}`;
+    this.descriptionProperty.value = program.descriptionProperty.value;
 
     // All others can be the same
     this.keywordsProperty.value = program.keywordsProperty.value;
@@ -86,6 +86,39 @@ export default class ProgramModel {
     this.rightWhiskerLengthProperty.value = program.rightWhiskerLengthProperty.value;
     this.bottomWhiskerLengthProperty.value = program.bottomWhiskerLengthProperty.value;
     this.leftWhiskerLengthProperty.value = program.leftWhiskerLengthProperty.value;
+  }
+
+  /**
+   * Copies the custom code from the provided program to this program. For now, we just copy every string and
+   * leave it up to the user to update variable name references.
+   */
+  copyCustomCodeFromOther( program ) {
+    this.customCodeContainer.copyFromOther( program.customCodeContainer );
+  }
+
+  /**
+   * Copy all components from the provided program to this program. Names are adjusted to avoid conflicts.
+   *
+   * The tricky parts of this is getting the behavior right for dependency relationships and updating custom code.
+   * Here is how this function behaves:
+   *
+   * - When creating names, they are given a COPYN suffix to avoid conflicts where N is the next available number.
+   * - All dependency components are copied first.
+   * - Dependent components are created next. If a dependency for this component was copied, the copied dependency will
+   *     be used. Otherwise, the dependency will be the same as the original (this should only be the case for
+   *     dependencies in other programs).
+   * - When copying custom code, variable and function references are updated to use the new names.
+   *
+   * @param {ProgramModel} program
+   * @param {function} getUniqueCopyName - a function that returns a unique name for a component
+   * @param {NamedProperty[]} allComponents - all model components in all programs
+   */
+  copyComponentsFromOther( program, getUniqueCopyName, allComponents ) {
+    const newModelNames = this.modelContainer.copyModelComponentsFromOther( program.modelContainer, getUniqueCopyName, allComponents );
+
+    this.controllerContainer.copyComponentsFromOther( program.controllerContainer, getUniqueCopyName, allComponents, newModelNames );
+    this.viewContainer.copyComponentsFromOther( program.viewContainer, getUniqueCopyName, allComponents, newModelNames );
+    this.listenerContainer.copyComponentsFromOther( program.listenerContainer, getUniqueCopyName, allComponents, newModelNames );
   }
 
   /**

@@ -141,7 +141,8 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'derived' ) {
         const derivedData = derivedDataRef.current;
-        component.dependencies = derivedData.dependencies;
+        const dependencies = Component.findComponentsByName( allModelComponents, derivedData.dependencyNames );
+        component.setDependencies( dependencies );
         component.derivation = derivedData.derivation;
       }
       else if ( selectedTab === 'bounds' ) {

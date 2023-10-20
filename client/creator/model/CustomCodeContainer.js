@@ -39,6 +39,20 @@ export default class CustomCodeContainer {
   }
 
   /**
+   * Set all custom code in this container to equal the values from another container.
+   */
+  copyFromOther( customCodeContainer ) {
+    this.onProgramAddedCodeProperty.value = customCodeContainer.onProgramAddedCodeProperty.value;
+    this.onProgramRemovedCodeProperty.value = customCodeContainer.onProgramRemovedCodeProperty.value;
+    this.onProgramChangedPositionCodeProperty.value = customCodeContainer.onProgramChangedPositionCodeProperty.value;
+    this.onProgramMarkersAddedCodeProperty.value = customCodeContainer.onProgramMarkersAddedCodeProperty.value;
+    this.onProgramMarkersRemovedCodeProperty.value = customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
+    this.onProgramMarkersChangedPositionCodeProperty.value = customCodeContainer.onProgramMarkersChangedPositionCodeProperty.value;
+    this.onProgramAdjacentCodeProperty.value = customCodeContainer.onProgramAdjacentCodeProperty.value;
+    this.onProgramSeparatedCodeProperty.value = customCodeContainer.onProgramSeparatedCodeProperty.value;
+  }
+
+  /**
    * Serialize this container to support save and load.
    */
   save() {

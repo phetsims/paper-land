@@ -133,6 +133,53 @@ export default class ProgramControllerContainer extends ComponentContainer {
     };
   }
 
+  /**
+   * Copy all controller components from another component to this container. Unique names are
+   * given to the copies to avoid conflicts. If model components were copied with the copy request,
+   * the copied controller will control the copied model component instead of the original.
+   *
+   * NOTE: If a controlled model component is copied, we do NOT currently create a copy of the controller
+   * unless we are duplicating both the model and the controller. This is because many controller types can only
+   * have one controlled model component.
+   *
+   * @param {ProgramControllerContainer} otherContainer
+   * @param {function} getUniqueCopyName - function that returns a unique name for a component
+   * @param {NamedProperty[]} allModelComponents - all the NamedProperties in the model
+   * @param {Map<string, string>} newModelNames - map of old model component names to new model component names
+   */
+  copyComponentsFromOther( otherContainer, getUniqueCopyName, allModelComponents, newModelNames ) {
+
+    // We can use a saved state to easily copy components.
+    const savedData = otherContainer.save();
+
+    // Include the model components that were renamed during this copy so we know how to
+    // whether to set dependencies on new copies or the original components.
+    const nameChangeMap = _.merge( {}, newModelNames );
+
+    // Update names so that they are unique.
+    for ( const key in savedData ) {
+      const components = savedData[ key ];
+
+      components.forEach( componentObject => {
+        const originalName = componentObject.name;
+        componentObject.name = getUniqueCopyName( originalName );
+        nameChangeMap[ originalName ] = componentObject.name;
+      } );
+    }
+
+    // Update dependency relationships for newly copied components
+    for ( const key in savedData ) {
+      const componentObjects = savedData[ key ];
+      componentObjects.forEach( componentObject => {
+
+        // update the dependency to use the newly copied component if it exists
+        componentObject.controlledComponentName = nameChangeMap[ componentObject.controlledComponentName ] || componentObject.controlledComponentName;
+      } );
+    }
+
+    this.load( savedData, allModelComponents );
+  }
+
   load( savedData, namedProperties ) {
 
     savedData.vector2PropertyControllers.forEach( controllerData => {

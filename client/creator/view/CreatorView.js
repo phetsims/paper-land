@@ -121,6 +121,7 @@ export default class CreatorView extends phet.scenery.Node {
               }
             }
             catch( error ) {
+              debugger;
               model.errorOccurredEmitter.emit( 'Error loading project: ' + error.message );
             }
           }

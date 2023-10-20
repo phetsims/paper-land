@@ -1,7 +1,7 @@
 /**
  * Collection of model components for a single program, with functions to create them.
  */
-import { enforceKeys, keysDefined } from '../../utils.js';
+import { enforceKeys } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedBounds2Property from './NamedBounds2Property.js';
@@ -187,6 +187,69 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() ),
       namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() )
     };
+  }
+
+  /**
+   * Copy model components from another container and put them in this container. Unique names are set
+   * on all components to avoid name conflicts.
+   *
+   * For dependent components, if its dependencies were copied the new copy is used. Otherwise, the original
+   * dependency is used (this should only happen if the dependency is in another program).
+   *
+   * NOTE: If a NamedDerivedProperty dependency is copied, the copy is NOT added as a dependency to the
+   * NamedDerivedProperty. Adding it as a dependency is meaningless because the derivation function will not include
+   * the copied value. But this might be unexpected for the user.
+   */
+  copyModelComponentsFromOther( otherContainer, getUniqueCopyName, allComponents ) {
+
+    // We can use save state to easily copy to new components - all we need to do is modify the name
+    // so that it is unique.
+    const stateObject = otherContainer.save();
+
+    // Need to map dependencies to the new copies so that we can determine whether the dependency should be
+    // on a copied component or on the original.
+    const nameChangeMap = {};
+
+    // Update names of components and look for dependencies
+    for ( const key in stateObject ) {
+      const components = stateObject[ key ];
+
+      components.forEach( component => {
+        const originalName = component.name;
+
+        // update the name to be unique
+        component.name = getUniqueCopyName( originalName );
+
+        // store the change so that we can appropriately update dependencies
+        nameChangeMap[ originalName ] = component.name;
+      } );
+    }
+
+    // Update dependency relationships and references in custom code. If a dependency was copied then use the new copy.
+    for ( const key in stateObject ) {
+      const componentObjects = stateObject[ key ];
+
+      componentObjects.forEach( componentStateObject => {
+        if ( componentStateObject.dependencyNames ) {
+
+          // update the dependency to use the newly copied component if it exists
+          componentStateObject.dependencyNames = componentStateObject.dependencyNames.map( dependencyName => {
+            return nameChangeMap[ dependencyName ] || dependencyName;
+          } );
+
+          // update the derivation function to use the newly copied component if necessary
+          for ( const name in nameChangeMap ) {
+            const newName = nameChangeMap[ name ];
+            componentStateObject.derivation = componentStateObject.derivation.replaceAll( name, newName );
+          }
+        }
+      } );
+    }
+
+    this.loadDependencyModelComponents( stateObject );
+    this.loadDependentModelComponents( stateObject, allComponents );
+
+    return nameChangeMap;
   }
 
   /**

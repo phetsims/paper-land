@@ -61,6 +61,55 @@ export default class ProgramListenerContainer extends ComponentContainer {
     };
   }
 
+  copyComponentsFromOther( otherContainer, getUniqueCopyName, allModelComponents, newModelNames ) {
+
+    // We can use the saved state to easily copy components. From this data we can update names
+    // and dependencies before loading the new components to this container as copies.
+    const stateObject = otherContainer.save();
+
+    // Include the model components that were renamed during this copy so we know how to
+    // whether to set dependencies on new copies or the original components.
+    const nameChangeMap = _.merge( {}, newModelNames );
+
+    for ( const key in stateObject ) {
+      const components = stateObject[ key ];
+
+      components.forEach( componentStateObject => {
+        const originalName = componentStateObject.name;
+        componentStateObject.name = getUniqueCopyName( originalName );
+        nameChangeMap[ originalName ] = componentStateObject.name;
+      } );
+    }
+
+    // Update dependency relationships and references in custom code.
+    for ( const key in stateObject ) {
+      const componentObjects = stateObject[ key ];
+      componentObjects.forEach( componentObject => {
+
+        // update the "controlled" components to use the newly copied component if necessary
+        componentObject.controlledPropertyNames = componentObject.controlledPropertyNames.map( dependencyName => {
+          return nameChangeMap[ dependencyName ] || dependencyName;
+        } );
+
+        // update the "dependencies" to use the newly copied component if necessary for controller components
+        // that have dependencies (currently the MultilinkListenerComponent)
+        if ( componentObject.dependencyNames ) {
+          componentObject.dependencyNames = componentObject.dependencyNames.map( dependencyName => {
+            return nameChangeMap[ dependencyName ] || dependencyName;
+          } );
+        }
+
+        // update the derivation function to use the newly copied component if necessary
+        for ( const name in nameChangeMap ) {
+          const newName = nameChangeMap[ name ];
+          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
+        }
+      } );
+    }
+
+    this.load( stateObject, allModelComponents );
+  }
+
   /**
    * Load an instance of a ProgramListenerContainer from a serialized JSON.
    */

@@ -141,6 +141,47 @@ export default class ProgramViewContainer extends ComponentContainer {
     };
   }
 
+  copyComponentsFromOther( otherContainer, getUniqueCopyName, allModelComponents, newModelNames ) {
+
+    // We can use the saved state to easily copy components. From this data we can update names
+    // and dependencies before loading the new components to this container as copies.
+    const stateObject = otherContainer.save();
+
+    // Include the model components that were renamed during this copy so we know how to
+    // whether to set dependencies on new copies or the original components.
+    const nameChangeMap = _.merge( {}, newModelNames );
+
+    for ( const key in stateObject ) {
+      const components = stateObject[ key ];
+
+      components.forEach( componentStateObject => {
+        const originalName = componentStateObject.name;
+        componentStateObject.name = getUniqueCopyName( originalName );
+        nameChangeMap[ originalName ] = componentStateObject.name;
+      } );
+    }
+
+    // Update dependency relationships and references in custom code.
+    for ( const key in stateObject ) {
+      const componentObjects = stateObject[ key ];
+      componentObjects.forEach( componentObject => {
+
+        // update the dependency to use the newly copied component if it exists
+        componentObject.modelComponentNames = componentObject.modelComponentNames.map( dependencyName => {
+          return nameChangeMap[ dependencyName ] || dependencyName;
+        } );
+
+        // update the derivation function to use the newly copied component if necessary
+        for ( const name in nameChangeMap ) {
+          const newName = nameChangeMap[ name ];
+          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
+        }
+      } );
+    }
+
+    this.load( stateObject, allModelComponents );
+  }
+
   /**
    * Loads all view components from the provided JSON object.
    */

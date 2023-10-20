@@ -43,6 +43,7 @@ export default class ProgramCodeGenerator {
       parse( generatedCode, { ecmaVersion: 'latest' } );
     }
     catch( error ) {
+      console.log( generatedCode );
       throw new Error( `Sorry, syntax error in generated code for program ${program.numberProperty.value}. Inspect your custom code or please report an issue to the developer.` );
     }
 
