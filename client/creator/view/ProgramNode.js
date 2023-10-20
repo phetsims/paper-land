@@ -147,18 +147,15 @@ export default class ProgramNode extends phet.scenery.Node {
       ]
     } );
 
-    // A parent is made eagerly for components with images, which won't be available intil the image
-    // is loaded. But the parent is ready for layout immediately
-    this.deleteButtonParent = new phet.scenery.Node();
-    this.customCodeIconParent = new phet.scenery.Node();
+    this.deleteButton = null;
+    this.copyButton = null;
+    this.customCodeIcon = null;
 
     // rendering order
     this.addChild( this.background );
     this.addChild( this.programNumber );
     this.addChild( this.titleText );
-    this.addChild( this.deleteButtonParent );
     this.addChild( this.allComponentsVBox );
-    this.addChild( this.customCodeIconParent );
     this.addChild( this.createComponentButton );
     this.addChild( this.createListenerButton );
 
@@ -166,9 +163,7 @@ export default class ProgramNode extends phet.scenery.Node {
     this.allComponents = [
       this.programNumber,
       this.titleText,
-      this.deleteButtonParent,
       this.allComponentsVBox,
-      this.customCodeIconParent,
       this.createListenerButton,
       this.createComponentButton
     ];
@@ -178,22 +173,46 @@ export default class ProgramNode extends phet.scenery.Node {
       const imageNode = new phet.scenery.Image( imageElement, {
         scale: 0.7
       } );
-      const button = new phet.sun.RectangularPushButton( _.merge( {}, {
+      this.deleteButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
         listener: () => model.deleteEmitter.emit(),
         enabledProperty: editEnabledProperty
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
-      this.deleteButtonParent.addChild( button );
+      this.addChild( this.deleteButton );
+      this.allComponents.push( this.deleteButton );
+
       this.layout();
     } );
 
-    ImageLoader.loadImage( 'media/images/magic-wand.svg', imageElement => {
+    ImageLoader.loadImage( 'media/images/copy.svg', imageElement => {
       const imageNode = new phet.scenery.Image( imageElement, {
+        scale: 0.7
+      } );
+      this.copyButton = new phet.sun.RectangularPushButton( _.merge( {}, {
+        content: imageNode,
+        listener: () => model.copyEmitter.emit(),
+        enabledProperty: editEnabledProperty
+      }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
+
+      this.addChild( this.copyButton );
+      this.allComponents.push( this.copyButton );
+
+      this.layout();
+    } );
+
+
+    ImageLoader.loadImage( 'media/images/magic-wand.svg', imageElement => {
+      this.customCodeIcon = new phet.scenery.Image( imageElement, {
         scale: 1.3
       } );
 
-      this.customCodeIconParent.addChild( imageNode );
+      model.customCodeContainer.hasCustomCodeProperty.link( hasCustomCode => {
+        this.customCodeIcon.visible = hasCustomCode;
+      } );
+
+      this.addChild( this.customCodeIcon );
+      this.allComponents.push( this.customCodeIcon );
       this.layout();
     } );
 
@@ -208,10 +227,6 @@ export default class ProgramNode extends phet.scenery.Node {
 
     model.numberProperty.link( number => {
       this.programNumber.string = number;
-    } );
-
-    model.customCodeContainer.hasCustomCodeProperty.link( hasCustomCode => {
-      this.customCodeIconParent.visible = hasCustomCode;
     } );
 
     // When the ActiveEdit is working with this program, draw a highlight indicator around this rectangle
@@ -305,12 +320,17 @@ export default class ProgramNode extends phet.scenery.Node {
     const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
     this.background.setRectHeight( backgroundHeight );
 
-    this.programNumber.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
-    this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
-    this.deleteButtonParent.rightTop = this.background.rightTop.plusXY( -OUTER_MARGIN, OUTER_MARGIN );
-    this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
-    this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -OUTER_MARGIN );
-    this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
-    this.customCodeIconParent.centerBottom = this.createComponentButton.centerTop.minusXY( 0, MARGIN );
+    // we cannot layout until all images are loaded
+    if ( this.deleteButton && this.copyButton && this.customCodeIcon ) {
+
+      this.programNumber.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
+      this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
+      this.deleteButton.rightTop = this.background.rightTop.plusXY( -OUTER_MARGIN, OUTER_MARGIN );
+      this.copyButton.rightTop = this.deleteButton.leftTop.minusXY( 5, 0 );
+      this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
+      this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -OUTER_MARGIN );
+      this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
+      this.customCodeIcon.centerBottom = this.createComponentButton.centerTop.minusXY( 0, MARGIN );
+    }
   }
 }

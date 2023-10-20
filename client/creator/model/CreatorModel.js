@@ -78,21 +78,31 @@ export default class CreatorModel {
   /**
    * Create a new program, registering important listeners for its removal within this model.
    * @param {Vector2} initialPosition - initial position for the program
-   * @param {number} [programNumber] - the number of this program, defaults to a random number {number
+   * @param {number} [programNumber] - the number of this program, defaults to a random number
    * @return {ProgramModel}
    */
   createProgram( initialPosition, programNumber ) {
     const newProgram = new ProgramModel( initialPosition, programNumber, this.activeEditProperty );
     this.programs.push( newProgram );
 
+    // listen for requests to copy this program
+    const copyListener = () => {
+      this.copyProgram( newProgram );
+    };
+    newProgram.copyEmitter.addListener( copyListener );
+
     // Listen for the delete emitter which tells us its time to delete a program
     const deleteListener = () => {
       this.deleteProgram( newProgram );
       newProgram.deleteEmitter.removeListener( deleteListener );
+
+      // remove the copy listener as well
+      newProgram.copyEmitter.removeListener( copyListener );
     };
     newProgram.deleteEmitter.addListener( deleteListener );
 
-    // listen for when the program gets new components so we can add it to our global lists
+    // listen for when the program gets new components so that we can add it to our global lists (this function also
+    // registers the component removal listeners)
     this.addComponentAddedListener( this.allModelComponents, newProgram.modelContainer.allComponents );
     this.addComponentAddedListener( this.allControllerComponents, newProgram.controllerContainer.allComponents );
     this.addComponentAddedListener( this.allViewComponents, newProgram.viewContainer.allComponents );
@@ -143,6 +153,27 @@ export default class CreatorModel {
     return !this.programs.some( program => program.numberProperty.value === number );
   }
 
+  /**
+   * Makes a copy of this program. The new program is given a random number. The program and component names
+   * are copied but will include (_COPY_1) or similar to make them unique. And the metadata will indicate that
+   * this program was copied from another.
+   * @param program
+   */
+  copyProgram( program ) {
+    assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
+
+    const newPosition = program.positionProperty.value.plusXY( 20, 20 );
+    const newProgram = this.createProgram( newPosition );
+    newProgram.copyMetadataFromOther( program );
+
+    // newProgram.copyComponentsFromOther( program );
+    // newProgram.copyCustomCodeFromOther( program );
+    return newProgram;
+  }
+
+  /**
+   * Deletes the program from them model, removing all contained components.
+   */
   deleteProgram( program ) {
     assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
     this.programs.splice( this.programs.indexOf( program ), 1 );

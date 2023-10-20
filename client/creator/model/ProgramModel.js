@@ -1,9 +1,9 @@
 import ProgramCodeGenerator from './code/ProgramCodeGenerator.js';
 import CustomCodeContainer from './CustomCodeContainer.js';
 import ProgramControllerContainer from './ProgramControllerContainer.js';
+import ProgramListenerContainer from './ProgramListenerContainer.js';
 import ProgramModelContainer from './ProgramModelContainer.js';
 import ProgramViewContainer from './views/ProgramViewContainer.js';
-import ProgramListenerContainer from './ProgramListenerContainer.js';
 
 // This value comes from the paper-land API. I am not sure why this value is used. It exists in server files so
 // I am not sure how best to share it.
@@ -53,6 +53,9 @@ export default class ProgramModel {
 
     // @public - emits an event when it is time to delete this program
     this.deleteEmitter = new phet.axon.Emitter();
+
+    // @public - emits an event when the user wants to copy this program
+    this.copyEmitter = new phet.axon.Emitter();
   }
 
   /**
@@ -67,6 +70,22 @@ export default class ProgramModel {
     const usedInListener = this.listenerContainer.allComponents.some( component => component.nameProperty.value === name );
 
     return usedInModel || usedInController || usedInView || usedInListener;
+  }
+
+  /**
+   * Copies the metadata from the provided program to this program. Small changes are made to make it clear this
+   * was from a copy.
+   */
+  copyMetadataFromOther( program ) {
+    this.titleProperty.value = `${program.titleProperty.value}_COPY`;
+    this.descriptionProperty.value = `${program.descriptionProperty.value}\n\nCOPY OF: ${program.numberProperty.value} - ${program.titleProperty.value}`;
+
+    // All others can be the same
+    this.keywordsProperty.value = program.keywordsProperty.value;
+    this.topWhiskerLengthProperty.value = program.topWhiskerLengthProperty.value;
+    this.rightWhiskerLengthProperty.value = program.rightWhiskerLengthProperty.value;
+    this.bottomWhiskerLengthProperty.value = program.bottomWhiskerLengthProperty.value;
+    this.leftWhiskerLengthProperty.value = program.leftWhiskerLengthProperty.value;
   }
 
   /**
