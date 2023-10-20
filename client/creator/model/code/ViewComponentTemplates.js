@@ -91,11 +91,15 @@ const ViewComponentTemplates = {
       scratchpad.{{NAME}}DescriptionUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
       
       scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        const descriptionString = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
-        
-        if ( descriptionString && descriptionString.length > 0 ) {
-          scratchpad.{{NAME}}DescriptionUtterance.alert = descriptionString;
-          phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance );
+
+        // Make sure there is a string to speak, including converting falsy values and numbers to a string       
+        const descriptionResult = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
+        if ( descriptionResult && descriptionResult.toString ) {
+          const descriptionString = descriptionResult.toString();
+          if ( descriptionString && descriptionString.length > 0 ) {
+            scratchpad.{{NAME}}DescriptionUtterance.alert = descriptionString;
+            phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance ); 
+          }
         }
       } ); 
     `,

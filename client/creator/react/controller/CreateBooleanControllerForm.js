@@ -30,7 +30,7 @@ export default function CreateBooleanControllerForm( props ) {
         {controlTypes.map( value => {
           const nameString = value === BooleanPropertyController.ControlType.MARKER ? 'Marker - true when marker is on paper' :
                              value === BooleanPropertyController.ControlType.WHISKER ? 'Whisker - true when paper is close to another' :
-                             'Rotation - true when paper is rotated 90 degrees';
+                             'Rotation - true when paper is rotated 180 degrees';
 
           const valueString = value.toString();
           return <Form.Check
