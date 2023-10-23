@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import ListenerComponent from '../../model/controllers/ListenerComponent.js';
@@ -57,6 +57,9 @@ export default function CreateModelControllerForm( props ) {
     setSelectedTab( getTabForActiveEdit( activeEdit ) );
   }, [ activeEdit ] );
 
+  // If there is an active edit, you cannot change tabs
+  const tabDisabled = !!( activeEdit && activeEdit.component );
+
   return (
     <>
       <Tabs
@@ -68,7 +71,7 @@ export default function CreateModelControllerForm( props ) {
         }}
         justify={true}
       >
-        <Tab eventKey='paper' title='Paper' tabClassName={styles.tab}>
+        <Tab eventKey='paper' title='Paper' tabClassName={styles.tab} disabled={tabDisabled}>
           <PaperControllerForm
             activeEdit={activeEdit}
             allModelComponents={allModelComponents}
@@ -78,7 +81,7 @@ export default function CreateModelControllerForm( props ) {
             model={model}
           />
         </Tab>
-        <Tab eventKey='link' title='Link' tabClassName={styles.tab}>
+        <Tab eventKey='link' title='Link' tabClassName={styles.tab} disabled={tabDisabled}>
           <MultilinkControllerForm
             activeEdit={activeEdit}
 
@@ -95,7 +98,7 @@ export default function CreateModelControllerForm( props ) {
             model={model}
           />
         </Tab>
-        <Tab eventKey='animation' title='Animation' tabClassName={styles.tab}>
+        <Tab eventKey='animation' title='Animation' tabClassName={styles.tab} disabled={tabDisabled}>
           <AnimationControllerForm
             activeEdit={activeEdit}
             isFormValid={() => {}}

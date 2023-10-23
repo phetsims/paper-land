@@ -2,6 +2,7 @@
  * Base class for a ViewComponent. A data structure representing some view component in
  * the paper playground framework.
  */
+import { renameVariableInCode } from '../../../utils.js';
 import Component from '../Component.js';
 
 export default class ViewComponent extends Component {
@@ -43,7 +44,7 @@ export default class ViewComponent extends Component {
     this.modelComponentNames = this._modelComponents.map( component => component.nameProperty.value );
 
     if ( newName && oldName && this.controlFunctionString ) {
-      this.controlFunctionString = this.controlFunctionString.replaceAll( oldName, newName );
+      this.controlFunctionString = renameVariableInCode( this.controlFunctionString, newName, oldName );
     }
   }
 

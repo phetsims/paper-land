@@ -2,6 +2,7 @@
  * A named DerivedProperty, with an implementation for saving and loading from state.
  */
 
+import { renameVariableInCode } from '../../utils.js';
 import NamedProperty from './NamedProperty.js';
 
 export default class NamedDerivedProperty extends NamedProperty {
@@ -19,26 +20,39 @@ export default class NamedDerivedProperty extends NamedProperty {
     // A Multilink that will update the collection of names whenever a dependency changes its name.
     this._nameChangeMultilink = null;
 
+    // A single listener that updates the derivation to use new variable names whenever a dependency name changes.
+    this.boundUpdateDependencyNames = this.updateDependencyNames.bind( this );
+
     this.setDependencies( dependencies );
   }
 
+  /**
+   * Set the list of dependencies for this DerivedProperty.
+   * @param dependencies
+   */
   setDependencies( dependencies ) {
-    if ( this._nameChangeMultilink ) {
-      this._nameChangeMultilink.dispose();
-      this._nameChangeMultilink = null;
-    }
+    this._dependencies.forEach( dependency => {
+      if ( dependency.nameProperty.hasListener( this.boundUpdateDependencyNames ) ) {
+        dependency.nameProperty.unlink( this.boundUpdateDependencyNames );
+      }
+    } );
 
+    // update references
     this._dependencies = dependencies;
     this.updateDependencyNames();
 
-    this._nameChangeMultilink = phet.axon.Multilink.multilink(
-      this._dependencies.map( dependency => dependency.nameProperty ),
-      () => { this.updateDependencyNames(); }
-    );
+    // link to new dependencies
+    dependencies.forEach( dependency => {
+      dependency.nameProperty.link( this.boundUpdateDependencyNames );
+    } );
   }
 
-  updateDependencyNames() {
+  updateDependencyNames( newName, oldName ) {
     this.dependencyNames = this._dependencies.map( dependency => dependency.nameProperty.value );
+
+    if ( newName && oldName && this.derivation ) {
+      this.derivation = renameVariableInCode( this.derivation, newName, oldName );
+    }
   }
 
   /**

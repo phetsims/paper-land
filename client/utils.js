@@ -395,6 +395,22 @@ export function stringToNumber( value ) {
 }
 
 /**
+ * Renames a variable in a code string, replacing all instances of the oldName with the newName. The regex
+ * uses a non-variable character boundary so that it will not match a variable name that is a substring of
+ * another variable name.
+ * @param codeString - code to search through
+ * @param newName - new name for the variable
+ * @param oldName - existing name for the variable
+ */
+export function renameVariableInCode( codeString, newName, oldName ) {
+
+  // the 'g' flag in the regex will replace all instances of the old name, and is supported on more platforms
+  // than replaceAll.
+  const regex = new RegExp( `\\b${oldName}\\b`, 'g' );
+  return codeString.replace( regex, newName );
+}
+
+/**
  * Prepares the provided function documentation list into a 'list' with newlines, which is better for the
  * AI input (and for humans).
  * @param functionList
