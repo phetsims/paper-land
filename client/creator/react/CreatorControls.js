@@ -11,6 +11,7 @@ import CreateCustomCodeForm from './CreateCustomCodeForm.js';
 import CreateProgramFromTemplateForm from './CreateProgramFromTemplateForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
 import ProgramNumberForm from './ProgramNumberForm.js';
+import SaveTemplateControl from './SaveTemplateControl.js';
 import SpaceSelectControls from './SpaceSelectControls.js';
 
 // eslint-disable-next-line react/display-name
@@ -64,13 +65,17 @@ const CreatorControls = forwardRef( ( props, ref ) => {
         }}
       >
         <fieldset disabled={!enableEdit}>
+          {activeEdit === null && !creatingFromTemplate && window.createTemplates ?
+           <SaveTemplateControl model={model}></SaveTemplateControl> : ''}
           {creatingFromTemplate ?
-           <CreateProgramFromTemplateForm createFromTemplate={
-             programTemplateJSON => {
-               model.createFromTemplate( programTemplateJSON );
-               model.creatingFromTemplateProperty.value = false;
-             }
-           }></CreateProgramFromTemplateForm> : ''}
+           <CreateProgramFromTemplateForm
+             sendGetTemplatesRequest={model.sendGetTemplatesRequest}
+             createFromTemplate={
+               programTemplateJSON => {
+                 model.createFromTemplate( programTemplateJSON );
+                 model.creatingFromTemplateProperty.value = false;
+               }
+             }></CreateProgramFromTemplateForm> : ''}
           {activeEdit && activeEdit.editType === EditType.METADATA ?
            <ProgramMetadataForm
              activeEdit={activeEdit}

@@ -7,9 +7,30 @@ export default class BackgroundViewComponent extends ViewComponent {
    * @param {string} name - name of this component
    * @param {NamedProperty[]} modelComponents - names of the model components this represents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
+   * @param {Object} providedOptions - options for this view component
    */
-  constructor( name, modelComponents, controlFunctionString ) {
+  constructor( name, modelComponents, controlFunctionString, providedOptions ) {
     super( name, modelComponents, controlFunctionString );
+
+    const options = phet.phetCore.merge( {
+      fillColor: 'green'
+    }, providedOptions );
+
+    this.fillColor = options.fillColor;
+  }
+
+  save() {
+    return {
+      ...super.save(),
+      fillColor: this.fillColor
+    };
+  }
+
+  static getStateSchema() {
+    return {
+      ...ViewComponent.getStateSchema(),
+      fillColor: 'green'
+    };
   }
 
   /**
@@ -21,7 +42,10 @@ export default class BackgroundViewComponent extends ViewComponent {
     return new BackgroundViewComponent(
       stateObject.name,
       dependencies,
-      stateObject.controlFunctionString
+      stateObject.controlFunctionString,
+      {
+        fillColor: stateObject.fillColor
+      }
     );
   }
 }

@@ -159,6 +159,7 @@ export default function PaperControllerForm( props ) {
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
+        debugger;
         const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.controlType, numberDataRef.current.relationshipControlType, numberDataRef.current.controlTypeFamily );
         activeProgram.controllerContainer.addNumberPropertyController( numberController );
       }

@@ -1,4 +1,4 @@
-import { renameVariableInCode } from '../../../utils.js';
+import { renameVariableInCode, replaceReferencesInCode } from '../../../utils.js';
 import Component from '../Component.js';
 
 export default class ListenerComponent extends Component {
@@ -48,13 +48,7 @@ export default class ListenerComponent extends Component {
     this.controlledPropertyNames = this._controlledProperties.map( controllingProperty => controllingProperty.nameProperty.value );
 
     if ( newName && oldName && this.controlFunctionString ) {
-      this.controlFunctionString = renameVariableInCode( this.controlFunctionString, newName, oldName );
-
-      // the listener component also has 'setter' functions for each like 'setMyComponent' - the setter function
-      // is the name with 'set' prepended and the first letter capitalized
-      const newSetterName = 'set' + newName.charAt( 0 ).toUpperCase() + newName.slice( 1 );
-      const oldSetterName = 'set' + oldName.charAt( 0 ).toUpperCase() + oldName.slice( 1 );
-      this.controlFunctionString = renameVariableInCode( this.controlFunctionString, newSetterName, oldSetterName );
+      this.controlFunctionString = replaceReferencesInCode( this.controlFunctionString, newName, oldName );
     }
   }
 

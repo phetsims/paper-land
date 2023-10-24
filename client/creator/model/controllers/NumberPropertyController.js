@@ -55,8 +55,10 @@ export default class NumberPropertyController extends PropertyController {
 
     // get the control type family from teh provided control type
 
-    // only PAPER_MOVEMENT has relationship control types, so check for that one first and fall back to MARKERS
-    const controlTypeFamily = FamilyToControlTypeMap.PAPER_MOVEMENT.includes( relationshipControlTypeValue ) ? 'PAPER_MOVEMENT' : 'MARKERS';
+    // only PAPER_MOVEMENT has relationship control types, so check for that one first and fall back to MARKERS -
+    // convert to strings in case the value comes in from a React form
+    const paperMovementControlTypesAsStrings = FamilyToControlTypeMap.PAPER_MOVEMENT.map( controlType => controlType.name );
+    const controlTypeFamily = paperMovementControlTypesAsStrings.includes( controlTypeValue.toString() ) ? 'PAPER_MOVEMENT' : 'MARKERS';
 
     super( name, namedProperty, NumberPropertyControlType, controlTypeValue, controlTypeFamily );
 

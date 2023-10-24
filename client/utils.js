@@ -411,6 +411,25 @@ export function renameVariableInCode( codeString, newName, oldName ) {
 }
 
 /**
+ * Replace references to a variable AND setter functions with a new name. Good for when you want to
+ * rename myComponent to newComponent and you need to update
+ * myComponent -> newComponent and
+ * setMyComponent -> setNewComponent
+ *
+ * for the entire code block.
+ */
+export function replaceReferencesInCode( codeString, newName, oldName ) {
+
+  // replace standalone variables
+  const withVariablesRenamed = renameVariableInCode( codeString, newName, oldName );
+
+  // replace setter functions
+  const newSetterName = 'set' + newName.charAt( 0 ).toUpperCase() + newName.slice( 1 );
+  const oldSetterName = 'set' + oldName.charAt( 0 ).toUpperCase() + oldName.slice( 1 );
+  return renameVariableInCode( withVariablesRenamed, newSetterName, oldSetterName );
+}
+
+/**
  * Prepares the provided function documentation list into a 'list' with newlines, which is better for the
  * AI input (and for humans).
  * @param functionList

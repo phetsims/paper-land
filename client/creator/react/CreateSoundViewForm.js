@@ -99,7 +99,7 @@ export default function CreateSoundViewForm( props ) {
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='sound'
-          handleChange={fileName => {
+          handleNewUpload={fileName => {
             refreshSoundFiles( fileName );
             handleChange( { soundFileName: fileName } );
           }}

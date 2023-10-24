@@ -1,3 +1,4 @@
+import { replaceReferencesInCode } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import AnimationListenerComponent from './controllers/AnimationListenerComponent.js';
 import MultilinkListenerComponent from './controllers/MultilinkListenerComponent.js';
@@ -98,7 +99,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
         // update the derivation function to use the newly copied component if necessary
         for ( const name in nameChangeMap ) {
           const newName = nameChangeMap[ name ];
-          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
+          componentObject.controlFunctionString = replaceReferencesInCode( componentObject.controlFunctionString, newName, name );
         }
       } );
     }

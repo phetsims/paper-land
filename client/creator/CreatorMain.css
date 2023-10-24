@@ -283,3 +283,8 @@ code {
 :local(.validation) {
   color: warningColor;
 }
+
+:local(.wrappingPre) {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+}

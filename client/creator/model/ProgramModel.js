@@ -77,7 +77,7 @@ export default class ProgramModel {
    * was from a copy.
    */
   copyMetadataFromOther( programJSON ) {
-    this.titleProperty.value = `${programJSON.title}_COPY`;
+    this.titleProperty.value = `${programJSON.title}_Copy`;
     this.descriptionProperty.value = programJSON.description;
 
     // All others can be the same

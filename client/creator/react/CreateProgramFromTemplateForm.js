@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import TemplateModel from '../model/TemplateModel.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -9,22 +8,22 @@ export default function CreateProgramFromTemplateForm( props ) {
   const [ availableTemplates, setAvailableTemplates ] = useState( [] );
   const [ selectedTemplate, setSelectedTemplate ] = useState( '' );
 
-  const testTemplates = [
-    new TemplateModel( 'Movable Image', 'This is the first template.', 'template1', jsonString ),
-    new TemplateModel( 'Movable Rectangle', 'This is the second template.', 'template2', jsonString ),
-    new TemplateModel( 'Movable Square', 'This is the second template.', 'template2', jsonString ),
-    new TemplateModel( 'Movable Text', 'This is the second template.', 'template2', jsonString )
-  ];
-
+  // Get the available templates from the database
   useEffect( () => {
-    setAvailableTemplates( testTemplates );
-    setSelectedTemplate( testTemplates[ 0 ] );
-  }, [] );
+    const getTemplates = async () => {
+      try {
+        const templates = await props.sendGetTemplatesRequest();
+        const templatesJSON = JSON.parse( templates );
+        setAvailableTemplates( templatesJSON.templates );
+        setSelectedTemplate( templatesJSON.templates[ 0 ] );
+      }
+      catch( e ) {
+        console.log( e );
+      }
+    };
 
-  // The form is going to have
-  // description
-  // number of programs
-  // 4) A final Create button
+    getTemplates();
+  }, [] );
 
   return (
     <>
@@ -52,10 +51,10 @@ export default function CreateProgramFromTemplateForm( props ) {
        <div className={styles.extraPadding}>
          <h3>Description:</h3>
          <div className='card'>
-           <pre className='card-body'>{selectedTemplate.description}</pre>
+           <pre className={styles.wrappingPre}>{selectedTemplate.description}</pre>
          </div>
          <StyledButton name='Create' onClick={() => {
-           props.createFromTemplate( selectedTemplate.programJSONString );
+           props.createFromTemplate( selectedTemplate.projectData );
          }}></StyledButton>
        </div> : ''}
     </>

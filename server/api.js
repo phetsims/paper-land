@@ -538,6 +538,78 @@ router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
 } );
 
 /**
+ * Save the template to the templates table.
+ */
+router.put( '/api/creator/templates', ( req, res ) => {
+  const {
+    templateName,
+    description,
+    keyWords,
+    projectData
+  } = req.body;
+
+  if ( !templateName ) {
+    res.status( 403 ).send( 'Missing template name' );
+  }
+  else if ( !projectData ) {
+    res.status( 403 ).send( 'Missing project data' );
+  }
+  else {
+
+    // make sure that the name is unique
+    knex
+      .select( 'name' )
+      .from( 'creator-templates' )
+      .where( { name: templateName } )
+      .then( selectResult => {
+        const existingNames = selectResult.map( result => result.name );
+        if ( existingNames.includes( templateName ) ) {
+          res.status( 402 ).send( 'Name already exists for this template.' );
+        }
+        else {
+
+          // name is unique so we can insert the template
+          knex( 'creator-templates' )
+            .insert( {
+              name: templateName,
+              projectData: projectData,
+              description: description,
+              keyWords: keyWords
+            } )
+            .then( () => {
+              res.status( 200 ).json( {} );
+            } );
+        }
+      } );
+  }
+} );
+
+/**
+ * Retrieve all templates from the templates table.
+ */
+router.get( '/api/creator/templates', ( req, res ) => {
+  knex
+    .select( 'name', 'description', 'keyWords', 'projectData' )
+    .from( 'creator-templates' )
+    .then( selectResult => {
+      res.json( { templates: selectResult } );
+    } );
+} );
+
+/**
+ * Delete the template from the templates table with the provided name.
+ */
+router.get( '/api/creator/templates/delete/:templateName', ( req, res ) => {
+  const { templateName } = req.params;
+  knex( 'creator-templates' )
+    .where( { name: templateName } )
+    .del()
+    .then( numberOfTemplatesDeleted => {
+      res.json( { numberOfTemplatesDeleted } );
+    } );
+} );
+
+/**
  * Get the project data at the provided space and project name.
  */
 router.get( '/api/creator/:spaceName/:projectName', ( req, res ) => {

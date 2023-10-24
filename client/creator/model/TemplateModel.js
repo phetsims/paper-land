@@ -3,7 +3,7 @@
  */
 
 export default class TemplateModel {
-  constructor( name, description, keyWords, programsJSON ) {
+  constructor( name, description, keyWords, projectData ) {
 
     // The name of this template.
     this.name = name;
@@ -15,6 +15,6 @@ export default class TemplateModel {
     this.keyWords = keyWords;
 
     // The state representing the programs which we will use to load from state.
-    this.programJSONString = programsJSON;
+    this.projectData = projectData;
   }
 }

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import styles from './../CreatorMain.css';
 import xhr from 'xhr';
+import styles from './../CreatorMain.css';
 
 export default function FileUploader( props ) {
 
@@ -14,7 +14,7 @@ export default function FileUploader( props ) {
   const uploadUrlPath = fileType === 'image' ? 'api/creator/uploadImage' : 'api/creator/uploadSound';
   const uploadUrl = new URL( uploadUrlPath, window.location.origin ).toString();
 
-  const handleChange = props.handleChange || ( () => {} );
+  const handleNewUpload = props.handleNewUpload || ( () => {} );
 
   const onDrop = useCallback( acceptedFiles => {
     const formData = new FormData();
@@ -29,12 +29,14 @@ export default function FileUploader( props ) {
           const bodyObject = JSON.parse( response.body );
           const fileNameKey = fileType === 'image' ? 'imageFileName' : 'soundFileName';
           if ( bodyObject && bodyObject[ fileNameKey ] ) {
-            handleChange( bodyObject[ fileNameKey ] );
+            handleNewUpload( bodyObject[ fileNameKey ] );
           }
         }
       }
     } );
-  }, [] );
+
+    // it is important to update this callback when props change to avoid a stale closure!
+  }, [ uploadUrl, fileType, handleNewUpload ] );
 
   const hintContent = props.hint || 'Drag \'n\' drop a file here, or click to select a file.';
 

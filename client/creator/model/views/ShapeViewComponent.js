@@ -25,28 +25,28 @@ export default class ShapeViewComponent extends NodeViewComponent {
       // implementation for now.  If this gets too complex, we can revisit.
 
       // rectangle defaults
-      rectWidth: 100,
-      rectHeight: 50,
+      rectWidth: 0.5,
+      rectHeight: 0.25,
 
       // circle defaults
-      circleRadius: 50,
+      circleRadius: 0.2,
 
       // ellipse defaults
-      ellipseRadiusX: 100,
-      ellipseRadiusY: 50,
+      ellipseRadiusX: 0.3,
+      ellipseRadiusY: 0.15,
 
       // line defaults
       lineStartX: 0,
       lineStartY: 0,
-      lineEndX: 100,
-      lineEndY: 100,
+      lineEndX: 0.5,
+      lineEndY: 0.5,
 
       // triangle defaults
-      triangleBaseWidth: 100,
-      triangleHeight: 100,
+      triangleBaseWidth: 0.2,
+      triangleHeight: 0.3,
 
       // polygon defaults
-      polygonPoints: [ [ 0, 0 ], [ 100, 0 ], [ 100, 100 ], [ 0, 100 ] ]
+      polygonPoints: [ [ 0, 0 ], [ 0.1, 0 ], [ 0.1, 0.1 ], [ 0, 0.1 ] ]
     };
     const options = _.merge( {}, shapeOptions, providedOptions );
     super( name, modelComponents, controlFunctionString, options );
@@ -89,28 +89,28 @@ export default class ShapeViewComponent extends NodeViewComponent {
         lineWidth: 1,
 
         // rectangle
-        rectWidth: 100,
-        rectHeight: 50,
+        rectWidth: 0.5,
+        rectHeight: 0.5,
 
         // circle defaults
-        circleRadius: 50,
+        circleRadius: 0.5,
 
         // ellilpse defaults
-        ellipseRadiusX: 100,
-        ellipseRadiusY: 50,
+        ellipseRadiusX: 0.3,
+        ellipseRadiusY: 0.15,
 
         // line defaults
         lineStartX: 0,
         lineStartY: 0,
-        lineEndX: 100,
-        lineEndY: 100,
+        lineEndX: 0.3,
+        lineEndY: 0.3,
 
         // triangle defaults
-        triangleBaseWidth: 100,
-        triangleHeight: 100,
+        triangleBaseWidth: 0.1,
+        triangleHeight: 0.3,
 
         // polygon defaults
-        polygonPoints: [ [ 0, 0 ], [ 100, 0 ], [ 100, 100 ], [ 0, 100 ] ]
+        polygonPoints: [ [ 0, 0 ], [ 0.1, 0 ], [ 0.1, 0.1 ], [ 0, 0.1 ] ]
       }
     };
   }

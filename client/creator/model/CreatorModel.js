@@ -57,6 +57,9 @@ export default class CreatorModel {
     // {Emitter} - Emits when the save request to the server is successful.
     this.saveSuccessfulEmitter = new phet.axon.Emitter();
 
+    // {Emitter} - Emits when the save template request to the server is successful.
+    this.saveTemplateSuccessfulEmitter = new phet.axon.Emitter();
+
     this.sendConfirmedEmitter.addListener( async () => {
 
       // Save programs to the server whenever we send to the playground (users expected this to be automatic).
@@ -162,7 +165,7 @@ export default class CreatorModel {
 
     let copyNumber = 1;
     while ( copyNumber < maxAttempts ) {
-      const copyName = `${name}_copy${copyNumber}`;
+      const copyName = `${name}_Copy${copyNumber}`;
       if ( this.isNameAvailable( copyName ) ) {
         return copyName;
       }
@@ -378,6 +381,74 @@ export default class CreatorModel {
         else {
           this.saveSuccessfulEmitter.emit();
           resolve();
+        }
+      } );
+    } );
+  }
+
+  async sendSaveTemplateRequest( templateName, description, keyWords ) {
+
+    return new Promise( ( resolve, reject ) => {
+      const json = this.save();
+
+      const url = new URL( 'api/creator/templates', window.location.origin ).toString();
+      xhr.put( url, {
+        json: {
+          templateName, description, keyWords, projectData: json
+        }
+      }, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+          this.errorOccurredEmitter.emit( error.message );
+          reject( error );
+        }
+        else {
+
+          if ( response.statusCode === 402 ) {
+            this.errorOccurredEmitter.emit( 'Template name already exists' );
+          }
+          else if ( response.statusCode === 403 ) {
+            this.errorOccurredEmitter.emit( response.body );
+          }
+          else if ( response.statusCode === 200 ) {
+            this.saveTemplateSuccessfulEmitter.emit();
+            resolve();
+          }
+          else {
+            this.errorOccurredEmitter.emit( 'Unknown error occurred' );
+          }
+        }
+      } );
+    } );
+  }
+
+  async sendDeleteTemplateRequest( templateName ) {
+    return new Promise( ( resolve, reject ) => {
+      const url = new URL( `api/creator/templates/delete/${templateName}`, window.location.origin ).toString();
+      xhr.get( url, {}, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+          this.errorOccurredEmitter.emit( error.message );
+          reject( error );
+        }
+        else {
+          resolve();
+        }
+      } );
+    } );
+  }
+
+  async sendGetTemplatesRequest() {
+    return new Promise( ( resolve, reject ) => {
+      const url = new URL( 'api/creator/templates', window.location.origin ).toString();
+      xhr.get( url, {}, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+          this.errorOccurredEmitter.emit( error.message );
+          reject( error );
+        }
+        else {
+          resolve( response.body );
         }
       } );
     } );

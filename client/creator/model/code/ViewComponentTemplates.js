@@ -143,32 +143,41 @@ const ViewComponentTemplates = {
   BackgroundViewComponent: {
     onProgramAdded: `
       // Create a background rectangle and add it to the view.
-      const {{NAME}}BackgroundRectangle = new phet.scenery.Rectangle( 0, 0, sharedData.displaySize.width, sharedData.displaySize.height );
+      const {{NAME}}BackgroundRectangle = new phet.scenery.Rectangle( 0, 0, sharedData.displaySize.width, sharedData.displaySize.height, {
+        fill: '{{FILL_COLOR}}'
+      } );
       sharedData.scene.addChild( {{NAME}}BackgroundRectangle );
       {{NAME}}BackgroundRectangle.moveToBack();
       
       // Assign to the scratchpad so that we can remove it later.
       scratchpad.{{NAME}}BackgroundRectangle = {{NAME}}BackgroundRectangle;
-      
-      // Get a new background color whenever a dependency changes. The control function should return a color string.
-      const {{NAME}}BackgroundFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        {{CONTROL_FUNCTION}}
+  
+      // The background may not have any dependencies that control it.    
+      const {{NAME}}BackgroundColorDependencies = {{DEPENDENCY_NAMES_ARRAY}};
+      if ( {{NAME}}BackgroundColorDependencies.length > 0 ) {
+
+        // Get a new background color whenever a dependency changes. The control function should return a color string.
+        const {{NAME}}BackgroundFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+          {{CONTROL_FUNCTION}}
+        }
+        
+        // Update the background rectangle whenever the dependencies change.
+        scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+          const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
+          {{NAME}}BackgroundRectangle.fill = backgroundColorString;
+        } );
       }
-      
-      // Update the background rectangle whenever the dependencies change.
-      scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
-        {{NAME}}BackgroundRectangle.fill = backgroundColorString;
-      } );
     `,
     onProgramRemoved: `
       // Remove the background rectangle from the view.
       sharedData.scene.removeChild( scratchpad.{{NAME}}BackgroundRectangle );
       delete scratchpad.{{NAME}}BackgroundRectangle;
       
-      // Remove the multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, {{NAME}}BackgroundMultilinkId );
-      delete scratchpad.{{NAME}}BackgroundMultilinkId;
+      // Remove the multilink if there were any dependencies
+      if ( scratchpad.{{NAME}}BackgroundMultilinkId ) {
+        phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, {{NAME}}BackgroundMultilinkId );
+        delete scratchpad.{{NAME}}BackgroundMultilinkId;
+      }
     `
   },
   ImageViewComponent: {

@@ -95,7 +95,8 @@ export default function CreateImageViewForm( props ) {
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='image'
-          handleChange={async fileName => {
+          handleNewUpload={async fileName => {
+
             refreshImageFiles( fileName );
             handleChange( { imageFileName: fileName } );
           }}

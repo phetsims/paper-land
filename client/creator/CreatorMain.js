@@ -19,6 +19,7 @@ export default function CreatorMain( props ) {
   const urlSearchParams = new URLSearchParams( window.location.search );
   const params = Object.fromEntries( urlSearchParams.entries() );
   window.dev = params.hasOwnProperty( 'dev' );
+  window.createTemplates = params.hasOwnProperty( 'createTemplates' );
 
   // fundamental model and view for the editor
   const creatorModel = new CreatorModel();

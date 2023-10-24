@@ -10,6 +10,7 @@ const NODE_COMPONENT_FUNCTIONS = [
   'setRotation( number ) - A number. Sets the rotation in radians.',
   'setOpacity( number ) - A number between 0 and 1.',
   'setVisible( boolean ) - A boolean. Visible when true.',
+  'moveToFront() - Moves this view component in front of all others.',
 
   'unitBoundsToDisplayBounds( bounds ) - Converts bounds in unit (0-1) coordinates to display coordinates (pixels). Returns a new bounds.',
   'unitPositionToDisplayPosition( position ) - Converts a position in unit (0-1) coordinates to display coordinates (pixels). Returns a new position.'

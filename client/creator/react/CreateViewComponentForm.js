@@ -89,12 +89,14 @@ export default function CreateViewComponentForm( props ) {
   const soundsDataRef = useRef( {} );
   const imagesDataRef = useRef( {} );
   const shapesDataRef = useRef( {} );
+  const backgroundDataRef = useRef( {} );
 
   // to be called every change so that we can use data to create components
   const getDataForGeneral = data => {generalDataRef.current = data;};
   const getDataForSounds = data => {soundsDataRef.current = data;};
   const getDataForImages = data => {imagesDataRef.current = data;};
   const getDataForShapes = data => {shapesDataRef.current = data;};
+  const getDataForBackground = data => {backgroundDataRef.current = data;};
 
   // functions for subcomponents to set form validity
   const getSoundsFormInvalidReasons = formInvalidReasons => setSoundsFormInvalidReasons( formInvalidReasons );
@@ -169,6 +171,9 @@ export default function CreateViewComponentForm( props ) {
         editingComponent.defaultShapeOptions = shapesDataRef.current.defaultShapeOptions;
         editingComponent.defaultViewOptions = shapesDataRef.current.defaultViewOptions;
       }
+      if ( selectedTab === 'background' ) {
+        editingComponent.fillColor = backgroundDataRef.current.fillColor;
+      }
     }
     else {
 
@@ -184,7 +189,9 @@ export default function CreateViewComponentForm( props ) {
         activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
       }
       else if ( selectedTab === 'background' ) {
-        const backgroundViewComponent = new BackgroundViewComponent( componentName, selectedModelComponents, controlFunctionString );
+        const backgroundViewComponent = new BackgroundViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+          fillColor: backgroundDataRef.current.fillColor
+        } );
         activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
       }
       else if ( selectedTab === 'images' ) {
@@ -264,6 +271,7 @@ export default function CreateViewComponentForm( props ) {
             allModelComponents={props.allModelComponents}
             isFormValid={getBackgroundFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
+            getBackgroundFormData={getDataForBackground}
             activeEdit={activeEdit}
           ></CreateBackgroundViewForm>
         </Tab>

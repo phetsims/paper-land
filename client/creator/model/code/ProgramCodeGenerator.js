@@ -401,7 +401,9 @@ export default class ProgramCodeGenerator {
     else if ( componentType === 'BackgroundViewComponent' ) {
 
       // No extra data for background components yet.
-      data = {};
+      data = {
+        FILL_COLOR: viewComponent.fillColor
+      };
     }
     else if ( componentType === 'ImageViewComponent' ) {
       data = {

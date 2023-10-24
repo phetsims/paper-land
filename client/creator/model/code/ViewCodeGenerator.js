@@ -86,6 +86,10 @@ export default class ViewCodeGenerator {
         ${componentNameString}.visible = visible;
       };
       
+      const moveToFront = () => {
+        ${componentNameString}.moveToFront();
+      };
+      
       const setRotation = ( rotation ) => {
         ${componentNameString}.rotation = rotation;
       };`
