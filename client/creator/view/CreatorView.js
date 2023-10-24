@@ -47,9 +47,18 @@ export default class CreatorView extends phet.scenery.Node {
     // Displays a warning when we are in "readonly" mode.
     this.restrictedWarningNode = new RestrictedWarningNode();
 
-    this.newProgramButton = new phet.sun.TextPushButton( 'New Program', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+    this.newProgramButton = new phet.sun.TextPushButton( 'New Empty Program', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
         model.createProgram( this.applicationLayerNode.globalToLocalPoint( this.newProgramButton.leftBottom ) );
+      }
+    } ) );
+    this.newProgramFromTemplateButton = new phet.sun.TextPushButton( 'Create from Template', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+      listener: () => {
+
+        model.creatingFromTemplateProperty.value = true;
+
+        // clear the active edit because we are entering a new mode of creating
+        model.activeEditProperty.value = null;
       }
     } ) );
     this.saveProjectButton = new phet.sun.TextPushButton( 'Save Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
@@ -71,6 +80,7 @@ export default class CreatorView extends phet.scenery.Node {
     this.applicationLayerNode.addChild( this.connectionsNode );
 
     controlLayerNode.addChild( this.newProgramButton );
+    controlLayerNode.addChild( this.newProgramFromTemplateButton );
     controlLayerNode.addChild( this.saveProjectButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
@@ -121,7 +131,6 @@ export default class CreatorView extends phet.scenery.Node {
               }
             }
             catch( error ) {
-              debugger;
               model.errorOccurredEmitter.emit( 'Error loading project: ' + error.message );
             }
           }
@@ -130,6 +139,7 @@ export default class CreatorView extends phet.scenery.Node {
         // You can only save or create programs if the space is not restricted
         this.saveProjectButton.enabled = editEnabledProperty.value;
         this.newProgramButton.enabled = editEnabledProperty.value;
+        this.newProgramFromTemplateButton.enabled = editEnabledProperty.value;
         this.sendToPaperLandButton.enabled = true;
       }
       else {
@@ -138,12 +148,16 @@ export default class CreatorView extends phet.scenery.Node {
         this.saveProjectButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
         this.newProgramButton.enabled = false;
+        this.newProgramFromTemplateButton.enabled = false;
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );
 
     display.addInputListener( {
       down: event => {
+
+        // no longer creating from template since the user has clicked on something else
+        model.creatingFromTemplateProperty.value = false;
 
         if ( !_.some( event.trail.nodes, node => node instanceof ProgramNode ) ) {
           model.activeEditProperty.value = null;
@@ -173,7 +187,9 @@ export default class CreatorView extends phet.scenery.Node {
    * @param {number} height - total available height for the view
    */
   layout( width, height ) {
-    this.newProgramButton.leftTop = new phet.dot.Vector2( 5, 5 );
+    this.newProgramFromTemplateButton.leftTop = new phet.dot.Vector2( 5, 5 );
+    this.newProgramButton.leftTop = this.newProgramFromTemplateButton.leftBottom.plusXY( 0, 5 );
+
     this.saveProjectButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
     this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );

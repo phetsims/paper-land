@@ -61,18 +61,14 @@ export default class ProgramListenerContainer extends ComponentContainer {
     };
   }
 
-  copyComponentsFromOther( otherContainer, getUniqueCopyName, allModelComponents, newModelNames ) {
-
-    // We can use the saved state to easily copy components. From this data we can update names
-    // and dependencies before loading the new components to this container as copies.
-    const stateObject = otherContainer.save();
+  copyComponentsFromOther( otherContainerJSON, getUniqueCopyName, allModelComponents, newModelNames ) {
 
     // Include the model components that were renamed during this copy so we know how to
     // whether to set dependencies on new copies or the original components.
     const nameChangeMap = _.merge( {}, newModelNames );
 
-    for ( const key in stateObject ) {
-      const components = stateObject[ key ];
+    for ( const key in otherContainerJSON ) {
+      const components = otherContainerJSON[ key ];
 
       components.forEach( componentStateObject => {
         const originalName = componentStateObject.name;
@@ -82,8 +78,8 @@ export default class ProgramListenerContainer extends ComponentContainer {
     }
 
     // Update dependency relationships and references in custom code.
-    for ( const key in stateObject ) {
-      const componentObjects = stateObject[ key ];
+    for ( const key in otherContainerJSON ) {
+      const componentObjects = otherContainerJSON[ key ];
       componentObjects.forEach( componentObject => {
 
         // update the "controlled" components to use the newly copied component if necessary
@@ -107,7 +103,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
       } );
     }
 
-    this.load( stateObject, allModelComponents );
+    this.load( otherContainerJSON, allModelComponents );
   }
 
   /**

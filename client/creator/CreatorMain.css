@@ -71,6 +71,11 @@
   padding-bottom: 10px;
 }
 
+:local(.extraPadding) {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 :local(.horizontalPadding) {
   padding-right: 10px;
 }

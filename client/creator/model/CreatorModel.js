@@ -35,6 +35,9 @@ export default class CreatorModel {
     // {Property.<boolean>} - The Project name that is currently being worked on
     this.projectNameProperty = new phet.axon.Property( '' );
 
+    // {Property.<boolean>} - Are we currently creating new programs from a template?
+    this.creatingFromTemplateProperty = new phet.axon.BooleanProperty( false );
+
     // {CreatorVisibilityModel}
     this.visibilityModel = new CreatorVisibilityModel();
 
@@ -179,7 +182,7 @@ export default class CreatorModel {
 
   /**
    * Makes a copy of this program. The new program is given a random number. The program and component names
-   * are copied but will include (_COPY_1) or similar to make them unique. And the metadata will indicate that
+   * are copied but will include a suffix to make them unique. And the metadata will indicate that
    * this program was copied from another.
    * @param program
    */
@@ -188,10 +191,23 @@ export default class CreatorModel {
 
     const newPosition = program.positionProperty.value.plusXY( 20, 20 );
     const newProgram = this.createProgram( newPosition );
-    newProgram.copyMetadataFromOther( program );
-    newProgram.copyCustomCodeFromOther( program );
-    newProgram.copyComponentsFromOther( program, this.getUniqueCopyName.bind( this ), this.allModelComponents );
 
+    const programJSON = program.save();
+    newProgram.copyFromOther( programJSON, this.getUniqueCopyName.bind( this ), this.allModelComponents );
+    return newProgram;
+  }
+
+  /**
+   * Create a copy of a program from the provided JSON state. The new program is given a random number. The program and
+   * component names are copied but will include a suffix or make them unique.
+   * @param programJSON
+   * @return {ProgramModel}
+   */
+  copyProgramFromJSON( programJSON ) {
+    const newPosition = phet.dot.Vector2.fromStateObject( programJSON.positionProperty ).plusXY( 20, 20 );
+    const newProgram = this.createProgram( newPosition );
+
+    newProgram.copyFromOther( programJSON, this.getUniqueCopyName.bind( this ), this.allModelComponents );
     return newProgram;
   }
 
@@ -236,6 +252,10 @@ export default class CreatorModel {
 
     // shallow copy as we clear the array
     this.programs.slice().forEach( program => this.deleteProgram( program ) );
+    this.loadProgramsFromJSON( json );
+  }
+
+  loadProgramsFromJSON( json ) {
 
     // Program components are loaded individually here because all program dependency components
     // must be created before view code.
@@ -264,6 +284,23 @@ export default class CreatorModel {
         program.loadControllerComponents( programJSON, this.allModelComponents );
         program.loadViewComponents( programJSON, this.allModelComponents );
       } );
+    }
+  }
+
+  /**
+   * Create one or more programs from the provided JSON.
+   * @param templateJSONString - Saved state describing the programs we need to create.
+   */
+  createFromTemplate( templateJSONString ) {
+
+    try {
+      const templateJSON = JSON.parse( templateJSONString );
+      templateJSON.programs.forEach( programJSON => {
+        this.copyProgramFromJSON( programJSON );
+      } );
+    }
+    catch( error ) {
+      this.errorOccurredEmitter.emit( error.message );
     }
   }
 
@@ -329,6 +366,8 @@ export default class CreatorModel {
 
     return new Promise( ( resolve, reject ) => {
       const json = this.save();
+
+      console.log( json );
 
       const url = new URL( `api/creator/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
       xhr.put( url, { json: { projectData: json } }, ( error, response ) => {

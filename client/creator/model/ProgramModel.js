@@ -76,24 +76,24 @@ export default class ProgramModel {
    * Copies the metadata from the provided program to this program. Small changes are made to make it clear this
    * was from a copy.
    */
-  copyMetadataFromOther( program ) {
-    this.titleProperty.value = `${program.titleProperty.value}_COPY`;
-    this.descriptionProperty.value = program.descriptionProperty.value;
+  copyMetadataFromOther( programJSON ) {
+    this.titleProperty.value = `${programJSON.title}_COPY`;
+    this.descriptionProperty.value = programJSON.description;
 
     // All others can be the same
-    this.keywordsProperty.value = program.keywordsProperty.value;
-    this.topWhiskerLengthProperty.value = program.topWhiskerLengthProperty.value;
-    this.rightWhiskerLengthProperty.value = program.rightWhiskerLengthProperty.value;
-    this.bottomWhiskerLengthProperty.value = program.bottomWhiskerLengthProperty.value;
-    this.leftWhiskerLengthProperty.value = program.leftWhiskerLengthProperty.value;
+    this.keywordsProperty.value = programJSON.keywords;
+    this.topWhiskerLengthProperty.value = programJSON.topWhiskerLength;
+    this.rightWhiskerLengthProperty.value = programJSON.rightWhiskerLength;
+    this.bottomWhiskerLengthProperty.value = programJSON.bottomWhiskerLength;
+    this.leftWhiskerLengthProperty.value = programJSON.leftWhiskerLength;
   }
 
   /**
    * Copies the custom code from the provided program to this program. For now, we just copy every string and
    * leave it up to the user to update variable name references.
    */
-  copyCustomCodeFromOther( program ) {
-    this.customCodeContainer.copyFromOther( program.customCodeContainer );
+  copyCustomCodeFromOther( programJSON ) {
+    this.customCodeContainer.copyFromOther( programJSON.customCodeContainer );
   }
 
   /**
@@ -109,16 +109,22 @@ export default class ProgramModel {
    *     dependencies in other programs).
    * - When copying custom code, variable and function references are updated to use the new names.
    *
-   * @param {ProgramModel} program
+   * @param {*} programJSON - a saved state of another program, from ProgramModel.save()
    * @param {function} getUniqueCopyName - a function that returns a unique name for a component
    * @param {NamedProperty[]} allComponents - all model components in all programs
    */
-  copyComponentsFromOther( program, getUniqueCopyName, allComponents ) {
-    const newModelNames = this.modelContainer.copyModelComponentsFromOther( program.modelContainer, getUniqueCopyName, allComponents );
+  copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents ) {
+    const newModelNames = this.modelContainer.copyModelComponentsFromOther( programJSON.modelContainer, getUniqueCopyName, allComponents );
 
-    this.controllerContainer.copyComponentsFromOther( program.controllerContainer, getUniqueCopyName, allComponents, newModelNames );
-    this.viewContainer.copyComponentsFromOther( program.viewContainer, getUniqueCopyName, allComponents, newModelNames );
-    this.listenerContainer.copyComponentsFromOther( program.listenerContainer, getUniqueCopyName, allComponents, newModelNames );
+    this.controllerContainer.copyComponentsFromOther( programJSON.controllerContainer, getUniqueCopyName, allComponents, newModelNames );
+    this.viewContainer.copyComponentsFromOther( programJSON.viewContainer, getUniqueCopyName, allComponents, newModelNames );
+    this.listenerContainer.copyComponentsFromOther( programJSON.listenerContainer, getUniqueCopyName, allComponents, newModelNames );
+  }
+
+  copyFromOther( programJSON, getUniqueCopyName, allComponents ) {
+    this.copyMetadataFromOther( programJSON );
+    this.copyCustomCodeFromOther( programJSON );
+    this.copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents );
   }
 
   /**

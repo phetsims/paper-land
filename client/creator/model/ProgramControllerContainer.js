@@ -142,23 +142,20 @@ export default class ProgramControllerContainer extends ComponentContainer {
    * unless we are duplicating both the model and the controller. This is because many controller types can only
    * have one controlled model component.
    *
-   * @param {ProgramControllerContainer} otherContainer
+   * @param {*} otherContainerJSON - the saved state of another container, from ProgramContainer.save()
    * @param {function} getUniqueCopyName - function that returns a unique name for a component
    * @param {NamedProperty[]} allModelComponents - all the NamedProperties in the model
    * @param {Map<string, string>} newModelNames - map of old model component names to new model component names
    */
-  copyComponentsFromOther( otherContainer, getUniqueCopyName, allModelComponents, newModelNames ) {
-
-    // We can use a saved state to easily copy components.
-    const savedData = otherContainer.save();
+  copyComponentsFromOther( otherContainerJSON, getUniqueCopyName, allModelComponents, newModelNames ) {
 
     // Include the model components that were renamed during this copy so we know how to
     // whether to set dependencies on new copies or the original components.
     const nameChangeMap = _.merge( {}, newModelNames );
 
     // Update names so that they are unique.
-    for ( const key in savedData ) {
-      const components = savedData[ key ];
+    for ( const key in otherContainerJSON ) {
+      const components = otherContainerJSON[ key ];
 
       components.forEach( componentObject => {
         const originalName = componentObject.name;
@@ -168,8 +165,8 @@ export default class ProgramControllerContainer extends ComponentContainer {
     }
 
     // Update dependency relationships for newly copied components
-    for ( const key in savedData ) {
-      const componentObjects = savedData[ key ];
+    for ( const key in otherContainerJSON ) {
+      const componentObjects = otherContainerJSON[ key ];
       componentObjects.forEach( componentObject => {
 
         // update the dependency to use the newly copied component if it exists
@@ -177,7 +174,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
       } );
     }
 
-    this.load( savedData, allModelComponents );
+    this.load( otherContainerJSON, allModelComponents );
   }
 
   load( savedData, namedProperties ) {

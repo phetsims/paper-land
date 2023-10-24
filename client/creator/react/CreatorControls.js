@@ -8,6 +8,7 @@ import styles from '../CreatorMain.css';
 import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import CreateCustomCodeForm from './CreateCustomCodeForm.js';
+import CreateProgramFromTemplateForm from './CreateProgramFromTemplateForm.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
 import ProgramNumberForm from './ProgramNumberForm.js';
 import SpaceSelectControls from './SpaceSelectControls.js';
@@ -19,6 +20,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
   // state variables
   const [ activeEdit, setActiveEdit ] = useState( null );
   const [ enableEdit, setEnableEdit ] = useState( false );
+  const [ creatingFromTemplate, setCreatingFromTemplate ] = useState( false );
 
   // see https://legacy.reactjs.org/docs/hooks-effect.html for example of register and cleanup
   useEffect( () => {
@@ -35,10 +37,17 @@ const CreatorControls = forwardRef( ( props, ref ) => {
     };
     model.spaceRestrictedProperty.link( restrictedListener );
 
+    // update the creatingFromTemplate state from the axon Property
+    const creatingFromTemplateListener = axonCreatingFromTemplate => {
+      setCreatingFromTemplate( axonCreatingFromTemplate );
+    };
+    model.creatingFromTemplateProperty.link( creatingFromTemplateListener );
+
     // returning a function tells useEffect to dispose of this component when it is time
     return function cleanup() {
       model.activeEditProperty.unlink( selectedProgramListener );
       model.spaceRestrictedProperty.unlink( restrictedListener );
+      model.creatingFromTemplateProperty.unlink( creatingFromTemplateListener );
     };
   } );
 
@@ -55,6 +64,13 @@ const CreatorControls = forwardRef( ( props, ref ) => {
         }}
       >
         <fieldset disabled={!enableEdit}>
+          {creatingFromTemplate ?
+           <CreateProgramFromTemplateForm createFromTemplate={
+             programTemplateJSON => {
+               model.createFromTemplate( programTemplateJSON );
+               model.creatingFromTemplateProperty.value = false;
+             }
+           }></CreateProgramFromTemplateForm> : ''}
           {activeEdit && activeEdit.editType === EditType.METADATA ?
            <ProgramMetadataForm
              activeEdit={activeEdit}

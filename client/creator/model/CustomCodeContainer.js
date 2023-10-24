@@ -41,15 +41,15 @@ export default class CustomCodeContainer {
   /**
    * Set all custom code in this container to equal the values from another container.
    */
-  copyFromOther( customCodeContainer ) {
-    this.onProgramAddedCodeProperty.value = customCodeContainer.onProgramAddedCodeProperty.value;
-    this.onProgramRemovedCodeProperty.value = customCodeContainer.onProgramRemovedCodeProperty.value;
-    this.onProgramChangedPositionCodeProperty.value = customCodeContainer.onProgramChangedPositionCodeProperty.value;
-    this.onProgramMarkersAddedCodeProperty.value = customCodeContainer.onProgramMarkersAddedCodeProperty.value;
-    this.onProgramMarkersRemovedCodeProperty.value = customCodeContainer.onProgramMarkersRemovedCodeProperty.value;
-    this.onProgramMarkersChangedPositionCodeProperty.value = customCodeContainer.onProgramMarkersChangedPositionCodeProperty.value;
-    this.onProgramAdjacentCodeProperty.value = customCodeContainer.onProgramAdjacentCodeProperty.value;
-    this.onProgramSeparatedCodeProperty.value = customCodeContainer.onProgramSeparatedCodeProperty.value;
+  copyFromOther( otherContainerJSON ) {
+    this.onProgramAddedCodeProperty.value = otherContainerJSON.onProgramAddedCode;
+    this.onProgramRemovedCodeProperty.value = otherContainerJSON.onProgramRemovedCode;
+    this.onProgramChangedPositionCodeProperty.value = otherContainerJSON.onProgramChangedPositionCode;
+    this.onProgramMarkersAddedCodeProperty.value = otherContainerJSON.onProgramMarkersAddedCode;
+    this.onProgramMarkersRemovedCodeProperty.value = otherContainerJSON.onProgramMarkersRemovedCode;
+    this.onProgramMarkersChangedPositionCodeProperty.value = otherContainerJSON.onProgramMarkersChangedPositionCode;
+    this.onProgramAdjacentCodeProperty.value = otherContainerJSON.onProgramAdjacentCode;
+    this.onProgramSeparatedCodeProperty.value = otherContainerJSON.onProgramSeparatedCode;
   }
 
   /**

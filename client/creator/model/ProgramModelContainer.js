@@ -200,19 +200,15 @@ export default class ProgramModelContainer extends ComponentContainer {
    * NamedDerivedProperty. Adding it as a dependency is meaningless because the derivation function will not include
    * the copied value. But this might be unexpected for the user.
    */
-  copyModelComponentsFromOther( otherContainer, getUniqueCopyName, allComponents ) {
-
-    // We can use save state to easily copy to new components - all we need to do is modify the name
-    // so that it is unique.
-    const stateObject = otherContainer.save();
+  copyModelComponentsFromOther( otherContainerJSON, getUniqueCopyName, allComponents ) {
 
     // Need to map dependencies to the new copies so that we can determine whether the dependency should be
     // on a copied component or on the original.
     const nameChangeMap = {};
 
     // Update names of components and look for dependencies
-    for ( const key in stateObject ) {
-      const components = stateObject[ key ];
+    for ( const key in otherContainerJSON ) {
+      const components = otherContainerJSON[ key ];
 
       components.forEach( component => {
         const originalName = component.name;
@@ -226,8 +222,8 @@ export default class ProgramModelContainer extends ComponentContainer {
     }
 
     // Update dependency relationships and references in custom code. If a dependency was copied then use the new copy.
-    for ( const key in stateObject ) {
-      const componentObjects = stateObject[ key ];
+    for ( const key in otherContainerJSON ) {
+      const componentObjects = otherContainerJSON[ key ];
 
       componentObjects.forEach( componentStateObject => {
         if ( componentStateObject.dependencyNames ) {
@@ -246,8 +242,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       } );
     }
 
-    this.loadDependencyModelComponents( stateObject );
-    this.loadDependentModelComponents( stateObject, allComponents );
+    this.loadDependencyModelComponents( otherContainerJSON );
+    this.loadDependentModelComponents( otherContainerJSON, allComponents );
 
     return nameChangeMap;
   }
