@@ -16,8 +16,8 @@ export default class ShapeViewComponent extends NodeViewComponent {
 
     const shapeOptions = {
       shapeType: 'rectangle',
-      fill: '#007BFF', // electric blu,
-      stroke: '#001F3F', // navy blu,
+      fill: 'lightblue',
+      stroke: 'red',
       lineWidth: 1,
 
       // The following are options that will be specific to certain kinds of shapes.  Putting them all
@@ -84,8 +84,8 @@ export default class ShapeViewComponent extends NodeViewComponent {
       ...NodeViewComponent.getStateSchema(),
       defaultShapeOptions: {
         shapeType: 'rectangle',
-        fill: '#007BFF',
-        stroke: '#001F3F',
+        fill: 'lightblue',
+        stroke: 'red',
         lineWidth: 1,
 
         // rectangle
