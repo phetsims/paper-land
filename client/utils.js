@@ -1,5 +1,16 @@
 import Matrix from 'node-matrices';
 
+// A list of reserved keywords that cannot be used in component names.
+const RESERVED_KEYWORDS = [
+  'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
+  'default', 'delete', 'do', 'else', 'export', 'extends', 'false',
+  'finally', 'for', 'function', 'if', 'import', 'in', 'instanceof',
+  'new', 'null', 'return', 'super', 'switch', 'this', 'throw',
+  'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield',
+  'let', 'static', 'await', 'enum', 'implements', 'package', 'protected',
+  'interface', 'private', 'public', 'console'
+];
+
 export function norm( vector ) {
   if ( vector.x !== undefined ) {
     return norm( [ vector.x, vector.y ] );
@@ -358,14 +369,22 @@ export function createSetterFunctionString( component ) {
  */
 export function isNameValid( activeEdit, creatorModel, componentName ) {
   const hasLength = componentName.length > 0;
-  const containsSpaces = componentName.includes( ' ' );
 
-  // If editing a component, the name is valid if it is unused or if it matches the existing component name.
-  // Otherwise, the name is valid if it is unused.
-  const unique = ( activeEdit && activeEdit.component ) ? ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.nameProperty.value ) :
+  // Check if the name starts with a letter, $, or _
+  const isValidStart = /^[a-zA-Z_$]/.test( componentName );
+
+  // Check if the rest of the name contains only valid characters
+  const hasValidChars = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test( componentName );
+
+  // Check if the name is a reserved word in JavaScript
+  const isReserved = RESERVED_KEYWORDS.includes( componentName );
+
+  // The name must be unique for all components in the model.
+  const unique = ( activeEdit && activeEdit.component ) ?
+                 ( creatorModel.isNameAvailable( componentName ) || componentName === activeEdit.component.nameProperty.value ) :
                  creatorModel.isNameAvailable( componentName );
 
-  return hasLength && unique && !containsSpaces;
+  return hasLength && isValidStart && hasValidChars && !isReserved && unique;
 }
 
 /**

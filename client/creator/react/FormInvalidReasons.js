@@ -11,7 +11,7 @@ export default function FormInvalidReasons( props ) {
       <ul>
         {
           componentNameValid ? null :
-          <li>Name is invalid. Must be unique and cannot contain spaces.</li>
+          <li>Name is invalid. Must be unique, start with a letter, and contain only letters, numbers, and underscores. Cannot be a reserved JavaScript keyword.</li>
         }
         {
           invalidReasons.map( reason => {
