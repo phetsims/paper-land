@@ -51,20 +51,52 @@ export default class ProgramCodeGenerator {
   }
 
   /**
+   * Given a placeholder value, this is the default value we will fall back to in case the user provided
+   * an empty or bad value.
+   *
+   * In general, we shouldn't hit this case and validation in the form should prevent a user from entering an
+   * invalid value. But this supports a graceful fallback.
+   *
+   * TODO: Consider moving this to the components themselves?
+   * TODO: Consider factoring out the placeholder names into constants or a map.
+   */
+  static getDefaultValueForPlaceholder( placeholder ) {
+    if ( placeholder === 'CENTER_X' || placeholder === 'CENTER_Y' ) {
+
+      // For translation, we want to insert undefined so that there isn't an unexpected translation to the origin
+      return 'undefined';
+    }
+    else if ( placeholder === 'SCALE' || placeholder === 'OPACITY' ) {
+      return 1;
+    }
+    else if ( placeholder === 'ROTATION' ) {
+      return 0;
+    }
+    else {
+
+      // For all other templates (mostly non-Node options), we will just use an empty string
+      return '';
+    }
+  }
+
+  /**
    * Fill in the template with teh data. The template is expected to have
    * variables surrounded by double curly braces, e.g. {{VARIABLE_NAME}}. The
    * data is a map of variable names to values. Variable names in the data
    */
   static fillInTemplate( template, data ) {
     return template.replace( /\{\{(\w+)\}\}/g, ( match, placeholder ) => {
+      const defaultValue = ProgramCodeGenerator.getDefaultValueForPlaceholder( placeholder );
 
-      // For translation, we want to insert undefined so that there isn't an unexpected translation to the origin
-      if ( placeholder === 'CENTER_X' || placeholder === 'CENTER_Y' ) {
-        return data[ placeholder ] || 'undefined';
+      if ( defaultValue ) {
+
+        // There is a default value for empty and falsey values, so use that
+        return data[ placeholder ] || defaultValue;
       }
       else {
 
-        // Use the nullish coalescing operator to check if the value exists and is not null/undefined
+        // Use the nullish coalescing operator to check if the value exists and is not null/undefined (letting 0
+        // and falsy values through)
         return data[ placeholder ] ?? '';
       }
     } );
