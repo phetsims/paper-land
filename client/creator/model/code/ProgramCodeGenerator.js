@@ -309,7 +309,7 @@ export default class ProgramCodeGenerator {
       programCode = program.customCodeContainer.onProgramSeparatedCodeProperty.value;
     }
 
-    return programCode;
+    return this.formatStringForMonaco( programCode );
   }
 
   /**
@@ -504,6 +504,11 @@ export default class ProgramCodeGenerator {
           controlledName,
           controllerComponent.markerColor
         )
+      };
+    }
+    else if ( componentType === 'BoundsPropertyController' ) {
+      data = {
+        PROGRAM_CHANGED_POSITION_CODE: ControllerCodeGenerator.getBoundsControllerChangedPositionCode( controllerComponent.controlType, controlledName )
       };
     }
     else if ( componentType === 'BooleanPropertyController' ) {

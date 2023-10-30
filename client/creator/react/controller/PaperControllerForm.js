@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import { isNameValid } from '../../../utils.js';
 import BooleanPropertyController from '../../model/controllers/BooleanPropertyController.js';
+import BoundsPropertyController from '../../model/controllers/BoundsPropertyController.js';
 import EnumerationPropertyController from '../../model/controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
 import PropertyController from '../../model/controllers/PropertyController.js';
@@ -16,6 +17,7 @@ import CreateComponentButton from '../CreateComponentButton.js';
 import FormInvalidReasons from '../FormInvalidReasons.js';
 import styles from './../../CreatorMain.css';
 import CreateBooleanControllerForm from './CreateBooleanControllerForm.js';
+import CreateBounds2ControllerForm from './CreateBounds2ControllerForm.js';
 import CreateEnumerationControllerForm from './CreateEnumerationControllerForm.js';
 import CreateNumberControllerForm from './CreateNumberControllerForm.js';
 import CreateVector2ControllerForm from './CreateVector2ControllerForm.js';
@@ -38,9 +40,11 @@ export default function PaperControllerForm( props ) {
   const booleanDataRef = useRef( {} );
   const enumerationDataRef = useRef( {} );
   const numberDataRef = useRef( {} );
+  const boundsDataRef = useRef( {} );
 
   // To be called on form changes to receive the data to create controllers
   const getDataForPosition = data => { positionDataRef.current = data; };
+  const getDataForBounds = data => { boundsDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
   const getDataFormNumber = data => { numberDataRef.current = data; };
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
@@ -51,6 +55,7 @@ export default function PaperControllerForm( props ) {
 
   // State for whether a particular form is valid for creating a controller.
   const [ positionFormValid, setPositionFormValid ] = useState( [] );
+  const [ boundsFormValid, setBoundsFormValid ] = useState( [] );
   const [ booleanFormValid, setBooleanFormValid ] = useState( [] );
   const [ numberFormValid, setNumberFormValid ] = useState( [] );
   const [ enumerationFormValid, setEnumerationFormValid ] = useState( [] );
@@ -60,13 +65,13 @@ export default function PaperControllerForm( props ) {
   const getIsBooleanFormValid = isValid => setBooleanFormValid( isValid );
   const getIsNumberFormValid = isValid => setNumberFormValid( isValid );
   const getIsEnumerationFormValid = isValid => setEnumerationFormValid( isValid );
+  const getIsBoundsFormValid = isValid => setBoundsFormValid( isValid );
 
   /**
    * Get a list of all model components, except for DerivedProperty components. Those cannot be controlled directly.
-   * Also excluding Bounds2Property because there are currently no ways to control that data structure.
    */
   function getComponentsExcludingDerived() {
-    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' && component.propertyType !== 'Bounds2Property' );
+    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' );
   }
 
   // Update state when a new model component is created (receiving new data from a phet.axon component)
@@ -94,6 +99,9 @@ export default function PaperControllerForm( props ) {
   useEffect( () => {
     if ( selectedComponentType === 'Vector2Property' ) {
       setComponentFormValid( positionFormValid.length === 0 && componentName.length > 0 );
+    }
+    else if ( selectedComponentType === 'Bounds2Property' ) {
+      setComponentFormValid( boundsFormValid.length === 0 && componentName.length > 0 );
     }
     else if ( selectedComponentType === 'BooleanProperty' ) {
       setComponentFormValid( booleanFormValid.length === 0 && componentName.length > 0 );
@@ -131,6 +139,9 @@ export default function PaperControllerForm( props ) {
       if ( selectedComponentType === 'Vector2Property' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( positionDataRef.current.controlType, Vector2PropertyController.ControlType );
       }
+      else if ( selectedComponentType === 'Bounds2Property' ) {
+        editingComponent.controlType = PropertyController.controlTypeStringToValue( boundsDataRef.current.controlType, BoundsPropertyController.ControlType );
+      }
       else if ( selectedComponentType === 'BooleanProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( booleanDataRef.current.controlType, BooleanPropertyController.ControlType );
         editingComponent.whiskerConfiguration = new WhiskerConfiguration( booleanDataRef.current.whiskerConfiguration );
@@ -149,6 +160,10 @@ export default function PaperControllerForm( props ) {
       if ( selectedComponentType === 'Vector2Property' ) {
         const vector2PropertyController = new Vector2PropertyController( componentName, selectedComponent, positionDataRef.current.controlType );
         activeProgram.controllerContainer.addVector2PropertyController( vector2PropertyController );
+      }
+      else if ( selectedComponentType === 'Bounds2Property' ) {
+        const boundsController = new BoundsPropertyController( componentName, selectedComponent, boundsDataRef.current.controlType );
+        activeProgram.controllerContainer.addBoundsPropertyController( boundsController );
       }
       else if ( selectedComponentType === 'BooleanProperty' ) {
         const whiskerConfiguration = booleanDataRef.current.whiskerConfiguration;
@@ -184,6 +199,9 @@ export default function PaperControllerForm( props ) {
     else if ( selectedComponentType === 'StringProperty' ) {
       return enumerationFormValid;
     }
+    else if ( selectedComponentType === 'Bounds2Property' ) {
+      return boundsFormValid;
+    }
     else {
       return [];
     }
@@ -213,6 +231,12 @@ export default function PaperControllerForm( props ) {
          getFormData={getDataForPosition}
          isFormValid={getIsPositionFormValid}>
        </CreateVector2ControllerForm> :
+       selectedComponentType === 'Bounds2Property' ?
+       <CreateBounds2ControllerForm
+         activeEdit={activeEdit}
+         getFormData={getDataForBounds}
+         isFormValid={getIsBoundsFormValid}>
+       </CreateBounds2ControllerForm> :
        selectedComponentType === 'StringProperty' ?
        <CreateEnumerationControllerForm
          activeEdit={activeEdit}

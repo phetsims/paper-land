@@ -120,6 +120,26 @@ const boardUtils = {
   },
 
   /**
+   * Given the orientation of points, return a new array where the points are sorted such that
+   * the left/top most point is first and the left/bottom most point is last, so that we have
+   * a valid Bounds2 instance no matter the point positions or paper rotation.
+   */
+  getAbsolutePaperBounds( points ) {
+    const xValues = points.map( point => point.x );
+    const yValues = points.map( point => point.y );
+
+    const sortedXValues = xValues.sort( ( a, b ) => a - b );
+    const sortedYValues = yValues.sort( ( a, b ) => a - b );
+
+    return new phet.dot.Bounds2(
+      sortedXValues[ 0 ],
+      sortedYValues[ 0 ],
+      sortedXValues[ sortedXValues.length - 1 ],
+      sortedYValues[ sortedYValues.length - 1 ]
+    );
+  },
+
+  /**
    * Turns a point into a dot.Vector2 instance.
    * @param point
    * @return {dot.Vector2}

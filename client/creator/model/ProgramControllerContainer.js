@@ -3,6 +3,7 @@
  */
 import ComponentContainer from './ComponentContainer.js';
 import BooleanPropertyController from './controllers/BooleanPropertyController.js';
+import BoundsPropertyController from './controllers/BoundsPropertyController.js';
 import EnumerationPropertyController from './controllers/EnumerationPropertyController.js';
 import NumberPropertyController from './controllers/NumberPropertyController.js';
 import Vector2PropertyController from './controllers/Vector2PropertyController.js';
@@ -22,6 +23,9 @@ export default class ProgramControllerContainer extends ComponentContainer {
 
     // {ObservableArray<EnumerationPropertyController>
     this.enumerationPropertyControllers = phet.axon.createObservableArray();
+
+    // {ObservableArray<BoundsPropertyController>}
+    this.boundsPropertyControllers = phet.axon.createObservableArray();
   }
 
   /**
@@ -105,6 +109,25 @@ export default class ProgramControllerContainer extends ComponentContainer {
   }
 
   /**
+   * Adds a controller for a NamedBounds2Property.
+   * @param {BoundsPropertyController} boundsPropertyController
+   */
+  addBoundsPropertyController( boundsPropertyController ) {
+    this.boundsPropertyControllers.push( boundsPropertyController );
+    this.addToAllComponents( boundsPropertyController );
+
+    this.registerChangeListeners( boundsPropertyController, this.removeBoundsPropertyController.bind( this ) );
+  }
+
+  /**
+   * Removes a controller for a NamedBounds2Property from this container.
+   */
+  removeBoundsPropertyController( boundsPropertyController ) {
+    this.boundsPropertyControllers.remove( boundsPropertyController );
+    this.removeFromAllComponents( boundsPropertyController );
+  }
+
+  /**
    * When a PropertyController emits that it is time to delete, we remove it from the model.
    * Also removes the PropertyController when its NamedProperty that it is controlling is removed.
    *
@@ -127,6 +150,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
   save() {
     return {
       vector2PropertyControllers: this.vector2PropertyControllers.map( controller => controller.save() ),
+      boundsPropertyControllers: this.boundsPropertyControllers.map( controller => controller.save() ),
       booleanPropertyControllers: this.booleanPropertyControllers.map( controller => controller.save() ),
       numberPropertyControllers: this.numberPropertyControllers.map( controller => controller.save() ),
       enumerationPropertyControllers: this.enumerationPropertyControllers.map( controller => controller.save() )
@@ -179,9 +203,21 @@ export default class ProgramControllerContainer extends ComponentContainer {
 
   load( savedData, namedProperties ) {
 
+    // in case the saved state doesn't have a particular set of controllers
+    savedData.vector2PropertyControllers = savedData.vector2PropertyControllers || [];
+    savedData.boundsPropertyControllers = savedData.boundsPropertyControllers || [];
+    savedData.booleanPropertyControllers = savedData.booleanPropertyControllers || [];
+    savedData.numberPropertyControllers = savedData.numberPropertyControllers || [];
+    savedData.enumerationPropertyControllers = savedData.enumerationPropertyControllers || [];
+
     savedData.vector2PropertyControllers.forEach( controllerData => {
       const controller = Vector2PropertyController.fromData( controllerData, namedProperties );
       this.addVector2PropertyController( controller );
+    } );
+
+    savedData.boundsPropertyControllers.forEach( controllerData => {
+      const controller = BoundsPropertyController.fromData( controllerData, namedProperties );
+      this.addBoundsPropertyController( controller );
     } );
 
     savedData.booleanPropertyControllers.forEach( controllerData => {
@@ -206,6 +242,7 @@ export default class ProgramControllerContainer extends ComponentContainer {
     this.vector2PropertyControllers.dispose();
     this.booleanPropertyControllers.dispose();
     this.numberPropertyControllers.dispose();
+    this.boundsPropertyControllers.dispose();
     this.enumerationPropertyControllers.dispose();
 
     this.allComponents.dispose();

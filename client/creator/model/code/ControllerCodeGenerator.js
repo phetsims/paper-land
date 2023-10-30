@@ -3,6 +3,7 @@
  * code for the controller sections of code in the program templates.
  */
 import BooleanPropertyController from '../controllers/BooleanPropertyController.js';
+import BoundsPropertyController from '../controllers/BoundsPropertyController.js';
 import EnumerationPropertyController from '../controllers/EnumerationPropertyController.js';
 import NumberPropertyController from '../controllers/NumberPropertyController.js';
 import Vector2PropertyController from '../controllers/Vector2PropertyController.js';
@@ -57,6 +58,22 @@ class ControllerCodeGenerator {
     else {
       return '';
     }
+  }
+
+  /**
+   * Get the controller code for a NamedBounds2Property. There is only one control type for now, setting
+   * the bounds to match the paper dimensions.
+   * @param controlType
+   * @param controlledName
+   * @return {string}
+   */
+  static getBoundsControllerChangedPositionCode( controlType, controlledName ) {
+    if ( controlType !== BoundsPropertyController.ControlType.PAPER_SIZE ) {
+      throw new Error( `Sorry, only match paper control type is supported at this time. Can't generate code for ${controlType} control of ${controlledName}.` );
+    }
+
+    const calculateBoundsString = 'phet.paperLand.utils.getAbsolutePaperBounds( points )';
+    return ControllerCodeGenerator.getModelControllerCode( controlledName, () => calculateBoundsString );
   }
 
   static getNumberControllerMarkersAddedCode( controlTypeFamily, controlType, relationshipControlType, controlledName, colorName ) {

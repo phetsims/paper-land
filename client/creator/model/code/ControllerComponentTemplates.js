@@ -4,6 +4,9 @@ const ControllerComponentTemplates = {
     onProgramMarkersAdded: '{{PROGRAM_MARKERS_ADDED_CODE}}',
     onProgramMarkersRemoved: '{{PROGRAM_MARKERS_REMOVED_CODE}}'
   },
+  BoundsPropertyController: {
+    onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}'
+  },
   BooleanPropertyController: {
     onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}',
     onProgramMarkersAdded: '{{PROGRAM_MARKERS_ADDED_CODE}}',
