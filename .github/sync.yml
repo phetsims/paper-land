@@ -1,0 +1,6 @@
+phetsims/paper-land@main:
+  - source: docs/use/board-api.md
+    dest: client/board/doc/board-api.md
+phetsims/paper-land@dev:
+  - source: docs/use/board-api.md
+    dest: client/board/doc/board-api.md
