@@ -17,5 +17,5 @@ jobs:
           PR_LABELS: false
           # REVIEWERS: brettfiedler
           COMMIT_BODY: 'Repo File Sync auto update api doc main/dev branches'
-          DRY_RUN: true
+        #   DRY_RUN: true
           SKIP_PR: true
