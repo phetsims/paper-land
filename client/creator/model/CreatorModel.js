@@ -6,13 +6,16 @@ export default class CreatorModel {
   constructor() {
 
     // {ProgramModel[]} - Collection of all programs in the creator editor
-    this.programs = [];
+    this.programs = phet.axon.createObservableArray();
 
     // emits when a program is added
     this.programAddedEmitter = new phet.axon.Emitter( { parameters: [ { valueType: ProgramModel } ] } );
 
     // emits when a program is removed
     this.programRemovedEmitter = new phet.axon.Emitter( { parameters: [ { valueType: ProgramModel } ] } );
+
+    // Emits an event whenever the model successfully loads a new state from JSON.
+    this.loadCompleteEmitter = new phet.axon.Emitter();
 
     // An obserable array of all model components in all programs
     this.allModelComponents = phet.axon.createObservableArray();
@@ -53,6 +56,10 @@ export default class CreatorModel {
     // {Emitter} - Emits when some error happens that the user should be aware of, such as error during code
     // generation, load, or a failed request to the server.
     this.errorOccurredEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );
+
+    // {Emitter} - Emits when any successful action takes place. We generally want to display that some action
+    // was successful. Use this to display a success message to the user.
+    this.successOccurredEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );
 
     // {Emitter} - Emits when the save request to the server is successful.
     this.saveSuccessfulEmitter = new phet.axon.Emitter();
@@ -256,6 +263,8 @@ export default class CreatorModel {
     // shallow copy as we clear the array
     this.programs.slice().forEach( program => this.deleteProgram( program ) );
     this.loadProgramsFromJSON( json );
+
+    this.loadCompleteEmitter.emit();
   }
 
   loadProgramsFromJSON( json ) {
@@ -386,7 +395,17 @@ export default class CreatorModel {
     } );
   }
 
-  async sendSaveTemplateRequest( templateName, description, keyWords ) {
+  /**
+   * Send a request to save a new template with the current programs in the editor.
+   * @param templateName - Name for the template
+   * @param description - A description of what this template does
+   * @param keyWords - keywords to search for this template
+   * @param saveToSpace - If true, the template will be saved to the currently selected space. Otherwise spaceName
+   *                      will be left null in the database, and the template will be available to all spaces.
+   * @return {Promise<unknown>}
+   */
+  async sendSaveTemplateRequest( templateName, description, keyWords, saveToSpace ) {
+    const spaceName = saveToSpace ? this.spaceNameProperty.value : null;
 
     return new Promise( ( resolve, reject ) => {
       const json = this.save();
@@ -394,7 +413,7 @@ export default class CreatorModel {
       const url = new URL( 'api/creator/templates', window.location.origin ).toString();
       xhr.put( url, {
         json: {
-          templateName, description, keyWords, projectData: json
+          templateName, description, keyWords, projectData: json, spaceName: spaceName
         }
       }, ( error, response ) => {
         if ( error ) {
@@ -422,6 +441,49 @@ export default class CreatorModel {
     } );
   }
 
+  /**
+   * Update a template with the provided data.
+   * @param templateId - the unique id for this template (within the database)
+   * @param templateName
+   * @param description
+   * @param keyWords
+   */
+  async sendUpdateTemplateRequest( templateId, templateName, description, keyWords ) {
+    return new Promise( ( resolve, reject ) => {
+      const json = this.save();
+
+      const url = new URL( 'api/creator/templates/update/save', window.location.origin ).toString();
+      xhr.put( url, {
+        json: {
+          templateName, description, keyWords, projectData: json, templateId
+        }
+      }, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+          this.errorOccurredEmitter.emit( error.message );
+          reject( error );
+        }
+        else if ( response.statusCode === 403 ) {
+          this.errorOccurredEmitter.emit( response.body );
+          reject( error );
+        }
+        else if ( response.statusCode === 200 ) {
+          this.saveTemplateSuccessfulEmitter.emit();
+          resolve();
+        }
+        else {
+          this.errorOccurredEmitter.emit( 'Unknown error occurred' );
+          reject( error );
+        }
+      } );
+    } );
+  }
+
+  /**
+   * Sends a delete request to the server to delete a template.
+   * @param templateName
+   * @return {Promise<unknown>}
+   */
   async sendDeleteTemplateRequest( templateName ) {
     return new Promise( ( resolve, reject ) => {
       const url = new URL( `api/creator/templates/delete/${templateName}`, window.location.origin ).toString();
@@ -438,9 +500,11 @@ export default class CreatorModel {
     } );
   }
 
-  async sendGetTemplatesRequest() {
+  /**
+   * Sends a general request to the server related to templates.
+   */
+  async sendTemplateRequest( url ) {
     return new Promise( ( resolve, reject ) => {
-      const url = new URL( 'api/creator/templates', window.location.origin ).toString();
       xhr.get( url, {}, ( error, response ) => {
         if ( error ) {
           console.error( error );
@@ -452,5 +516,31 @@ export default class CreatorModel {
         }
       } );
     } );
+  }
+
+  /**
+   * Sends a request to the server to get all templates that can be used to create new programs. This includes all
+   * global templates and all templates that has been created for the selected space.
+   */
+  async sendGetTemplatesForUseRequest( spaceName ) {
+    if ( !spaceName ) {
+      throw new Error( 'Cannot request templates for use without a space name' );
+    }
+
+    const url = new URL( `api/creator/templates/use/${spaceName}`, window.location.origin ).toString();
+    return this.sendTemplateRequest( url );
+  }
+
+  /**
+   * Send a request to the server to get all available templates that can be edited by the
+   * user (based on the selected space and user privileges).
+   */
+  async sendGetTemplatesForEditRequest( spaceName ) {
+    if ( !spaceName ) {
+      throw new Error( 'Cannot request templates for edit without a space name' );
+    }
+
+    const url = new URL( `api/creator/templates/edit/${spaceName}`, window.location.origin ).toString();
+    return this.sendTemplateRequest( url );
   }
 }

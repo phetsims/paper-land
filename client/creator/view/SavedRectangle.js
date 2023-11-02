@@ -7,16 +7,19 @@
 import ViewConstants from './ViewConstants.js';
 
 export default class SavedRectangle extends phet.scenery.Rectangle {
-  constructor() {
+  constructor( providedOptions ) {
+    const options = _.merge( {
+      message: 'Saved ✓'
+    }, providedOptions );
 
     super( 0, 0, 0, 0, 5, 5, { fill: ViewConstants.SAVED_COLOR } );
 
-    const savedText = new phet.scenery.Text( 'Saved ✓', {
+    this.savedText = new phet.scenery.Text( '', {
       font: ViewConstants.TEXT_FONT
     } );
+    this.addChild( this.savedText );
 
-    this.addChild( savedText );
-    this.setRectBounds( savedText.bounds.dilatedXY( 30, 10 ) );
+    this.setMessage( options.message );
 
     // references to active animations so they can be stopped if necessary
     this.inAnimation = null;
@@ -24,6 +27,13 @@ export default class SavedRectangle extends phet.scenery.Rectangle {
 
     // initially, opacity is zero
     this.opacity = 0;
+  }
+
+  // Update the displayed message and surrounding rectangle bounds. After updating the message
+  // you may need to update layout for this component within its parent.
+  setMessage( message ) {
+    this.savedText.string = message;
+    this.setRectBounds( this.savedText.bounds.dilatedXY( 30, 10 ) );
   }
 
   /**

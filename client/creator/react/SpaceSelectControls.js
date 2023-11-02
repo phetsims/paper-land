@@ -198,7 +198,7 @@ const SpaceSelectControls = props => {
                 setSelectedProjectName( '' );
               }}
             >
-              <option>Select Space</option>
+              <option value=''>Select Space</option>
               {availableSpaces.map( ( option, index ) => {
                 return <option key={index}>
                   {option}

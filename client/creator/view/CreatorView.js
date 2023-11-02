@@ -21,6 +21,10 @@ export default class CreatorView extends phet.scenery.Node {
   constructor( model, display ) {
     super();
 
+    // The available width and height for the view, not defined until first layout.
+    this.availableWidth = 0;
+    this.availableHeight = 0;
+
     // Editing of components is enabled when the space is not restricted
     const editEnabledProperty = phet.axon.DerivedProperty.not( model.spaceRestrictedProperty );
 
@@ -35,6 +39,9 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Fades in using twixt when the project is successfully saved to the database
     this.savedRectangle = new SavedRectangle();
+
+    // Fades in to show a success message whenever some kind of successful action is completed.
+    this.successRectangle = new SavedRectangle( { message: 'Success ✓' } );
 
     this.visibilityControls = new CreatorVisibilityControls( model.visibilityModel );
 
@@ -84,6 +91,7 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.saveProjectButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
+    controlLayerNode.addChild( this.successRectangle );
     controlLayerNode.addChild( this.visibilityControls );
     controlLayerNode.addChild( this.restrictedWarningNode );
 
@@ -124,11 +132,6 @@ export default class CreatorView extends phet.scenery.Node {
           else {
             try {
               model.load( body.projectData );
-
-              // pan to the first program so something is in view
-              if ( programLayerNode.children.length > 0 ) {
-                phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
-              }
             }
             catch( error ) {
               model.errorOccurredEmitter.emit( 'Error loading project: ' + error.message );
@@ -152,6 +155,13 @@ export default class CreatorView extends phet.scenery.Node {
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );
+
+    // Whenever the model reloads, pan to the first program so there is something in view (if there is one)
+    model.loadCompleteEmitter.addListener( () => {
+      if ( programLayerNode.children.length > 0 ) {
+        phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
+      }
+    } );
 
     display.addInputListener( {
       down: event => {
@@ -179,6 +189,15 @@ export default class CreatorView extends phet.scenery.Node {
     model.saveSuccessfulEmitter.addListener( () => {
       this.savedRectangle.showSaved();
     } );
+
+    model.successOccurredEmitter.addListener( message => {
+
+      // display the message and adjust layout after the rectangle bounds change
+      this.successRectangle.setMessage( message );
+      this.successRectangle.centerTop = new phet.dot.Vector2( this.availableWidth / 2, 5 );
+
+      this.successRectangle.showSaved();
+    } );
   }
 
   /**
@@ -187,12 +206,16 @@ export default class CreatorView extends phet.scenery.Node {
    * @param {number} height - total available height for the view
    */
   layout( width, height ) {
+    this.availableWidth = width;
+    this.availableHeight = height;
+
     this.newProgramFromTemplateButton.leftTop = new phet.dot.Vector2( 5, 5 );
     this.newProgramButton.leftTop = this.newProgramFromTemplateButton.leftBottom.plusXY( 0, 5 );
 
     this.saveProjectButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
     this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );
+    this.successRectangle.centerTop = new phet.dot.Vector2( width / 2, 5 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 
     this.restrictedWarningNode.leftCenter = this.newProgramButton.rightCenter.plusXY( 5, 0 );

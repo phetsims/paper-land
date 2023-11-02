@@ -22,8 +22,10 @@ const editorHandleDuration = 1500;
 const SUCCESS = 200;
 const SPACE_RESTRICTED = 401;
 const PROJECT_ALREADY_EXISTS = 402;
-const BAD_PARAMETERS = 403;
+
+// const BAD_PARAMETERS = 403;
 const PROJECT_DOES_NOT_EXIST = 404;
+const UNKNOWN_ERROR = 500;
 
 /**
  * Returns true if the user has access to the space. Always true for those with permissions, otherwise only true
@@ -31,7 +33,7 @@ const PROJECT_DOES_NOT_EXIST = 404;
  */
 const canAccessSpace = spaceName => {
   return ALLOW_ACCESS_TO_RESTRICTED_FILES || !restrictedSpacesList.includes( spaceName );
-}
+};
 
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
@@ -538,14 +540,15 @@ router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
 } );
 
 /**
- * Save the template to the templates table.
+ * Save a new template to the templates table.
  */
 router.put( '/api/creator/templates', ( req, res ) => {
   const {
     templateName,
     description,
     keyWords,
-    projectData
+    projectData,
+    spaceName
   } = req.body;
 
   if ( !templateName ) {
@@ -574,10 +577,14 @@ router.put( '/api/creator/templates', ( req, res ) => {
               name: templateName,
               projectData: projectData,
               description: description,
-              keyWords: keyWords
+              keyWords: keyWords,
+              spaceName: spaceName
             } )
             .then( () => {
               res.status( 200 ).json( {} );
+            } )
+            .catch( error => {
+              res.status( UNKNOWN_ERROR ).send( 'An error occurred while saving the template' );
             } );
         }
       } );
@@ -585,15 +592,101 @@ router.put( '/api/creator/templates', ( req, res ) => {
 } );
 
 /**
+ * Update a Creator template with the provided id with the provided data.
+ *
+ * For some reason, I had to had a 'save' into the URL. I could not figure out why.
+ * '/api/creator/templates/update' on its own did not work, the request would never get to this endpoint.
+ */
+router.put( '/api/creator/templates/update/save', ( req, res ) => {
+  const {
+    description,
+    keyWords,
+    projectData,
+    templateName,
+    templateId
+  } = req.body;
+
+  knex( 'creator-templates' )
+    .select( '*' )
+    .where( { id: templateId } )
+    .first()
+    .then( template => {
+      if ( !template ) {
+        res.status( PROJECT_DOES_NOT_EXIST ).send( 'Template not found' );
+      }
+      else {
+        knex( 'creator-templates' )
+          .where( { id: templateId } )
+          .update( {
+            name: templateName,
+            projectData: projectData,
+            description: description,
+            keyWords: keyWords
+          } )
+          .then( () => {
+            res.status( SUCCESS ).send( 'Template updated successfully' );
+          } )
+          .catch( error => {
+            res.status( UNKNOWN_ERROR ).send( 'An error occurred while updating the template' );
+          } );
+      }
+    } )
+    .catch( error => {
+      res.status( UNKNOWN_ERROR ).send( 'An error occurred while checking for the template' );
+    } );
+} );
+
+/**
  * Retrieve all templates from the templates table.
  */
-router.get( '/api/creator/templates', ( req, res ) => {
+router.get( '/api/creator/all-templates', ( req, res ) => {
   knex
-    .select( 'name', 'description', 'keyWords', 'projectData' )
+    .select( 'name', 'description', 'keyWords', 'projectData', 'id' )
     .from( 'creator-templates' )
     .then( selectResult => {
       res.json( { templates: selectResult } );
     } );
+} );
+
+/**
+ * Get the templates that can be used in the provided space. Will include all global templates and the template
+ * that are assigned to the provided space.
+ */
+router.get( '/api/creator/templates/use/:spaceName', ( req, res ) => {
+  const { spaceName } = req.params;
+  knex
+    .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
+    .from( 'creator-templates' )
+    .where( { spaceName: spaceName } )
+    .orWhereNull( 'spaceName' )
+    .then( selectResult => {
+      res.json( { templates: selectResult } );
+    } );
+} );
+
+/**
+ * Get the templates that can be edited in the provided space. If the user has full access, it will include all
+ * global templates. Otherwise, it will include teh templates assigned to the provided spaceName, assuming that
+ * the user has access to the space.
+ */
+router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
+  const { spaceName } = req.params;
+
+  const query = knex
+    .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
+    .from( 'creator-templates' );
+
+  if ( canAccessSpace( spaceName ) ) {
+    query.where( { spaceName: spaceName } );
+  }
+
+  if ( ALLOW_ACCESS_TO_RESTRICTED_FILES ) {
+    query.orWhereNull( 'spaceName' );
+  }
+
+  query.then( selectResult => {
+    res.json( { templates: selectResult } );
+  } );
 } );
 
 /**
@@ -607,6 +700,16 @@ router.get( '/api/creator/templates/delete/:templateName', ( req, res ) => {
     .then( numberOfTemplatesDeleted => {
       res.json( { numberOfTemplatesDeleted } );
     } );
+} );
+
+/**
+ * Just returns true if the user has access to restricted spaces, which is controlled by a value in the
+ * .env file.
+ *
+ * Lets front end code know if there is access to restricted files.
+ */
+router.get( '/api/creator/can-access-restricted-files', ( req, res ) => {
+  res.json( { canAccess: ALLOW_ACCESS_TO_RESTRICTED_FILES } );
 } );
 
 /**

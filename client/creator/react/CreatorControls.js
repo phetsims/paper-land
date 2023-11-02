@@ -9,9 +9,9 @@ import EditType from '../model/EditType.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import CreateCustomCodeForm from './CreateCustomCodeForm.js';
 import CreateProgramFromTemplateForm from './CreateProgramFromTemplateForm.js';
+import EditTemplateControls from './EditTemplateControls.js';
 import ProgramMetadataForm from './ProgramMetadataForm.js';
 import ProgramNumberForm from './ProgramNumberForm.js';
-import SaveTemplateControl from './SaveTemplateControl.js';
 import SpaceSelectControls from './SpaceSelectControls.js';
 
 // eslint-disable-next-line react/display-name
@@ -22,6 +22,7 @@ const CreatorControls = forwardRef( ( props, ref ) => {
   const [ activeEdit, setActiveEdit ] = useState( null );
   const [ enableEdit, setEnableEdit ] = useState( false );
   const [ creatingFromTemplate, setCreatingFromTemplate ] = useState( false );
+  const [ selectedSpaceName, setSelectedSpaceName ] = useState( '' );
 
   // see https://legacy.reactjs.org/docs/hooks-effect.html for example of register and cleanup
   useEffect( () => {
@@ -44,11 +45,17 @@ const CreatorControls = forwardRef( ( props, ref ) => {
     };
     model.creatingFromTemplateProperty.link( creatingFromTemplateListener );
 
+    const spaceNameListener = spaceName => {
+      setSelectedSpaceName( spaceName );
+    };
+    model.spaceNameProperty.link( spaceNameListener );
+
     // returning a function tells useEffect to dispose of this component when it is time
     return function cleanup() {
       model.activeEditProperty.unlink( selectedProgramListener );
       model.spaceRestrictedProperty.unlink( restrictedListener );
       model.creatingFromTemplateProperty.unlink( creatingFromTemplateListener );
+      model.spaceNameProperty.unlink( spaceNameListener );
     };
   } );
 
@@ -65,11 +72,12 @@ const CreatorControls = forwardRef( ( props, ref ) => {
         }}
       >
         <fieldset disabled={!enableEdit}>
-          {activeEdit === null && !creatingFromTemplate && window.createTemplates ?
-           <SaveTemplateControl model={model}></SaveTemplateControl> : ''}
+          {activeEdit === null && !creatingFromTemplate ?
+           <EditTemplateControls model={model}></EditTemplateControls> : ''}
           {creatingFromTemplate ?
            <CreateProgramFromTemplateForm
-             sendGetTemplatesRequest={model.sendGetTemplatesRequest}
+             sendGetTemplatesRequest={model.sendGetTemplatesForUseRequest.bind( model )}
+             selectedSpaceName={selectedSpaceName}
              createFromTemplate={
                programTemplateJSON => {
                  model.createFromTemplate( programTemplateJSON );

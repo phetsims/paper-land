@@ -12,7 +12,8 @@ export default function CreateProgramFromTemplateForm( props ) {
   useEffect( () => {
     const getTemplates = async () => {
       try {
-        const templates = await props.sendGetTemplatesRequest();
+        const templates = await props.sendGetTemplatesRequest( props.selectedSpaceName );
+
         const templatesJSON = JSON.parse( templates );
         setAvailableTemplates( templatesJSON.templates );
         setSelectedTemplate( templatesJSON.templates[ 0 ] );
@@ -41,8 +42,9 @@ export default function CreateProgramFromTemplateForm( props ) {
           }}
         >
           {availableTemplates.map( ( template, index ) => {
-            return <option key={index}>
-              {template.name}
+            const optionName = template.name + ( template.spaceName ? ' (custom)' : '' );
+            return <option key={index} value={template.name}>
+              {optionName}
             </option>;
           } )}
         </Form.Select>
