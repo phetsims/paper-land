@@ -124,7 +124,8 @@ export default class ProgramNode extends phet.scenery.Node {
     this.createListenerButton = new phet.sun.TextPushButton( 'Custom Code', _.merge( {}, BUTTON_OPTIONS, {
       listener: () => {
         activeEditProperty.value = new ActiveEdit( model, EditType.CUSTOM_CODE );
-      }
+      },
+      enabledProperty: editEnabledProperty
     } ) );
 
     this.allComponentsVBox = new phet.scenery.VBox( {

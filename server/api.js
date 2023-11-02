@@ -713,6 +713,14 @@ router.get( '/api/creator/can-access-restricted-files', ( req, res ) => {
 } );
 
 /**
+ * Returns true if the user has access to the provide space.
+ */
+router.get( '/api/creator/can-access-space/:spaceName', ( req, res ) => {
+  const { spaceName } = req.params;
+  res.json( { canAccess: canAccessSpace( spaceName ) } );
+} );
+
+/**
  * Get the project data at the provided space and project name.
  */
 router.get( '/api/creator/:spaceName/:projectName', ( req, res ) => {

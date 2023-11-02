@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
-import xhr from 'xhr';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import xhr from 'xhr';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -13,6 +13,7 @@ export default function TemplateDataControls( props ) {
   const [ description, setDescription ] = useState( '' );
   const [ keyWords, setKeyWords ] = useState( '' );
   const [ canAccessRestrictedFiles, setCanAccessRestrictedFiles ] = useState( false );
+  const [ canAccessSpace, setCanAccessSpace ] = useState( false );
 
   // Populate fields with the selected template data
   useEffect( () => {
@@ -27,6 +28,21 @@ export default function TemplateDataControls( props ) {
       setKeyWords( '' );
     }
   }, [ props.selectedTemplate ] );
+
+  // Make sure that the user can only delete or add templates to spaces that they have access to
+  useEffect( () => {
+    if ( props.selectedSpaceName ) {
+      const url = new URL( `api/creator/can-access-space/${props.selectedSpaceName}`, window.location.origin ).toString();
+      xhr.get( url, { json: true }, ( error, response ) => {
+        if ( error ) {
+          console.error( error );
+        }
+        else {
+          setCanAccessSpace( response.body.canAccess );
+        }
+      } );
+    }
+  }, [ props.selectedSpaceName ] );
 
   // on mount, determine if we have access to restricted files, which allows us to save to all spaces
   useEffect( () => {
@@ -69,7 +85,10 @@ export default function TemplateDataControls( props ) {
         <Row>
           <Col>
             <StyledButton
-              disabled={!props.selectedSpaceName || templateName === ''}
+              disabled={
+                ( !props.selectedSpaceName || templateName === '' ) ||
+                !canAccessSpace
+              }
               name={props.selectedTemplate ? 'Save Changes' : 'Add Template to Space'}
               onClick={async () => {
                 try {
@@ -97,7 +116,7 @@ export default function TemplateDataControls( props ) {
           <Col>
             <StyledButton
               name='Delete Template'
-              disabled={!props.selectedTemplate}
+              disabled={!props.selectedTemplate || !canAccessSpace}
               onClick={async () => {
                 try {
                   await props.model.sendDeleteTemplateRequest( templateName, description, keyWords );
