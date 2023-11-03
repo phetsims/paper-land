@@ -4,6 +4,7 @@
  * string for each paper event that will be appended to the end
  * of the generated code.
  */
+import { renameVariableInCode } from '../../utils.js';
 
 export default class CustomCodeContainer {
   constructor() {
@@ -36,6 +37,35 @@ export default class CustomCodeContainer {
              onProgramMarkersAddedCode || onProgramMarkersRemovedCode || onProgramMarkersChangedPositionCode ||
              onProgramAdjacentCode || onProgramSeparatedCode;
     } );
+  }
+
+  /**
+   * Updates all variable references in code strings, replacing oldName with newName.
+   */
+  updateVariableReferences( newName, oldName ) {
+    this.onProgramAddedCodeProperty.value = renameVariableInCode( this.onProgramAddedCodeProperty.value, newName, oldName );
+    this.onProgramRemovedCodeProperty.value = renameVariableInCode( this.onProgramRemovedCodeProperty.value, newName, oldName );
+    this.onProgramChangedPositionCodeProperty.value = renameVariableInCode( this.onProgramChangedPositionCodeProperty.value, newName, oldName );
+    this.onProgramMarkersAddedCodeProperty.value = renameVariableInCode( this.onProgramMarkersAddedCodeProperty.value, newName, oldName );
+    this.onProgramMarkersRemovedCodeProperty.value = renameVariableInCode( this.onProgramMarkersRemovedCodeProperty.value, newName, oldName );
+    this.onProgramMarkersChangedPositionCodeProperty.value = renameVariableInCode( this.onProgramMarkersChangedPositionCodeProperty.value, newName, oldName );
+    this.onProgramAdjacentCodeProperty.value = renameVariableInCode( this.onProgramAdjacentCodeProperty.value, newName, oldName );
+    this.onProgramSeparatedCodeProperty.value = renameVariableInCode( this.onProgramSeparatedCodeProperty.value, newName, oldName );
+  }
+
+  /**
+   * Disposes of all Properties within this container.
+   */
+  dispose() {
+    this.hasCustomCodeProperty.dispose();
+    this.onProgramAddedCodeProperty.dispose();
+    this.onProgramRemovedCodeProperty.dispose();
+    this.onProgramChangedPositionCodeProperty.dispose();
+    this.onProgramMarkersAddedCodeProperty.dispose();
+    this.onProgramMarkersRemovedCodeProperty.dispose();
+    this.onProgramMarkersChangedPositionCodeProperty.dispose();
+    this.onProgramAdjacentCodeProperty.dispose();
+    this.onProgramSeparatedCodeProperty.dispose();
   }
 
   /**
