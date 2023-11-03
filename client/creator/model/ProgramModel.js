@@ -56,59 +56,6 @@ export default class ProgramModel {
 
     // @public - emits an event when the user wants to copy this program
     this.copyEmitter = new phet.axon.Emitter();
-
-    // Listeners that are added to each container's allComponents ObservableArray elementAddedEmitter that
-    // will update custom code whenever a component has a name change. The listener would only need to be removed
-    // upon disposal. Since the container itself is disposed in that case there is no need to keep references for
-    // manual disposal.
-    this.addNameChangeListenerToContainer( this.modelContainer );
-    this.addNameChangeListenerToContainer( this.controllerContainer );
-    this.addNameChangeListenerToContainer( this.viewContainer );
-    this.addNameChangeListenerToContainer( this.listenerContainer );
-  }
-
-  /**
-   * Adds a listener to a container that will observe components for a changing name. When any component
-   * changes its name, we want to replace all matching variables with the new name in custom code.
-   *
-   * @private
-   */
-  addNameChangeListenerToContainer( container ) {
-    const addedListener = addedComponent => {
-      const handleNameChange = ( newName, oldName ) => {
-        this.customCodeContainer.updateVariableReferences( newName, oldName );
-      };
-      addedComponent.nameProperty.link( handleNameChange );
-
-      // when the addedComponent is removed, unlink the listener to avoid a memory leak
-      container.allComponents.elementRemovedEmitter.addListener( removedComponent => {
-        if ( removedComponent === addedComponent ) {
-          addedComponent.nameProperty.unlink( handleNameChange );
-        }
-      } );
-    };
-    container.allComponents.elementAddedEmitter.addListener( addedListener );
-
-    // Return the listener so it can be removed upon disposal (if necessary).
-    return addedListener;
-  }
-
-  /**
-   * Registers a listener to
-   * @param addedComponent
-   */
-  registerComponentNameChangeListener( addedComponent ) {
-    const handleNameChange = ( newName, oldName ) => {
-      this.customCodeContainer.updateVariableReferences( newName, oldName );
-    };
-    addedComponent.nameProperty.link( handleNameChange );
-
-    // when the addedComponent is removed, unlink the listener to avoid a memory leak
-    this.modelContainer.allComponents.elementRemovedEmitter.addListener( removedComponent => {
-      if ( removedComponent === addedComponent ) {
-        addedComponent.nameProperty.unlink( handleNameChange );
-      }
-    } );
   }
 
   /**

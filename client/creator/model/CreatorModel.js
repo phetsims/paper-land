@@ -135,13 +135,26 @@ export default class CreatorModel {
    */
   addComponentAddedListener( allComponentsList, programComponentList ) {
     const componentAddedListener = addedComponent => {
+
+      // add to the global list
       allComponentsList.push( addedComponent );
+
+      // observe name changes so that all custom code (in EVERY program) can update when a component is renamed
+      const nameChangeListener = ( newName, oldName ) => {
+        if ( oldName ) {
+          this.programs.forEach( programModel => {
+            programModel.customCodeContainer.updateVariableReferences( newName, oldName );
+          } );
+        }
+      };
+      addedComponent.nameProperty.link( nameChangeListener );
 
       // listen for its removal
       const componentRemovedListener = removedComponent => {
         if ( addedComponent === removedComponent ) {
           allComponentsList.remove( removedComponent );
           programComponentList.elementRemovedEmitter.removeListener( componentRemovedListener );
+          addedComponent.nameProperty.unlink( nameChangeListener );
         }
       };
       programComponentList.elementRemovedEmitter.addListener( componentRemovedListener );
