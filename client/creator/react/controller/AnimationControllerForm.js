@@ -83,6 +83,9 @@ export default function AnimationControllerForm( props ) {
   return (
     <>
       <hr></hr>
+      <p>Select the model components you want to control and use the available functions to update them with animation.
+        The function you write will be called every few miliseconds.
+      </p>
       <h4>Controlled Components</h4>
       <ModelComponentSelector
         allModelComponents={allModelComponents}
