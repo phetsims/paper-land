@@ -56,6 +56,46 @@ export default class ProgramModel {
 
     // @public - emits an event when the user wants to copy this program
     this.copyEmitter = new phet.axon.Emitter();
+
+    this.modelContainer.allComponents.elementAddedEmitter.addListener( this.modelContainerListener );
+  }
+
+  addNameChangeListenerToContainer( container ) {
+    const addedListener = addedComponent => {
+      const handleNameChange = ( newName, oldName ) => {
+        this.customCodeContainer.updateVariableReferences( newName, oldName );
+      };
+      addedComponent.nameProperty.link( handleNameChange );
+
+      // when the addedComponent is removed, unlink the listener to avoid a memory leak
+      container.allComponents.elementRemovedEmitter.addListener( removedComponent => {
+        if ( removedComponent === addedComponent ) {
+          addedComponent.nameProperty.unlink( handleNameChange );
+        }
+      } );
+    };
+    container.allComponents.elementAddedEmitter.addListener( addedListener );
+
+    // Return the listener so it can be removed upon disposal
+    return addedListener;
+  }
+
+  /**
+   * Registers a listener to
+   * @param addedComponent
+   */
+  registerComponentNameChangeListener( addedComponent ) {
+    const handleNameChange = ( newName, oldName ) => {
+      this.customCodeContainer.updateVariableReferences( newName, oldName );
+    };
+    addedComponent.nameProperty.link( handleNameChange );
+
+    // when the addedComponent is removed, unlink the listener to avoid a memory leak
+    this.modelContainer.allComponents.elementRemovedEmitter.addListener( removedComponent => {
+      if ( removedComponent === addedComponent ) {
+        addedComponent.nameProperty.unlink( handleNameChange );
+      }
+    } );
   }
 
   /**
@@ -137,6 +177,8 @@ export default class ProgramModel {
     this.controllerContainer.dispose();
     this.viewContainer.dispose();
     this.listenerContainer.dispose();
+
+    this.modelContainer.allComponents.elementAddedEmitter.removeListener( this.modelContainerListener );
 
     this.deleteEmitter.dispose();
   }
