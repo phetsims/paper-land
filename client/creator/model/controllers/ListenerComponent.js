@@ -1,4 +1,4 @@
-import { renameVariableInCode, replaceReferencesInCode } from '../../../utils.js';
+import { replaceReferencesInCode } from '../../../utils.js';
 import Component from '../Component.js';
 
 export default class ListenerComponent extends Component {
