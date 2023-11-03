@@ -78,6 +78,8 @@ export default function AnimationControllerForm( props ) {
     props.onComponentCreated();
   };
 
+  const nameAllowed = isNameValid( activeEditProperty.value, model, componentName );
+
   return (
     <>
       <hr></hr>
@@ -107,10 +109,10 @@ export default function AnimationControllerForm( props ) {
         variableComponents={selectedControlledComponents}
         additionalPromptContent={'I also have the following variables for animation. They cannot be changed.\ndt - the time step, in seconds\n"elapsedTime" - How long the application has been running, in seconds\n\n'}
       ></AIHelperChat>
-      <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
+      <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={nameAllowed}></FormInvalidReasons>
       <CreateComponentButton
         createComponent={createComponent}
-        selectedTabFormValid={formInvalidReasons.length === 0}
+        selectedTabFormValid={formInvalidReasons.length === 0 && nameAllowed}
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </>
