@@ -62,6 +62,9 @@ const CreatorControls = forwardRef( ( props, ref ) => {
   return (
     <div className={styles.scrollable} ref={ref}>
       <SpaceSelectControls creatorModel={model} enableEdit={enableEdit}></SpaceSelectControls>
+      <hr></hr>
+      <EditTemplateControls model={model}></EditTemplateControls>
+      <hr></hr>
       {activeEdit ? <ProgramNumberForm activeEdit={activeEdit} creatorModel={model}></ProgramNumberForm> : ''}
       <form
         onSubmit={event => {
@@ -72,8 +75,6 @@ const CreatorControls = forwardRef( ( props, ref ) => {
         }}
       >
         <fieldset disabled={!enableEdit}>
-          {activeEdit === null && !creatingFromTemplate ?
-           <EditTemplateControls model={model}></EditTemplateControls> : ''}
           {creatingFromTemplate ?
            <CreateProgramFromTemplateForm
              sendGetTemplatesRequest={model.sendGetTemplatesForUseRequest.bind( model )}
