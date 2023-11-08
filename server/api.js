@@ -559,19 +559,20 @@ router.put( '/api/creator/templates', ( req, res ) => {
   }
   else {
 
-    // make sure that the name is unique
+    // Make sure that the name is unique for the space the template is in. We allow duplicate names for
+    // different spaces and for templates in the global space.
+    // NOTE: Templates are uniquely identified by ID in the database so overlapping names is fine.
+    // This limitation just helps avoid a confusing UX.
     knex
-      .select( 'name' )
+      .select( 'name', 'spaceName' )
       .from( 'creator-templates' )
-      .where( { name: templateName } )
+      .where( { name: templateName, spaceName: spaceName } )
       .then( selectResult => {
         const existingNames = selectResult.map( result => result.name );
         if ( existingNames.includes( templateName ) ) {
           res.status( 402 ).send( 'Name already exists for this template.' );
         }
         else {
-
-          // name is unique so we can insert the template
           knex( 'creator-templates' )
             .insert( {
               name: templateName,

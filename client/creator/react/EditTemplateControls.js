@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Accordion } from 'react-bootstrap';
 import AccordionButton from 'react-bootstrap/AccordionButton';
 import Form from 'react-bootstrap/Form';
+import ConfirmationDialog from './ConfirmationDialog.js';
 import TemplateDataControls from './TemplateDataControls.js';
 
 export default function EditTemplateControls( props ) {
@@ -17,6 +18,10 @@ export default function EditTemplateControls( props ) {
   const [ availableTemplates, setAvailableTemplates ] = useState( [] );
   const [ editingTemplatesEnabled, setEditingTemplatesEnabled ] = useState( false );
   const [ selectedSpaceName, setSelectedSpaceName ] = useState( '' );
+
+  // The template we are about to load. Loading a template will replace all programs with this template's programs,
+  // so we need to get confirmation from the user that this is OK.
+  const [ potentialTemplateToLoad, setPotentialTemplateToLoad ] = useState( '' );
 
   const getTemplates = async () => {
     try {
@@ -80,26 +85,54 @@ export default function EditTemplateControls( props ) {
 
   return (
     <>
+      <ConfirmationDialog
+        showing={potentialTemplateToLoad !== ''}
+        onConfirm={async () => {
+          if ( potentialTemplateToLoad ) {
+            try {
+
+              // Load the actual template data as a project
+              const projectData = JSON.parse( potentialTemplateToLoad.projectData );
+              await props.model.load( projectData );
+
+              // State representing the template currently being edited
+              setSelectedTemplate( potentialTemplateToLoad );
+
+              // clear the potential template to load since we confirmed it was OK.
+              setPotentialTemplateToLoad( '' );
+            }
+            catch( e ) {
+              console.log( e );
+            }
+          }
+        }}
+        onCancel={() => {
+          setPotentialTemplateToLoad( '' );
+        }}
+        confirmationContent={
+          <div>
+            <p>⚠ Warning! Loading a different template will delete all current programs.</p>
+          </div>
+        }
+      ></ConfirmationDialog>
       <Accordion>
         <Accordion.Item eventKey='0'>
           <AccordionButton>Edit Templates</AccordionButton>
           <Accordion.Body>
-            <p hidden={editingTemplatesEnabled}>{'\u26A0 To edit a different template, delete all programs or create a new project. Project needs to be empty to load template programs. \u26A0'}</p>
             <Form.Select
-              hidden={!editingTemplatesEnabled}
               value={selectedTemplate ? selectedTemplate.name : ''}
               onChange={async event => {
                 const newSelectedTemplate = availableTemplates.find( template => template.name === event.target.value );
-                setSelectedTemplate( newSelectedTemplate );
 
                 if ( newSelectedTemplate ) {
-                  try {
-                    const projectData = JSON.parse( newSelectedTemplate.projectData );
-                    await props.model.load( projectData );
-                  }
-                  catch( e ) {
-                    console.log( e );
-                  }
+
+                  // before loading new templates make sure the user is OK with this!
+                  setPotentialTemplateToLoad( newSelectedTemplate );
+                }
+                else {
+
+                  // Fall back to a "New Template" if the user hasn't selected anything
+                  setSelectedTemplate( '' );
                 }
               }}
             >

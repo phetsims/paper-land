@@ -166,29 +166,33 @@ function getKeywordsFromProgram( program ) {
   const programLines = program.split( '\n' );
   const firstLine = programLines[ 0 ];
   const secondLine = programLines[ 1 ];
+
   const keywords = [];
 
-  const commentRegEx = /\s*\/\/\s*(.+)/;
-  const wordRegEx = /\b[a-zA-Z]+\b/g;
+  if ( firstLine && secondLine ) {
 
-  // Test the first line and see if it is a comment and contains words.  If so, extract those words.
-  const titleMatchResults = firstLine.match( commentRegEx );
-  if ( titleMatchResults && titleMatchResults[ 1 ] ) {
-    const titleWords = titleMatchResults[ 1 ].match( wordRegEx );
-    titleWords && keywords.push( ...titleWords );
-  }
+    const commentRegEx = /\s*\/\/\s*(.+)/;
+    const wordRegEx = /\b[a-zA-Z]+\b/g;
 
-  // Test the second line to see if it is a comment and is formatted correctly to indicate that it contains keywords and
-  // add them to our list if so.
-  const keywordMatchResults = secondLine.match( commentRegEx );
-  if ( keywordMatchResults && keywordMatchResults[ 1 ] && keywordMatchResults[ 1 ].includes( 'Keywords' ) ) {
-    let explicitlySpecifiedKeywords = keywordMatchResults[ 1 ].match( wordRegEx );
+    // Test the first line and see if it is a comment and contains words.  If so, extract those words.
+    const titleMatchResults = firstLine.match( commentRegEx );
+    if ( titleMatchResults && titleMatchResults[ 1 ] ) {
+      const titleWords = titleMatchResults[ 1 ].match( wordRegEx );
+      titleWords && keywords.push( ...titleWords );
+    }
 
-    // Filter out the word "keywords" in case it was used on this line.
-    explicitlySpecifiedKeywords = explicitlySpecifiedKeywords.filter( word => !word.toLowerCase().includes( 'keyword' ) );
+    // Test the second line to see if it is a comment and is formatted correctly to indicate that it contains keywords and
+    // add them to our list if so.
+    const keywordMatchResults = secondLine.match( commentRegEx );
+    if ( keywordMatchResults && keywordMatchResults[ 1 ] && keywordMatchResults[ 1 ].includes( 'Keywords' ) ) {
+      let explicitlySpecifiedKeywords = keywordMatchResults[ 1 ].match( wordRegEx );
 
-    // Add these to our keyword list.
-    keywords.push( ...explicitlySpecifiedKeywords );
+      // Filter out the word "keywords" in case it was used on this line.
+      explicitlySpecifiedKeywords = explicitlySpecifiedKeywords.filter( word => !word.toLowerCase().includes( 'keyword' ) );
+
+      // Add these to our keyword list.
+      keywords.push( ...explicitlySpecifiedKeywords );
+    }
   }
 
   return keywords;
