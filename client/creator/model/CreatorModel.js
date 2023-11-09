@@ -64,6 +64,9 @@ export default class CreatorModel {
     // {Emitter} - Emits when the save request to the server is successful.
     this.saveSuccessfulEmitter = new phet.axon.Emitter();
 
+    // {Emitter} - Emits when the programs are successfully sent to Paper Playground.
+    this.sendSuccessfulEmitter = new phet.axon.Emitter();
+
     // {Emitter} - Emits when the save template request to the server is successful.
     this.saveTemplateSuccessfulEmitter = new phet.axon.Emitter();
 
@@ -77,6 +80,7 @@ export default class CreatorModel {
 
           // Show a success notification if the request succeeds.
           console.log( 'Success!' );
+          this.sendSuccessfulEmitter.emit();
 
         } )
         .catch( error => {
@@ -334,8 +338,8 @@ export default class CreatorModel {
   }
 
   /**
-   * Returns an array of strings for the code of this project. Used to move code to the paper-playground database of
-   * programs.
+   * Returns an array of objects with program number and code for this project. Used to move code to the
+   * paper-playground database of programs.
    */
   convertToProgramData() {
     const programStrings = [];
@@ -348,36 +352,64 @@ export default class CreatorModel {
     return programStrings;
   }
 
+  /**
+   * Send a request to the server to save the current programs to the selected space.
+   * @return {Promise<string>}
+   */
   async sendProgramsToPlayground() {
-    const url = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/set`, window.location.origin ).toString();
-    return new Promise( ( resolve, reject ) => {
 
-      // Convert model to code for the database. If this throws an error for some reason (like an unsupported type),
-      // the promise should reject.
+    // Convert model to code for the database. If this throws an error for some reason (like an unsupported type),
+    // the promise should reject.
+    try {
       const dataForServer = this.convertToProgramData();
 
-      if ( window.dev ) {
-        dataForServer.forEach( programCodeString => {
-          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
-          console.log( programCodeString.code );
-          console.log( '///////////////////////////////////////////////////////////////////////////////////////////' );
-        } );
-      }
+      try {
 
-      xhr.post( url, {
-        json: {
-          programs: dataForServer
+        // First, clear all programs in the space
+        const clearUrl = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/clear`, window.location.origin ).toString();
+        await this.sendRequest( clearUrl, 'POST', {} );
+
+        // Now add the programs one by one. Adding sequentially reduces the payload size which has limitations.
+        for ( const programData of dataForServer ) {
+
+          // Await the request to add each individual program
+          const addUrl = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/add-premade-program`, window.location.origin ).toString();
+          await this.sendRequest( addUrl, 'POST', { program: programData } );
         }
+
+        // If everything succeeds, resolve the promise
+        console.log( 'All programs sent successfully!' );
+        return 'All programs sent successfully!';
+
+      }
+      catch( error ) {
+        console.error( 'Error sending programs:', error );
+      }
+    }
+    catch( error ) {
+      console.error( 'Error converting programs to code:', error );
+      throw error;
+    }
+
+    return 'Error sending programs to playground.';
+  }
+
+  /**
+   * A helper function that sends a general request to the server.
+   * @param url - API endpoint
+   * @param method - XHR method
+   * @param data - payload (json)
+   */
+  async sendRequest( url, method, data ) {
+    return new Promise( ( resolve, reject ) => {
+      xhr[ method.toLowerCase() ]( url, {
+        json: data
       }, ( error, response ) => {
         if ( error ) {
           reject( error );
         }
         else {
-          resolve( 'Project Created!' );
-          console.log( 'Project created!' );
-
-          // Set a flag on the appliation storage to indicate that programs were just created with Creator
-          localStorage.paperProgramsCreatedWithCreator = true;
+          resolve( response );
         }
       } );
     } );

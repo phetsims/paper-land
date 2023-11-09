@@ -240,48 +240,88 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
 } );
 
 /**
+ * Clears all programs in the selected space.
+ */
+router.post( '/api/spaces/:spaceName/programs/clear', ( req, res ) => {
+  const { spaceName } = req.params;
+  knex( 'programs' )
+    .where( { spaceName } )
+    .del()
+    .then( numberOfProgramsDeleted => {
+      res.json( { numberOfProgramsDeleted } );
+    } );
+} );
+
+/**
+ * Add a single program to the space, generally a premade program with implementation
+ * data ready from Creator.
+ */
+router.post( '/api/spaces/:spaceName/programs/add-premade-program', ( req, res ) => {
+  const { spaceName } = req.params;
+  const { program } = req.body;
+
+  if ( !program || !program.number || !program.code ) {
+    res.status( 400 ).send( 'Missing program, number or code' );
+  }
+
+  knex( 'programs' )
+    .insert( {
+      spaceName: spaceName,
+      number: program.number,
+      originalCode: program.code,
+      currentCode: program.code
+    } )
+    .then( () => {
+      res.json( { message: 'Program added successfully' } );
+    } )
+    .catch( error => {
+      res.status( 500 ).send( error );
+    } );
+} );
+
+/**
  * Sets the code strings provided in the request body to the specified space. BEWARE! This will
  * remove all existing programs in the space, making way for a new one.
  */
 router.post( '/api/spaces/:spaceName/programs/set', ( req, res ) => {
 
-  const { spaceName } = req.params;
-
-  // extract code from the request
-  const { programs } = req.body;
-  if ( !programs ) {
-    res.status( 400 ).send( 'Missing "programs"' );
-  }
-
-  // Given the programs, create objects that can can be used with .insert()
-  const programData = programs.map( program => {
-    if ( !program.number ) {
-      res.status( 400 ).send( 'Missing "number", is program data correct?' );
-    }
-    if ( !program.code ) {
-      res.status( 400 ).send( 'Missing "code"' );
-    }
-
-    return {
-      spaceName: spaceName,
-      number: program.number,
-      originalCode: program.code,
-      currentCode: program.code
-    };
-  } );
-
-  knex( 'programs' )
-    .where( { spaceName } )
-    .del()
-    .then( () => {
-      knex( 'programs' )
-        .insert( programData )
-        .then( () => {
-          getSpaceData( req, spaceData => {
-            res.json( { spaceData } );
-          } );
-        } );
-    } );
+  // const { spaceName } = req.params;
+  //
+  // // extract code from the request
+  // const { programs } = req.body;
+  // if ( !programs ) {
+  //   res.status( 400 ).send( 'Missing "programs"' );
+  // }
+  //
+  // // Given the programs, create objects that can can be used with .insert()
+  // const programData = programs.map( program => {
+  //   if ( !program.number ) {
+  //     res.status( 400 ).send( 'Missing "number", is program data correct?' );
+  //   }
+  //   if ( !program.code ) {
+  //     res.status( 400 ).send( 'Missing "code"' );
+  //   }
+  //
+  //   return {
+  //     spaceName: spaceName,
+  //     number: program.number,
+  //     originalCode: program.code,
+  //     currentCode: program.code
+  //   };
+  // } );
+  //
+  // knex( 'programs' )
+  //   .where( { spaceName } )
+  //   .del()
+  //   .then( () => {
+  //     knex( 'programs' )
+  //       .insert( programData )
+  //       .then( () => {
+  //         getSpaceData( req, spaceData => {
+  //           res.json( { spaceData } );
+  //         } );
+  //       } );
+  //   } );
 } );
 
 // Create a new snippet

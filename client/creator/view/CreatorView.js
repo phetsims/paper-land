@@ -40,6 +40,8 @@ export default class CreatorView extends phet.scenery.Node {
     // Fades in using twixt when the project is successfully saved to the database
     this.savedRectangle = new SavedRectangle();
 
+    this.sendSuccessRectangle = new SavedRectangle( { message: 'Sent ✓' } );
+
     // Fades in to show a success message whenever some kind of successful action is completed.
     this.successRectangle = new SavedRectangle( { message: 'Success ✓' } );
 
@@ -91,6 +93,7 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.saveProjectButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.savedRectangle );
+    controlLayerNode.addChild( this.sendSuccessRectangle );
     controlLayerNode.addChild( this.successRectangle );
     controlLayerNode.addChild( this.visibilityControls );
     controlLayerNode.addChild( this.restrictedWarningNode );
@@ -190,6 +193,10 @@ export default class CreatorView extends phet.scenery.Node {
       this.savedRectangle.showSaved();
     } );
 
+    model.sendSuccessfulEmitter.addListener( () => {
+      this.sendSuccessRectangle.showSaved();
+    } );
+
     model.successOccurredEmitter.addListener( message => {
 
       // display the message and adjust layout after the rectangle bounds change
@@ -215,6 +222,7 @@ export default class CreatorView extends phet.scenery.Node {
     this.saveProjectButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
     this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );
+    this.sendSuccessRectangle.rightCenter = this.sendToPaperLandButton.leftCenter.plusXY( -5, 0 );
     this.successRectangle.centerTop = new phet.dot.Vector2( width / 2, 5 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 
