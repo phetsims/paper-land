@@ -92,8 +92,8 @@ export default class ProgramModel {
    * Copies the custom code from the provided program to this program. For now, we just copy every string and
    * leave it up to the user to update variable name references.
    */
-  copyCustomCodeFromOther( programJSON ) {
-    this.customCodeContainer.copyFromOther( programJSON.customCodeContainer );
+  copyCustomCodeFromOther( programJSON, newModelNames ) {
+    this.customCodeContainer.copyFromOther( programJSON.customCodeContainer, newModelNames );
   }
 
   /**
@@ -119,12 +119,14 @@ export default class ProgramModel {
     this.controllerContainer.copyComponentsFromOther( programJSON.controllerContainer, getUniqueCopyName, allComponents, newModelNames );
     this.viewContainer.copyComponentsFromOther( programJSON.viewContainer, getUniqueCopyName, allComponents, newModelNames );
     this.listenerContainer.copyComponentsFromOther( programJSON.listenerContainer, getUniqueCopyName, allComponents, newModelNames );
+
+    return newModelNames;
   }
 
   copyFromOther( programJSON, getUniqueCopyName, allComponents ) {
     this.copyMetadataFromOther( programJSON );
-    this.copyCustomCodeFromOther( programJSON );
-    this.copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents );
+    const newModelNames = this.copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents );
+    this.copyCustomCodeFromOther( programJSON, newModelNames );
   }
 
   /**

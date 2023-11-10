@@ -70,8 +70,11 @@ export default class CustomCodeContainer {
 
   /**
    * Set all custom code in this container to equal the values from another container.
+   * @param {*} otherContainerJSON
+   * @param {Object} newModelNames - A map of old model names to new model names, as they were renamed as
+   *                                 necessary for the copy.
    */
-  copyFromOther( otherContainerJSON ) {
+  copyFromOther( otherContainerJSON, newModelNames ) {
     this.onProgramAddedCodeProperty.value = otherContainerJSON.onProgramAddedCode;
     this.onProgramRemovedCodeProperty.value = otherContainerJSON.onProgramRemovedCode;
     this.onProgramChangedPositionCodeProperty.value = otherContainerJSON.onProgramChangedPositionCode;
@@ -80,6 +83,12 @@ export default class CustomCodeContainer {
     this.onProgramMarkersChangedPositionCodeProperty.value = otherContainerJSON.onProgramMarkersChangedPositionCode;
     this.onProgramAdjacentCodeProperty.value = otherContainerJSON.onProgramAdjacentCode;
     this.onProgramSeparatedCodeProperty.value = otherContainerJSON.onProgramSeparatedCode;
+
+    // Update variable names in the code
+    for ( const oldName in newModelNames ) {
+      const newName = newModelNames[ oldName ];
+      this.updateVariableReferences( newName, oldName );
+    }
   }
 
   /**
