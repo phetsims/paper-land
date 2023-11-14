@@ -366,11 +366,8 @@ export default class ProgramCodeGenerator {
     else if ( modelComponent.propertyType === 'DerivedProperty' ) {
       data = {
 
-        // Each dependency name, wrapped in the getter that will return a Property instance in
-        // a comma separated list - the template will wrap this in array brackets
-        DEPENDENCIES: modelComponent.dependencyNames.map( name => {
-          return `phet.paperLand.getModelComponent( '${name}' )`;
-        } ).join( ', ' ),
+        // Each dependency name, wrapped in the getter that will return a Property instance in a comma separated list
+        DEPENDENCIES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( modelComponent.dependencyNames ),
         DEPENDENCY_ARGUMENTS: modelComponent.dependencyNames.map( name => {
           return name;
         } ).join( ', ' ),
