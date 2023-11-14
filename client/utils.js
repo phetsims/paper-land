@@ -356,12 +356,16 @@ export function createSetterFunctionString( component ) {
   else if ( type === 'Bounds2Property' ) {
     argumentDocumentation = 'Pass in a new Bounds2 object with `new phet.dot.Bounds2( minX, minY, maxX, maxY )`';
   }
-  else {
-    throw new Error( `Unhandled property type: ${type}` );
-  }
 
-  const capitalizedComponentName = componentName.charAt( 0 ).toUpperCase() + componentName.slice( 1 );
-  return `set${capitalizedComponentName}( value ) - ${argumentDocumentation}`;
+  if ( argumentDocumentation ) {
+    const capitalizedComponentName = componentName.charAt( 0 ).toUpperCase() + componentName.slice( 1 );
+    return `set${capitalizedComponentName}( value ) - ${argumentDocumentation}`;
+  }
+  else {
+
+    // Gracefully handle the case where there is no documentation.
+    return '';
+  }
 }
 
 /**

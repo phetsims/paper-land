@@ -16,12 +16,13 @@ export default function ComponentSetterList( props ) {
       <ListGroup>
         {
           components.map( ( selectedComponent, index ) => {
-            return (
+            const documentationString = createSetterFunctionString( selectedComponent );
+            return documentationString ? (
               <ListGroup.Item
                 key={`component-documentation-${index}`}
                 className={styles.listGroupItem}
-              >{createSetterFunctionString( selectedComponent )}</ListGroup.Item>
-            );
+              >{documentationString}</ListGroup.Item>
+            ) : null;
           } )
         }
       </ListGroup>
