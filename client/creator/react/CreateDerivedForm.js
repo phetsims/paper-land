@@ -36,6 +36,11 @@ export default function CreateDerivedForm( props ) {
     NamedDerivedProperty
   );
 
+  // The Derived component can observe changes to all model components except for itself (the active edit if there is one)
+  const usableModelComponents = allModelComponents.filter( component => {
+    return component !== props.activeEdit.component;
+  } );
+
   /**
    * Finds a component by name from all model components.
    */
@@ -63,9 +68,9 @@ export default function CreateDerivedForm( props ) {
         <p>Select dependency model components. This component will compute a new value whenever any dependency changes.</p>
         <Container>
           {
-            allModelComponents.map( ( component, index ) => {
+            usableModelComponents.map( ( component, index ) => {
               if ( index % 3 === 0 ) {
-                const nextThreeComponents = allModelComponents.slice( index, index + 3 );
+                const nextThreeComponents = usableModelComponents.slice( index, index + 3 );
 
                 // We will fill the array with entries for layout so that the row is full, even
                 // if there isn't a component to render in that column
@@ -104,7 +109,7 @@ export default function CreateDerivedForm( props ) {
           }
         </Container>
       </div>
-      <div hidden={allModelComponents.length === 0}>
+      <div hidden={usableModelComponents.length === 0}>
         <p className={styles.controlElement}>Write the body of a function that returns the desired value.</p>
         <p>Available variables:</p>
         <ListGroup>
