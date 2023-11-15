@@ -58,10 +58,22 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
     finalPromptString += userPrompt;
   }
 
-  finalPromptString += '\n\nI just need the code that would go inside of a JavaScript function. I will take care of the rest.';
-
+  finalPromptString += '{{ROLE}} You are a code snippet creator helping a user to create code that goes inside the body of a JavaScript function using the MVC framework. ';
+  finalPromptString += '{{CONTEXT}} The code you generate is being used to create JavaScript programs connected to real encoded physical papers that are detected using computer vision. Code organization is arranged by paper. ';
+  finalPromptString += '{{RULES}} You will only provide the code that belongs inside of the function declaration. '; 
+  finalPromptString += 'Do not wrap the code in a function declaration. ';
+  // finalPromptString += '\n\nIf you have to create new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
+  finalPromptString += '\n\nHere is an example of the output I might expect.';
+  finalPromptString += '\n\n```javascript\n' +
+                       `if (someValue) {
+    doSomethingForTrue();
+  } else {
+    doSomethingForFalse();
+  }`;;
+  finalPromptString += '\n```';
+  finalPromptString += '\n\nNotice that I did not introduce a new function because all I need to do is fill in the function body.';
   if ( setterFunctionDocumentation.length > 0 || additionalControlFunctions.length > 0 ) {
-    finalPromptString += '\n\nI have the following functions available for the implementation.';
+    finalPromptString += '\n\nYou know of the following functions available for use inside of the function. ```';
     if ( setterFunctionDocumentation.length > 0 ) {
       finalPromptString += '\n' + setterFunctionDocumentation;
     }
@@ -71,7 +83,7 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
   }
 
   if ( variableFunctionDocumentation.length > 0 ) {
-    finalPromptString += '\nI have the following variables, which can be used in your implementation. But they cannot be changed directly.';
+    finalPromptString += '```\n\nYou know of the following READ-ONLY variables that can be read inside of the function: ```';
     finalPromptString += '\n' + variableFunctionDocumentation;
   }
 
@@ -79,17 +91,8 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
     finalPromptString += '\n' + additionalContent;
   }
 
-  finalPromptString += '\n\nIf you have to create new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
-  finalPromptString += '\n\nPLEASE DO NOT WRAP THE SOLUTION IN A NEW FUNCTION DECLARATION. Here is an example of the output I might expect.';
-  finalPromptString += '\n\n```javascript\n' +
-                       `if (someValue) {
-    doSomethingForTrue();
-  } else {
-    doSomethingForFalse();
-  }`;
-  finalPromptString += '\n```';
-  finalPromptString += '\n\nNotice that I did not introduce a new function because all I need to do is fill in the function body.';
-  finalPromptString += '\n\nPlease make the code as simple and short as possible and only use the functions and variables that you need. Then, can you briefly explain each line as if I were a novice developer?';
+  finalPromptString += '```\n\nVerify the code is as simple and short as possible and only use the functions and variables that you need.'; 
+  finalPromptString += '\nLastly, can you briefly explain each line as if I were a novice developer?';
 
   return finalPromptString;
 };
