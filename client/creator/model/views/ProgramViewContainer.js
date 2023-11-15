@@ -225,4 +225,33 @@ export default class ProgramViewContainer extends ComponentContainer {
     this.shapeViews.dispose();
     this.imageViews.dispose();
   }
+
+  /**
+   * After components have been renamed (likely from a copy), update all relationships between dependency
+   * components and this view component, as well as references to the renamed variables in custom code.
+   * Note this operation is done on a serialized object.
+   *
+   * @param viewContainerJSON - State object for a ProgramViewContainer.
+   * @param {Record<string,string>} nameChangeMap - A map of the changed component names, oldName -> new name
+   */
+  static updateReferencesAfterRename( viewContainerJSON, nameChangeMap ) {
+
+    // update the view components so that they are dependent on the newly copied components
+    for ( const key in viewContainerJSON ) {
+      const componentObjects = viewContainerJSON[ key ];
+      componentObjects.forEach( componentObject => {
+
+        // update the dependency to use the newly copied component if it exists
+        componentObject.modelComponentNames = componentObject.modelComponentNames.map( dependencyName => {
+          return nameChangeMap[ dependencyName ] || dependencyName;
+        } );
+
+        // update the derivation function to use the newly copied component if necessary
+        for ( const name in nameChangeMap ) {
+          const newName = nameChangeMap[ name ];
+          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
+        }
+      } );
+    }
+  }
 }

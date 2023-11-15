@@ -19,7 +19,7 @@ export default class ProgramModel {
   constructor( initialPosition, initialNumber, activeEditProperty ) {
 
     // @public (read-only) - the number of this program
-    this.numberProperty = new phet.axon.NumberProperty( initialNumber === undefined ? Math.floor( Math.random() * MAX_PROGRAM_NUMBER ) : initialNumber );
+    this.numberProperty = new phet.axon.NumberProperty( initialNumber === undefined ? ProgramModel.generateUniqueProgramNumber() : initialNumber );
 
     // @public (read-only)
     this.activeEditProperty = activeEditProperty;
@@ -70,63 +70,6 @@ export default class ProgramModel {
     const usedInListener = this.listenerContainer.allComponents.some( component => component.nameProperty.value === name );
 
     return usedInModel || usedInController || usedInView || usedInListener;
-  }
-
-  /**
-   * Copies the metadata from the provided program to this program. Small changes are made to make it clear this
-   * was from a copy.
-   */
-  copyMetadataFromOther( programJSON ) {
-    this.titleProperty.value = `${programJSON.title}_Copy`;
-    this.descriptionProperty.value = programJSON.description;
-
-    // All others can be the same
-    this.keywordsProperty.value = programJSON.keywords;
-    this.topWhiskerLengthProperty.value = programJSON.topWhiskerLength;
-    this.rightWhiskerLengthProperty.value = programJSON.rightWhiskerLength;
-    this.bottomWhiskerLengthProperty.value = programJSON.bottomWhiskerLength;
-    this.leftWhiskerLengthProperty.value = programJSON.leftWhiskerLength;
-  }
-
-  /**
-   * Copies the custom code from the provided program to this program. For now, we just copy every string and
-   * leave it up to the user to update variable name references.
-   */
-  copyCustomCodeFromOther( programJSON, newModelNames ) {
-    this.customCodeContainer.copyFromOther( programJSON.customCodeContainer, newModelNames );
-  }
-
-  /**
-   * Copy all components from the provided program to this program. Names are adjusted to avoid conflicts.
-   *
-   * The tricky parts of this is getting the behavior right for dependency relationships and updating custom code.
-   * Here is how this function behaves:
-   *
-   * - When creating names, they are given a COPYN suffix to avoid conflicts where N is the next available number.
-   * - All dependency components are copied first.
-   * - Dependent components are created next. If a dependency for this component was copied, the copied dependency will
-   *     be used. Otherwise, the dependency will be the same as the original (this should only be the case for
-   *     dependencies in other programs).
-   * - When copying custom code, variable and function references are updated to use the new names.
-   *
-   * @param {*} programJSON - a saved state of another program, from ProgramModel.save()
-   * @param {function} getUniqueCopyName - a function that returns a unique name for a component
-   * @param {NamedProperty[]} allComponents - all model components in all programs
-   */
-  copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents ) {
-    const newModelNames = this.modelContainer.copyModelComponentsFromOther( programJSON.modelContainer, getUniqueCopyName, allComponents );
-
-    this.controllerContainer.copyComponentsFromOther( programJSON.controllerContainer, getUniqueCopyName, allComponents, newModelNames );
-    this.viewContainer.copyComponentsFromOther( programJSON.viewContainer, getUniqueCopyName, allComponents, newModelNames );
-    this.listenerContainer.copyComponentsFromOther( programJSON.listenerContainer, getUniqueCopyName, allComponents, newModelNames );
-
-    return newModelNames;
-  }
-
-  copyFromOther( programJSON, getUniqueCopyName, allComponents ) {
-    this.copyMetadataFromOther( programJSON );
-    const newModelNames = this.copyComponentsFromOther( programJSON, getUniqueCopyName, allComponents );
-    this.copyCustomCodeFromOther( programJSON, newModelNames );
   }
 
   /**
@@ -239,5 +182,86 @@ export default class ProgramModel {
    */
   convertToProgramString() {
     return ProgramCodeGenerator.convertToCode( this );
+  }
+
+  /**
+   * Renames components in (from a JSON representation of a program) to avoid duplicates.
+   * @param {JSON} stateObject - Serialized ProgramModel
+   * @param getUniqueCopyName - Implementation for creating a unique name (and determining if that is needed).
+   *
+   * @return {Record<string,string>} - A map of old name -> newName so that when a component is renamed we can
+   *                                   update references.
+   */
+  static renameComponentsToAvoidDuplicates( stateObject, getUniqueCopyName ) {
+    const nameChangeMap = {};
+
+    const updateNames = containerJSON => {
+      for ( const key in containerJSON ) {
+        const components = containerJSON[ key ];
+        components.forEach( componentJSON => {
+          const originalName = componentJSON.name;
+          componentJSON.name = getUniqueCopyName( componentJSON.name );
+          nameChangeMap[ originalName ] = componentJSON.name;
+        } );
+      }
+    };
+
+    updateNames( stateObject.modelContainer );
+    updateNames( stateObject.controllerContainer );
+    updateNames( stateObject.viewContainer );
+    updateNames( stateObject.listenerContainer );
+
+    return nameChangeMap;
+  }
+
+  /**
+   * After a rename of components (likely from a copy), update references between components and
+   * variable names in any custom code.
+   *
+   * @param programJSON
+   * @param nameChangeMap
+   */
+  static updateReferencesAfterRename( programJSON, nameChangeMap ) {
+
+    // Update references between model components after components have been renamed from a copy
+    // (Mostly needed for NamedDerivedProperty).
+    ProgramModelContainer.updateReferencesAfterRename( programJSON.modelContainer, nameChangeMap );
+
+    // Update the reference between controller components and their controlled model components after a rename.
+    ProgramControllerContainer.updateReferencesAfterRename( programJSON.controllerContainer, nameChangeMap );
+
+    // Update references between model and view components, and update usages in custom code for view components.
+    ProgramViewContainer.updateReferencesAfterRename( programJSON.viewContainer, nameChangeMap );
+
+    // Update references between dependency and controlled components in a custom listener function.
+    ProgramListenerContainer.updateReferencesAfterRename( programJSON.listenerContainer, nameChangeMap );
+
+    // Update code references in custom code after components have been renamed.
+    CustomCodeContainer.updateReferencesAfterRename( programJSON.customCodeContainer, nameChangeMap );
+  }
+
+  /**
+   * Create a unique number (bound by MAX_PROGRAM_NUMBER) for a new program. If any other programs are provided,
+   * the number will be unique from those programs.
+   *
+   * @param [allPrograms]
+   */
+  static generateUniqueProgramNumber( allPrograms ) {
+    allPrograms = allPrograms || [];
+
+    const existingNumbers = allPrograms.map( program => program.numberProperty.value );
+    let number = Math.floor( Math.random() * MAX_PROGRAM_NUMBER );
+
+    // Keep trying until we find a unique number
+    let tries = 0;
+    const maxTries = 100; // a safety net so we don't search forever
+    while ( existingNumbers.includes( number ) && tries < maxTries ) {
+      number = Math.floor( Math.random() * MAX_PROGRAM_NUMBER );
+      tries++;
+
+      assert && assert( tries < maxTries, 'Unable to find a unique program number after 100 tries.' );
+    }
+
+    return number;
   }
 }

@@ -221,26 +221,49 @@ export default class CreatorModel {
   copyProgram( program ) {
     assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
 
-    const newPosition = program.positionProperty.value.plusXY( 20, 20 );
-    const newProgram = this.createProgram( newPosition );
-
+    // Convert to JSON and shift down a bit so it is clear this is a new program
     const programJSON = program.save();
-    newProgram.copyFromOther( programJSON, this.getUniqueCopyName.bind( this ), this.allModelComponents );
-    return newProgram;
+    programJSON.positionProperty = program.positionProperty.value.plusXY( 20, 20 ).toStateObject();
+    programJSON.title = `${programJSON.title}_Copy`;
+
+    const copyJSON = { programs: [ programJSON ] };
+    this.copyProgramsFromJSON( copyJSON );
   }
 
   /**
    * Create a copy of a program from the provided JSON state. The new program is given a random number. The program and
    * component names are copied but will include a suffix or make them unique.
-   * @param programJSON
+   * @param json
    * @return {ProgramModel}
    */
-  copyProgramFromJSON( programJSON ) {
-    const newPosition = phet.dot.Vector2.fromStateObject( programJSON.positionProperty ).plusXY( 20, 20 );
-    const newProgram = this.createProgram( newPosition );
+  copyProgramsFromJSON( json ) {
+    if ( json.programs ) {
 
-    newProgram.copyFromOther( programJSON, this.getUniqueCopyName.bind( this ), this.allModelComponents );
-    return newProgram;
+      // work on a deep copy so that we do not modify the original JSON
+      const deepCopy = JSON.parse( JSON.stringify( json ) );
+
+      // First, go through ALL components in all provided programs and rename components that would collide with
+      // existing components. Save names to a map so that we can update references and relationships with
+      // those renamed components later.
+      const nameChangeMap = {}; // Maps oldName -> newName
+      deepCopy.programs.forEach( programJSON => {
+
+        // Create a unique program number
+        programJSON.number = ProgramModel.generateUniqueProgramNumber( this.programs );
+
+        // Rename all components as necessary to avoid duplicates
+        const newNames = ProgramModel.renameComponentsToAvoidDuplicates( programJSON, this.getUniqueCopyName.bind( this ) );
+        _.merge( nameChangeMap, newNames );
+      } );
+
+      // Now that everything has been renamed, we can update the relationships and references to renamed components.
+      deepCopy.programs.forEach( programJSON => {
+        ProgramModel.updateReferencesAfterRename( programJSON, nameChangeMap );
+      } );
+
+      // After everything has been renamed, we can load the system from the JSON like normal.
+      this.loadProgramsFromJSON( deepCopy );
+    }
   }
 
   /**
@@ -329,10 +352,7 @@ export default class CreatorModel {
 
     try {
       const templateJSON = JSON.parse( templateJSONString );
-      debugger;
-      templateJSON.programs.forEach( programJSON => {
-        this.copyProgramFromJSON( programJSON );
-      } );
+      this.copyProgramsFromJSON( templateJSON );
     }
     catch( error ) {
       this.errorOccurredEmitter.emit( error.message );

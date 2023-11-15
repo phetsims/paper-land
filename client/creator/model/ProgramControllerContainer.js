@@ -157,50 +157,6 @@ export default class ProgramControllerContainer extends ComponentContainer {
     };
   }
 
-  /**
-   * Copy all controller components from another component to this container. Unique names are
-   * given to the copies to avoid conflicts. If model components were copied with the copy request,
-   * the copied controller will control the copied model component instead of the original.
-   *
-   * NOTE: If a controlled model component is copied, we do NOT currently create a copy of the controller
-   * unless we are duplicating both the model and the controller. This is because many controller types can only
-   * have one controlled model component.
-   *
-   * @param {*} otherContainerJSON - the saved state of another container, from ProgramContainer.save()
-   * @param {function} getUniqueCopyName - function that returns a unique name for a component
-   * @param {NamedProperty[]} allModelComponents - all the NamedProperties in the model
-   * @param {Map<string, string>} newModelNames - map of old model component names to new model component names
-   */
-  copyComponentsFromOther( otherContainerJSON, getUniqueCopyName, allModelComponents, newModelNames ) {
-
-    // Include the model components that were renamed during this copy so we know how to
-    // whether to set dependencies on new copies or the original components.
-    const nameChangeMap = _.merge( {}, newModelNames );
-
-    // Update names so that they are unique.
-    for ( const key in otherContainerJSON ) {
-      const components = otherContainerJSON[ key ];
-
-      components.forEach( componentObject => {
-        const originalName = componentObject.name;
-        componentObject.name = getUniqueCopyName( originalName );
-        nameChangeMap[ originalName ] = componentObject.name;
-      } );
-    }
-
-    // Update dependency relationships for newly copied components
-    for ( const key in otherContainerJSON ) {
-      const componentObjects = otherContainerJSON[ key ];
-      componentObjects.forEach( componentObject => {
-
-        // update the dependency to use the newly copied component if it exists
-        componentObject.controlledComponentName = nameChangeMap[ componentObject.controlledComponentName ] || componentObject.controlledComponentName;
-      } );
-    }
-
-    this.load( otherContainerJSON, allModelComponents );
-  }
-
   load( savedData, namedProperties ) {
 
     // in case the saved state doesn't have a particular set of controllers
@@ -246,5 +202,26 @@ export default class ProgramControllerContainer extends ComponentContainer {
     this.enumerationPropertyControllers.dispose();
 
     this.allComponents.dispose();
+  }
+
+  /**
+   * After components have been renamed (likely from a rename), update all relationships between controller and
+   * controlled component, and references to the renamed variables in custom code. Note this operation is done
+   * on a serialized object.
+   *
+   * @param controllerContainerJSON - State object for a ProgramControllerContainer.
+   * @param {Record<string,string>} nameChangeMap - A map of the changed component names, oldName -> new name
+   */
+  static updateReferencesAfterRename( controllerContainerJSON, nameChangeMap ) {
+
+    // update controller components so that they will control the newly copied components
+    for ( const key in controllerContainerJSON ) {
+      const componentObjects = controllerContainerJSON[ key ];
+      componentObjects.forEach( componentObject => {
+
+        // update the dependency to use the newly copied component if it exists
+        componentObject.controlledComponentName = nameChangeMap[ componentObject.controlledComponentName ] || componentObject.controlledComponentName;
+      } );
+    }
   }
 }

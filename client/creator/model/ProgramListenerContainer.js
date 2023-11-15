@@ -62,25 +62,34 @@ export default class ProgramListenerContainer extends ComponentContainer {
     };
   }
 
-  copyComponentsFromOther( otherContainerJSON, getUniqueCopyName, allModelComponents, newModelNames ) {
+  /**
+   * Load an instance of a ProgramListenerContainer from a serialized JSON.
+   */
+  load( json, allComponents ) {
+    const linkListeners = json.linkListeners || [];
+    const animationListeners = json.animationListeners || [];
 
-    // Include the model components that were renamed during this copy so we know how to
-    // whether to set dependencies on new copies or the original components.
-    const nameChangeMap = _.merge( {}, newModelNames );
+    linkListeners.forEach( linkListenerJSON => {
+      const linkListener = MultilinkListenerComponent.fromData( linkListenerJSON, allComponents );
+      this.addLinkListener( linkListener );
+    } );
+    animationListeners.forEach( animationListenerJSON => {
+      const animationListener = AnimationListenerComponent.fromData( animationListenerJSON, allComponents );
+      this.addAnimationListener( animationListener );
+    } );
+  }
 
-    for ( const key in otherContainerJSON ) {
-      const components = otherContainerJSON[ key ];
-
-      components.forEach( componentStateObject => {
-        const originalName = componentStateObject.name;
-        componentStateObject.name = getUniqueCopyName( originalName );
-        nameChangeMap[ originalName ] = componentStateObject.name;
-      } );
-    }
-
-    // Update dependency relationships and references in custom code.
-    for ( const key in otherContainerJSON ) {
-      const componentObjects = otherContainerJSON[ key ];
+  /**
+   * After components have been renamed (likely from a rename), update all relationships between dependency and
+   * controlled components, as well as references to the renamed variables in custom code. Note this operation is done
+   * on a serialized object.
+   *
+   * @param listenerContainerJSON - State object for a ProgramListenerContainer.
+   * @param {Record<string,string>} nameChangeMap - A map of the changed component names, oldName -> new name
+   */
+  static updateReferencesAfterRename( listenerContainerJSON, nameChangeMap ) {
+    for ( const key in listenerContainerJSON ) {
+      const componentObjects = listenerContainerJSON[ key ];
       componentObjects.forEach( componentObject => {
 
         // update the "controlled" components to use the newly copied component if necessary
@@ -103,24 +112,5 @@ export default class ProgramListenerContainer extends ComponentContainer {
         }
       } );
     }
-
-    this.load( otherContainerJSON, allModelComponents );
-  }
-
-  /**
-   * Load an instance of a ProgramListenerContainer from a serialized JSON.
-   */
-  load( json, allComponents ) {
-    const linkListeners = json.linkListeners || [];
-    const animationListeners = json.animationListeners || [];
-
-    linkListeners.forEach( linkListenerJSON => {
-      const linkListener = MultilinkListenerComponent.fromData( linkListenerJSON, allComponents );
-      this.addLinkListener( linkListener );
-    } );
-    animationListeners.forEach( animationListenerJSON => {
-      const animationListener = AnimationListenerComponent.fromData( animationListenerJSON, allComponents );
-      this.addAnimationListener( animationListener );
-    } );
   }
 }

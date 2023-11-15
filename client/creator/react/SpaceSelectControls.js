@@ -63,7 +63,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'jg-tests' );
 
               setTimeout( () => {
-                setSelectedProjectName( 'projection-test' );
+                setSelectedProjectName( 'derived-test' );
               }, 500 );
             }, 500 );
           }

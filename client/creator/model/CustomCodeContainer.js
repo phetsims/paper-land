@@ -4,7 +4,7 @@
  * string for each paper event that will be appended to the end
  * of the generated code.
  */
-import { renameVariableInCode } from '../../utils.js';
+import { renameVariableInCode, replaceReferencesInCode } from '../../utils.js';
 
 export default class CustomCodeContainer {
   constructor() {
@@ -69,29 +69,6 @@ export default class CustomCodeContainer {
   }
 
   /**
-   * Set all custom code in this container to equal the values from another container.
-   * @param {*} otherContainerJSON
-   * @param {Object} newModelNames - A map of old model names to new model names, as they were renamed as
-   *                                 necessary for the copy.
-   */
-  copyFromOther( otherContainerJSON, newModelNames ) {
-    this.onProgramAddedCodeProperty.value = otherContainerJSON.onProgramAddedCode;
-    this.onProgramRemovedCodeProperty.value = otherContainerJSON.onProgramRemovedCode;
-    this.onProgramChangedPositionCodeProperty.value = otherContainerJSON.onProgramChangedPositionCode;
-    this.onProgramMarkersAddedCodeProperty.value = otherContainerJSON.onProgramMarkersAddedCode;
-    this.onProgramMarkersRemovedCodeProperty.value = otherContainerJSON.onProgramMarkersRemovedCode;
-    this.onProgramMarkersChangedPositionCodeProperty.value = otherContainerJSON.onProgramMarkersChangedPositionCode;
-    this.onProgramAdjacentCodeProperty.value = otherContainerJSON.onProgramAdjacentCode;
-    this.onProgramSeparatedCodeProperty.value = otherContainerJSON.onProgramSeparatedCode;
-
-    // Update variable names in the code
-    for ( const oldName in newModelNames ) {
-      const newName = newModelNames[ oldName ];
-      this.updateVariableReferences( newName, oldName );
-    }
-  }
-
-  /**
    * Serialize this container to support save and load.
    */
   save() {
@@ -123,5 +100,23 @@ export default class CustomCodeContainer {
     this.onProgramMarkersChangedPositionCodeProperty.value = stateObject.onProgramMarkersChangedPositionCode || '';
     this.onProgramAdjacentCodeProperty.value = stateObject.onProgramAdjacentCode || '';
     this.onProgramSeparatedCodeProperty.value = stateObject.onProgramSeparatedCode || '';
+  }
+
+  /**
+   * After components have been renamed (likely from a rename), update all references to the renamed variables
+   * in custom code. Note this operation is done on a serialized object.
+   *
+   * @param customCodeContainerJSON - State object for a CustomCodeContainer.
+   * @param {Record<string,string>} nameChangeMap - A map of the changed component names, oldName -> new name
+   */
+  static updateReferencesAfterRename( customCodeContainerJSON, nameChangeMap ) {
+
+    // update all references in custom code with the new names now that all renames are complete
+    for ( const key in customCodeContainerJSON ) {
+      for ( const oldName in nameChangeMap ) {
+        const newName = nameChangeMap[ oldName ];
+        customCodeContainerJSON[ key ] = replaceReferencesInCode( customCodeContainerJSON[ key ], newName, oldName );
+      }
+    }
   }
 }
