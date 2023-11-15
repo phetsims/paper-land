@@ -184,6 +184,11 @@ export default class CreatorModel {
    */
   getUniqueCopyName( name ) {
 
+    // only rename components if necessary
+    if ( this.isNameAvailable( name ) ) {
+      return name;
+    }
+
     // As a safety precaution, we will only try a certain number of times to find a unique name.
     const maxAttempts = 1000;
 
@@ -324,6 +329,7 @@ export default class CreatorModel {
 
     try {
       const templateJSON = JSON.parse( templateJSONString );
+      debugger;
       templateJSON.programs.forEach( programJSON => {
         this.copyProgramFromJSON( programJSON );
       } );

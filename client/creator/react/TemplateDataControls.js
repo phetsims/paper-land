@@ -140,7 +140,7 @@ export default function TemplateDataControls( props ) {
             <StyledButton
               hidden={!canAccessRestrictedFiles}
               name='Add Template to all Spaces'
-              disabled={!props.selectedTemplate}
+              disabled={templateName === ''}
               onClick={async () => {
                 try {
                   await props.model.sendSaveTemplateRequest( templateName, description, keyWords, false );
