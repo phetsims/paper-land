@@ -74,12 +74,6 @@ export default function CreateComponentForm( props ) {
         justify
         onSelect={( eventKey, event ) => {
           setSelectedTab( eventKey );
-
-          // When the component type changes, its most convenient to clear the name unless we are editing an existing
-          // component
-          if ( !activeEditObject ) {
-            setComponentName( '' );
-          }
         }}>
         <Tab disabled={tabDisabled} eventKey='model' title='Model' tabClassName={styles.tab}>
           <CreateModelComponentForm
