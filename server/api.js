@@ -579,7 +579,15 @@ router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
   }
 } );
 
+// We save projects by sending small chunks of data to reduce the payload. Chunks are stored here
+// and then reassembled to save the data to the database.
 const spaceChunkMap = {};
+
+/**
+ * Clears the chunks of data for a space. To be called by the client before starting a save
+ * request so that no old data is send in a new request. (This should only be possible if
+ * the user hits save twic while a save is already in progress).
+ */
 router.put( '/api/creator/chunk/:spaceName/clear', ( req, res ) => {
   const { spaceName } = req.params;
 
@@ -590,6 +598,16 @@ router.put( '/api/creator/chunk/:spaceName/clear', ( req, res ) => {
   res.json( {} );
 } );
 
+/**
+ * Saves a chunk of program data for a project to the server at the provided space. The chunk
+ * is saved to memory until all chunks are received and then the project data is saved to the
+ * database.
+ *
+ * @param {string} spaceName - The name of the space to save the project to.
+ * @param {string} projectName - The name of the project to save.
+ *
+ * req.body should have { programData: JSON, totalChunksCount: number }
+ */
 router.put( '/api/creator/chunk/:spaceName/:projectName', ( req, res ) => {
   const { spaceName, projectName } = req.params;
 
