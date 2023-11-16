@@ -35,8 +35,9 @@ export default class ProgramNode extends phet.scenery.Node {
    * @param {ProgramModel} model
    * @param {Property<null|ActiveEdit>} activeEditProperty
    * @param {Property<boolean>} editEnabledProperty
+   * @param {Property<Bounds2>} availableBoundsProperty - total space available for programs
    */
-  constructor( model, activeEditProperty, editEnabledProperty ) {
+  constructor( model, activeEditProperty, editEnabledProperty, availableBoundsProperty ) {
     super();
     this.model = model;
 
@@ -248,6 +249,14 @@ export default class ProgramNode extends phet.scenery.Node {
       positionProperty: model.positionProperty,
       start: () => {
         activeEditProperty.value = new ActiveEdit( model, EditType.METADATA );
+      },
+      drag: () => {
+
+        // Limit dragging to the available bounds
+        const availableBounds = availableBoundsProperty.value;
+        const newX = phet.dot.Utils.clamp( this.bounds.left, availableBounds.left, availableBounds.right - this.bounds.width );
+        const newY = phet.dot.Utils.clamp( this.bounds.top, availableBounds.top, availableBounds.bottom - this.bounds.height );
+        model.positionProperty.value = new phet.dot.Vector2( newX, newY );
       }
     } );
     this.addInputListener( dragListener );

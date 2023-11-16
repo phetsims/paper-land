@@ -21,9 +21,11 @@ export default class CreatorView extends phet.scenery.Node {
   constructor( model, display ) {
     super();
 
-    // The available width and height for the view, not defined until first layout.
-    this.availableWidth = 0;
-    this.availableHeight = 0;
+    // @private
+    this.model = model;
+
+    // Property with the available width/height of the view
+    this.availableBoundsProperty = new phet.axon.Property( new phet.dot.Bounds2( 0, 0, 0, 0 ) );
 
     // Editing of components is enabled when the space is not restricted
     const editEnabledProperty = phet.axon.DerivedProperty.not( model.spaceRestrictedProperty );
@@ -100,7 +102,7 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
-      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty, editEnabledProperty );
+      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty, editEnabledProperty, this.availableBoundsProperty );
       this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 
@@ -162,6 +164,11 @@ export default class CreatorView extends phet.scenery.Node {
     // Whenever the model reloads, pan to the first program so there is something in view (if there is one)
     model.loadCompleteEmitter.addListener( () => {
       if ( programLayerNode.children.length > 0 ) {
+
+        // make sure that all programs are within bounds
+        this.constrainProgramsToBounds();
+
+        // pan to a node so something is in view
         phet.scenery.animatedPanZoomSingleton.listener.panToNode( programLayerNode.children[ 0 ] );
       }
     } );
@@ -201,7 +208,7 @@ export default class CreatorView extends phet.scenery.Node {
 
       // display the message and adjust layout after the rectangle bounds change
       this.successRectangle.setMessage( message );
-      this.successRectangle.centerTop = new phet.dot.Vector2( this.availableWidth / 2, 5 );
+      this.successRectangle.centerTop = new phet.dot.Vector2( this.availableBoundsProperty.value.width / 2, 5 );
 
       this.successRectangle.showSaved();
     } );
@@ -213,8 +220,7 @@ export default class CreatorView extends phet.scenery.Node {
    * @param {number} height - total available height for the view
    */
   layout( width, height ) {
-    this.availableWidth = width;
-    this.availableHeight = height;
+    this.availableBoundsProperty.value = new phet.dot.Bounds2( 0, 0, width, height );
 
     this.newProgramFromTemplateButton.leftTop = new phet.dot.Vector2( 5, 5 );
     this.newProgramButton.leftTop = this.newProgramFromTemplateButton.leftBottom.plusXY( 0, 5 );
@@ -229,6 +235,30 @@ export default class CreatorView extends phet.scenery.Node {
     this.restrictedWarningNode.leftCenter = this.newProgramButton.rightCenter.plusXY( 5, 0 );
 
     this.connectionsNode.layout( width, height );
+
+    // Make sure that all of the program Nodes are contained in the available bounds
+    this.constrainProgramsToBounds();
+
+  }
+
+  /**
+   * Makes sure that the programs stay within the available bounds. This is used on load when programs are first added
+   * and when the screen is resized, to make sure that programs don't go off screen.
+   */
+  constrainProgramsToBounds() {
+    const bounds = this.availableBoundsProperty.value;
+    if ( bounds.isFinite() ) {
+      this.model.programs.forEach( program => {
+        const currentLeft = program.positionProperty.value.x;
+        const currentTop = program.positionProperty.value.y;
+
+        // Shifted by arbitrary view amounts so that they can still be grabbed and pulled into view if they
+        // are off-screen.
+        const newLeft = phet.dot.Utils.clamp( currentLeft, bounds.minX, bounds.maxX - 100 );
+        const newTop = phet.dot.Utils.clamp( currentTop, bounds.minY, bounds.maxY - 100 );
+        program.positionProperty.value = new phet.dot.Vector2( newLeft, newTop );
+      } );
+    }
   }
 
   step( dt ) {
