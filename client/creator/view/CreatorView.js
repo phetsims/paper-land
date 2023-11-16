@@ -106,6 +106,9 @@ export default class CreatorView extends phet.scenery.Node {
       this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 
+      // Whenever a program has been added we need to make sure that it is within the available bounds
+      this.constrainProgramsToBounds();
+
       // removes the ProgramNode and related listeners when the program is removed
       const removalListener = removedProgram => {
         if ( removedProgram === newProgram ) {
