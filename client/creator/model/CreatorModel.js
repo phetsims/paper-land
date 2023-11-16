@@ -447,6 +447,16 @@ export default class CreatorModel {
    */
   async sendSaveRequest() {
     const json = this.save();
+    let allChunksSent = false; // the server will let us know when it receives all the chunks
+
+    // A timeout for the save request so that if it fails or gets interrupted, we can notify the
+    // user.
+    const timeout = ms => new Promise( ( _, reject ) => setTimeout( () => {
+      if ( !allChunksSent ) {
+        this.errorOccurredEmitter.emit( 'The save request timed out. Please try again later.' );
+        reject( new Error( `Save request timed out after ${ms}ms.` ) );
+      }
+    }, ms ) );
 
     // We are about to start sending chunks of data, clear the stored data for this project first.
     const clearUrl = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/clear`, window.location.origin ).toString();
@@ -454,12 +464,19 @@ export default class CreatorModel {
 
     // Send each program as a separate chunk so that the payload to the server is not too large
     const totalChunksCount = json.programs.length;
-    let allChunksSent = false; // the server will let us know when it receives all the chunks
     for ( const programData of json.programs ) {
       const url = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
-      const response = await this.sendRequest( url, 'PUT', { programData: programData, totalChunksCount: totalChunksCount } );
-      if ( response.body.status === 'CHUNKS_SENT' ) {
-        allChunksSent = true;
+
+      const response = await Promise.race( [ this.sendRequest( url, 'PUT', { programData, totalChunksCount } ), timeout( 10000 ) ] );
+      if ( response && response.body && response.body.status ) {
+        if ( response.body.status === 'CHUNKS_SENT' ) {
+          allChunksSent = true;
+        }
+      }
+      else {
+
+        // The timeout error occurred because we didn't have a status from the request, stop trying.
+        break;
       }
     }
 
