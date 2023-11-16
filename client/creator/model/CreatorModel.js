@@ -446,24 +446,29 @@ export default class CreatorModel {
    * @return {Promise<unknown>}
    */
   async sendSaveRequest() {
+    const json = this.save();
 
-    return new Promise( ( resolve, reject ) => {
-      const json = this.save();
+    // We are about to start sending chunks of data, clear the stored data for this project first.
+    const clearUrl = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/clear`, window.location.origin ).toString();
+    await this.sendRequest( clearUrl, 'PUT', {} );
 
-      console.log( json );
+    // Send each program as a separate chunk so that the payload to the server is not too large
+    const totalChunksCount = json.programs.length;
+    let allChunksSent = false; // the server will let us know when it receives all the chunks
+    for ( const programData of json.programs ) {
+      const url = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
+      const response = await this.sendRequest( url, 'PUT', { programData: programData, totalChunksCount: totalChunksCount } );
+      if ( response.body.status === 'CHUNKS_SENT' ) {
+        allChunksSent = true;
+      }
+    }
 
-      const url = new URL( `api/creator/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
-      xhr.put( url, { json: { projectData: json } }, ( error, response ) => {
-        if ( error ) {
-          console.error( error );
-          reject( error );
-        }
-        else {
-          this.saveSuccessfulEmitter.emit();
-          resolve();
-        }
-      } );
-    } );
+    if ( allChunksSent ) {
+      this.saveSuccessfulEmitter.emit();
+    }
+    else {
+      this.errorOccurredEmitter.emit( 'An error occurred while saving this project.' );
+    }
   }
 
   /**

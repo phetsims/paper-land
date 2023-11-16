@@ -579,6 +579,53 @@ router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
   }
 } );
 
+const spaceChunkMap = {};
+router.put( '/api/creator/chunk/:spaceName/clear', ( req, res ) => {
+  const { spaceName } = req.params;
+
+  // clear the chunk data as requested by the user to make sure that we don't have any lingering data
+  spaceChunkMap[ spaceName ] = [];
+
+  // send back an empty response
+  res.json( {} );
+} );
+
+router.put( '/api/creator/chunk/:spaceName/:projectName', ( req, res ) => {
+  const { spaceName, projectName } = req.params;
+
+  // should have a programData and a totalChunksCount property
+  const { programData, totalChunksCount } = req.body;
+
+  // This is the first chunk we received for the space name, create a new collection
+  if ( !spaceChunkMap[ spaceName ] ) {
+    spaceChunkMap[ spaceName ] = [];
+  }
+
+  // Add the chunk to the collection
+  spaceChunkMap[ spaceName ].push( programData );
+
+  // If we have all the chunks, we can save the project data
+  if ( spaceChunkMap[ spaceName ].length === totalChunksCount ) {
+    const fullProjectData = {
+      programs: spaceChunkMap[ spaceName ]
+    };
+
+    knex( 'creator-data' )
+      .update( { projectData: fullProjectData } )
+      .where( { spaceName, projectName } )
+      .then( () => {
+
+        // clear the chunk data now that we have fully sent it
+        spaceChunkMap[ spaceName ] = [];
+
+        res.json( { status: 'CHUNKS_SENT' } );
+      } );
+  }
+  else {
+    res.json( { status: 'CHUNK_ADDED', chunksReceived: spaceChunkMap[ spaceName ].length } );
+  }
+} );
+
 /**
  * Save a new template to the templates table.
  */
