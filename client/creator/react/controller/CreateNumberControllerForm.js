@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from '../../CreatorMain.css';
 import NumberPropertyController from '../../model/controllers/NumberPropertyController.js';
@@ -38,7 +38,10 @@ export default function CreateNumberControllerForm( props ) {
         <NumberPropertyControlTypeForm controlType={formData.controlType} relationshipControlType={formData.relationshipControlType} handleChange={handleChange}/>
       </div>
       <div hidden={formData.controlTypeFamily !== 'MARKERS'}>
-        <MarkerControlTypeForm controlType={formData.controlType} handleChange={handleChange}/>
+        <MarkerControlTypeForm
+          markerColor={formData.markerColor}
+          controlType={formData.controlType}
+          handleChange={handleChange}/>
       </div>
     </div>
   );
@@ -143,30 +146,49 @@ const NumberPropertyControlTypeForm = function( props ) {
 const MarkerControlTypeForm = function( props ) {
   const handleChange = props.handleChange;
   const controlType = props.controlType;
-
   const markerControlTypes = NumberPropertyController.FAMILY_TO_CONTROL_TYPE_MAP.MARKERS;
 
   return (
     <>
-      <Form.Label>Marker control type:</Form.Label>
-      {markerControlTypes.map( value => {
-        const nameString = value === NumberPropertyController.NumberPropertyControlType.MARKER_COUNT ? 'Marker Count - Number of markers on the paper sets the value.' :
-                           'Marker Location - Location of a marker on the paper sets the value like a slider.';
+      <div className={styles.controlElement}>
+        <Form.Label>Marker control type:</Form.Label>
+        {markerControlTypes.map( value => {
+          const nameString = value === NumberPropertyController.NumberPropertyControlType.MARKER_COUNT ? 'Marker Count - Value equals the number of markers on this paper.' :
+                             value === NumberPropertyController.NumberPropertyControlType.GLOBAL_MARKER_COUNT ? 'Global Marker Count - Value equals the number of all detected markers.' :
+                             'Marker Location - Location of a marker on the paper sets the value like a slider.';
 
-        const valueString = value.toString();
-        return <Form.Check
-          name={'marker-controls'}
-          value={valueString}
-          checked={valueString === controlType}
-          type={'radio'}
-          id={`number-marker-${valueString}`}
-          key={`number-marker-${valueString}`}
-          label={nameString}
-          onChange={() => {
-            handleChange( { controlType: valueString } );
-          }}
-        />;
-      } )}
+          const valueString = value.toString();
+          return <Form.Check
+            name={'marker-controls'}
+            value={valueString}
+            checked={valueString === controlType}
+            type={'radio'}
+            id={`number-marker-${valueString}`}
+            key={`number-marker-${valueString}`}
+            label={nameString}
+            onChange={() => {
+              handleChange( { controlType: valueString } );
+            }}
+          />;
+        } )}
+      </div>
+      <div className={styles.controlElement}>
+        <Form.Label>Marker color - only the selected color will be counted</Form.Label>
+        {NumberPropertyController.MARKER_COLORS.map( value => {
+          return <Form.Check
+            name={'marker-colors'}
+            value={value}
+            checked={value === props.markerColor}
+            type={'radio'}
+            id={`number-marker-color-${value}`}
+            key={`number-marker-color-${value}`}
+            label={value.toUpperCase()}
+            onChange={() => {
+              handleChange( { markerColor: value } );
+            }}
+          />;
+        } )}
+      </div>
     </>
   );
 };

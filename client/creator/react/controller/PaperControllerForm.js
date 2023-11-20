@@ -148,6 +148,7 @@ export default function PaperControllerForm( props ) {
         editingComponent.markerColor = booleanDataRef.current.markerColor;
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
+        editingComponent.markerColor = numberDataRef.current.markerColor;
         editingComponent.controlType = PropertyController.controlTypeStringToValue( numberDataRef.current.controlType, NumberPropertyController.NumberPropertyControlType );
         editingComponent.selectedControlTypeFamily = numberDataRef.current.controlTypeFamily;
         editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
@@ -174,7 +175,15 @@ export default function PaperControllerForm( props ) {
         activeProgram.controllerContainer.addBooleanPropertyController( booleanController );
       }
       else if ( selectedComponentType === 'NumberProperty' ) {
-        const numberController = new NumberPropertyController( componentName, selectedComponent, numberDataRef.current.controlType, numberDataRef.current.relationshipControlType, numberDataRef.current.controlTypeFamily );
+        const numberController = new NumberPropertyController(
+          componentName,
+          selectedComponent,
+          numberDataRef.current.controlType,
+          numberDataRef.current.relationshipControlType,
+          {
+            markerColor: numberDataRef.current.markerColor
+          }
+        );
         activeProgram.controllerContainer.addNumberPropertyController( numberController );
       }
       else if ( selectedComponentType === 'StringProperty' ) {

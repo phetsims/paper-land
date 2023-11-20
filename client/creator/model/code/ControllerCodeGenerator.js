@@ -81,7 +81,7 @@ class ControllerCodeGenerator {
       if ( controlType === NumberPropertyController.NumberPropertyControlType.MARKER_COUNT ) {
 
         // If a specific color is specified, count the number of markers of that color, otherwise count all markerss
-        const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
+        const calculateValueString = colorName !== 'all' ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
 
         return ControllerCodeGenerator.getModelControllerCode(
           controlledName,
@@ -89,9 +89,6 @@ class ControllerCodeGenerator {
           // When a marker is added, the value should be true
           () => calculateValueString
         );
-      }
-      else {
-        throw new Error( `Sorry, only marker count control type is supported at this time. Can't generate code for ${controlType} control of ${controlledName}.` );
       }
     }
     return '';
@@ -103,7 +100,7 @@ class ControllerCodeGenerator {
 
         // If a specific color is used, the value will be false when there are no more of that color. Otherwise it
         // will be false when there are no more markers.
-        const calculateValueString = colorName ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
+        const calculateValueString = colorName !== 'all' ? `_.filter(markers, { colorName: '${colorName}' }).length` : 'markers.length';
 
         return ControllerCodeGenerator.getModelControllerCode(
           controlledName,
@@ -112,11 +109,59 @@ class ControllerCodeGenerator {
           () => calculateValueString
         );
       }
-      else {
-        throw new Error( 'Sorry, only marker count control type is supported at this time.' );
-      }
     }
     return '';
+  }
+
+  /**
+   * Code added to the program for the 'onProgramAdded' callback. This supports global markers by adding listeners
+   * to the Emitters that emit an event when a marker is added/removed from the camera. Related tear-down code
+   * is added to the 'onProgramRemoved' callback.
+   * @param componentName
+   * @param controlTypeFamily
+   * @param controlType
+   * @param controlledName
+   * @param colorName - one of 'all', 'red', 'green', 'blue', 'black'
+   * @return {string}
+   */
+  static getNumberControllerProgramAddedCode( componentName, controlTypeFamily, controlType, controlledName, colorName ) {
+    let controllerCode = '';
+
+    if ( controlTypeFamily === 'MARKERS' ) {
+      if ( controlType === NumberPropertyController.NumberPropertyControlType.GLOBAL_MARKER_COUNT ) {
+
+        // Use a new unique ID in case there is a collision in the same scope
+        const uniqueListenerReference = `scratchpad.${componentName}MarkersChangedListener`;
+        const calculateValueString = colorName !== 'all' ? `_.filter( sharedData.allMarkers, { colorName: '${colorName}' }).length` : 'sharedData.allMarkers.length';
+
+        const updateModelCode = ControllerCodeGenerator.getModelControllerCode( controlledName, () => calculateValueString );
+
+        controllerCode = `
+        ${uniqueListenerReference} = () => { ${updateModelCode} };
+        phet.paperLand.markersAddedEmitter.addListener( scratchpad.${componentName}MarkersChangedListener );
+        phet.paperLand.markersRemovedEmitter.addListener( scratchpad.${componentName}MarkersChangedListener );
+        `;
+      }
+    }
+    return controllerCode;
+  }
+
+  /**
+   * Removes listeners on emitters watching for global markers. This is called when the program is removed. Code is
+   * only added if this component has the correct control type and family.
+   */
+  static getNumberControllerProgramRemovedCode( componentName, controlTypeFamily, controlType ) {
+    let controllerCode = '';
+
+    if ( controlTypeFamily === 'MARKERS' ) {
+      if ( controlType === NumberPropertyController.NumberPropertyControlType.GLOBAL_MARKER_COUNT ) {
+        controllerCode = `
+        phet.paperLand.markersAddedEmitter.removeListener( scratchpad.${componentName}MarkersChangedListener );
+        phet.paperLand.markersRemovedEmitter.removeListener( scratchpad.${componentName}MarkersChangedListener );
+        `;
+      }
+    }
+    return controllerCode;
   }
 
   static getVector2ControllerChangedPositionCode( controlType, controlledName ) {

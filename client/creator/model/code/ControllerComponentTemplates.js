@@ -1,5 +1,7 @@
 const ControllerComponentTemplates = {
   NumberPropertyController: {
+    onProgramAdded: '{{PROGRAM_ADDED_CODE}}',
+    onProgramRemoved: '{{PROGRAM_REMOVED_CODE}}',
     onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}',
     onProgramMarkersAdded: '{{PROGRAM_MARKERS_ADDED_CODE}}',
     onProgramMarkersRemoved: '{{PROGRAM_MARKERS_REMOVED_CODE}}'

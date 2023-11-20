@@ -478,6 +478,7 @@ export default class ProgramCodeGenerator {
   }
 
   static getControllerComponentData( controllerComponent ) {
+    const componentName = controllerComponent.nameProperty.value;
     const componentType = controllerComponent.constructor.name;
     const controlledName = controllerComponent.namedProperty.nameProperty.value;
     let data = {};
@@ -502,6 +503,18 @@ export default class ProgramCodeGenerator {
           controllerComponent.relationshipControlType,
           controlledName,
           controllerComponent.markerColor
+        ),
+        PROGRAM_ADDED_CODE: ControllerCodeGenerator.getNumberControllerProgramAddedCode(
+          componentName,
+          controllerComponent.selectedControlTypeFamily,
+          controllerComponent.controlType,
+          controlledName,
+          controllerComponent.markerColor
+        ),
+        PROGRAM_REMOVED_CODE: ControllerCodeGenerator.getNumberControllerProgramRemovedCode(
+          componentName,
+          controllerComponent.selectedControlTypeFamily,
+          controllerComponent.controlType
         )
       };
     }

@@ -9,8 +9,15 @@ class NumberPropertyControlType extends phet.phetCore.EnumerationValue {
   static ROTATION = new NumberPropertyControlType();
 
   // Marker control types
+  // the number of markers on THIS paper
   static MARKER_COUNT = new NumberPropertyControlType();
+
+  // the position of a marker on this paper, you can use the marker like a slider thumb - only one
+  // marker per paper
   static MARKER_LOCATION = new NumberPropertyControlType();
+
+  // the number of markers detected on all papers
+  static GLOBAL_MARKER_COUNT = new NumberPropertyControlType();
 
   static enumeration = new phet.phetCore.Enumeration( NumberPropertyControlType );
 }
@@ -38,17 +45,28 @@ const FamilyToControlTypeMap = {
   ],
   MARKERS: [
     NumberPropertyControlType.MARKER_COUNT,
+    NumberPropertyControlType.GLOBAL_MARKER_COUNT,
     NumberPropertyControlType.MARKER_LOCATION
   ]
 };
 
-// controlType - one of NumberPropertyControlType
-// selectedControlTypeFamily - one of 'PAPER_MOVEMENT' or 'MARKERS'
-// relationshipControlType - one of RelationshipControlType
-
+const MARKER_COLORS = [
+  'all',
+  'red',
+  'green',
+  'blue',
+  'black'
+];
 
 export default class NumberPropertyController extends PropertyController {
-  constructor( name, namedProperty, controlTypeValue, relationshipControlTypeValue ) {
+  constructor( name, namedProperty, controlTypeValue, relationshipControlTypeValue, providedOptions ) {
+
+    const options = phet.phetCore.merge( {
+
+      // One of MARKER_COLORS - Only this selected color will be used to control the value
+      // when using marker control types
+      markerColor: 'all'
+    }, providedOptions );
 
     // Convert back to enumeration value if React forms gave us a string
     relationshipControlTypeValue = PropertyController.controlTypeStringToValue( relationshipControlTypeValue, RelationshipControlType );
@@ -64,6 +82,8 @@ export default class NumberPropertyController extends PropertyController {
 
     // {RelationshipControlType|null} This may not be defined depending on the control type family
     this.relationshipControlType = relationshipControlTypeValue || null;
+
+    this.markerColor = options.markerColor;
   }
 
   /**
@@ -73,6 +93,7 @@ export default class NumberPropertyController extends PropertyController {
   save() {
     return {
       ...super.save(),
+      markerColor: this.markerColor,
 
       // will only be defined for 'PAPER_MOVEMENT'
       relationshipControlType: this.relationshipControlType ? this.relationshipControlType.name : null
@@ -85,7 +106,8 @@ export default class NumberPropertyController extends PropertyController {
       relationshipControlType: '',
 
       // a type specific default needs to be provided
-      controlTypeFamily: 'PAPER_MOVEMENT'
+      controlTypeFamily: 'PAPER_MOVEMENT',
+      markerColor: 'all'
     };
   }
 
@@ -97,10 +119,13 @@ export default class NumberPropertyController extends PropertyController {
       throw new Error( `Could not find named property with name: ${data.controlledComponentName}` );
     }
 
-    return new NumberPropertyController( data.name, namedProperty, data.controlType, data.relationshipControlType );
+    return new NumberPropertyController( data.name, namedProperty, data.controlType, data.relationshipControlType, {
+      markerColor: data.markerColor
+    } );
   }
 
   static NumberPropertyControlType = NumberPropertyControlType;
   static RelationshipControlType = RelationshipControlType;
   static FAMILY_TO_CONTROL_TYPE_MAP = FamilyToControlTypeMap;
+  static MARKER_COLORS = MARKER_COLORS;
 }
