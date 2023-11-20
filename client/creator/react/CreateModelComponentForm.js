@@ -136,7 +136,7 @@ export default function CreateModelComponentForm( props ) {
         component.defaultX = positionData.defaultX;
         component.defaultY = positionData.defaultY;
       }
-      else if ( selectedTab === 'eumeration' ) {
+      else if ( selectedTab === 'enumeration' ) {
         component.values = enumerationDataRef.current.values;
       }
       else if ( selectedTab === 'derived' ) {
