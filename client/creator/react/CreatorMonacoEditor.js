@@ -29,9 +29,14 @@ export default function CreatorMonacoEditor( props ) {
   const debouncedHandleCodeChange = useCallback( _.debounce( ( newValue, event ) => {
     codeString.current = newValue;
 
+    // The code will actually be wrapped in a function. Wrap the proposed code in a test function
+    // for more accurate syntax error reporting (e.g. 'return' statements are OK (and expected!) without the user
+    // writing their own function).
+    const testFunctionString = `function testFunction() { ${newValue} }`;
+
     // Use acorn to report when there is a syntax error in the current code
     try {
-      parse( newValue, { ecmaVersion: 'latest' } );
+      parse( testFunctionString, { ecmaVersion: 'latest' } );
       setHasError( false );
     }
     catch( error ) {
