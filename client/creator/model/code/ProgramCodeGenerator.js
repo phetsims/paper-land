@@ -1,4 +1,5 @@
 import { parse } from 'acorn';
+import NumberPropertyController from '../controllers/NumberPropertyController.js';
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ListenerCodeGenerator from './ListenerCodeGenerator.js';
@@ -481,6 +482,11 @@ export default class ProgramCodeGenerator {
     const componentName = controllerComponent.nameProperty.value;
     const componentType = controllerComponent.constructor.name;
     const controlledName = controllerComponent.namedProperty.nameProperty.value;
+
+    if ( controllerComponent.controlType === NumberPropertyController.NumberPropertyControlType.MARKER_LOCATION ) {
+      throw new Error( 'Sorry, marker location controller is not supported yet for code generation.' );
+    }
+
     let data = {};
     if ( componentType === 'NumberPropertyController' ) {
       data = {
