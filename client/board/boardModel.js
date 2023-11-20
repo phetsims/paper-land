@@ -450,9 +450,10 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
  *
  * @param {string[]} componentNames
  * @param {function} listener - the callback for the Multilink
+ * @param {boolean} [lazy=false] - If true, a LazyMultiLInk
  * @return {number}
  */
-paperLand.addModelPropertyMultilink = ( componentNames, listener ) => {
+paperLand.addModelPropertyMultilink = ( componentNames, listener, lazy = false ) => {
   let multilink = null;
 
   return paperLand.addMultiModelObserver(
@@ -467,7 +468,7 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener ) => {
         throw new Error( 'Multilink already exists.' );
       }
 
-      multilink = new phet.axon.Multilink( components, listener );
+      multilink = new phet.axon.Multilink( components, listener, lazy );
     },
 
     // detach - detach the multilink

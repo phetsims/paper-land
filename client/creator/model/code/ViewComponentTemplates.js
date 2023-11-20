@@ -101,7 +101,7 @@ const ViewComponentTemplates = {
             phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance ); 
           }
         }
-      } ); 
+      }, {{LAZY}} ); 
     `,
     onProgramRemoved: `
       // Remove the description multilink

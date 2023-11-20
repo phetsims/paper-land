@@ -11,11 +11,22 @@ export default class ViewComponent extends Component {
    * @param {string} name - the name of this component
    * @param {NamedProperty[]} modelComponents - the name of the model component that this view component represents
    * @param {string} controlFunctionString - the function that is called when the model component changes
+   * @param {Object} [providedOptions] - options for this view component
    */
-  constructor( name, modelComponents, controlFunctionString ) {
+  constructor( name, modelComponents, controlFunctionString, providedOptions ) {
+
+    const options = _.merge( {
+
+      // If true, the multilink that observes the dependency components will be attached lazily so that
+      // the listener doesn't trigger until the next change.
+      lazyLink: false
+    }, providedOptions );
+
     super( name );
     this._modelComponents = modelComponents;
     this.controlFunctionString = controlFunctionString;
+
+    this.lazyLink = options.lazyLink;
 
     this.boundUpdateDependencyNames = this.updateDependencyNames.bind( this );
 
@@ -55,7 +66,8 @@ export default class ViewComponent extends Component {
     return {
       name: this.nameProperty.value,
       modelComponentNames: this._modelComponents.map( component => component.nameProperty.value ),
-      controlFunctionString: this.controlFunctionString
+      controlFunctionString: this.controlFunctionString,
+      lazyLink: this.lazyLink
     };
   }
 
@@ -67,7 +79,8 @@ export default class ViewComponent extends Component {
     return {
       name: '',
       modelComponentNames: [],
-      controlFunctionString: ''
+      controlFunctionString: '',
+      lazyLink: false
     };
   }
 }

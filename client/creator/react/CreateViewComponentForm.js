@@ -146,6 +146,7 @@ export default function CreateViewComponentForm( props ) {
   const createComponent = () => {
     const componentName = props.componentName;
     const componentNames = generalDataRef.current.modelComponentNames;
+    const lazyLink = generalDataRef.current.lazyLink;
     const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, componentNames );
     const controlFunctionString = generalDataRef.current.controlFunctionString;
 
@@ -162,6 +163,9 @@ export default function CreateViewComponentForm( props ) {
         editingComponent.soundFileName = soundsDataRef.current.soundFileName;
         editingComponent.loop = soundsDataRef.current.loop;
         editingComponent.autoplay = soundsDataRef.current.autoplay;
+      }
+      else if ( selectedTab === 'description' ) {
+        editingComponent.lazyLink = lazyLink;
       }
       else if ( selectedTab === 'images' ) {
         editingComponent.imageFileName = imagesDataRef.current.imageFileName;
@@ -185,7 +189,9 @@ export default function CreateViewComponentForm( props ) {
         activeProgram.viewContainer.addSoundView( soundViewComponent );
       }
       else if ( selectedTab === 'description' ) {
-        const descriptionViewComponent = new DescriptionViewComponent( componentName, selectedModelComponents, controlFunctionString );
+        const descriptionViewComponent = new DescriptionViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+          lazyLink: lazyLink
+        } );
         activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
       }
       else if ( selectedTab === 'background' ) {

@@ -398,8 +398,10 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'DescriptionViewComponent' ) {
 
-      // No extra data for description components yet.
-      data = {};
+      // If lazy, we wait to speak something until the paper is added.
+      data = {
+        LAZY: viewComponent.lazyLink
+      };
     }
     else if ( componentType === 'ShapeViewComponent' ) {
 

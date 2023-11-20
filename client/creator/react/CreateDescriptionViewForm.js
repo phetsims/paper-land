@@ -1,4 +1,5 @@
 import React from 'react';
+import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
 import styles from './../CreatorMain.css';
@@ -24,6 +25,20 @@ export default function CreateDescriptionViewForm( props ) {
     DescriptionViewComponent
   );
 
+  // Description components have a checkbox to lazily link to the model components - waiting to speak until
+  // there is a model change so that speech doesn't happen when you add the program
+  const typeSpecificControls = (
+    <div className={styles.controlElement}>
+      <Form.Check
+        type={'checkbox'}
+        id={'lazy-link-checkbox'}
+        label={'Wait for change to speak'}
+        checked={formData.lazyLink}
+        onChange={event => {
+          handleChange( { lazyLink: event.target.checked } );
+        }}/>
+    </div>
+  );
 
   const descriptionFunctions = (
     <div className={styles.controlElement}>
@@ -38,6 +53,7 @@ export default function CreateDescriptionViewForm( props ) {
     <div>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
+        typeSpecificControls={typeSpecificControls}
         typeSpecificFunctions={descriptionFunctions}
         isFormValid={props.isFormValid}
         formData={formData}

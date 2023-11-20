@@ -2,8 +2,8 @@ import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
 export default class DescriptionViewComponent extends ViewComponent {
-  constructor( name, modelComponents, controlFunctionString ) {
-    super( name, modelComponents, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString, options ) {
+    super( name, modelComponents, controlFunctionString, options );
   }
 
   /**
@@ -14,7 +14,10 @@ export default class DescriptionViewComponent extends ViewComponent {
     return new DescriptionViewComponent(
       stateObject.name,
       dependencies,
-      stateObject.controlFunctionString
+      stateObject.controlFunctionString,
+      {
+        lazyLink: stateObject.lazyLink
+      }
     );
   }
 }
