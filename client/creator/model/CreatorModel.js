@@ -498,6 +498,48 @@ export default class CreatorModel {
   }
 
   /**
+   * Synchronously save this model as JSON and request a download of it so that it can be saved/used later
+   * locally on the user's computer.
+   */
+  sendDownloadJSONRequest() {
+    const json = this.save();
+    const blob = new Blob( [ JSON.stringify( json ) ], { type: 'application/json' } );
+    const url = URL.createObjectURL( blob );
+    const a = document.createElement( 'a' );
+    a.download = 'project.json';
+    a.href = url;
+    a.click();
+    URL.revokeObjectURL( url );
+  }
+
+  sendLoadJSONRequest() {
+
+    const input = document.createElement( 'input' );
+    input.type = 'file';
+    input.accept = '.json';
+
+    // Read the file and load the JSON
+    input.addEventListener( 'change', event => {
+      const file = event.target.files[ 0 ];
+      if ( file ) {
+        const reader = new FileReader();
+        reader.onload = event => {
+          try {
+            const json = JSON.parse( event.target.result );
+            this.load( json );
+          }
+          catch( error ) {
+            this.errorOccurredEmitter.emit( `Error loading project from JSON: ${error.message}` );
+          }
+        };
+        reader.readAsText( file, 'UTF-8' );
+      }
+    } );
+
+    input.click();
+  }
+
+  /**
    * Send a request to save a new template with the current programs in the editor.
    * @param templateName - Name for the template
    * @param description - A description of what this template does

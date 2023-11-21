@@ -84,6 +84,16 @@ export default class CreatorView extends phet.scenery.Node {
         model.sendRequestedEmitter.emit();
       }
     } ) );
+    this.saveProjectJSONButton = new phet.sun.TextPushButton( 'Download Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+      listener: () => {
+        model.sendDownloadJSONRequest();
+      }
+    } ) );
+    this.loadProjectJSONButton = new phet.sun.TextPushButton( 'Load Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+      listener: () => {
+        model.sendLoadJSONRequest();
+      }
+    } ) );
 
     // Buttons are not usable until save/send operations receive a response from the server
     model.serverRequestInProgressProperty.link( inProgress => {
@@ -102,6 +112,8 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.newProgramFromTemplateButton );
     controlLayerNode.addChild( this.saveProjectButton );
     controlLayerNode.addChild( this.sendToPaperLandButton );
+    controlLayerNode.addChild( this.saveProjectJSONButton );
+    controlLayerNode.addChild( this.loadProjectJSONButton );
     controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.sendSuccessRectangle );
     controlLayerNode.addChild( this.successRectangle );
@@ -238,6 +250,8 @@ export default class CreatorView extends phet.scenery.Node {
 
     this.saveProjectButton.rightTop = new phet.dot.Vector2( width - 10, 5 );
     this.sendToPaperLandButton.rightTop = this.saveProjectButton.rightBottom.plusXY( 0, 5 );
+    this.saveProjectJSONButton.rightTop = this.sendToPaperLandButton.rightBottom.plusXY( 0, 5 );
+    this.loadProjectJSONButton.rightTop = this.saveProjectJSONButton.rightBottom.plusXY( 0, 5 );
     this.savedRectangle.rightCenter = this.saveProjectButton.leftCenter.plusXY( -5, 0 );
     this.sendSuccessRectangle.rightCenter = this.sendToPaperLandButton.leftCenter.plusXY( -5, 0 );
     this.successRectangle.centerTop = new phet.dot.Vector2( width / 2, 5 );
