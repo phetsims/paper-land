@@ -473,19 +473,30 @@ export default class CreatorModel {
 
     // Send each program as a separate chunk so that the payload to the server is not too large
     const totalChunksCount = json.programs.length;
-    for ( const programData of json.programs ) {
-      const url = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
+    if ( totalChunksCount === 0 ) {
 
-      const response = await Promise.race( [ this.sendRequest( url, 'PUT', { programData, totalChunksCount } ), timeout( 10000 ) ] );
-      if ( response && response.body && response.body.status ) {
-        if ( response.body.status === 'CHUNKS_SENT' ) {
-          allChunksSent = true;
+      // an API request to save an empty project since there are no programs in the current project
+      const url = new URL( `api/creator/clear/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
+      await this.sendRequest( url, 'PUT', {} );
+
+      // There were no chunks to send.
+      allChunksSent = true;
+    }
+    else {
+      for ( const programData of json.programs ) {
+        const url = new URL( `api/creator/chunk/${this.spaceNameProperty.value}/${this.projectNameProperty.value}`, window.location.origin ).toString();
+
+        const response = await Promise.race( [ this.sendRequest( url, 'PUT', { programData, totalChunksCount } ), timeout( 10000 ) ] );
+        if ( response && response.body && response.body.status ) {
+          if ( response.body.status === 'CHUNKS_SENT' ) {
+            allChunksSent = true;
+          }
         }
-      }
-      else {
+        else {
 
-        // The timeout error occurred because we didn't have a status from the request, stop trying.
-        break;
+          // The timeout error occurred because we didn't have a status from the request, stop trying.
+          break;
+        }
       }
     }
 

@@ -561,11 +561,14 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
 } );
 
 /**
- * Save the project data to the provided space and project name.
+ * Saves an empty project to the provided project.
  */
-router.put( '/api/creator/:spaceName/:projectName', ( req, res ) => {
+router.put( '/api/creator/clear/:spaceName/:projectName', ( req, res ) => {
   const { spaceName, projectName } = req.params;
-  const { projectData } = req.body;
+
+  const projectData = {
+    programs: []
+  };
   if ( !projectData ) {
     res.status( 400 ).send( 'Missing project data' );
   }
