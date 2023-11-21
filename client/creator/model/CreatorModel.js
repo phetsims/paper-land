@@ -512,6 +512,9 @@ export default class CreatorModel {
     URL.revokeObjectURL( url );
   }
 
+  /**
+   * Send a request to load a project from a JSON file on the user's local machine.
+   */
   sendLoadJSONRequest() {
 
     const input = document.createElement( 'input' );
