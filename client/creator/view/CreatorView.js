@@ -74,7 +74,9 @@ export default class CreatorView extends phet.scenery.Node {
     } ) );
     this.saveProjectButton = new phet.sun.TextPushButton( 'Save Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: async () => {
+        model.serverRequestInProgressProperty.value = true;
         await model.sendSaveRequest();
+        model.serverRequestInProgressProperty.value = false;
       }
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
@@ -82,6 +84,12 @@ export default class CreatorView extends phet.scenery.Node {
         model.sendRequestedEmitter.emit();
       }
     } ) );
+
+    // Buttons are not usable until save/send operations receive a response from the server
+    model.serverRequestInProgressProperty.link( inProgress => {
+      this.saveProjectButton.enabled = !inProgress;
+      this.sendToPaperLandButton.enabled = !inProgress;
+    } );
 
     // rendering order
     this.addChild( this.applicationLayerNode );

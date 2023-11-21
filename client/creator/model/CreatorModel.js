@@ -44,7 +44,11 @@ export default class CreatorModel {
     // {CreatorVisibilityModel}
     this.visibilityModel = new CreatorVisibilityModel();
 
-    // {Emitter} - Emits an event when the user would like to save the current project as programs
+    // A Property for when any request to save/send to playground/load is currently in progress. Certain UI
+    // components should be unusable while these operations are in progress.
+    this.serverRequestInProgressProperty = new phet.axon.BooleanProperty( false );
+
+    // {Emitter} - Emits an event when the user would like to send the current project as programs
     // to the selected space. This will clear existing programs in the space, so we first move
     // to a confirmation dialog to confirm the action.
     this.sendRequestedEmitter = new phet.axon.Emitter();
@@ -72,6 +76,9 @@ export default class CreatorModel {
 
     this.sendConfirmedEmitter.addListener( async () => {
 
+      // The send to playground operation was confirmed
+      this.serverRequestInProgressProperty.value = true;
+
       // Save programs to the server whenever we send to the playground (users expected this to be automatic).
       await this.sendSaveRequest();
 
@@ -81,10 +88,12 @@ export default class CreatorModel {
           // Show a success notification if the request succeeds.
           console.log( 'Success!' );
           this.sendSuccessfulEmitter.emit();
+          this.serverRequestInProgressProperty.value = false;
 
         } )
         .catch( error => {
           this.errorOccurredEmitter.emit( error.message );
+          this.serverRequestInProgressProperty.value = false;
 
           // Show an error dialog if the request fails.
           console.error( 'ERROR:', error.message );
