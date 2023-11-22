@@ -8,6 +8,7 @@ import NamedBounds2Property from './NamedBounds2Property.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
 import NamedEnumerationProperty from './NamedEnumerationProperty.js';
 import NamedNumberProperty from './NamedNumberProperty.js';
+import NamedObservableArray from './NamedObservableArray.js';
 import NamedVector2Property from './NamedVector2Property.js';
 
 export default class ProgramModelContainer extends ComponentContainer {
@@ -21,6 +22,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedEnumerationProperties = phet.axon.createObservableArray();
     this.namedDerivedProperties = phet.axon.createObservableArray();
     this.namedBounds2Properties = phet.axon.createObservableArray();
+    this.namedObservableArrays = phet.axon.createObservableArray();
   }
 
   /**
@@ -87,6 +89,28 @@ export default class ProgramModelContainer extends ComponentContainer {
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedBounds2Properties.splice( index, 1 );
     this.removeFromAllComponents( namedProperty );
+  }
+
+  /**
+   * Adds a NamedObservableArray to this container with the provided name.
+   */
+  addNamedObservableArray( name ) {
+    const newNamedProperty = new NamedObservableArray( name );
+    this.namedObservableArrays.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
+
+    this.registerChangeListeners( newNamedProperty, this.removeNamedObservableArray.bind( this ) );
+  }
+
+  /**
+   * Remove the NamedObservableArray component from this container.
+   * @param namedObservableArray
+   */
+  removeNamedObservableArray( namedObservableArray ) {
+    const index = this.namedObservableArrays.indexOf( namedObservableArray );
+    assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
+    this.namedObservableArrays.splice( index, 1 );
+    this.removeFromAllComponents( namedObservableArray );
   }
 
   /**
@@ -185,7 +209,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedNumberProperties: this.namedNumberProperties.map( namedProperty => namedProperty.save() ),
       namedEnumerationProperties: this.namedEnumerationProperties.map( namedProperty => namedProperty.save() ),
       namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() ),
-      namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() )
+      namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() ),
+      namedObservableArrays: this.namedObservableArrays.map( namedProperty => namedProperty.save() )
     };
   }
 
@@ -201,6 +226,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedNumberProperties = stateObject.namedNumberProperties || [];
     const namedEnumerationProperties = stateObject.namedEnumerationProperties || [];
     const namedBounds2Properties = stateObject.namedBounds2Properties || [];
+    const namedObservableArrays = stateObject.namedObservableArrays || [];
 
     namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
@@ -242,6 +268,9 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedBounds2PropertyData.defaultMaxX,
         namedBounds2PropertyData.defaultMaxY
       );
+    } );
+    namedObservableArrays.forEach( namedObservableArray => {
+      this.addNamedObservableArray( namedObservableArray.name );
     } );
   }
 

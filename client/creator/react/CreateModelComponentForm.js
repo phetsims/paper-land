@@ -283,6 +283,9 @@ export default function CreateModelComponentForm( props ) {
         <Tab disabled={tabDisabled} eventKey='bounds' title='Bounds' tabClassName={styles.tab}>
           <CreateBoundsForm activeEdit={activeEdit} isFormValid={getBoundsFormInvalidReasons} getFormData={getDataForBounds}></CreateBoundsForm>
         </Tab>
+        <Tab disabled={tabDisabled} eventKey='array' title='Array' tabClassName={styles.tab}>
+          <div>Array</div>
+        </Tab>
       </Tabs>
       <FormInvalidReasons invalidReasons={getInvalidReasonsForSelectedTab()} componentNameValid={isComponentNameValid()}></FormInvalidReasons>
       <CreateComponentButton
