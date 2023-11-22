@@ -94,19 +94,19 @@ export default class ProgramModelContainer extends ComponentContainer {
   /**
    * Adds a NamedObservableArray to this container with the provided name.
    */
-  addNamedObservableArray( name ) {
+  addObservableArray( name ) {
     const newNamedProperty = new NamedObservableArray( name );
     this.namedObservableArrays.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
-    this.registerChangeListeners( newNamedProperty, this.removeNamedObservableArray.bind( this ) );
+    this.registerChangeListeners( newNamedProperty, this.removeObservableArray.bind( this ) );
   }
 
   /**
    * Remove the NamedObservableArray component from this container.
    * @param namedObservableArray
    */
-  removeNamedObservableArray( namedObservableArray ) {
+  removeObservableArray( namedObservableArray ) {
     const index = this.namedObservableArrays.indexOf( namedObservableArray );
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedObservableArrays.splice( index, 1 );
@@ -270,7 +270,7 @@ export default class ProgramModelContainer extends ComponentContainer {
       );
     } );
     namedObservableArrays.forEach( namedObservableArray => {
-      this.addNamedObservableArray( namedObservableArray.name );
+      this.addObservableArray( namedObservableArray.name );
     } );
   }
 

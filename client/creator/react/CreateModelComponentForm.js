@@ -8,9 +8,11 @@ import NamedBounds2Property from '../model/NamedBounds2Property.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import NamedNumberProperty from '../model/NamedNumberProperty.js';
+import NamedObservableArray from '../model/NamedObservableArray.js';
 import NamedProperty from '../model/NamedProperty.js';
 import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
+import CreateArrayForm from './CreateArrayForm.js';
 import CreateBooleanForm from './CreateBooleanForm.js';
 import CreateBoundsForm from './CreateBoundsForm.js';
 import CreateComponentButton from './CreateComponentButton.js';
@@ -51,6 +53,7 @@ export default function CreateModelComponentForm( props ) {
   const [ enumerationFormInvalidReasons, setEnumerationFormInvalidReasons ] = useState( [] );
   const [ derivedFormInvalidReasons, setDerivedFormInvalidReasons ] = useState( [] );
   const [ boundsFormInvalidReasons, setBoundsFormInvalidReasons ] = useState( [] );
+  const [ arrayFormInvalidReasons, setArrayFormInvalidReasons ] = useState( [] );
 
   const getBooleanFormInvalidReasons = validStrings => setBooleanFormInvalidReasons( validStrings );
   const getNumberFormInvalidReasons = validStrings => setNumberFormInvalidReasons( validStrings );
@@ -58,6 +61,7 @@ export default function CreateModelComponentForm( props ) {
   const getPositionFormInvalidReasons = validStrings => setPositionFormInvalidReasons( validStrings );
   const getDerivedFormInvalidReasons = validStrings => setDerivedFormInvalidReasons( validStrings );
   const getBoundsFormInvalidReasons = validStrings => setBoundsFormInvalidReasons( validStrings );
+  const getArrayFormInvalidReasons = validStrings => setArrayFormInvalidReasons( validStrings );
 
   // An object with { defaultValue: 'true' | 'false' }
   const booleanDataRef = useRef( {} );
@@ -108,10 +112,13 @@ export default function CreateModelComponentForm( props ) {
     else if ( selectedTab === 'bounds' ) {
       setSelectedTabFormValid( boundsFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
+    else if ( selectedTab === 'array' ) {
+      setSelectedTabFormValid( arrayFormInvalidReasons.length === 0 && isComponentNameValid() );
+    }
     else {
       setSelectedTabFormValid( false );
     }
-  }, [ props.componentName, selectedTab, booleanFormInvalidReasons, numberFormInvalidReasons, enumerationFormInvalidReasons, derivedFormInvalidReasons, boundsFormInvalidReasons ] );
+  }, [ props.componentName, selectedTab, booleanFormInvalidReasons, numberFormInvalidReasons, enumerationFormInvalidReasons, derivedFormInvalidReasons, boundsFormInvalidReasons, arrayFormInvalidReasons ] );
 
   const createComponent = () => {
 
@@ -181,6 +188,9 @@ export default function CreateModelComponentForm( props ) {
         const boundsData = boundsDataRef.current;
         activeProgram.modelContainer.addBounds2Property( componentName, boundsData.defaultMinX, boundsData.defaultMinY, boundsData.defaultMaxX, boundsData.defaultMaxY );
       }
+      else if ( selectedTab === 'array' ) {
+        activeProgram.modelContainer.addObservableArray( componentName );
+      }
       else {
         throw new Error( 'Cannot create component for selected tab.' );
       }
@@ -208,6 +218,9 @@ export default function CreateModelComponentForm( props ) {
     else if ( selectedTab === 'bounds' ) {
       return boundsFormInvalidReasons;
     }
+    else if ( selectedTab === 'array' ) {
+      return arrayFormInvalidReasons;
+    }
     else {
       return [];
     }
@@ -233,6 +246,9 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( component instanceof NamedBounds2Property ) {
         return 'bounds';
+      }
+      else if ( component instanceof NamedObservableArray ) {
+        return 'array';
       }
       else {
         throw new Error( 'Unknown component type.' );
@@ -284,7 +300,7 @@ export default function CreateModelComponentForm( props ) {
           <CreateBoundsForm activeEdit={activeEdit} isFormValid={getBoundsFormInvalidReasons} getFormData={getDataForBounds}></CreateBoundsForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='array' title='Array' tabClassName={styles.tab}>
-          <div>Array</div>
+          <CreateArrayForm activeEdit={activeEdit} isFormValid={getArrayFormInvalidReasons} getFormData={() => {}}></CreateArrayForm>
         </Tab>
       </Tabs>
       <FormInvalidReasons invalidReasons={getInvalidReasonsForSelectedTab()} componentNameValid={isComponentNameValid()}></FormInvalidReasons>
