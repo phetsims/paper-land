@@ -31,7 +31,7 @@ export default function PaperControllerForm( props ) {
 
   const activeProgram = props.activeEdit.program;
 
-  const [ allComponents, setAllComponents ] = useState( getComponentsExcludingDerived() );
+  const [ allComponents, setAllComponents ] = useState( getUsableComponents() );
 
   const [ selectedComponent, setSelectedComponent ] = useState( allComponents[ 0 ] || null );
 
@@ -68,10 +68,13 @@ export default function PaperControllerForm( props ) {
   const getIsBoundsFormValid = isValid => setBoundsFormValid( isValid );
 
   /**
-   * Get a list of all model components, except for DerivedProperty components. Those cannot be controlled directly.
+   * Get a list of all model components that can be controlled.
    */
-  function getComponentsExcludingDerived() {
-    return allModelComponents.filter( component => component.propertyType !== 'DerivedProperty' );
+  function getUsableComponents() {
+    return allModelComponents.filter(
+      component => component.propertyType !== 'DerivedProperty' &&
+                   component.propertyType !== 'ArrayItem'
+    );
   }
 
   // Update state when a new model component is created (receiving new data from a phet.axon component)
@@ -81,7 +84,7 @@ export default function PaperControllerForm( props ) {
 
       // Gets all model components that are not DerivedProperties - DerivedProperties cannot be externally controlled.
       // React requires a new array reference to update correctly. Filter does that for us.
-      const withoutDerivedProperties = getComponentsExcludingDerived();
+      const withoutDerivedProperties = getUsableComponents();
       setAllComponents( withoutDerivedProperties );
       setSelectedComponent( withoutDerivedProperties[ 0 ] || null );
     };

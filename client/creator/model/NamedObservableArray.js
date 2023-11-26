@@ -10,7 +10,7 @@ import NamedProperty from './NamedProperty.js';
 
 export default class NamedObservableArray extends NamedProperty {
   constructor( name ) {
-    super( name, 'NamedObservableArray' );
+    super( name, 'ObservableArray' );
   }
 
   save() {

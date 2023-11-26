@@ -323,6 +323,9 @@ export function getComponentDocumentation( namedProperty ) {
   else if ( type === 'Bounds2Property' ) {
     usabilityDocumentation = `This is a Bounds2 object. Access min and max values with \`${name}.minX\`, \`${name}.minY\`, \`${name}.maxX\`, and \`${name}.maxY\`. Easily determine if a position is inside these bounds with \`${name}.containsPoint( yourPositionComponent )\``;
   }
+  else if ( type === 'ObservableArray' ) {
+    usabilityDocumentation = 'This is an array of Array Item components.';
+  }
   else {
     throw new Error( `Unhandled property type: ${type}` );
   }

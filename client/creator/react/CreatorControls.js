@@ -6,6 +6,7 @@
 import React, { forwardRef, useEffect, useState } from 'react';
 import styles from '../CreatorMain.css';
 import EditType from '../model/EditType.js';
+import ConnectToArrayForm from './ConnectToArrayForm.js';
 import CreateComponentForm from './CreateComponentForm.js';
 import CreateCustomCodeForm from './CreateCustomCodeForm.js';
 import CreateProgramFromTemplateForm from './CreateProgramFromTemplateForm.js';

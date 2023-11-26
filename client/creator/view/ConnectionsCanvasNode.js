@@ -81,6 +81,17 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.stroke();
     }
 
+    if ( this.visibilityModel.arrayConnectionsVisibleProperty.value ) {
+      this.updateArrayConnections();
+
+      context.beginPath();
+      context.strokeStyle = ViewConstants.ARRAY_WIRE_COLOR;
+      this.arrayConnections.forEach( connection => {
+        this.drawCurve( context, connection.start, connection.end );
+      } );
+      context.stroke();
+    }
+
     context.restore();
   }
 
@@ -165,6 +176,51 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           }
         } );
       }
+    } );
+  }
+
+  /**
+   * Inspect the model for arrays and array items.
+   */
+  updateArrayConnections() {
+    this.arrayConnections = [];
+
+    this.programNodes.forEach( programNode => {
+      programNode.model.modelContainer.allComponents.forEach( component => {
+        if ( component.propertyType === 'ArrayItem' ) {
+
+          // start by drawing connections between the components and this array item,
+          // showing the components as used BY the item
+          const componentName = component.nameProperty.value;
+          const arrayItemPoint = programNode.getComponentListItemConnectionPoint( componentName );
+
+
+          // We know that the array item will only include components from its own program,
+          // so we don't have to loop through all OTHER ProgramNodes to find connection
+          // points.
+          component.itemSchema.forEach( entry => {
+            const startPoint = programNode.getComponentListItemConnectionPoint( entry.componentName );
+            if ( startPoint && arrayItemPoint ) {
+              this.arrayConnections.push( { start: startPoint, end: arrayItemPoint } );
+            }
+          } );
+
+          // now draw a connection between this item and the array it belongs to - it could be
+          // on any other program, so we need to loop through all ProgramNodes
+          this.programNodes.forEach( otherProgramNode => {
+            otherProgramNode.model.modelContainer.allComponents.forEach( otherComponent => {
+              if ( otherComponent.propertyType === 'ObservableArray' ) {
+                if ( otherComponent.nameProperty.value === component.arrayName ) {
+                  const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( component.arrayName );
+                  if ( arrayPoint && arrayItemPoint ) {
+                    this.arrayConnections.push( { start: arrayItemPoint, end: arrayPoint } );
+                  }
+                }
+              }
+            } );
+          } );
+        }
+      } );
     } );
   }
 

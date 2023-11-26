@@ -9,9 +9,13 @@ export default class CreatorVisibilityModel {
   constructor() {
 
     // Visibility state for the types of connections
-    this.derivedConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
     this.viewConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
     this.controllerConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
-    this.listenerConnectionsVisibleProperty = new phet.axon.BooleanProperty( true );
+    this.listenerConnectionsVisibleProperty = new phet.axon.BooleanProperty( false );
+    this.derivedConnectionsVisibleProperty = new phet.axon.BooleanProperty( false );
+
+    // Displays connections between array items and their arrays and components that
+    // are inside the array items.
+    this.arrayConnectionsVisibleProperty = new phet.axon.BooleanProperty( false );
   }
 }

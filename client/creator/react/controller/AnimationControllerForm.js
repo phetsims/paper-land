@@ -17,6 +17,12 @@ export default function AnimationControllerForm( props ) {
   const componentName = props.componentName;
   const model = props.model;
 
+  // The animation component cannot control array items, which only serve as data structures
+  // that are added to array components.
+  const usableModelComponents = allModelComponents.filter( component => {
+    return component.propertyType !== 'ArrayItem';
+  } );
+
   // validity state for the form
   const [ formInvalidReasons, setFormInvalidReasons ] = useState( [] );
 
@@ -55,7 +61,7 @@ export default function AnimationControllerForm( props ) {
     setFormInvalidReasons( getIsFormValid( formData ) );
   }, [ componentName ] );
 
-  const selectedControlledComponents = Component.findComponentsByName( props.allModelComponents, formData.controlledPropertyNames );
+  const selectedControlledComponents = Component.findComponentsByName( usableModelComponents, formData.controlledPropertyNames );
 
   const createComponent = () => {
     if ( props.activeEdit && props.activeEdit.component instanceof AnimationListenerComponent ) {
@@ -88,7 +94,7 @@ export default function AnimationControllerForm( props ) {
       </p>
       <h4>Controlled Components</h4>
       <ModelComponentSelector
-        allModelComponents={allModelComponents}
+        allModelComponents={usableModelComponents}
         selectedModelComponents={selectedControlledComponents}
 
         handleChange={selectedComponents => {

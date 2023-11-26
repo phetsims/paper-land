@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
+import StyledTextInput from './StyledTextInput.js';
 import useEditableForm from './useEditableForm.js';
 
 export default function CreateEnumerationForm( props ) {
@@ -60,24 +61,11 @@ export default function CreateEnumerationForm( props ) {
         {
           formData.values.map( ( value, index ) =>
             <div key={`${index}-enum-input-parent`}>
-              <TextInput value={value} index={index} handleEdit={handleEdit}/>
+              <StyledTextInput value={value} index={index} handleEdit={handleEdit}/>
             </div>
           )
         }
       </div>
-    </>
-  );
-}
-
-function TextInput( props ) {
-  return (
-    <>
-      <Form.Group className={styles.controlElement}>
-        <Form.Label>Value String</Form.Label>
-        <Form.Control type='text' onChange={event => {
-          props.handleEdit( event, props.index );
-        }} value={props.value}/>
-      </Form.Group>
     </>
   );
 }

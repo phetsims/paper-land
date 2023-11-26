@@ -3,6 +3,7 @@
  */
 import { enforceKeys } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
+import NamedArrayItem from './NamedArrayItem.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedBounds2Property from './NamedBounds2Property.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
@@ -23,6 +24,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedDerivedProperties = phet.axon.createObservableArray();
     this.namedBounds2Properties = phet.axon.createObservableArray();
     this.namedObservableArrays = phet.axon.createObservableArray();
+    this.namedArrayItems = phet.axon.createObservableArray();
   }
 
   /**
@@ -111,6 +113,34 @@ export default class ProgramModelContainer extends ComponentContainer {
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedObservableArrays.splice( index, 1 );
     this.removeFromAllComponents( namedObservableArray );
+  }
+
+  /**
+   * Adds an ObservableArray item to this container. The item will be added to its array
+   * with its data when created.
+   * @param name
+   * @param arrayName
+   * @param itemSchema
+   */
+  addObservableArrayItem( name, arrayName, itemSchema ) {
+    const newArrayItem = new NamedArrayItem( name, arrayName, itemSchema );
+    this.namedArrayItems.push( newArrayItem );
+    this.addToAllComponents( newArrayItem );
+
+    this.registerChangeListeners( newArrayItem, this.removeObservableArrayItem.bind( this ) );
+  }
+
+  /**
+   * Removes an item from this container, and removes it from the list of all components.
+   * @param namedItem
+   */
+  removeObservableArrayItem( namedItem ) {
+    const index = this.namedArrayItems.indexOf( namedItem );
+    assert && assert( index > -1, 'Item does not exist in this program and cannot be removed.' );
+    if ( index > -1 ) {
+      this.namedArrayItems.splice( index, 1 );
+      this.removeFromAllComponents( namedItem );
+    }
   }
 
   /**
@@ -210,7 +240,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedEnumerationProperties: this.namedEnumerationProperties.map( namedProperty => namedProperty.save() ),
       namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() ),
       namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() ),
-      namedObservableArrays: this.namedObservableArrays.map( namedProperty => namedProperty.save() )
+      namedObservableArrays: this.namedObservableArrays.map( namedProperty => namedProperty.save() ),
+      namedArrayItems: this.namedArrayItems.map( namedArrayItem => namedArrayItem.save() )
     };
   }
 
@@ -227,6 +258,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedEnumerationProperties = stateObject.namedEnumerationProperties || [];
     const namedBounds2Properties = stateObject.namedBounds2Properties || [];
     const namedObservableArrays = stateObject.namedObservableArrays || [];
+    const namedArrayItems = stateObject.namedArrayItems || [];
 
     namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
@@ -269,8 +301,18 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedBounds2PropertyData.defaultMaxY
       );
     } );
+
+    // Since the data for the array does not include references to other components
+    // (only their names), we can add these as dependency components.
     namedObservableArrays.forEach( namedObservableArray => {
       this.addObservableArray( namedObservableArray.name );
+    } );
+    namedArrayItems.forEach( namedArrayItem => {
+      this.addObservableArrayItem(
+        namedArrayItem.name,
+        namedArrayItem.arrayName,
+        namedArrayItem.itemSchema
+      );
     } );
   }
 
@@ -341,6 +383,14 @@ export default class ProgramModelContainer extends ComponentContainer {
             const newName = nameChangeMap[ name ];
             componentJSON.derivation = componentJSON.derivation.replaceAll( name, newName );
           }
+        }
+        if ( componentJSON.itemSchema ) {
+
+          // update the array item schema to use the newly copied component if it exists,
+          // keeping the entry name the same
+          componentJSON.itemSchema.forEach( item => {
+            item.componentName = nameChangeMap[ item.componentName ] || item.componentName;
+          } );
         }
       } );
     }

@@ -143,11 +143,17 @@ export default function CreateViewComponentForm( props ) {
     setSelectedTab( getTabForActiveEdit( activeEdit ) );
   }, [ activeEdit ] );
 
+  // View components can observe changes to all components except for ArrayItems, which only serve to
+  // add data to arrays.
+  const usableModelComponents = props.allModelComponents.filter( component => {
+    return component.propertyType !== 'ArrayItem';
+  } );
+
   const createComponent = () => {
     const componentName = props.componentName;
     const componentNames = generalDataRef.current.modelComponentNames;
     const lazyLink = generalDataRef.current.lazyLink;
-    const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, componentNames );
+    const selectedModelComponents = Component.findComponentsByName( usableModelComponents, componentNames );
     const controlFunctionString = generalDataRef.current.controlFunctionString;
 
     if ( activeEdit && activeEdit.component ) {
@@ -265,7 +271,7 @@ export default function CreateViewComponentForm( props ) {
       >
         <Tab disabled={tabDisabled} eventKey='shapes' title='Shapes' tabClassName={styles.tab}>
           <CreateShapeViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getShapesFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             getShapeFormData={getDataForShapes}
@@ -274,7 +280,7 @@ export default function CreateViewComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='background' title='Background' tabClassName={styles.tab}>
           <CreateBackgroundViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getBackgroundFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             getBackgroundFormData={getDataForBackground}
@@ -283,7 +289,7 @@ export default function CreateViewComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='images' title='Images' tabClassName={styles.tab}>
           <CreateImageViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getImagesFormInvalidReasons}
             getImageFormData={getDataForImages}
             getGeneralFormData={getDataForGeneral}
@@ -292,7 +298,7 @@ export default function CreateViewComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='text' title='Text' tabClassName={styles.tab}>
           <CreateTextViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getTextFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
@@ -300,7 +306,7 @@ export default function CreateViewComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='sounds' title='Sounds' tabClassName={styles.tab}>
           <CreateSoundViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getSoundsFormInvalidReasons}
             getSoundFormData={getDataForSounds}
             getGeneralFormData={getDataForGeneral}
@@ -309,7 +315,7 @@ export default function CreateViewComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='description' title='Description' tabClassName={styles.tab}>
           <CreateDescriptionViewForm
-            allModelComponents={props.allModelComponents}
+            allModelComponents={usableModelComponents}
             isFormValid={getDescriptionFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}

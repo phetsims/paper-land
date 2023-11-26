@@ -17,6 +17,11 @@ export default function MultilinkControllerForm( props ) {
   const componentName = props.componentName;
   const model = props.model;
 
+  // ArrayItems canot be controlled, they are just data structures that are added to arrays
+  const usableModelComponents = allModelComponents.filter( component => {
+    return component.propertyType !== 'ArrayItem';
+  } );
+
   // validity state for the form
   const [ formInvalidReasons, setFormInvalidReasons ] = useState( [] );
 
@@ -59,11 +64,11 @@ export default function MultilinkControllerForm( props ) {
   }, [ componentName ] );
 
   // Get the references to the actual model components from selected form data (name strings)
-  const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, formData.dependencyNames );
-  const selectedControlledComponents = Component.findComponentsByName( props.allModelComponents, formData.controlledPropertyNames );
+  const selectedModelComponents = Component.findComponentsByName( usableModelComponents, formData.dependencyNames );
+  const selectedControlledComponents = Component.findComponentsByName( usableModelComponents, formData.controlledPropertyNames );
 
   // The Properties that you can control are all the Properties minus the selected model components
-  const controllableComponents = allModelComponents.filter( component => {
+  const controllableComponents = usableModelComponents.filter( component => {
     return !selectedModelComponents.includes( component );
   } );
 
@@ -96,7 +101,7 @@ export default function MultilinkControllerForm( props ) {
       <hr></hr>
       <h4>Dependency Properties</h4>
       <ModelComponentSelector
-        allModelComponents={allModelComponents}
+        allModelComponents={usableModelComponents}
         selectedModelComponents={selectedModelComponents}
 
         handleChange={selectedComponents => {

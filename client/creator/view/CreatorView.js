@@ -178,8 +178,8 @@ export default class CreatorView extends phet.scenery.Node {
 
         this.saveProjectButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
-        this.newProgramButton.enabled = false;
-        this.newProgramFromTemplateButton.enabled = false;
+        // this.newProgramButton.enabled = false;
+        // this.newProgramFromTemplateButton.enabled = false;
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );

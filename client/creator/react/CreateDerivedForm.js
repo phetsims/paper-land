@@ -36,9 +36,10 @@ export default function CreateDerivedForm( props ) {
     NamedDerivedProperty
   );
 
-  // The Derived component can observe changes to all model components except for itself (the active edit if there is one)
+  // The Derived component can observe changes to all model components except for itself (the ActiveEdit)
+  // and ArrayItem components.
   const usableModelComponents = allModelComponents.filter( component => {
-    return component !== props.activeEdit.component;
+    return component !== props.activeEdit.component && component.propertyType !== 'ArrayItem';
   } );
 
   /**
