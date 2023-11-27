@@ -380,6 +380,37 @@ export default class ProgramCodeGenerator {
         FILE_NAME: modelComponent.soundUrl
       };
     }
+    else if ( modelComponent.propertyType === 'ObservableArray' ) {
+
+      // No extra data for observable arrays yet.
+      data = {};
+    }
+    else if ( modelComponent.propertyType === 'ArrayItem' ) {
+
+      // All names of the model components that are added to the array in an object.
+      const dependencyNames = modelComponent.itemSchema.map( item => item.componentName );
+
+      // Add the array itself as a dependency so that items are added when the array is available.
+      dependencyNames.push( modelComponent.arrayName );
+
+      // Create the key-value pair object as a string that will actually be put into the array.
+      let itemDataString = '{ \n';
+      modelComponent.itemSchema.forEach( ( item, index ) => {
+        itemDataString += `'${item.entryName}': phet.paperLand.getModelComponent( '${item.componentName}' ).value`;
+        if ( index < modelComponent.itemSchema.length - 1 ) {
+          itemDataString += ',';
+        }
+        itemDataString += '\n';
+      } );
+      itemDataString += ' }';
+
+      data = {
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
+        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
+        ITEM_OBJECT: itemDataString,
+        ARRAY_NAME: modelComponent.arrayName
+      };
+    }
     else {
       throw new Error( `Could not get model data for component ${modelComponent.propertyType} during code generation.` );
     }
