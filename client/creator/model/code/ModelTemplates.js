@@ -112,9 +112,10 @@ const ModelComponentTemplates = {
             // Create the entry from the item schema.
             scratchpad.item = {{ITEM_OBJECT}}
             
-            // Add the item to the array.
-            {{ARRAY_NAME}}Array.push( scratchpad.item );
-            
+            // Add the item to the array, inserting it into the same index as the previous item
+            // to be less disruptive to the array data.
+            {{ARRAY_NAME}}Array.splice( index, 0, scratchpad.item );
+                        
             // Set the array back to the Property.
             phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = {{ARRAY_NAME}}Array;
           };
@@ -134,19 +135,23 @@ const ModelComponentTemplates = {
         () => {
         
           // Remove the item from the array as soon as any dependencies are removed (if it is still in the array)
-          const {{ARRAY_NAME}}Array = phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value;
-          const index = {{ARRAY_NAME}}Array.indexOf( scratchpad.item );
-          if ( index > -1 ) {
-            {{ARRAY_NAME}}Array.splice( index, 1 );
+          const {{ARRAY_NAME}}Array = phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' );
+          if ( {{ARRAY_NAME}}Array ) {
+            const arrayValue = {{ARRAY_NAME}}Array.value;
             
-            // Set the Property to a new array so that listeners are triggered.
-            phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = {{ARRAY_NAME}}Array.slice();
+            const index = arrayValue.indexOf( scratchpad.item );
+            if ( index > -1 ) {
+              arrayValue.splice( index, 1 );
+              
+              // Set the Property to a new array so that listeners are triggered.
+              phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = arrayValue.slice();
+            }
           }
           
           // detach listeners that will replace the item
           {{DEPENDENCY_NAMES_ARRAY}}.forEach( dependencyName => {
             const dependency = phet.paperLand.getModelComponent( dependencyName );
-            if ( dependency.hasListener( scratchpad.replaceItem ) ) {
+            if ( dependency && dependency.hasListener( scratchpad.replaceItem ) ) {
               dependency.unlink( scratchpad.replaceItem );
             }
           } );
@@ -155,21 +160,21 @@ const ModelComponentTemplates = {
     `,
     onProgramRemoved: `
       // If the item is in the array still, remove it.
-      const {{ARRAY_NAME}}Array = phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value;
+      const {{ARRAY_NAME}}Array = phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' );
       if ( {{ARRAY_NAME}}Array ) {
-        const index = {{ARRAY_NAME}}Array.indexOf( scratchpad.item );
+        const index = {{ARRAY_NAME}}Array.value.indexOf( scratchpad.item );
         if ( index > -1 ) {
-          {{ARRAY_NAME}}Array.splice( index, 1 );
+          {{ARRAY_NAME}}Array.value.splice( index, 1 );
           
           // Set the Property to a new array so that listeners are triggered.
-          phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = {{ARRAY_NAME}}Array.slice();
+          phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = {{ARRAY_NAME}}Array.value.slice();
         }
       }
       
       // detach listeners that will replace the item, if they are still on the dependencies
       {{DEPENDENCY_NAMES_ARRAY}}.forEach( dependencyName => {
         const dependency = phet.paperLand.getModelComponent( dependencyName );
-        if ( dependency.hasListener( scratchpad.replaceItem ) ) {
+        if ( dependency && dependency.hasListener( scratchpad.replaceItem ) ) {
           dependency.unlink( scratchpad.replaceItem );
         }
       } );

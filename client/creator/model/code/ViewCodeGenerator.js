@@ -143,6 +143,12 @@ export default class ViewCodeGenerator {
         const setRectBounds = ( bounds ) => {
           const transformedBounds = ${inModelCoordinates ? 'unitBoundsToDisplayBounds( bounds )' : 'bounds'};
           ${componentNameString}.shape = phet.kite.Shape.bounds( transformedBounds );
+        };
+        
+        // for a polygon
+        const setPoints = ( points ) => {
+          const transformedPoints = ${inModelCoordinates ? 'points.map( thisPoint => unitPositionToDisplayPosition( thisPoint ) )' : 'points'};
+          ${componentNameString}.shape = phet.kite.Shape.polygon( transformedPoints );
         };`
       );
     }
