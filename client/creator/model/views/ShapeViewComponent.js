@@ -29,7 +29,7 @@ export default class ShapeViewComponent extends NodeViewComponent {
       rectHeight: 0.25,
 
       // circle defaults
-      circleRadius: 0.2,
+      circleRadius: 0.05,
 
       // ellipse defaults
       ellipseRadiusX: 0.3,
@@ -93,7 +93,7 @@ export default class ShapeViewComponent extends NodeViewComponent {
         rectHeight: 0.5,
 
         // circle defaults
-        circleRadius: 0.5,
+        circleRadius: 0.05,
 
         // ellilpse defaults
         ellipseRadiusX: 0.3,
