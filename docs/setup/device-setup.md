@@ -83,7 +83,7 @@ Calibration also sets the average dot size. This will determine how large dots n
 
 #### Fine-tuning program detection
 
-If your setup is not detecting all of the dots on your papers, you won't be able to calibrate them and your programs will not be detected (or will be detected intermittently).
+If your setup is not detecting all of the dots on your papers, you will not be able to calibrate them and your programs will not be detected (or will be detected intermittently).
 
 You can fine-tune the requirements for detecting dots on the paper for your specific setup and lighting conditions.
 
@@ -103,10 +103,20 @@ You can fine-tune the requirements for detecting dots on the paper for your spec
 
         `maxArea` - good for filtering out anything that is being mistreated as a marker.
 
-Look under the Detection header in the sidebar of Camera.html and adjust the parameters. Even with adjustments, you may need to improve the lighting of your room or find you need to print papers with larger dots to get reliable dot detection.
+Look under the Detection header in the sidebar of Camera.html and adjust the controls. Even with adjustments, you may need to improve the lighting of your room or find you need to print papers with larger dots (or more spaced out dots) to get reliable dot detection.
+
+- **Average Dot Centers (checkbox):** Improves performance by using an average center to determine dot position, rather than raw pixel coordinates. May decrease dot detection accuracy.
+
+- **Pixel Value Threshold:** Changes the number of steps used to check for a difference between a dot and background. Large steps might miss dots without enough contrast, but will increase performance. Small steps will find more dots, but slow down performance significantly.
+- **Min Pixel Value:** The minimum saturation value (out of 256) to look for a dot. Use this to gate out noise if image features are being detected as dots. 
+- **Max Pixel Value:** The maximum saturation value (out of 256) to look for a dot. Use this to gate out noise if image features are being detected as dots.
+- **Min Dot Area (pixels):** The minimum area in pixels that an image feature must be to be called a dot. Use this to gate out noise if image features are being detected as dots.
+- **Max Dot Area (pixels):** The maximum area in pixels that an image feature must be to be called a dot. Use this to gate out noise if image features are being detected as dots. *This is a good slider to use if image features are being erroneously detected as Markers*.
+- **Min Dot Separation (pixels):** The minimum numbers of pixels the algorithm expects to see dots. Lower values will help to detect smaller dots or farther away programs, at the cost of detecting more image features that may not be paper dots.
+- **Scale Factor:** Recommended to keep at 1. Higher values lower the effective resolution of your camera feed. If you need higher performance and dot detection is not a problem/you are using a very high resolution camera, this will speed up the algorithm significantly to get more performance.
 
 ## Canvas Projector Setup
 
-If you're using the legacy Projector page to send visual elements to the web canvas, rather than the Board, you'll follow these intructions instead:
+If you're using the legacy Canvas (projector.html) page to send visual elements to the web canvas, rather than the Display (board.html), you'll follow these intructions instead:
 
 Power on the projector and separate [http://localhost:3000/projector.html](http://localhost:3000/projector.html) to its own window. Move this window to the projector's display and enter fullscreen mode (Ctrl/Cmd+Shift+F). If you encounter issues (e.g., a recently created program not displaying), refreshing the page should help.

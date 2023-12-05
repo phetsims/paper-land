@@ -11,36 +11,31 @@
 
 ## Interactive Play Meets Multimodal Web Development
 
-Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping JavaScript code to real pieces of paper and manipulating the code in your **physical space**.
+Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping JavaScript code to real pieces of paper and manipulating the code in your **physical space**. Everything runs on your machine and you can collaborate locally or using a hosting service to collaborate over projects with others in your shared space.
 
-We aim to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning technology.
+While Paper Playground can support many uses, our aim to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning technology.
 
-Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [the library stack](https://github.com/scenerystack) used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects using JavaScript, with a particular emphasis on easy addition of audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in these projects.
+Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [the library stack](https://github.com/scenerystack) used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects based in JavaScript. In creating Paper Playground, we are developing with a particular emphasis on easy addition of multimodal display such as audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in complex web projects.
+
+## Overview of Paper Playground Use
 
 The ideas behind Paper Playground are simple, but the possibilities are infinite.
 
-1. Create programs, as many as you would like, to represent your project.
-2. Print out the dot-covered papers that belong to those programs.
+1. Using code or our low-code interface, Creator, create a project that factors in physical paper movement into the programs.
+2. Print out the dot-covered papers assigned to those programs.
 3. Put those *paper programs* in front of a webcam.
-4. Watch and interact with the output of that code in your browser.
-5. Move programs around and trigger the mappings between your papers position in space and your code!
-6. Change your program code and keep the creativity going!
+4. Interact with and experience the output of your programs in your browser or in the world around you using a projector (Display).
+5. Add/remove/slide/rotate/add markers to programs and trigger the mappings between your papers position in space and your code!
+6. Change your programs, iterate, and keep the creativity going!
 
 <figure markdown>
   ![Paper Playground setup detecting paper programs that create a moon lander and control vertical thrust](assets/full-interface.png){ width=900 }
   <figcaption>The interface in action.</figcaption>
 </figure>
 
-## What can you do with it?
+You'll create JavaScript programs to populate a page (Display) with interactive, multimodal components to envision anything you want!
 
-<figure markdown>
-  ![create play display collab](assets/paper-features.png){ width=600 }
-  <figcaption></figcaption>
-</figure>
-
-You'll create JavaScript programs to populate a page (Board) with interactive, multimodal components to envision anything you want!
-
-Want to create a simple game? Maybe an interactive art experience? Or maybe you want to prototype auditory displays (speech and sounds) for a project or idea that you have? It's all possible with Paper Playground.
+Want to create a card game? Maybe an interactive art experience? Or maybe you want to prototype auditory displays (speech and sounds) for a project or idea that you have? It's all possible with Paper Playground.
 
 Every program you write is associated with a sequence of colored (black, red, green, and blue) dots that you will put (or print) on the corners of a piece of paper. We'll refer to the linked papers and code as paper programs from here on out!
 

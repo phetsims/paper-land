@@ -11,3 +11,7 @@ Don't have a color printer, but do have markers/colored pencils? Use this templa
 [Blank Dot Template (GitHub)](https://github.com/phetsims/paper-land/blob/main/docs/use/resources/draw-dots-paper-template.pdf)
 
 [Blank Dot Template](./resources/draw-dots-paper-template.pdf)
+
+!!! tip
+
+        Dot sequences are tied to the program number/ID. When using Creator, you can change the number of the programs you create. This means that you can re-use papers over and over! Just note the number of the paper you have printed and change the program numbers before sending them to the Playground.

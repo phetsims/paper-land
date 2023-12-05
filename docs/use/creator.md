@@ -4,41 +4,43 @@
 
       We are working on updating our documentation - more details coming soon!
 
-The Creator interface is where you can create working paper programs and visualize the components of your paper programs while writing little to no code!
+## What is Creator?
 
-Creator is currently organized around the [Model-View-Component framework](mvc.md).
+!!! warning "In Development"
 
-You create **Model components**, pieces of your idea that other components will need to use or change to make your project work, to be controlled by **Controller components** and display the information dynamically as a visual (e.g., text, image, shape), sound, and more using **View components**
+      The Creator interface is in development! The current feature set likely does not reflect the final vision of the tool. Follow the development in [GitHub](https://github.com/phetsims/paper-land) or in our community channels!
 
-??? example "Example project (!! text in progress !!)"
+The primary vision of Creator is to bring the relationships between the components of your project to the forefront. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc).
 
-        Let's say you wanted to make a frog jump around your screen. Let's add some interactivity and make it jump to wherever a piece of paper. Say, a lily pad paper? 
+Creator is organized around the [Model-View-Component framework](mvc.md).
 
-        Let's think about the design at a high level and connect it to the needed components:
-        
-        We want to know...
-
-        1. Where the frog is and be able to change where it is (model component > position > "frogPosition")
-        2. Controlling the value of `frogPosition` with a "lilypad" paper (controller components > paper > paper movement)
-        3. Drawing a picture of the frog (view component > image > "frogPicture")
-        
-        Since we want to update the image position separately from the frog's new position (so the image doesn't instantly travel when you move the paper), we'll need to make components for each part (X and Y) of the image position too. 
-
-        4. We'll create a model component > Number > imageYPosition and imageXPosition.
-        
-        Edit the frogPicture view component and use the Custom Function to set the Center X and Center Y to frogXPosition and lastly we could add a component for
-        
-        5. Animating that frog when the "lilypad" paper moves (controller component > animation)
+Simply stated: You create **Model components** (pieces of your idea that other components will need to use or change to make your project work), to be controlled by **Controller components** and display the information dynamically as a visual (e.g., text, image, shape), sound, speech, and more using **View components**
 
 Watch the videos for two simple examples below for creating an "Audio Pendulum" or "Paper Organ".
 
 ## Using Templates
 
-## Copying Programs
+You can load in templates using the New Template button in the top left of the interface. These will create a paper or set of papers that are pre-populated with components to create the desired effect. Want a shape that will follow the position of your paper? Select the *Movable Shape* template and the required papers/components will appear, ready to be customized!
+
+### Creating Templates
+
+Some templates are already included in Paper Playground. However, if you'd like to use templates for common sets of programs/components
+
+## Copying Projects and Programs
+
+
 
 ## Adding Images and Sounds
 
-Adding your own images (.jpg, .png, .gif, etc.) and sounds (.wav, .mp3, etc.) can be done right in Creator! Add a View Component, 
+Adding your own images (.jpg, .png, .gif, etc.) and sounds (.wav, .mp3, etc.) can be done right in Creator! Add a View Component, select Image or Sound, and drag/drop your file or select the upload box to open a file dialog.
+
+Once uploaded, files will live in the paper-land directory under `.../www/media/images/upload` or `.../www/media/sound/upload`. You can also directly add files to this directory for bulk upload.
+
+The files will now appear in the dropdown selection for those components!
+
+## Using AI chat to create Custom Code
+
+- 
 
 ## Audio Pendulum Walkthrough
 <figure>
