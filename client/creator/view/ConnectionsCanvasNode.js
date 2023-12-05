@@ -194,7 +194,6 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           const componentName = component.nameProperty.value;
           const arrayItemPoint = programNode.getComponentListItemConnectionPoint( componentName );
 
-
           // We know that the array item will only include components from its own program,
           // so we don't have to loop through all OTHER ProgramNodes to find connection
           // points.
@@ -210,8 +209,10 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           this.programNodes.forEach( otherProgramNode => {
             otherProgramNode.model.modelContainer.allComponents.forEach( otherComponent => {
               if ( otherComponent.propertyType === 'ObservableArray' ) {
-                if ( otherComponent.nameProperty.value === component.arrayName ) {
-                  const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( component.arrayName );
+
+                const componentArrayName = component.arrayComponent.nameProperty.value;
+                if ( otherComponent.nameProperty.value === componentArrayName ) {
+                  const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName );
                   if ( arrayPoint && arrayItemPoint ) {
                     this.arrayConnections.push( { start: arrayItemPoint, end: arrayPoint } );
                   }

@@ -1,10 +1,10 @@
 import NamedProperty from './NamedProperty.js';
 
 export default class NamedArrayItem extends NamedProperty {
-  constructor( name, arrayComponentName, itemSchema ) {
+  constructor( name, arrayComponent, itemSchema ) {
     super( name, 'ArrayItem' );
 
-    this.arrayName = arrayComponentName;
+    this.arrayComponent = arrayComponent;
 
     // Defines the entries of the array item, an array with objects like
     // [ { entryName:'string', componentName: 'string' } ]
@@ -14,7 +14,7 @@ export default class NamedArrayItem extends NamedProperty {
   save() {
     return {
       name: this.nameProperty.value,
-      arrayName: this.arrayName,
+      arrayName: this.arrayComponent.nameProperty.value,
       itemSchema: this.itemSchema
     };
   }

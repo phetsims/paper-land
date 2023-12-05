@@ -227,7 +227,8 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'arrayItem' ) {
         const itemData = arrayItemDataRef.current;
-        activeProgram.modelContainer.addObservableArrayItem( componentName, itemData.arrayName, itemData.itemSchema );
+        const arrayComponent = Component.findComponentsByName( allModelComponents, [ itemData.arrayName ] )[ 0 ];
+        activeProgram.modelContainer.addObservableArrayItem( componentName, arrayComponent, itemData.itemSchema );
       }
       else {
         throw new Error( 'Cannot create component for selected tab.' );

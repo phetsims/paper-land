@@ -268,7 +268,6 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedEnumerationProperties = stateObject.namedEnumerationProperties || [];
     const namedBounds2Properties = stateObject.namedBounds2Properties || [];
     const namedObservableArrays = stateObject.namedObservableArrays || [];
-    const namedArrayItems = stateObject.namedArrayItems || [];
 
     namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
@@ -311,18 +310,8 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedBounds2PropertyData.defaultMaxY
       );
     } );
-
-    // Since the data for the array does not include references to other components
-    // (only their names), we can add these as dependency components.
     namedObservableArrays.forEach( namedObservableArray => {
       this.addObservableArray( namedObservableArray.name, namedObservableArray.lengthComponentName );
-    } );
-    namedArrayItems.forEach( namedArrayItem => {
-      this.addObservableArrayItem(
-        namedArrayItem.name,
-        namedArrayItem.arrayName,
-        namedArrayItem.itemSchema
-      );
     } );
   }
 
@@ -348,6 +337,16 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedDerivedPropertyData.name,
         dependencies,
         namedDerivedPropertyData.derivation
+      );
+    } );
+
+    const namedArrayItems = state.namedArrayItems || [];
+    namedArrayItems.forEach( namedArrayItem => {
+      const foundArray = allComponents.find( namedArray => namedArray.nameProperty.value === namedArrayItem.arrayName );
+      this.addObservableArrayItem(
+        namedArrayItem.name,
+        foundArray,
+        namedArrayItem.itemSchema
       );
     } );
   }
