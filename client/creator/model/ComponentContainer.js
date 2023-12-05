@@ -42,6 +42,15 @@ export default class ComponentContainer {
   }
 
   /**
+   * Returns a reference to the component with the provided name, or null if it does not exist.
+   * @param componentName
+   * @returns {*}
+   */
+  getComponent( componentName ) {
+    return this.allComponents.find( component => component.nameProperty.value === componentName );
+  }
+
+  /**
    * Registers listeners to the deleteEmitter and editEmitter for a provided component to activate editing or removal
    * when the component is deleted or edited.
    *

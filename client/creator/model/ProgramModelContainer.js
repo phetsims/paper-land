@@ -109,6 +109,16 @@ export default class ProgramModelContainer extends ComponentContainer {
    * @param namedObservableArray
    */
   removeObservableArray( namedObservableArray ) {
+
+    // find the number property we created that lets the user observe ONLY the length
+    const createdLengthProperty = this.getComponent( namedObservableArray.lengthComponentName );
+
+    // It is possible at this time for the user to manually delete this component,
+    // so it might not be available anymore.
+    if ( createdLengthProperty ) {
+      this.removeDerivedProperty( createdLengthProperty );
+    }
+
     const index = this.namedObservableArrays.indexOf( namedObservableArray );
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedObservableArrays.splice( index, 1 );

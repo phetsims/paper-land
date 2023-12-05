@@ -190,8 +190,9 @@ export default class CreatorModel {
    * available name.
    *
    * @param {string} name - The name we want to copy.
+   * @param {string} [suffixString] - The suffix to add to the name, defaults to "_Copy"
    */
-  getUniqueCopyName( name ) {
+  getUniqueCopyName( name, suffixString = '_Copy' ) {
 
     // only rename components if necessary
     if ( this.isNameAvailable( name ) ) {
@@ -203,7 +204,7 @@ export default class CreatorModel {
 
     let copyNumber = 1;
     while ( copyNumber < maxAttempts ) {
-      const copyName = `${name}_Copy${copyNumber}`;
+      const copyName = `${name}${suffixString}${copyNumber}`;
       if ( this.isNameAvailable( copyName ) ) {
         return copyName;
       }

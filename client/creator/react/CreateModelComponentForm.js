@@ -204,7 +204,24 @@ export default function CreateModelComponentForm( props ) {
         activeProgram.modelContainer.addBounds2Property( componentName, boundsData.defaultMinX, boundsData.defaultMinY, boundsData.defaultMaxX, boundsData.defaultMaxY );
       }
       else if ( selectedTab === 'array' ) {
+
+        // Add the observable array
         activeProgram.modelContainer.addObservableArray( componentName );
+
+        // Get the reference to the new component
+        const newArrayComponent = activeProgram.modelContainer.getComponent( componentName );
+
+        // Add a derived property to the model so that the user can just observe the length
+        // of the array.
+        const lengthComponentName = model.getUniqueCopyName( `${componentName}Length`, '_arrayLength' );
+        activeProgram.modelContainer.addDerivedProperty(
+          lengthComponentName, [ newArrayComponent ],
+          `return ${componentName}.length;`
+        );
+
+        // Add the name of the length component to the array, so that we can try to remove
+        // it when the array is removed.
+        newArrayComponent.lengthComponentName = lengthComponentName;
       }
       else if ( selectedTab === 'arrayItem' ) {
         const itemData = arrayItemDataRef.current;
