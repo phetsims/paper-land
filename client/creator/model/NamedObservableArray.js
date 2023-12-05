@@ -9,12 +9,12 @@
 import NamedProperty from './NamedProperty.js';
 
 export default class NamedObservableArray extends NamedProperty {
-  constructor( name ) {
+  constructor( name, lengthComponentName ) {
     super( name, 'ObservableArray' );
 
     // The name of the lenth coponent that was created for this array. If it still
     // exists when we try to remove this component, we will remove the length component too.
-    this.lengthComponentName = '';
+    this.lengthComponentName = lengthComponentName;
   }
 
   save() {
@@ -31,5 +31,6 @@ export default class NamedObservableArray extends NamedProperty {
   load( stateObject ) {
     super.load( stateObject );
     this.lengthComponentName = stateObject.lengthComponentName;
+    throw new Error( 'It seems this function is unused?' );
   }
 }

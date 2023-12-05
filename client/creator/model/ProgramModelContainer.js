@@ -96,8 +96,8 @@ export default class ProgramModelContainer extends ComponentContainer {
   /**
    * Adds a NamedObservableArray to this container with the provided name.
    */
-  addObservableArray( name ) {
-    const newNamedProperty = new NamedObservableArray( name );
+  addObservableArray( name, lengthComponentName ) {
+    const newNamedProperty = new NamedObservableArray( name, lengthComponentName );
     this.namedObservableArrays.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
@@ -315,7 +315,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     // Since the data for the array does not include references to other components
     // (only their names), we can add these as dependency components.
     namedObservableArrays.forEach( namedObservableArray => {
-      this.addObservableArray( namedObservableArray.name );
+      this.addObservableArray( namedObservableArray.name, namedObservableArray.lengthComponentName );
     } );
     namedArrayItems.forEach( namedArrayItem => {
       this.addObservableArrayItem(

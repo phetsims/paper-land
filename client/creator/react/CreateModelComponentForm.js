@@ -205,15 +205,17 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'array' ) {
 
+        // Will be used for the name of a created derived property just for the length, see below
+        const lengthComponentName = model.getUniqueCopyName( `${componentName}Length`, '_arrayLength' );
+
         // Add the observable array
-        activeProgram.modelContainer.addObservableArray( componentName );
+        activeProgram.modelContainer.addObservableArray( componentName, lengthComponentName );
 
         // Get the reference to the new component
         const newArrayComponent = activeProgram.modelContainer.getComponent( componentName );
 
         // Add a derived property to the model so that the user can just observe the length
         // of the array.
-        const lengthComponentName = model.getUniqueCopyName( `${componentName}Length`, '_arrayLength' );
         activeProgram.modelContainer.addDerivedProperty(
           lengthComponentName, [ newArrayComponent ],
           `return ${componentName}.length;`
