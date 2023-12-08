@@ -108,6 +108,10 @@ const mapOfProgramNumbersToScratchpadObjects = new Map();
 // {Map<number,Object>} - map of paper program numbers that are present in the detection window to their position points
 const mapOfPaperProgramNumbersToPreviousPoints = new Map();
 
+// {Map<number,axon.TimerListener>} - map of paper program numbers to the timeout that will trigger the removal of
+// the program - if the program is added back before the timeout, the removal and timeout is cancelled.
+const mapOfProgramNumbersToRemovalTimeouts = new Map();
+
 // A map of paper number to the papers that overlap with another paper in a given direction.
 // { (paperNumber: number) : { top: number[], right: number[], bottom: number[], left: number[] } }
 const whiskerStateMap = new Map();
@@ -230,46 +234,60 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
       // If there are no handlers for this program, it means that it just appeared in the detection window.
       const paperProgramJustAppeared = !mapOfProgramNumbersToEventHandlers.has( paperProgramNumber );
 
-      if ( !paperProgramJustAppeared ) {
+      // If the paper program is in the removal map, detection was just lost - do not want to call removal/addition
+      // callbacks if we are in this case.
+      const inRemovalMap = mapOfProgramNumbersToRemovalTimeouts.has( paperProgramNumber );
 
-        // Since the paper didn't just appear in the detection window, it indicates that its program probably changed.
-        // Since pretty much anything could have changed about the program, we treat this as a removal and re-appearance
-        // of the program.
+      if ( !inRemovalMap ) {
+        if ( !paperProgramJustAppeared ) {
+
+          // Since the paper didn't just appear in the detection window, it indicates that its program probably changed.
+          // Since pretty much anything could have changed about the program, we treat this as a removal and re-appearance
+          // of the program.
+          // NOTE: There is no delay in this case, we assume program attribute change should be reflected right away.
+          const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
+
+          // first detach any whiskers for this program and others
+          detachWhiskersForProgram( paperProgramNumber );
+
+          // then trigger events for program removal
+          if ( eventHandlers.onProgramRemoved ) {
+            evalProgramFunction( eventHandlers.onProgramRemoved, [
+              paperProgramNumber,
+              mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+              sharedData
+            ], 'onProgramRemoved' );
+          }
+        }
+
+        // Extract the event handlers from the program, since they are either new or potentially changed.
+        mapOfProgramNumbersToEventHandlers.set( paperProgramNumber, programSpecificData.paperPlaygroundData.eventHandlers || {} );
+
+        // Set the scratchpad data to an empty object.
+        mapOfProgramNumbersToScratchpadObjects.set( paperProgramNumber, {} );
+
+        // Run this program's "added" handler, if present (and generally it should be).
         const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
-
-        // first detach any whiskers for this program and others
-        detachWhiskersForProgram( paperProgramNumber );
-
-        // then trigger events for program removal
-        if ( eventHandlers.onProgramRemoved ) {
-          evalProgramFunction( eventHandlers.onProgramRemoved, [
+        if ( eventHandlers.onProgramAdded ) {
+          evalProgramFunction( eventHandlers.onProgramAdded, [
             paperProgramNumber,
             mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
             sharedData
-          ], 'onProgramRemoved' );
+          ], 'onProgramAdded' );
+
+          // DO NOT update adjacent papers here because the position change will be detected right after this
+          // and it will be done there. If we do it here too, adjacent paper callbacks will be called twice
+
+          // Make sure that the position change handler gets called.
+          paperProgramHasMoved = true;
         }
       }
+      else {
 
-      // Extract the event handlers from the program, since they are either new or potentially changed.
-      mapOfProgramNumbersToEventHandlers.set( paperProgramNumber, programSpecificData.paperPlaygroundData.eventHandlers || {} );
-
-      // Set the scratchpad data to an empty object.
-      mapOfProgramNumbersToScratchpadObjects.set( paperProgramNumber, {} );
-
-      // Run this program's "added" handler, if present (and generally it should be).
-      const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
-      if ( eventHandlers.onProgramAdded ) {
-        evalProgramFunction( eventHandlers.onProgramAdded, [
-          paperProgramNumber,
-          mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-          sharedData
-        ], 'onProgramAdded' );
-
-        // DO NOT update adjacent papers here because the position change will be detected right after this
-        // and it will be done there. If we do it here too, adjacent paper callbacks will be called twice
-
-        // Make sure that the position change handler gets called.
-        paperProgramHasMoved = true;
+        // The program was just detected, but it was in the removal map because detection was just momentarily lost.
+        // Clear the timeout and remove it from the map now that it has been re-detected.
+        phet.axon.stepTimer.clearTimeout( mapOfProgramNumbersToRemovalTimeouts.get( paperProgramNumber ) );
+        mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
       }
     }
 
@@ -373,31 +391,41 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
   mapOfProgramNumbersToEventHandlers.forEach( ( eventHandlers, paperProgramNumber ) => {
     if ( !presentPaperProgramNumbers.includes( paperProgramNumber ) ) {
 
-      // This paper program has disappeared.  Run its removal method and clear its data. Markers have
-      // also been removed from this program.
-      if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-        evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
-          paperProgramNumber,
-          mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
-          mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-          sharedData,
-          [] // empty markers - none since paper is being removed
-        ], 'onProgramMarkersRemoved' );
-      }
-      mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
+      // This paper program has disappeared. Queue it up for removal. If it is still gone after the removal delay,
+      // we run the removal handler and remove it from the state. Marker removal is also done first.
+      mapOfProgramNumbersToRemovalTimeouts.set( paperProgramNumber, phet.axon.stepTimer.setTimeout( () => {
 
-      // remove any whiskers on this program, and any whiskers connecting this program to others
-      detachWhiskersForProgram( paperProgramNumber );
+        // First call any marker removal handlers before removing this program
+        if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
+          evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+            paperProgramNumber,
+            mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
+            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+            sharedData,
+            [] // empty markers - none since paper is being removed
+          ], 'onProgramMarkersRemoved' );
+        }
+        mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
 
-      if ( eventHandlers.onProgramRemoved ) {
-        evalProgramFunction( eventHandlers.onProgramRemoved, [
-          paperProgramNumber,
-          mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-          sharedData
-        ], 'onProgramRemoved' );
-      }
-      mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
-      mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
+        // remove any whiskers on this program, and any whiskers connecting this program to others
+        detachWhiskersForProgram( paperProgramNumber );
+
+        // Finally call the program removal handler
+        if ( eventHandlers.onProgramRemoved ) {
+          evalProgramFunction( eventHandlers.onProgramRemoved, [
+            paperProgramNumber,
+            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+            sharedData
+          ], 'onProgramRemoved' );
+        }
+
+        // cleanup state maps
+        mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
+        mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
+
+        // clear the timeout from the map now that it has ocurred
+        mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
+      }, boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
     }
   } );
 
