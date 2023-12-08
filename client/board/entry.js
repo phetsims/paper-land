@@ -393,39 +393,47 @@ const updateBoard = ( presentPaperProgramInfo, currentMarkersInfo ) => {
 
       // This paper program has disappeared. Queue it up for removal. If it is still gone after the removal delay,
       // we run the removal handler and remove it from the state. Marker removal is also done first.
-      mapOfProgramNumbersToRemovalTimeouts.set( paperProgramNumber, phet.axon.stepTimer.setTimeout( () => {
+      //
+      // NOTE: The program is removed from mapOfProgramNumbersToEventHandlers when the timeout occurs. It is
+      // possible that we call updateBoard before the timeout completes. In that case, the program number will STILL
+      // be in mapOfProgramNumbersToEventHandlers even though we already have a removal queued up. So we simply
+      // let the original timeout complete without adding another removal timeout.
+      const alreadyHasRemovalTimeout = mapOfProgramNumbersToRemovalTimeouts.has( paperProgramNumber );
+      if ( !alreadyHasRemovalTimeout ) {
+        mapOfProgramNumbersToRemovalTimeouts.set( paperProgramNumber, phet.axon.stepTimer.setTimeout( () => {
 
-        // First call any marker removal handlers before removing this program
-        if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-          evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
-            paperProgramNumber,
-            mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
-            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-            sharedData,
-            [] // empty markers - none since paper is being removed
-          ], 'onProgramMarkersRemoved' );
-        }
-        mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
+          // First call any marker removal handlers before removing this program
+          if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
+            evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+              paperProgramNumber,
+              mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
+              mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+              sharedData,
+              [] // empty markers - none since paper is being removed
+            ], 'onProgramMarkersRemoved' );
+          }
+          mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
 
-        // remove any whiskers on this program, and any whiskers connecting this program to others
-        detachWhiskersForProgram( paperProgramNumber );
+          // remove any whiskers on this program, and any whiskers connecting this program to others
+          detachWhiskersForProgram( paperProgramNumber );
 
-        // Finally call the program removal handler
-        if ( eventHandlers.onProgramRemoved ) {
-          evalProgramFunction( eventHandlers.onProgramRemoved, [
-            paperProgramNumber,
-            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-            sharedData
-          ], 'onProgramRemoved' );
-        }
+          // Finally call the program removal handler
+          if ( eventHandlers.onProgramRemoved ) {
+            evalProgramFunction( eventHandlers.onProgramRemoved, [
+              paperProgramNumber,
+              mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+              sharedData
+            ], 'onProgramRemoved' );
+          }
 
-        // cleanup state maps
-        mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
-        mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
+          // cleanup state maps
+          mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
+          mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
 
-        // clear the timeout from the map now that it has ocurred
-        mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
-      }, boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
+          // clear the timeout from the map now that it has ocurred
+          mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
+        }, boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
+      }
     }
   } );
 
