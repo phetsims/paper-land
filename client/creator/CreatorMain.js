@@ -30,11 +30,45 @@ export default function CreatorMain( props ) {
   // is going to those components and prevent pan/zoom unless interacting with the scenery display.
   const reactParentRef = useRef( null );
 
+  // The width of the display column, as a fraction of the total width - the rest of the screen will be used
+  // for the form controls (React).
+  const displayColumnWidthProperty = new phet.axon.NumberProperty( 0.5, {
+    range: new phet.dot.Range( 0.25, 0.75 )
+  } );
+
+  // A ref to each of the HTML elements that contain the scenery display and the React controls. This
+  // way we can update layout with JavaScript when the displayColumnWidthProperty changes.
+  const displayColumnRef = useRef( null );
+  const reactColumnRef = useRef( null );
+
+  // useEffect( () => {
+  //
+  //   // THIS FUNCTION IS BEING CALLED BUT DOESN"T UPDATE THE LAYOUT LIKE I EXPECT
+  //   const updateLayout = displayWidth => {
+  //     // displayColumnRef.current.style.flex = displayWidth;
+  //     // reactColumnRef.current.style.flex = 1 - displayWidth;
+  //
+  //     displayColumnRef.current.style.flex = `0 0 ${displayWidth * 100}%`; // Assuming displayWidth is a fraction
+  //     reactColumnRef.current.style.flex = `0 0 ${( 1 - displayWidth ) * 100}%`;
+  //
+  //     // update the display layout after the columns adjust
+  //     updateDisplaySize( creatorView.display, window.innerWidth, window.innerHeight );
+  //
+  //     console.log( displayColumnRef.current.style.flex );
+  //   };
+  //
+  //   displayColumnWidthProperty.link( updateLayout );
+  //
+  //   return function cleanup() {
+  //     displayColumnWidthProperty.unlink( updateLayout );
+  //   };
+  // } );
+
   // Sets the Display size and layout the view when the window size changes.
   const updateDisplaySize = ( display, width, height ) => {
 
     // scenery requires integer values for dimensions
-    const displayWidth = Math.floor( width * 0.5 );
+    const displayWidth = Math.floor( width * displayColumnWidthProperty.value );
     const displayHeight = height;
     display.setWidthHeight( displayWidth, displayHeight );
 
@@ -57,13 +91,29 @@ export default function CreatorMain( props ) {
   const modifyDisplay = display => {
 
     // create the fundamental view and add it to the display
-    creatorView = new CreatorView( creatorModel, display );
+    creatorView = new CreatorView( creatorModel, display, displayColumnWidthProperty );
     scene.addChild( creatorView );
 
     phet.scenery.animatedPanZoomSingleton.initialize( creatorView.applicationLayerNode, {
       maxScale: 6
     } );
     display.addInputListener( phet.scenery.animatedPanZoomSingleton.listener );
+
+    // THIS FUNCTION IS BEING CALLED BUT DOESN"T UPDATE THE LAYOUT LIKE I EXPECT
+    const updateLayout = displayWidth => {
+      console.log( displayWidth, 1 - displayWidth );
+
+      // update the display layout after the columns adjust
+      updateDisplaySize( display, window.innerWidth, window.innerHeight );
+
+      displayColumnRef.current.style.flex = displayWidth;
+      reactColumnRef.current.style.flex = 1 - displayWidth;
+
+      // displayColumnRef.current.style.flex = `0 0 ${displayWidth * 100}%`; // Assuming displayWidth is a fraction
+      // reactColumnRef.current.style.flex = `0 0 ${( 1 - displayWidth ) * 100}%`;
+    };
+
+    displayColumnWidthProperty.link( updateLayout );
 
     // TODO
     // workaround to get pan/zoom working outside of a sim - lots of things assume phet-io or
@@ -97,6 +147,7 @@ export default function CreatorMain( props ) {
 
   const stepFunction = dt => {
     if ( creatorView ) {
+
       creatorView.step( dt );
     }
   };
@@ -119,7 +170,9 @@ export default function CreatorMain( props ) {
       </div>
       <div className={styles.rowContainer}>
         <div
-          className={styles.displayColumn}>
+          className={styles.displayColumn}
+          ref={displayColumnRef}
+        >
           <SceneryDisplay
             scene={scene}
             displayClass={styles.displayPanel}
@@ -129,7 +182,10 @@ export default function CreatorMain( props ) {
             step={stepFunction}
           />
         </div>
-        <div className={`${styles.rowSpacer} ${styles.panelClass}`}>
+        <div
+          className={`${styles.reactColumn} ${styles.panelClass}`}
+          ref={reactColumnRef}
+        >
           <CreatorControls
             ref={reactParentRef}
             creatorModel={creatorModel}

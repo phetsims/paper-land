@@ -25,20 +25,19 @@
 
   /*so that contents are centered within extra spacing added by flex*/
   align-content: center;
-  column-gap: 10px
+  column-gap: 5px
 }
 
 /*An (empty) item in the row so that the scenery display is centered*/
-:local(.rowSpacer) {
-  flex: 1;
+:local(.reactColumn) {
+  flex: 0.5;
 }
 
 /*Column containing the scenery Display (and possibly the editor)*/
 :local(.displayColumn) {
 
-  /*so that this column is centered horizontally under rowContainer*/
-  /*flex-grow: 2;*/
-  flex: 1;
+  /* So that this column takes up have of the view, but this will adjust with javascript */
+  flex: 0.5;
 
   /*This component is a column with child contents*/
   display: flex;

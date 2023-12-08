@@ -5,6 +5,7 @@
  */
 
 import xhr from 'xhr';
+import ColumnDragThumb from './ColumnDragThumb.js';
 import ConnectionsCanvasNode from './ConnectionsCanvasNode.js';
 import CreatorVisibilityControls from './CreatorVisibilityControls.js';
 import ProgramNode from './ProgramNode.js';
@@ -17,8 +18,9 @@ export default class CreatorView extends phet.scenery.Node {
   /**
    * @param {CreatorModel} model
    * @param {scenery.Display} display
+   * @param {phet.dot.Property.<number>} displayColumnWidthProperty - Property that controls the width of the display
    */
-  constructor( model, display ) {
+  constructor( model, display, displayColumnWidthProperty ) {
     super();
 
     // @private
@@ -46,6 +48,8 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Fades in to show a success message whenever some kind of successful action is completed.
     this.successRectangle = new SavedRectangle( { message: 'Success ✓' } );
+
+    this.columnDragThumb = new ColumnDragThumb( displayColumnWidthProperty );
 
     this.visibilityControls = new CreatorVisibilityControls( model.visibilityModel );
 
@@ -119,6 +123,7 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.successRectangle );
     controlLayerNode.addChild( this.visibilityControls );
     controlLayerNode.addChild( this.restrictedWarningNode );
+    controlLayerNode.addChild( this.columnDragThumb );
 
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
@@ -178,8 +183,6 @@ export default class CreatorView extends phet.scenery.Node {
 
         this.saveProjectButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
-        // this.newProgramButton.enabled = false;
-        // this.newProgramFromTemplateButton.enabled = false;
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );
@@ -258,6 +261,8 @@ export default class CreatorView extends phet.scenery.Node {
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
 
     this.restrictedWarningNode.leftCenter = this.newProgramButton.rightCenter.plusXY( 5, 0 );
+
+    this.columnDragThumb.rightCenter = new phet.dot.Vector2( width, height / 2 );
 
     this.connectionsNode.layout( width, height );
 
