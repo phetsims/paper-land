@@ -158,8 +158,12 @@ export default function CreateModelComponentForm( props ) {
         component.values = enumerationDataRef.current.values;
       }
       else if ( selectedTab === 'arrayItem' ) {
+
+        // save the new array name
         component.arrayName = arrayItemDataRef.current.arrayName;
-        component.itemSchema = arrayItemDataRef.current.itemSchema;
+
+        // save the new schema, getting references to actual components from the saved names
+        component.itemSchema = NamedArrayItem.getSchemaWithComponents( arrayItemDataRef.current.itemSchema, allModelComponents );
       }
       else if ( selectedTab === 'derived' ) {
         const derivedData = derivedDataRef.current;
@@ -228,7 +232,10 @@ export default function CreateModelComponentForm( props ) {
       else if ( selectedTab === 'arrayItem' ) {
         const itemData = arrayItemDataRef.current;
         const arrayComponent = Component.findComponentsByName( allModelComponents, [ itemData.arrayName ] )[ 0 ];
-        activeProgram.modelContainer.addObservableArrayItem( componentName, arrayComponent, itemData.itemSchema );
+
+        // the form data has the name of the component, but we need the component itself
+        const realSchema = NamedArrayItem.getSchemaWithComponents( itemData.itemSchema, allModelComponents );
+        activeProgram.modelContainer.addObservableArrayItem( componentName, arrayComponent, realSchema );
       }
       else {
         throw new Error( 'Cannot create component for selected tab.' );

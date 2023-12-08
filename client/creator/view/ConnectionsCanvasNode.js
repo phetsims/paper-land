@@ -198,7 +198,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           // so we don't have to loop through all OTHER ProgramNodes to find connection
           // points.
           component.itemSchema.forEach( entry => {
-            const startPoint = programNode.getComponentListItemConnectionPoint( entry.componentName );
+            const startPoint = programNode.getComponentListItemConnectionPoint( entry.component.nameProperty.value );
             if ( startPoint && arrayItemPoint ) {
               this.arrayConnections.push( { start: startPoint, end: arrayItemPoint } );
             }

@@ -343,10 +343,14 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedArrayItems = state.namedArrayItems || [];
     namedArrayItems.forEach( namedArrayItem => {
       const foundArray = allComponents.find( namedArray => namedArray.nameProperty.value === namedArrayItem.arrayName );
+
+      // find the components that are used in the array item schema
+      const actualSchema = NamedArrayItem.getSchemaWithComponents( namedArrayItem.itemSchema, allComponents );
+
       this.addObservableArrayItem(
         namedArrayItem.name,
         foundArray,
-        namedArrayItem.itemSchema
+        actualSchema
       );
     } );
   }
