@@ -13,8 +13,15 @@ const MIN_POSITION_INTERVAL = 0;
 const MAX_POSITION_INTERVAL = 0.5;
 const POSITION_INTERVAL_STEP = 0.01;
 
+// A delay in seconds that controls how long a program must be out of detection before calling
+// any removal callbacks (onProgramRemoved, onProgramMarkersRemoved).
+const MIN_REMOVAL_DELAY = 0;
+const MAX_REMOVAL_DELAY = 5;
+const REMOVAL_INTERVAL_STEP = 0.5;
+
 export default function PaperLandControls( props ) {
   const [ positionInterval, setPositionInterval ] = useState( props.initialPositionInterval );
+  const [ removalDelay, setRemovalDelay ] = useState( props.initialRemovalDelay );
   const [ consoleVisible, setConsoleVisible ] = useState( true );
   const [ printSpeechSynthesis, setPrintSpeechSynthesis ] = useState( false );
 
@@ -63,11 +70,11 @@ export default function PaperLandControls( props ) {
   }, [ printSpeechSynthesis ] );
 
   return (
-    <div className={`${styles.paperLandControlsContent} ${styles.boardPanel}`}>
+    <div className={`${styles.boardPanel}`}>
       <>
         <>
           <div>
-            <Form.Label>Position Interval</Form.Label>
+            <Form.Label>Position Interval (%):</Form.Label>
             <p className={styles.inlineValue}>{positionInterval}</p>
             <Form.Range
               min={MIN_POSITION_INTERVAL}
@@ -82,6 +89,23 @@ export default function PaperLandControls( props ) {
             />
           </div>
         </>
+      </>
+      <>
+        <div>
+          <Form.Label>Removal Delay (seconds):</Form.Label>
+          <p className={styles.inlineValue}>{removalDelay}</p>
+          <Form.Range
+            min={MIN_REMOVAL_DELAY}
+            max={MAX_REMOVAL_DELAY}
+            step={REMOVAL_INTERVAL_STEP}
+            value={removalDelay}
+            onChange={event => {
+              const newValue = event.target.value;
+              setRemovalDelay( newValue );
+              props.updateRemovalDelay( newValue );
+            }}
+          />
+        </div>
       </>
       <>
         <Form.Check

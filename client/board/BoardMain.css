@@ -93,13 +93,6 @@
   width: 75%
 }
 
-:local(.paperLandControlsContent) {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
-}
-
 /* Inline display for value readouts */
 :local(.inlineValue) {
   display: inline;

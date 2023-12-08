@@ -13,6 +13,7 @@ export default function BoardMain( props ) {
   const scene = props.scene;
   const boardConfigObject = props.boardConfigObject;
   const updatePositionInterval = props.updatePositionInterval;
+  const updateRemovalDelay = props.updateRemovalDelay;
 
   const [ consoleVisible, setConsoleVisible ] = useState( true );
 
@@ -42,6 +43,8 @@ export default function BoardMain( props ) {
             <PaperLandControls
               initialPositionInterval={boardConfigObject.positionInterval}
               updatePositionInterval={updatePositionInterval}
+              initialRemovalDelay={boardConfigObject.removalDelay}
+              updateRemovalDelay={updateRemovalDelay}
               updateConsoleVisibility={setConsoleVisible}
               sceneryDisplay={sceneryDisplay}
             ></PaperLandControls>

@@ -44,7 +44,8 @@ const localWhiskerMap = new Map();
 
 // Defaults for the board configuration, if values are not saved to local storage
 const defaultBoardConfig = {
-  positionInterval: 0
+  positionInterval: 0,
+  removalDelay: 0
 };
 
 // Combined config with localStorage overriding defaults. This will change during runtime as new values
@@ -64,6 +65,10 @@ const updatePositionInterval = newValue => {
   saveValueToBoardConfig( 'positionInterval', newValue );
 };
 
+const updateRemovalDelay = newValue => {
+  saveValueToBoardConfig( 'removalDelay', newValue );
+};
+
 // Sets the new value to the runtime config object and local storage for next page load.
 const saveValueToBoardConfig = ( nameString, value ) => {
   boardConfigObject[ nameString ] = value;
@@ -77,6 +82,7 @@ ReactDOM.render(
     scene={scene}
     boardConfigObject={boardConfigObject}
     updatePositionInterval={updatePositionInterval}
+    updateRemovalDelay={updateRemovalDelay}
   ></BoardMain>,
   simDisplayDiv
 );
