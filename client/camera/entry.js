@@ -39,6 +39,11 @@ const defaultConfig = {
   maxArea: 500,
   minDistBetweenBlobs: 10,
 
+  // When true, a program will only be detected if all corners are detected. Generally this should be false, and
+  // detectPrograms will try to guess where missing corners are for easier detection. But there are cases where
+  // you will want to only detect programs that are fully visible.
+  requireAllCorners: false,
+
   selectedCameraDeviceId: ''
 };
 

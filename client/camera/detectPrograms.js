@@ -413,14 +413,17 @@ export default function detectPrograms( {
       }
     }
 
-    // Take the average of all potential points for each unknown point.
-    for ( let i = 0; i < 4; i++ ) {
-      if ( potentialPoints[ i ] ) {
-        points[ i ] = { x: 0, y: 0 };
-        potentialPoints[ i ].forEach( vec => {
-          points[ i ].x += vec.x / potentialPoints[ i ].length;
-          points[ i ].y += vec.y / potentialPoints[ i ].length;
-        } );
+    if ( !config.requireAllCorners ) {
+      
+      // Take the average of all potential points for each unknown point.
+      for ( let i = 0; i < 4; i++ ) {
+        if ( potentialPoints[ i ] ) {
+          points[ i ] = { x: 0, y: 0 };
+          potentialPoints[ i ].forEach( vec => {
+            points[ i ].x += vec.x / potentialPoints[ i ].length;
+            points[ i ].y += vec.y / potentialPoints[ i ].length;
+          } );
+        }
       }
     }
 

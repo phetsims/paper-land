@@ -3,7 +3,7 @@
  * https://github.com/phetsims/paper-land/issues/127 for notes.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import styles from './CameraMain.css';
 
@@ -19,6 +19,10 @@ export default function DetectorControls( props ) {
   // state for 'faster' in the config, which controls 'averaging dot centers'
   const [ faster, setFaster ] = useState( props.config.faster );
 
+  // State for whether all corners are required for a program detection - see config defaults
+  // for more documentation.
+  const [ requireAllCorners, setRequireAllCorners ] = useState( props.config.requireAllCorners );
+
   // state for validation
   const [ areaValid, setAreaValid ] = useState( true );
   const [ thresholdValid, setThresholdValid ] = useState( true );
@@ -32,6 +36,23 @@ export default function DetectorControls( props ) {
   // For the rest of the sliders state is managed by the inner component SliderWithLabel.
   return (
     <div>
+      <div className={styles.detectionControlInput}>
+        <Form.Check
+          type='checkbox'
+          id='requireAllCorners'
+          name='requireAllCorners'
+          label='Require All Program Corners'
+          checked={requireAllCorners}
+          onChange={event => {
+            const checked = event.target.checked;
+            setRequireAllCorners( checked );
+            props.onConfigChange( {
+              ...props.config,
+              requireAllCorners: checked
+            } );
+          }}
+        ></Form.Check>
+      </div>
       <div className={styles.detectionControlInput}>
         <Form.Check
           type='checkbox'
