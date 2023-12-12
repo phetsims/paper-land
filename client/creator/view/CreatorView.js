@@ -99,6 +99,20 @@ export default class CreatorView extends phet.scenery.Node {
       }
     } ) );
 
+    // A button that quickly collapses all programs
+    this.collapseAllButton = new phet.sun.TextPushButton( 'Collapse All', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+      listener: () => {
+        model.setAllProgramsExpanded( false );
+      }
+    } ) );
+
+    // A button that quickly expands all programs
+    this.expandAllButton = new phet.sun.TextPushButton( 'Expand All', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
+      listener: () => {
+        model.setAllProgramsExpanded( true );
+      }
+    } ) );
+
     // Buttons are not usable until save/send operations receive a response from the server
     model.serverRequestInProgressProperty.link( inProgress => {
       this.saveProjectButton.enabled = !inProgress;
@@ -118,6 +132,8 @@ export default class CreatorView extends phet.scenery.Node {
     controlLayerNode.addChild( this.sendToPaperLandButton );
     controlLayerNode.addChild( this.saveProjectJSONButton );
     controlLayerNode.addChild( this.loadProjectJSONButton );
+    controlLayerNode.addChild( this.collapseAllButton );
+    controlLayerNode.addChild( this.expandAllButton );
     controlLayerNode.addChild( this.savedRectangle );
     controlLayerNode.addChild( this.sendSuccessRectangle );
     controlLayerNode.addChild( this.successRectangle );
@@ -259,6 +275,8 @@ export default class CreatorView extends phet.scenery.Node {
     this.sendSuccessRectangle.rightCenter = this.sendToPaperLandButton.leftCenter.plusXY( -5, 0 );
     this.successRectangle.centerTop = new phet.dot.Vector2( width / 2, 5 );
     this.visibilityControls.leftBottom = new phet.dot.Vector2( 5, height - 10 );
+    this.expandAllButton.rightBottom = new phet.dot.Vector2( width - 10, height - 10 );
+    this.collapseAllButton.centerBottom = this.expandAllButton.centerTop.minusXY( 0, 5 );
 
     this.restrictedWarningNode.leftCenter = this.newProgramButton.rightCenter.plusXY( 5, 0 );
 

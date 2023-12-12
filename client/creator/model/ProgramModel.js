@@ -56,6 +56,10 @@ export default class ProgramModel {
 
     // @public - emits an event when the user wants to copy this program
     this.copyEmitter = new phet.axon.Emitter();
+
+    // @public - whether this program is 'expanded' - when false, the visualization is collapsed,
+    // making it easier to view many programs.
+    this.expandedProperty = new phet.axon.BooleanProperty( true );
   }
 
   /**

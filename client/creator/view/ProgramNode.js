@@ -1,6 +1,7 @@
 import ActiveEdit from '../model/ActiveEdit.js';
 import EditType from '../model/EditType.js';
 import ComponentListItemNode from './ComponentListItemNode.js';
+import CustomExpandCollapseButton from './CustomExpandCollapseButton.js';
 import ImageLoader from './ImageLoader.js';
 import ViewConstants from './ViewConstants.js';
 
@@ -129,6 +130,9 @@ export default class ProgramNode extends phet.scenery.Node {
       enabledProperty: editEnabledProperty
     } ) );
 
+    // Expands/collapses the program
+    this.expandCollapseButton = new CustomExpandCollapseButton( model.expandedProperty );
+
     this.allComponentsVBox = new phet.scenery.VBox( {
       spacing: MARGIN * 2,
       align: 'left',
@@ -149,6 +153,19 @@ export default class ProgramNode extends phet.scenery.Node {
       ]
     } );
 
+    this.createButtonsVBox = new phet.scenery.VBox( {
+      spacing: MARGIN,
+      align: 'center',
+
+      // so that the 'custom code icon' (which gets loaded asynchronously) can be placed at the front without
+      // affecting the layout
+      excludeInvisibleChildrenFromBounds: false,
+      children: [
+        this.createComponentButton,
+        this.createListenerButton
+      ]
+    } );
+
     this.deleteButton = null;
     this.copyButton = null;
     this.customCodeIcon = null;
@@ -158,16 +175,15 @@ export default class ProgramNode extends phet.scenery.Node {
     this.addChild( this.programNumber );
     this.addChild( this.titleText );
     this.addChild( this.allComponentsVBox );
-    this.addChild( this.createComponentButton );
-    this.addChild( this.createListenerButton );
+    this.addChild( this.createButtonsVBox );
+    this.addChild( this.expandCollapseButton );
 
     // collection of components that will contribute to layout bounds, to easily calculate height
     this.allComponents = [
       this.programNumber,
       this.titleText,
       this.allComponentsVBox,
-      this.createListenerButton,
-      this.createComponentButton
+      this.createButtonsVBox
     ];
 
     // Load after components needed for layout are set up.
@@ -203,7 +219,6 @@ export default class ProgramNode extends phet.scenery.Node {
       this.layout();
     } );
 
-
     ImageLoader.loadImage( 'media/images/magic-wand.svg', imageElement => {
       this.customCodeIcon = new phet.scenery.Image( imageElement, {
         scale: 1.3
@@ -213,8 +228,8 @@ export default class ProgramNode extends phet.scenery.Node {
         this.customCodeIcon.visible = hasCustomCode;
       } );
 
-      this.addChild( this.customCodeIcon );
-      this.allComponents.push( this.customCodeIcon );
+      // Place at the front of this HBox so that the icon comes first
+      this.createButtonsVBox.insertChild( 0, this.customCodeIcon );
       this.layout();
     } );
 
@@ -253,10 +268,7 @@ export default class ProgramNode extends phet.scenery.Node {
       drag: () => {
 
         // Limit dragging to the available bounds
-        const availableBounds = availableBoundsProperty.value;
-        const newX = phet.dot.Utils.clamp( this.bounds.left, availableBounds.left, availableBounds.right - this.bounds.width );
-        const newY = phet.dot.Utils.clamp( this.bounds.top, availableBounds.top, availableBounds.bottom - this.bounds.height );
-        model.positionProperty.value = new phet.dot.Vector2( newX, newY );
+        this.keepInBounds( availableBoundsProperty.value );
       }
     } );
     this.addInputListener( dragListener );
@@ -301,6 +313,15 @@ export default class ProgramNode extends phet.scenery.Node {
       } );
     };
 
+    model.expandedProperty.link( expanded => {
+      this.allComponentsVBox.visible = expanded;
+      this.createButtonsVBox.visible = expanded;
+      this.layout();
+
+      // make sure that the node is still in bounds after the layout
+      this.keepInBounds( availableBoundsProperty.value );
+    } );
+
     registerComponentListListener( model.modelContainer.allComponents, this.modelComponentList );
     registerComponentListListener( model.controllerContainer.allComponents, this.controllerComponentList );
     registerComponentListListener( model.viewContainer.allComponents, this.viewComponentList );
@@ -310,11 +331,62 @@ export default class ProgramNode extends phet.scenery.Node {
     this.layout();
   }
 
+  /**
+   * Keep this ProgramNode within the available bounds.
+   */
+  keepInBounds( availableBounds ) {
+    const thisVisibleBounds = this.visibleBounds;
+    const newX = phet.dot.Utils.clamp( thisVisibleBounds.left, availableBounds.left, availableBounds.right - thisVisibleBounds.width );
+    const newY = phet.dot.Utils.clamp( thisVisibleBounds.top, availableBounds.top, availableBounds.bottom - thisVisibleBounds.height );
+    this.model.positionProperty.value = new phet.dot.Vector2( newX, newY );
+  }
+
+  /**
+   * Returns the point in global coordinates where the 'connection point' is. This is where a displayed connection
+   * wire should be placed. If the component name is not on this ProgramNode, null is returned.
+   */
   getComponentListItemConnectionPoint( componentName ) {
     const componentListItemNode = _.find( this.allListItemNodes, componentListItemNode => {
       return componentListItemNode.componentName === componentName;
     } );
-    return componentListItemNode ? componentListItemNode.getGlobalConnectionPoint() : null;
+
+    let connectionPoint = null;
+    if ( componentListItemNode ) {
+      if ( this.model.expandedProperty.value ) {
+
+        // the component is on this program, so return the global connection point - if the program is expanded then
+        // we return the connection point in the global coordinate frame.
+        connectionPoint = componentListItemNode.getGlobalConnectionPoint();
+      }
+      else {
+
+        // the component is on this program, so return the global connection point - if the program is collapsed then
+        connectionPoint = this.getGlobalTitleConnectionPoint();
+      }
+    }
+
+    return connectionPoint;
+  }
+
+  /**
+   * The connection point at the title of this program - used for all component connections on this program
+   * when the program is collapsed.
+   */
+  getGlobalTitleConnectionPoint() {
+    const globalTitleConnectionPoint = this.titleText.globalBounds.leftCenter;
+    const panZoomMatrix = phet.scenery.animatedPanZoomSingleton.listener.matrixProperty.value.inverted();
+    return panZoomMatrix.timesVector2( globalTitleConnectionPoint );
+  }
+
+  /**
+   * Return the total height needed to fit the components in the provided list into a vertical layout container,
+   * assuming that they are all stacked vertically with MARGIN between them.
+   */
+  getHeightForComponents( componentsList ) {
+    return componentsList.reduce( ( accumulator, component ) => {
+      const componentHeight = Math.max( 0, component.height );
+      return accumulator + componentHeight + ( MARGIN * 2 );
+    }, 0 );
   }
 
   /**
@@ -322,25 +394,36 @@ export default class ProgramNode extends phet.scenery.Node {
    */
   layout() {
 
-    // Make sure the retangle is big enough for everything.
-    const totalHeight = this.allComponents.reduce( ( accumulator, component ) => {
-      const componentHeight = Math.max( 0, component.height );
-      return accumulator + componentHeight + ( MARGIN * 2 );
-    }, 0 );
-    const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
-    this.background.setRectHeight( backgroundHeight );
+    if ( this.model.expandedProperty.value ) {
+
+      // Make sure the rectangle is big enough for everything.
+      const totalHeight = this.getHeightForComponents( this.allComponents );
+      const backgroundHeight = Math.max( totalHeight, DEFAULT_HEIGHT );
+      this.background.setRectHeight( backgroundHeight );
+    }
+    else {
+
+      // When collapsed, we just display the title, number, and top buttons - at this time the top buttons are aligned
+      // with the program number so we only have to consider the height of the title and number.
+      const totalHeight = this.getHeightForComponents( [
+        this.programNumber,
+        this.titleText
+      ] );
+
+      // a little extra margin looks nicer in this collapsed state
+      this.background.setRectHeight( totalHeight + OUTER_MARGIN * 2 );
+    }
 
     // we cannot layout until all images are loaded
     if ( this.deleteButton && this.copyButton && this.customCodeIcon ) {
-
-      this.programNumber.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
-      this.titleText.leftTop = this.programNumber.leftBottom.plusXY( 0, MARGIN );
+      this.expandCollapseButton.leftTop = this.background.leftTop.plusXY( OUTER_MARGIN, OUTER_MARGIN );
+      this.programNumber.leftCenter = this.expandCollapseButton.rightCenter.plusXY( 5, 0 );
+      this.titleText.leftTop = this.expandCollapseButton.leftBottom.plusXY( 0, MARGIN );
       this.deleteButton.rightTop = this.background.rightTop.plusXY( -OUTER_MARGIN, OUTER_MARGIN );
       this.copyButton.rightTop = this.deleteButton.leftTop.minusXY( 5, 0 );
       this.allComponentsVBox.leftTop = this.titleText.leftBottom.plusXY( 0, MARGIN );
-      this.createListenerButton.centerBottom = this.background.centerBottom.plusXY( 0, -OUTER_MARGIN );
-      this.createComponentButton.centerBottom = this.createListenerButton.centerTop.minusXY( 0, MARGIN );
-      this.customCodeIcon.centerBottom = this.createComponentButton.centerTop.minusXY( 0, MARGIN );
+      this.createButtonsVBox.centerBottom = this.background.centerBottom.plusXY( 0, -OUTER_MARGIN );
+      this.customCodeIcon.centerBottom = this.createButtonsVBox.centerTop.minusXY( 0, MARGIN );
     }
   }
 }

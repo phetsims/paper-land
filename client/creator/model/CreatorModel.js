@@ -102,6 +102,15 @@ export default class CreatorModel {
   }
 
   /**
+   * Quickly expand/collapse all programs in the model.
+   */
+  setAllProgramsExpanded( expanded ) {
+    this.programs.forEach( program => {
+      program.expandedProperty.value = expanded;
+    } );
+  }
+
+  /**
    * Create a new program, registering important listeners for its removal within this model.
    * @param {Vector2} initialPosition - initial position for the program
    * @param {number} [programNumber] - the number of this program, defaults to a random number
