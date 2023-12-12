@@ -334,9 +334,9 @@ export default class ProgramNode extends phet.scenery.Node {
    * Keep this ProgramNode within the available bounds.
    */
   keepInBounds( availableBounds ) {
-    const thisVisibleBounds = this.globalBounds;
-    const newX = phet.dot.Utils.clamp( thisVisibleBounds.left, availableBounds.left, availableBounds.right - thisVisibleBounds.width );
-    const newY = phet.dot.Utils.clamp( thisVisibleBounds.top, availableBounds.top, availableBounds.bottom - thisVisibleBounds.height );
+    const thisBounds = this.bounds;
+    const newX = phet.dot.Utils.clamp( thisBounds.left, availableBounds.left, availableBounds.right - thisBounds.width );
+    const newY = phet.dot.Utils.clamp( thisBounds.top, availableBounds.top, availableBounds.bottom - thisBounds.height );
     this.model.positionProperty.value = new phet.dot.Vector2( newX, newY );
   }
 
