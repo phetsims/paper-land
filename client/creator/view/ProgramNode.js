@@ -157,9 +157,6 @@ export default class ProgramNode extends phet.scenery.Node {
       spacing: MARGIN,
       align: 'center',
 
-      // so that the 'custom code icon' (which gets loaded asynchronously) can be placed at the front without
-      // affecting the layout
-      excludeInvisibleChildrenFromBounds: false,
       children: [
         this.createComponentButton,
         this.createListenerButton
@@ -226,6 +223,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
       model.customCodeContainer.hasCustomCodeProperty.link( hasCustomCode => {
         this.customCodeIcon.visible = hasCustomCode;
+        this.layout();
       } );
 
       // Place at the front of this HBox so that the icon comes first
@@ -314,6 +312,7 @@ export default class ProgramNode extends phet.scenery.Node {
     };
 
     model.expandedProperty.link( expanded => {
+
       this.allComponentsVBox.visible = expanded;
       this.createButtonsVBox.visible = expanded;
       this.layout();
