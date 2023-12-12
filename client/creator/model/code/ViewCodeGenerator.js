@@ -92,7 +92,33 @@ export default class ViewCodeGenerator {
       
       const setRotation = ( rotation ) => {
         ${componentNameString}.rotation = rotation;
-      };`
+      };
+
+      // Set the scale in X and Y and the       
+      const matchBounds = ( bounds, stretch ) => {
+      
+        // Find the scale to apply to the x and y dimensions so that the component bounds match the provided bounds
+        const ${componentNameString}ViewBounds = phet.paperLand.utils.paperToBoardBounds(bounds, sharedData.displaySize.width, sharedData.displaySize.height);
+
+        // local bounds may be zero as things load
+        // const aspectRatio = ( ${componentNameString}.localBounds.width || 1 ) / ( ${componentNameString}.localBounds.height || 1 );
+
+        const scaleX = ${componentNameString}ViewBounds.width / ( ${componentNameString}.localBounds.width || 1 );
+        const scaleY = ${componentNameString}ViewBounds.height / ( ${componentNameString}.localBounds.height || 1 );
+
+        if ( stretch ) {
+          ${componentNameString}.setScaleMagnitude(scaleX, scaleY);
+        }
+        else {
+        
+          // Scale by the minimum of the x and y scale factors, preserving the aspect ratio
+          ${componentNameString}.setScaleMagnitude( Math.min( scaleX, scaleY ) );
+        }        
+
+        // Now put the component in the center of the bounds
+        ${componentNameString}.center = ${componentNameString}ViewBounds.center;
+      };
+      `
     );
 
     if ( viewType === 'ShapeViewComponent' ) {
@@ -176,7 +202,7 @@ export default class ViewCodeGenerator {
         const setImage = imageName => {
           let ${componentNameString}ImageElement = document.createElement( 'img' );
           ${componentNameString}ImageElement.src = 'media/images/' + imageName;
-          ${componentNameString}.image = ${componentNameString}ImageElement; 
+          ${componentNameString}.image = ${componentNameString}ImageElement;
         };
       ` );
     }
