@@ -41,29 +41,6 @@ export default function CreatorMain( props ) {
   const displayColumnRef = useRef( null );
   const reactColumnRef = useRef( null );
 
-  // useEffect( () => {
-  //
-  //   // THIS FUNCTION IS BEING CALLED BUT DOESN"T UPDATE THE LAYOUT LIKE I EXPECT
-  //   const updateLayout = displayWidth => {
-  //     // displayColumnRef.current.style.flex = displayWidth;
-  //     // reactColumnRef.current.style.flex = 1 - displayWidth;
-  //
-  //     displayColumnRef.current.style.flex = `0 0 ${displayWidth * 100}%`; // Assuming displayWidth is a fraction
-  //     reactColumnRef.current.style.flex = `0 0 ${( 1 - displayWidth ) * 100}%`;
-  //
-  //     // update the display layout after the columns adjust
-  //     updateDisplaySize( creatorView.display, window.innerWidth, window.innerHeight );
-  //
-  //     console.log( displayColumnRef.current.style.flex );
-  //   };
-  //
-  //   displayColumnWidthProperty.link( updateLayout );
-  //
-  //   return function cleanup() {
-  //     displayColumnWidthProperty.unlink( updateLayout );
-  //   };
-  // } );
-
   // Sets the Display size and layout the view when the window size changes.
   const updateDisplaySize = ( display, width, height ) => {
 
@@ -99,18 +76,14 @@ export default function CreatorMain( props ) {
     } );
     display.addInputListener( phet.scenery.animatedPanZoomSingleton.listener );
 
-    // THIS FUNCTION IS BEING CALLED BUT DOESN"T UPDATE THE LAYOUT LIKE I EXPECT
     const updateLayout = displayWidth => {
-      console.log( displayWidth, 1 - displayWidth );
 
       // update the display layout after the columns adjust
       updateDisplaySize( display, window.innerWidth, window.innerHeight );
 
+      // Update the size of each column from the current displayWidth
       displayColumnRef.current.style.flex = displayWidth;
       reactColumnRef.current.style.flex = 1 - displayWidth;
-
-      // displayColumnRef.current.style.flex = `0 0 ${displayWidth * 100}%`; // Assuming displayWidth is a fraction
-      // reactColumnRef.current.style.flex = `0 0 ${( 1 - displayWidth ) * 100}%`;
     };
 
     displayColumnWidthProperty.link( updateLayout );
