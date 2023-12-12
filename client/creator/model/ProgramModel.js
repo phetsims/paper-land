@@ -97,6 +97,7 @@ export default class ProgramModel {
       title: this.titleProperty.value,
       keywords: this.keywordsProperty.value,
       description: this.descriptionProperty.value,
+      expanded: this.expandedProperty.value,
 
       topWhiskerLength: this.topWhiskerLengthProperty.value,
       rightWhiskerLength: this.rightWhiskerLengthProperty.value,
@@ -124,6 +125,10 @@ export default class ProgramModel {
     this.titleProperty.value = stateObject.title;
     this.keywordsProperty.value = stateObject.keywords;
     this.descriptionProperty.value = stateObject.description;
+
+    // Some states may have this as undefined because this was added late in development. If undefined, we want
+    // to default to expanded.
+    this.expandedProperty.value = stateObject.expanded === undefined ? true : stateObject.expanded;
 
     // These were added late in the game. We need to be graceful if someone is saving data without saving/loading
     // these values.
