@@ -388,15 +388,18 @@ export default class ProgramCodeGenerator {
     else if ( modelComponent.propertyType === 'ArrayItem' ) {
 
       // All names of the model components that are added to the array in an object.
-      const dependencyNames = modelComponent.itemSchema.map( item => item.componentName );
+      const dependencyNames = modelComponent.itemSchema.map( item => item.component.nameProperty.value );
 
       // Add the array itself as a dependency so that items are added when the array is available.
-      dependencyNames.push( modelComponent.arrayName );
+      const arrayName = modelComponent.arrayComponent.nameProperty.value;
+      dependencyNames.push( arrayName );
 
       // Create the key-value pair object as a string that will actually be put into the array.
       let itemDataString = '{ \n';
       modelComponent.itemSchema.forEach( ( item, index ) => {
-        itemDataString += `'${item.entryName}': phet.paperLand.getModelComponent( '${item.componentName}' ).value`;
+        const componentName = item.component.nameProperty.value;
+
+        itemDataString += `'${item.entryName}': phet.paperLand.getModelComponent( '${componentName}' ).value`;
         if ( index < modelComponent.itemSchema.length - 1 ) {
           itemDataString += ',';
         }
@@ -408,7 +411,7 @@ export default class ProgramCodeGenerator {
         DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
         DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
         ITEM_OBJECT: itemDataString,
-        ARRAY_NAME: modelComponent.arrayName
+        ARRAY_NAME: arrayName
       };
     }
     else {
