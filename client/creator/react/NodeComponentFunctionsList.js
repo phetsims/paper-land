@@ -11,7 +11,7 @@ const NODE_COMPONENT_FUNCTIONS = [
   'setOpacity( number ) - A number between 0 and 1.',
   'setVisible( boolean ) - A boolean. Visible when true.',
   'moveToFront() - Moves this view component in front of all others.',
-  'matchBounds( bounds, stretch ) - Scale and move the paper so that this component is the same as the provided bounds. If stretch is true, the component will be stretched in x and y. If stretch is false, the component will keep its aspect ratio. Do not use this with setCenterX, setCenterY, and setScale.',
+  'matchBounds( bounds, stretch ) - Scale and move the component so that it is the same size and centered in the provided bounds. If stretch is true, the component will be stretched in x and y. If stretch is false, the component will keep its aspect ratio. Do not use this with setCenterX, setCenterY, and setScale.',
 
   'unitBoundsToDisplayBounds( bounds ) - Converts bounds in unit (0-1) coordinates to display coordinates (pixels). Returns a new bounds.',
   'unitPositionToDisplayPosition( position ) - Converts a position in unit (0-1) coordinates to display coordinates (pixels). Returns a new position.'
