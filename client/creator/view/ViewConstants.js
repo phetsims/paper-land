@@ -6,7 +6,6 @@ const TEXT_FILL_COLOR = new phet.scenery.Color( 189, 203, 218 );
 const BUTTON_FILL_COLOR = new phet.scenery.Color( 89, 93, 94 );
 const BUTTON_STROKE_COLOR = new phet.scenery.Color( 80, 80, 80 );
 const BUTTON_APPEARANCE_STRATEGY = phet.sun.ButtonNode.FlatAppearanceStrategy;
-const TITLE_TEXT_FONT = new phet.scenery.Font( { size: 24 } );
 const BUTTON_DISABLED_COLOR = BUTTON_FILL_COLOR.colorUtilsBrighter( 0.25 );
 const BUTTON_PRESSED_COLOR = BUTTON_FILL_COLOR.colorUtilsDarker( 0.2 );
 const ARROW_SIZE = new phet.dot.Dimension2( 120, 21 );
@@ -87,13 +86,25 @@ const ViewConstants = {
   LINK_WIRE_COLOR: '#00FF00',
   ARRAY_WIRE_COLOR: '#BA55D3',
 
+  // The line dash for the different types of wires that represent connections between components.
+  VIEW_WIRE_LINE_DASH: [ 24, 2 ],
+  CONTROLLER_WIRE_LINE_DASH: [ 16, 4 ],
+  DERIVED_WIRE_LINE_DASH: [ 16, 8 ],
+  LINK_WIRE_LINE_DASH: [ 24, 8 ],
+  ARRAY_WIRE_LINE_DASH: [ 24, 4 ],
+
   TEXT_OPTIONS: {
     font: TEXT_FONT,
     fill: TEXT_FILL_COLOR
   },
 
+  TEXT_OPTIONS_LARGE: {
+    font: TEXT_FONT_LARGE,
+    fill: TEXT_FILL_COLOR
+  },
+
   titleTextOptions: {
-    font: TITLE_TEXT_FONT,
+    font: TEXT_FONT_LARGE,
     fill: TEXT_FILL_COLOR
   },
 

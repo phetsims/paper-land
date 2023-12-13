@@ -33,7 +33,6 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     context.save();
     context.lineCap = 'round';
     context.lineDashOffset = this.lineDashOffset;
-    context.setLineDash( [ 4, 2 ] );
 
     if ( this.visibilityModel.controllerConnectionsVisibleProperty.value ) {
       this.updateControllerConnections();
@@ -44,6 +43,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.controllerConnections.forEach( connection => {
         this.drawCurve( context, connection.start, connection.end );
       } );
+      context.setLineDash( ViewConstants.CONTROLLER_WIRE_LINE_DASH );
       context.stroke();
     }
 
@@ -56,6 +56,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.derivedPropertyConnections.forEach( connection => {
         this.drawCurve( context, connection.start, connection.end );
       } );
+      context.setLineDash( ViewConstants.DERIVED_WIRE_LINE_DASH );
       context.stroke();
     }
 
@@ -67,6 +68,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.viewConnections.forEach( connection => {
         this.drawCurve( context, connection.start, connection.end );
       } );
+      context.setLineDash( ViewConstants.VIEW_WIRE_LINE_DASH );
       context.stroke();
     }
 
@@ -78,6 +80,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.linkConnections.forEach( connection => {
         this.drawCurve( context, connection.start, connection.end );
       } );
+      context.setLineDash( ViewConstants.LINK_WIRE_LINE_DASH );
       context.stroke();
     }
 
@@ -89,6 +92,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.arrayConnections.forEach( connection => {
         this.drawCurve( context, connection.start, connection.end );
       } );
+      context.setLineDash( ViewConstants.ARRAY_WIRE_LINE_DASH );
       context.stroke();
     }
 
