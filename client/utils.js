@@ -326,6 +326,9 @@ export function getComponentDocumentation( namedProperty ) {
   else if ( type === 'ObservableArray' ) {
     usabilityDocumentation = 'This is an array of Array Item components.';
   }
+  else if ( type === 'NamedArrayItemReference' ) {
+    usabilityDocumentation = 'This is a reference to an Array Item component in the array. It will be "null" until the array has an item.';
+  }
   else {
     throw new Error( `Unhandled property type: ${type}` );
   }

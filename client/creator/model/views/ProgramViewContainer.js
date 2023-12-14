@@ -1,6 +1,7 @@
 /**
  * A container for all view related components in a ProgramModel.
  */
+import { renameVariableInCode } from '../../../utils.js';
 import ComponentContainer from '../ComponentContainer.js';
 import BackgroundViewComponent from './BackgroundViewComponent.js';
 import DescriptionViewComponent from './DescriptionViewComponent.js';
@@ -141,43 +142,6 @@ export default class ProgramViewContainer extends ComponentContainer {
     };
   }
 
-  copyComponentsFromOther( otherContainerJSON, getUniqueCopyName, allModelComponents, newModelNames ) {
-
-    // Include the model components that were renamed during this copy so we know how to
-    // whether to set dependencies on new copies or the original components.
-    const nameChangeMap = _.merge( {}, newModelNames );
-
-    for ( const key in otherContainerJSON ) {
-      const components = otherContainerJSON[ key ];
-
-      components.forEach( componentStateObject => {
-        const originalName = componentStateObject.name;
-        componentStateObject.name = getUniqueCopyName( originalName );
-        nameChangeMap[ originalName ] = componentStateObject.name;
-      } );
-    }
-
-    // Update dependency relationships and references in custom code.
-    for ( const key in otherContainerJSON ) {
-      const componentObjects = otherContainerJSON[ key ];
-      componentObjects.forEach( componentObject => {
-
-        // update the dependency to use the newly copied component if it exists
-        componentObject.modelComponentNames = componentObject.modelComponentNames.map( dependencyName => {
-          return nameChangeMap[ dependencyName ] || dependencyName;
-        } );
-
-        // update the derivation function to use the newly copied component if necessary
-        for ( const name in nameChangeMap ) {
-          const newName = nameChangeMap[ name ];
-          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
-        }
-      } );
-    }
-
-    this.load( otherContainerJSON, allModelComponents );
-  }
-
   /**
    * Loads all view components from the provided JSON object.
    */
@@ -249,7 +213,7 @@ export default class ProgramViewContainer extends ComponentContainer {
         // update the derivation function to use the newly copied component if necessary
         for ( const name in nameChangeMap ) {
           const newName = nameChangeMap[ name ];
-          componentObject.controlFunctionString = componentObject.controlFunctionString.replaceAll( name, newName );
+          componentObject.controlFunctionString = renameVariableInCode( componentObject.controlFunctionString, newName, name );
         }
       } );
     }

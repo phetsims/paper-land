@@ -1,9 +1,10 @@
 /**
  * Collection of model components for a single program, with functions to create them.
  */
-import { enforceKeys } from '../../utils.js';
+import { enforceKeys, renameVariableInCode } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import NamedArrayItem from './NamedArrayItem.js';
+import NamedArrayItemReference from './NamedArrayItemReference.js';
 import NamedBooleanProperty from './NamedBooleanProperty.js';
 import NamedBounds2Property from './NamedBounds2Property.js';
 import NamedDerivedProperty from './NamedDerivedProperty.js';
@@ -25,6 +26,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedBounds2Properties = phet.axon.createObservableArray();
     this.namedObservableArrays = phet.axon.createObservableArray();
     this.namedArrayItems = phet.axon.createObservableArray();
+    this.namedArrayItemReferences = phet.axon.createObservableArray();
   }
 
   /**
@@ -96,8 +98,8 @@ export default class ProgramModelContainer extends ComponentContainer {
   /**
    * Adds a NamedObservableArray to this container with the provided name.
    */
-  addObservableArray( name, lengthComponentName ) {
-    const newNamedProperty = new NamedObservableArray( name, lengthComponentName );
+  addObservableArray( name, lengthComponentName, addedItemReference, removedItemReference ) {
+    const newNamedProperty = new NamedObservableArray( name, lengthComponentName, addedItemReference, removedItemReference );
     this.namedObservableArrays.push( newNamedProperty );
     this.addToAllComponents( newNamedProperty );
 
@@ -151,6 +153,29 @@ export default class ProgramModelContainer extends ComponentContainer {
       this.namedArrayItems.splice( index, 1 );
       this.removeFromAllComponents( namedItem );
     }
+  }
+
+  /**
+   * Adds a component that keeps a reference to a particular array item. This is used to notify
+   * when an item is added or removed from the array.
+   */
+  addNamedArrayItemReference( name ) {
+    const newNamedProperty = new NamedArrayItemReference( name );
+    this.namedArrayItemReferences.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
+
+    this.registerChangeListeners( newNamedProperty, this.removeNamedArrayItemReference.bind( this ) );
+  }
+
+  /**
+   * Removes an array item reference from this container.
+   * @param {NamedArrayItemReference} namedProperty
+   */
+  removeNamedArrayItemReference( namedProperty ) {
+    const index = this.namedArrayItemReferences.indexOf( namedProperty );
+    assert && assert( index > -1, 'Component does not exist and cannot be removed.' );
+    this.namedArrayItemReferences.splice( index, 1 );
+    this.removeFromAllComponents( namedProperty );
   }
 
   /**
@@ -251,7 +276,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedDerivedProperties: this.namedDerivedProperties.map( namedProperty => namedProperty.save() ),
       namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() ),
       namedObservableArrays: this.namedObservableArrays.map( namedProperty => namedProperty.save() ),
-      namedArrayItems: this.namedArrayItems.map( namedArrayItem => namedArrayItem.save() )
+      namedArrayItems: this.namedArrayItems.map( namedArrayItem => namedArrayItem.save() ),
+      namedArrayItemReferences: this.namedArrayItemReferences.map( namedArrayItemReference => namedArrayItemReference.save() )
     };
   }
 
@@ -267,7 +293,8 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedNumberProperties = stateObject.namedNumberProperties || [];
     const namedEnumerationProperties = stateObject.namedEnumerationProperties || [];
     const namedBounds2Properties = stateObject.namedBounds2Properties || [];
-    const namedObservableArrays = stateObject.namedObservableArrays || [];
+    const namedArrayItemReferences = stateObject.namedArrayItemReferences || [];
+    const namedArrayStateObjects = stateObject.namedObservableArrays || [];
 
     namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
@@ -310,8 +337,25 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedBounds2PropertyData.defaultMaxY
       );
     } );
-    namedObservableArrays.forEach( namedObservableArray => {
-      this.addObservableArray( namedObservableArray.name, namedObservableArray.lengthComponentName );
+
+    namedArrayItemReferences.forEach( namedArrayItemReference => {
+      this.addNamedArrayItemReference( namedArrayItemReference.name );
+    } );
+
+    // Add the observable arrays after the reference components for array items have been created
+    namedArrayStateObjects.forEach( namedArrayStateObject => {
+      const addedItemName = namedArrayStateObject.arrayAddedItemReferenceName;
+      const removedItemName = namedArrayStateObject.arrayRemovedItemReferenceName;
+
+      const addedItemReference = this.allComponents.find( namedProperty => namedProperty.nameProperty.value === addedItemName );
+      const removedItemReference = this.allComponents.find( namedProperty => namedProperty.nameProperty.value === removedItemName );
+
+      this.addObservableArray(
+        namedArrayStateObject.name,
+        namedArrayStateObject.lengthComponentName,
+        addedItemReference,
+        removedItemReference
+      );
     } );
   }
 
@@ -366,6 +410,9 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedEnumerationProperties.dispose();
     this.namedDerivedProperties.dispose();
     this.namedBounds2Properties.dispose();
+    this.namedObservableArrays.dispose();
+    this.namedArrayItems.dispose();
+    this.namedArrayItemReferences.dispose();
 
     super.dispose();
   }
@@ -394,7 +441,7 @@ export default class ProgramModelContainer extends ComponentContainer {
           // update the derivation function to use the newly copied component if necessary
           for ( const name in nameChangeMap ) {
             const newName = nameChangeMap[ name ];
-            componentJSON.derivation = componentJSON.derivation.replaceAll( name, newName );
+            componentJSON.derivation = renameVariableInCode( componentJSON.derivation, newName, name );
           }
         }
         if ( componentJSON.itemSchema ) {
@@ -404,6 +451,14 @@ export default class ProgramModelContainer extends ComponentContainer {
           componentJSON.itemSchema.forEach( item => {
             item.componentName = nameChangeMap[ item.componentName ] || item.componentName;
           } );
+        }
+
+        // For an array component, we potentially need to update the length and reference items if they have
+        // been renamed
+        if ( componentJSON.propertyType === 'ObservableArray' ) {
+          componentJSON.arrayAddedItemReferenceName = nameChangeMap[ componentJSON.arrayAddedItemReferenceName ] || componentJSON.arrayAddedItemReferenceName;
+          componentJSON.arrayRemovedItemReferenceName = nameChangeMap[ componentJSON.arrayRemovedItemReferenceName ] || componentJSON.arrayRemovedItemReferenceName;
+          componentJSON.lengthComponentName = nameChangeMap[ componentJSON.lengthComponentName ] || componentJSON.lengthComponentName;
         }
       } );
     }

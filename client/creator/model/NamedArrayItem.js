@@ -5,6 +5,8 @@ export default class NamedArrayItem extends NamedProperty {
   constructor( name, arrayComponent, itemSchema ) {
     super( name, 'ArrayItem' );
 
+    // @param {NamedObservableArray|null} arrayComponent - the array that this item belongs to. This may be null.
+    // Creator allows it but code generation will fail.
     this.arrayComponent = arrayComponent;
 
     // Defines the entries of the array item, an array with objects like
@@ -24,7 +26,9 @@ export default class NamedArrayItem extends NamedProperty {
 
     return {
       name: this.nameProperty.value,
-      arrayName: this.arrayComponent.nameProperty.value,
+
+      // The array name may be undefined if the user manually deletes it.
+      arrayName: this.arrayComponent ? this.arrayComponent.nameProperty.value : '',
       itemSchema: serializedSchema
     };
   }

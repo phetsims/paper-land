@@ -391,8 +391,16 @@ export default class ProgramCodeGenerator {
       const dependencyNames = modelComponent.itemSchema.map( item => item.component.nameProperty.value );
 
       // Add the array itself as a dependency so that items are added when the array is available.
-      const arrayName = modelComponent.arrayComponent.nameProperty.value;
+      const arrayComponent = modelComponent.arrayComponent;
+      if ( !arrayComponent ) {
+        throw new Error( `ArrayItem ${modelComponent.nameProperty.value} does not have an array component.` );
+      }
+
+      const arrayName = arrayComponent.nameProperty.value;
       dependencyNames.push( arrayName );
+
+      const arrayAddedItemReferenceName = arrayComponent.arrayAddedItemReference ? arrayComponent.arrayAddedItemReference.nameProperty.value : '';
+      const arrayRemovedItemReferenceName = arrayComponent.arrayRemovedItemReference ? arrayComponent.arrayRemovedItemReference.nameProperty.value : '';
 
       // Create the key-value pair object as a string that will actually be put into the array.
       let itemDataString = '{ \n';
@@ -411,8 +419,15 @@ export default class ProgramCodeGenerator {
         DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
         DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
         ITEM_OBJECT: itemDataString,
-        ARRAY_NAME: arrayName
+        ARRAY_NAME: arrayName,
+        ADDED_ITEM_REFERENCE_NAME: arrayAddedItemReferenceName,
+        REMOVED_ITEM_REFERENCE_NAME: arrayRemovedItemReferenceName
       };
+    }
+    else if ( modelComponent.propertyType === 'NamedArrayItemReference' ) {
+
+      // No data for the array item reference
+      data = {};
     }
     else {
       throw new Error( `Could not get model data for component ${modelComponent.propertyType} during code generation.` );

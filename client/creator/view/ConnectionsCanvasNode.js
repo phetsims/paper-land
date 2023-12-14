@@ -191,6 +191,29 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
     this.programNodes.forEach( programNode => {
       programNode.model.modelContainer.allComponents.forEach( component => {
+
+        // Draws connections between array components and their added/removed item references.
+        if ( component.propertyType === 'ObservableArray' ) {
+
+          const componentName = component.nameProperty.value;
+          const arrayPoint = programNode.getComponentListItemConnectionPoint( componentName );
+
+          // The added/removed components may not be defined.
+          const addedItemName = component.arrayAddedItemReference?.nameProperty.value;
+          const removedItemName = component.arrayRemovedItemReference?.nameProperty.value;
+
+          const addedItemPoint = programNode.getComponentListItemConnectionPoint( addedItemName );
+          const removedItemPoint = programNode.getComponentListItemConnectionPoint( removedItemName );
+
+          if ( addedItemPoint ) {
+            this.arrayConnections.push( { start: arrayPoint, end: addedItemPoint } );
+          }
+          if ( removedItemPoint ) {
+            this.arrayConnections.push( { start: arrayPoint, end: removedItemPoint } );
+          }
+        }
+
+        // Draws connections between array items, their components, and the array they belong to.
         if ( component.propertyType === 'ArrayItem' ) {
 
           // start by drawing connections between the components and this array item,
@@ -214,7 +237,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
             otherProgramNode.model.modelContainer.allComponents.forEach( otherComponent => {
               if ( otherComponent.propertyType === 'ObservableArray' ) {
 
-                const componentArrayName = component.arrayComponent.nameProperty.value;
+                // The arrayComponent may not be defined.
+                const componentArrayName = component.arrayComponent?.nameProperty.value;
                 if ( otherComponent.nameProperty.value === componentArrayName ) {
                   const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName );
                   if ( arrayPoint && arrayItemPoint ) {

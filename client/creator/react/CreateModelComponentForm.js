@@ -4,6 +4,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import { isNameValid } from '../../utils.js';
 import Component from '../model/Component.js';
 import NamedArrayItem from '../model/NamedArrayItem.js';
+import NamedArrayItemReference from '../model/NamedArrayItemReference.js';
 import NamedBooleanProperty from '../model/NamedBooleanProperty.js';
 import NamedBounds2Property from '../model/NamedBounds2Property.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
@@ -126,6 +127,12 @@ export default function CreateModelComponentForm( props ) {
     else if ( selectedTab === 'arrayItem' ) {
       setSelectedTabFormValid( arrayItemFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
+    else if ( selectedTab === '' ) {
+
+      // When empty, either nothing or an internally created component is selected, so we can't edit anything
+      // except the name.
+      setSelectedTabFormValid( isComponentNameValid() );
+    }
     else {
       setSelectedTabFormValid( false );
     }
@@ -159,8 +166,11 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( selectedTab === 'arrayItem' ) {
 
-        // save the new array name
-        component.arrayName = arrayItemDataRef.current.arrayName;
+        // save the new array to the component
+        component.arrayComponent = Component.findComponentsByName(
+          allModelComponents,
+          [ arrayItemDataRef.current.arrayName ]
+        )[ 0 ];
 
         // save the new schema, getting references to actual components from the saved names
         component.itemSchema = NamedArrayItem.getSchemaWithComponents( arrayItemDataRef.current.itemSchema, allModelComponents );
@@ -212,8 +222,20 @@ export default function CreateModelComponentForm( props ) {
         // Will be used for the name of a created derived property just for the length, see below
         const lengthComponentName = model.getUniqueCopyName( `${componentName}Length`, '_arrayLength' );
 
+        // Add a component that can be used to keep a reference to the last added item to the array
+        const itemAddedComponentName = model.getUniqueCopyName( `${componentName}AddedItem`, '_AddedItem' );
+        activeProgram.modelContainer.addNamedArrayItemReference( itemAddedComponentName );
+
+        // Add a component that can be used to keep a reference to the last removed item from the array
+        const itemRemovedComponentName = model.getUniqueCopyName( `${componentName}RemovedItem`, '_RemovedItem' );
+        activeProgram.modelContainer.addNamedArrayItemReference( itemRemovedComponentName );
+
+        // get the references to the new components
+        const itemAddedComponent = activeProgram.modelContainer.getComponent( itemAddedComponentName );
+        const itemRemovedComponent = activeProgram.modelContainer.getComponent( itemRemovedComponentName );
+
         // Add the observable array
-        activeProgram.modelContainer.addObservableArray( componentName, lengthComponentName );
+        activeProgram.modelContainer.addObservableArray( componentName, lengthComponentName, itemAddedComponent, itemRemovedComponent );
 
         // Get the reference to the new component
         const newArrayComponent = activeProgram.modelContainer.getComponent( componentName );
@@ -225,8 +247,8 @@ export default function CreateModelComponentForm( props ) {
           `return ${componentName}.length;`
         );
 
-        // Add the name of the length component to the array, so that we can try to remove
-        // it when the array is removed.
+        // Add the custom-created components to the array component so that it can modify or remove them
+        // when necessary
         newArrayComponent.lengthComponentName = lengthComponentName;
       }
       else if ( selectedTab === 'arrayItem' ) {
@@ -298,6 +320,11 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( component instanceof NamedArrayItem ) {
         return 'arrayItem';
+      }
+      else if ( component instanceof NamedArrayItemReference ) {
+
+        // For this item (which was created internally) there is nothing that the user can edit.
+        return '';
       }
       else {
         throw new Error( 'Unknown component type.' );

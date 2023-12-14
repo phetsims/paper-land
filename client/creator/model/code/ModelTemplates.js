@@ -99,18 +99,27 @@ const ModelComponentTemplates = {
         {{DEPENDENCY_NAMES_ARRAY}},
         ( {{DEPENDENCY_ARGUMENTS}} ) => {
         
+          // Create the entry from the item schema.
+          const {{NAME}}ItemObject = {{ITEM_OBJECT}};
+        
+          // Now that all dependencies are detected, this is where we may add the item for the first time.
+          // If the model has a 'added' item reference, set this item to it.
+          if ( phet.paperLand.getModelComponent( '{{ADDED_ITEM_REFERENCE_NAME}}' ) ) {
+            phet.paperLand.getModelComponent( '{{ADDED_ITEM_REFERENCE_NAME}}' ).value = {{NAME}}ItemObject;
+          }
+        
           // A callback that will replace the item in the array.
           scratchpad.replaceItem = () => {
           
             // A shallow copy of the array so that we can set it back to the Property and trigger listeners.
             const {{ARRAY_NAME}}Array = phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value.slice();
+            
             const index = {{ARRAY_NAME}}Array.indexOf( scratchpad.item );
             if ( index > -1 ) {
               {{ARRAY_NAME}}Array.splice( index, 1 );
             }
             
-            // Create the entry from the item schema.
-            scratchpad.item = {{ITEM_OBJECT}}
+            scratchpad.item = {{NAME}}ItemObject;
             
             // Add the item to the array, inserting it into the same index as the previous item
             // to be less disruptive to the array data.
@@ -145,6 +154,12 @@ const ModelComponentTemplates = {
               
               // Set the Property to a new array so that listeners are triggered.
               phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = arrayValue.slice();
+              
+              // Update the reference to the item that was just removed from the array, if the model has such a
+              // component (it may have been removed by the user).
+              if ( phet.paperLand.getModelComponent( '{{REMOVED_ITEM_REFERENCE_NAME}}' ) ) {
+                phet.paperLand.getModelComponent( '{{REMOVED_ITEM_REFERENCE_NAME}}' ).value = scratchpad.item;
+              }
             }
           }
           
@@ -168,6 +183,12 @@ const ModelComponentTemplates = {
           
           // Set the Property to a new array so that listeners are triggered.
           phet.paperLand.getModelComponent( '{{ARRAY_NAME}}' ).value = {{ARRAY_NAME}}Array.value.slice();
+          
+          // Update the reference to the item that was just removed from the array, if the model has such a
+          // component (it may have been removed by the user).
+          if ( phet.paperLand.getModelComponent( '{{REMOVED_ITEM_REFERENCE_NAME}}' ) ) {
+            phet.paperLand.getModelComponent( '{{REMOVED_ITEM_REFERENCE_NAME}}' ).value = scratchpad.item;
+          }
         }
       }
       
@@ -181,6 +202,16 @@ const ModelComponentTemplates = {
       
       // Detach the multiModelObserver listener.
       phet.paperLand.removeMultiModelObserver( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}ItemObserverId );
+    `
+  },
+  NamedArrayItemReference: {
+    onProgramAdded: `
+      const {{NAME}} = new phet.axon.Property( null );
+      phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
+    `,
+    onProgramRemoved: `
+     // Remove the component from the model
+      phet.paperLand.removeModelComponent( '{{NAME}}' );
     `
   }
 };
