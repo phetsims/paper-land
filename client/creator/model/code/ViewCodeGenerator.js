@@ -162,7 +162,8 @@ export default class ViewCodeGenerator {
         
         // for a circle
         const setRadius = ( radius ) => {
-          ${componentNameString}.radius = ${ViewCodeGenerator.valueStringInViewUnits( 'radius', inModelCoordinates, 'x' )};
+          // since this is a Path and not a Circle, we need to recreate the shape
+          ${componentNameString}.shape = phet.kite.Shape.circle( ${ViewCodeGenerator.valueStringInViewUnits( 'radius', inModelCoordinates, 'x' )} );
         };
         
         // for a rectangle

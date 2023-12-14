@@ -74,7 +74,8 @@ export default function PaperControllerForm( props ) {
     return allModelComponents.filter(
       component => component.propertyType !== 'DerivedProperty' &&
                    component.propertyType !== 'ObservableArray' &&
-                   component.propertyType !== 'ArrayItem'
+                   component.propertyType !== 'ArrayItem' &&
+                   component.propertyType !== 'NamedArrayItemReference'
     );
   }
 
