@@ -407,7 +407,12 @@ export default class ProgramCodeGenerator {
       modelComponent.itemSchema.forEach( ( item, index ) => {
         const componentName = item.component.nameProperty.value;
 
-        itemDataString += `'${item.entryName}': phet.paperLand.getModelComponent( '${componentName}' ).value`;
+        // Define the getter for the property
+        itemDataString += `get ${item.entryName}() { return phet.paperLand.getModelComponent('${componentName}').value; },`;
+
+        // Define the setter for the property
+        itemDataString += `set ${item.entryName}(newValue) { phet.paperLand.getModelComponent('${componentName}').value = newValue; }`;
+
         if ( index < modelComponent.itemSchema.length - 1 ) {
           itemDataString += ',';
         }

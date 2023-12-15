@@ -27,8 +27,8 @@ export default class NamedObservableArray extends NamedProperty {
       name: this.nameProperty.value,
       propertyType: this.propertyType,
       lengthComponentName: this.lengthComponentName,
-      arrayAddedItemReferenceName: this.arrayAddedItemReference.nameProperty.value,
-      arrayRemovedItemReferenceName: this.arrayRemovedItemReference.nameProperty.value
+      arrayAddedItemReferenceName: this.arrayAddedItemReference?.nameProperty.value,
+      arrayRemovedItemReferenceName: this.arrayRemovedItemReference?.nameProperty.value
     };
   }
 }
