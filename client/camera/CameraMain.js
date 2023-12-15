@@ -701,6 +701,32 @@ export default class CameraMain extends React.Component {
                 </div>
               </div>
 
+              <div className={styles.cameraControls}>
+                <div className={styles.cameraInstructions}>
+                  <div className={styles.instruction}>
+                    <p>Zoom In/Out:</p>
+                    <div className={styles.keyCombo}>
+                      <span>⇧ Shift</span> + <span>Wheel Up/Down</span>
+                    </div>
+                    <p>OR</p>
+                    <div className={styles.keyCombo}>
+                      <span>⇧ Shift</span> + <span>+/-</span>
+                    </div>
+                  </div>
+                  <div className={styles.instruction}>
+                    <p>Pan/Move window:</p>
+                    <div className={styles.keyCombo}>
+                      <span>⇧ Shift</span> + <span>Mouse Drag</span>
+                    </div>
+                    <p>OR</p>
+                    <div className={styles.keyCombo}>
+                      <span>⇧ Shift</span> + <span>Arrow Keys</span>
+                    </div>
+                  </div>
+                </div>
+                <Button className={styles.cameraResetButton}>Reset Projection Box</Button>
+              </div>
+
               {/* editor with title/control bar */}
               <div className={styles.containerWithBackground}>
                 <div className={styles.editorTitleBar}>

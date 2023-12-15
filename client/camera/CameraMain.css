@@ -1,6 +1,9 @@
 @value cameraMainPadding: 20px;
+
 @value commonMargin: 10px;
+
 @value cameraMainSidebarWidth: 330px;
+
 @value backgroundColor: #2E4152;
 
 :local(.root) {
@@ -19,6 +22,58 @@
   flex-direction: row;
   padding: 12px;
   justify-content: space-between;
+}
+
+:local(.cameraControls) {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+}
+
+:local(.cameraInstructions) {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+:local(.cameraResetButton) {
+  margin: 40px;
+}
+
+:local(.instruction) {
+  color: #fff; /* White text */
+  padding: 5px 5px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline; /* Centers the items vertically, using baseline works well for paragraphs */
+}
+
+:local(.keyCombo) {
+  background-color: #222; /* Slightly lighter background for key combination */
+  border-radius: 5px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center; /* Centers the icons vertically */
+  margin-left: 5px; /* Space between label and key combination */
+}
+
+:local(.keyCombo) span {
+  margin: 0 3px;
+  padding: 2px 5px;
+  background-color: #666; /* Key background */
+  border-radius: 3px;
+  display: flex; /* Apply flex to align text in the middle of each key representation */
+  align-items: center; /* Center align text vertically */
+  justify-content: center; /* Center align text horizontally */
+}
+
+:local(.keyCombo) span:first-child {
+  margin-left: 0;
+}
+
+:local(.keyCombo) span:last-child {
+  margin-right: 0;
 }
 
 :local(.mainView) {
@@ -73,7 +128,7 @@
 }
 
 .btn-close {
-  fill: rgba(255,255,255,0.5);
+  fill: rgba(255, 255, 255, 0.5);
 }
 
 :local(.note) {
@@ -302,7 +357,7 @@
   border-radius: 3px;
 }
 
-:local(.horizontalRow){
+:local(.horizontalRow) {
   display: flex;
   flex-direction: row;
 }
@@ -326,27 +381,27 @@
   padding: .1rem 2.25rem .1rem .5rem;
 }
 
-.accordion{
+.accordion {
   --bs-accordion-border-width: 0;
   --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(100, 200, 255, 0.75);
 }
 
-.accordion-button{
+.accordion-button {
   border-radius: 5px;
   color: white;
   background-color: #6C8EAC;
 }
 
-.accordion-button:not(.collapsed){
+.accordion-button:not(.collapsed) {
   background-color: #6C8EAC;
   color: white
 }
 
-.accordion-body{
+.accordion-body {
   padding: 5px;
 }
 
-.accordion-item{
+.accordion-item {
   color: white;
   background-color: #405B72;
 }
