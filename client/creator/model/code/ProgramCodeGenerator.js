@@ -405,13 +405,19 @@ export default class ProgramCodeGenerator {
       // Create the key-value pair object as a string that will actually be put into the array.
       let itemDataString = '{ \n';
       modelComponent.itemSchema.forEach( ( item, index ) => {
-        const componentName = item.component.nameProperty.value;
+        const itemComponentName = item.component.nameProperty.value;
+
+        // Add a reference to the latest value so we can use it in the getter - this needs to be updated every time
+        // ANY depdendent component changes, so that the getter always returns the latest value. We cannot use
+        // the getter directly because the model component may be removed and we still need the last value for
+        // those callbacks.
+        itemDataString += `_latest_${item.entryName}: phet.paperLand.getModelComponent('${itemComponentName}').value,\n`;
 
         // Define the getter for the property
-        itemDataString += `get ${item.entryName}() { return phet.paperLand.getModelComponent('${componentName}').value; },`;
+        itemDataString += `get ${item.entryName}() { return this._latest_${item.entryName}; },\n`;
 
         // Define the setter for the property
-        itemDataString += `set ${item.entryName}(newValue) { phet.paperLand.getModelComponent('${componentName}').value = newValue; }`;
+        itemDataString += `set ${item.entryName}(newValue) { phet.paperLand.getModelComponent('${itemComponentName}').value = newValue; }`;
 
         if ( index < modelComponent.itemSchema.length - 1 ) {
           itemDataString += ',';
@@ -420,10 +426,21 @@ export default class ProgramCodeGenerator {
       } );
       itemDataString += ' }';
 
+
+      const itemObjectName = `${modelComponent.nameProperty.value}ItemObject`;
+
+      let updateItemDataString = '';
+      modelComponent.itemSchema.forEach( ( item, index ) => {
+        const itemComponentName = item.component.nameProperty.value;
+        updateItemDataString += `${itemObjectName}._latest_${item.entryName} = phet.paperLand.getModelComponent('${itemComponentName}').value;\n`;
+      } );
+
       data = {
         DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
         DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
+        ITEM_OBJECT_NAME: itemObjectName,
         ITEM_OBJECT: itemDataString,
+        ITEM_OBJECT_UPDATE: updateItemDataString,
         ARRAY_NAME: arrayName,
         ADDED_ITEM_REFERENCE_NAME: arrayAddedItemReferenceName,
         REMOVED_ITEM_REFERENCE_NAME: arrayRemovedItemReferenceName

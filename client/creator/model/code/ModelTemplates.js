@@ -100,12 +100,12 @@ const ModelComponentTemplates = {
         ( {{DEPENDENCY_ARGUMENTS}} ) => {
         
           // Create the entry from the item schema.
-          const {{NAME}}ItemObject = {{ITEM_OBJECT}};
+          const {{ITEM_OBJECT_NAME}} = {{ITEM_OBJECT}};
         
           // Now that all dependencies are detected, this is where we may add the item for the first time.
           // If the model has a 'added' item reference, set this item to it.
           if ( phet.paperLand.getModelComponent( '{{ADDED_ITEM_REFERENCE_NAME}}' ) ) {
-            phet.paperLand.getModelComponent( '{{ADDED_ITEM_REFERENCE_NAME}}' ).value = {{NAME}}ItemObject;
+            phet.paperLand.getModelComponent( '{{ADDED_ITEM_REFERENCE_NAME}}' ).value = {{ITEM_OBJECT_NAME}};
           }
         
           // A callback that will replace the item in the array.
@@ -119,7 +119,10 @@ const ModelComponentTemplates = {
               {{ARRAY_NAME}}Array.splice( index, 1 );
             }
             
-            scratchpad.item = {{NAME}}ItemObject;
+            // Update the ItemObject values every time a component changes
+            {{ITEM_OBJECT_UPDATE}}
+            
+            scratchpad.item = {{ITEM_OBJECT_NAME}};
             
             // Add the item to the array, inserting it into the same index as the previous item
             // to be less disruptive to the array data.
