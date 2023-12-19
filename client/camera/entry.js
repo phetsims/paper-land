@@ -12,12 +12,16 @@ const storedConfig = JSON.parse( localStorage.paperProgramsConfig || '{}' );
 // Check to see if there is an existing, previously selected space in local storage.  If not, create a default.
 const selectedSpaceName = storedConfig.selectedSpaceName || uuidv4().slice( 0, 8 );
 
+export const DEFAULT_KNOB_POINTS = [
+  { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 }
+];
+
 // Define a default
 const defaultConfig = {
   paperSize: 'LETTER',
   colorsRGB: [ [ 119, 43, 24, 255 ], [ 94, 104, 48, 255 ], [ 65, 80, 84, 255 ], [ 0, 0, 0, 255 ] ],
   paperDotSizes: [ 8, 8, 8, 8 ],
-  knobPoints: [ { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 1 } ],
+  knobPoints: DEFAULT_KNOB_POINTS,
   zoomTransform: d3.zoomIdentity,
   showOverlayKeyPointCircles: true,
   showOverlayKeyPointText: true,

@@ -4,6 +4,61 @@
   border-radius: 1000px;
   cursor: pointer;
 }
+
 :local(.keyPoint):hover {
   background: rgba(255, 255, 255, 0.6);
+}
+
+
+:local(.cameraControls) {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-top: 10px;
+}
+
+:local(.cameraInstructions) {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+}
+
+:local(.cameraResetButton) {
+  align-self: flex-start;
+}
+
+:local(.instruction) {
+  color: #fff; /* White text */
+  padding: 5px 5px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline; /* Centers the items vertically, using baseline works well for paragraphs */
+}
+
+:local(.keyCombo) {
+  background-color: #222; /* Slightly lighter background for key combination */
+  border-radius: 5px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center; /* Centers the icons vertically */
+  margin-left: 5px; /* Space between label and key combination */
+}
+
+:local(.keyCombo) span {
+  margin: 0 3px;
+  padding: 2px 5px;
+  background-color: #666; /* Key background */
+  border-radius: 3px;
+  display: flex; /* Apply flex to align text in the middle of each key representation */
+  align-items: center; /* Center align text vertically */
+  justify-content: center; /* Center align text horizontally */
+}
+
+:local(.keyCombo) span:first-child {
+  margin-left: 0;
+}
+
+:local(.keyCombo) span:last-child {
+  margin-right: 0;
 }
