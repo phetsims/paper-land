@@ -50,6 +50,7 @@ export default function CreateEnumerationForm( props ) {
   const handleEdit = ( event, index ) => {
     const newValues = formData.values.slice();
     newValues[ index ] = event.target.value;
+    console.log( 'newValues', newValues );
     handleChange( { values: newValues } );
   };
 
@@ -61,7 +62,7 @@ export default function CreateEnumerationForm( props ) {
         {
           formData.values.map( ( value, index ) =>
             <div key={`${index}-enum-input-parent`}>
-              <StyledTextInput value={value} index={index} handleEdit={handleEdit}/>
+              <StyledTextInput value={value} index={index} handleChange={handleEdit}/>
             </div>
           )
         }
