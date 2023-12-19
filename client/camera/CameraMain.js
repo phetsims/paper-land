@@ -6,7 +6,7 @@ import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import clientConstants from '../clientConstants.js';
 import SaveAlert from '../common/SaveAlert.js';
-import { codeToName, getApiUrl, programMatchesFilterString } from '../utils';
+import { codeToName, getApiUrl, programMatchesFilterString, sortProgramsByName } from '../utils';
 import styles from './CameraMain.css';
 import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
@@ -621,6 +621,11 @@ export default class CameraMain extends React.Component {
       this._editor.updateOptions( { readOnly: !okayToEditSelectedProgram } );
     }
 
+    const filteredPrograms = this.state.spaceData.programs.filter( program => programMatchesFilterString(
+      program.currentCode, this.state.programListFilterString
+    ) );
+    const filteredSortedPrograms = sortProgramsByName( filteredPrograms );
+
     // Return the JSX that defines this component.
     return (
       <div className={styles.root}>
@@ -866,58 +871,55 @@ export default class CameraMain extends React.Component {
                     </label>
                     <div className={`${styles.programList}`}>
                       <div>
-                        {this.state.spaceData.programs
-                          .filter( program => programMatchesFilterString( program.currentCode, this.state.programListFilterString ) )
-                          .sort( ( programA, programB ) => programA.number - programB.number )
-                          .map( program => (
-                            <div
-                              key={program.number}
-                              className={[
-                                this.state.programInEditor && program.number === this.state.programInEditor.number ?
-                                styles.selectedProgramListItem :
-                                styles.programListItem
-                              ].join( ' ' )}
+                        {filteredSortedPrograms.map( program => (
+                          <div
+                            key={program.number}
+                            className={[
+                              this.state.programInEditor && program.number === this.state.programInEditor.number ?
+                              styles.selectedProgramListItem :
+                              styles.programListItem
+                            ].join( ' ' )}
+                          >
+                            <span
+                              className={styles.programListItemContent}
+                              onClick={event => {
+                                event.stopPropagation();
+                                this.setState( {
+                                  programInEditor: program,
+                                  codeInEditor: program.currentCode.slice()
+                                } );
+                              }}
                             >
                               <span
-                                className={styles.programListItemContent}
-                                onClick={event => {
-                                  event.stopPropagation();
-                                  this.setState( {
-                                    programInEditor: program,
-                                    codeInEditor: program.currentCode.slice()
-                                  } );
-                                }}
+                                className={styles.programListItemName}
                               >
-                                <span
-                                  className={styles.programListItemName}
-                                >
-                                  <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
-                                </span>
+                                <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
                               </span>
+                            </span>
+                            <span
+                              className={styles.programListIcon}
+                              onClick={event => {
+                                event.stopPropagation();
+                                this._print( program );
+                              }}
+                            >
+                              <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                            </span>
+                            {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
                               <span
                                 className={styles.programListIcon}
                                 onClick={event => {
                                   event.stopPropagation();
-                                  this._print( program );
+                                  this._createDebugProgram( program.number, codeToName( program.currentCode ) );
                                 }}
                               >
-                                <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                                <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
                               </span>
-                              {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
-                                <span
-                                  className={styles.programListIcon}
-                                  onClick={event => {
-                                    event.stopPropagation();
-                                    this._createDebugProgram( program.number, codeToName( program.currentCode ) );
-                                  }}
-                                >
-                                  <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
-                                </span>
-                              ) : (
-                                 ''
-                               )}
-                            </div>
-                          ) )}
+                            ) : (
+                               ''
+                             )}
+                          </div>
+                        ) )}
                       </div>
                     </div>
 

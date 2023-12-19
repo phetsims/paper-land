@@ -155,6 +155,19 @@ export function codeToName( code ) {
 }
 
 /**
+ * Given a list of programs, sort them by title name.
+ * @param programs
+ * @return {*}
+ */
+export function sortProgramsByName( programs ) {
+  return programs.sort( ( a, b ) => {
+    const aName = codeToName( a.currentCode );
+    const bName = codeToName( b.currentCode );
+    return aName.localeCompare( bName );
+  } );
+}
+
+/**
  * Get a list of the keywords from a paper program.  Keywords are on the 2nd line and should be labeled like this:
  * Get a list of the keywords from a paper program.  Keywords are on the 2nd line and should be labeled like this:
  *   // Keywords: cool, fun, scary
