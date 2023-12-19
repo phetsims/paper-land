@@ -50,7 +50,6 @@ export default function CreateEnumerationForm( props ) {
   const handleEdit = ( event, index ) => {
     const newValues = formData.values.slice();
     newValues[ index ] = event.target.value;
-    console.log( 'newValues', newValues );
     handleChange( { values: newValues } );
   };
 
