@@ -1,6 +1,9 @@
 @value cameraMainPadding: 20px;
+
 @value commonMargin: 10px;
+
 @value cameraMainSidebarWidth: 330px;
+
 @value backgroundColor: #2E4152;
 
 :local(.root) {
@@ -73,7 +76,7 @@
 }
 
 .btn-close {
-  fill: rgba(255,255,255,0.5);
+  fill: rgba(255, 255, 255, 0.5);
 }
 
 :local(.note) {
@@ -302,7 +305,7 @@
   border-radius: 3px;
 }
 
-:local(.horizontalRow){
+:local(.horizontalRow) {
   display: flex;
   flex-direction: row;
 }
@@ -326,27 +329,27 @@
   padding: .1rem 2.25rem .1rem .5rem;
 }
 
-.accordion{
+.accordion {
   --bs-accordion-border-width: 0;
   --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(100, 200, 255, 0.75);
 }
 
-.accordion-button{
+.accordion-button {
   border-radius: 5px;
   color: white;
   background-color: #6C8EAC;
 }
 
-.accordion-button:not(.collapsed){
+.accordion-button:not(.collapsed) {
   background-color: #6C8EAC;
   color: white
 }
 
-.accordion-body{
+.accordion-body {
   padding: 5px;
 }
 
-.accordion-item{
+.accordion-item {
   color: white;
   background-color: #405B72;
 }
