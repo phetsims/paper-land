@@ -24,10 +24,6 @@ import './connections/SingleChildConnectionElement.js';
 import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
 // constants
-const DISPLAY_SIZE = new phet.dot.Dimension2(
-  parseInt( styles.displayWidth, 10 ),
-  parseInt( styles.displayHeight, 10 )
-);
 
 // Create the root element for React.
 const simDisplayDiv = document.getElementById( 'board-root-element' );
@@ -135,9 +131,7 @@ const sharedData = {
   model: boardModel,
   scene: scene,
   get displaySize() {
-
-    // If full screen, the display size is the full window - a getter
-    return phet.scenery.FullScreen.isFullScreen() ? new phet.dot.Dimension2( window.innerWidth, window.innerHeight ) : DISPLAY_SIZE;
+    return phet.paperLand.displaySizeProperty.value;
   },
   allMarkers: allMarkers
 };

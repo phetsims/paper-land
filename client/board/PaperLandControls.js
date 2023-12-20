@@ -36,13 +36,17 @@ export default function PaperLandControls( props ) {
 
           // take up the full window
           props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
+          phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
         }
         else {
+          const smallWidth = 640;
+          const smallHeight = 480;
 
           // re-apply styling for development
           props.sceneryDisplay.domElement.classList.add( styles.simDisplayPanel );
           props.sceneryDisplay.domElement.classList.add( styles.boardPanel );
-          props.sceneryDisplay.setWidthHeight( 640, 480 );
+          props.sceneryDisplay.setWidthHeight( smallWidth, smallHeight );
+          phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( smallWidth, smallHeight );
         }
       }
     };

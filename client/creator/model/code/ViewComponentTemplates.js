@@ -101,7 +101,7 @@ const ViewComponentTemplates = {
             phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance ); 
           }
         }
-      }, {{LAZY}} ); 
+      }, { lazy: {{LAZY}} } ); 
     `,
     onProgramRemoved: `
       // Remove the description multilink
@@ -128,7 +128,7 @@ const ViewComponentTemplates = {
 
         // the function that the user wrote to update the text      
         {{CONTROL_FUNCTION}}
-      } );
+      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
     `,
     onProgramRemoved: `
       // Remove the text from the view.
@@ -146,27 +146,41 @@ const ViewComponentTemplates = {
       const {{NAME}}BackgroundRectangle = new phet.scenery.Rectangle( 0, 0, sharedData.displaySize.width, sharedData.displaySize.height, {
         fill: '{{FILL_COLOR}}'
       } );
-      sharedData.scene.addChild( {{NAME}}BackgroundRectangle );
-      {{NAME}}BackgroundRectangle.moveToBack();
+      
+      // If there are no dependencies for the background, add it to the view immediately. Otherwise, we will add it
+      // once all dependencies are available.
+      if ( {{DEPENDENCY_NAMES_ARRAY}}.length === 0 ) {
+        sharedData.scene.addChild( {{NAME}}BackgroundRectangle );
+        {{NAME}}BackgroundRectangle.moveToBack();
+      }
       
       // Assign to the scratchpad so that we can remove it later.
       scratchpad.{{NAME}}BackgroundRectangle = {{NAME}}BackgroundRectangle;
   
-      // The background may not have any dependencies that control it.    
       const {{NAME}}BackgroundColorDependencies = {{DEPENDENCY_NAMES_ARRAY}};
-      if ( {{NAME}}BackgroundColorDependencies.length > 0 ) {
 
-        // Get a new background color whenever a dependency changes. The control function should return a color string.
-        const {{NAME}}BackgroundFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
-          {{CONTROL_FUNCTION}}
+      // Get a new background color whenever a dependency changes. The control function should return a color string.
+      const {{NAME}}BackgroundFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        {{CONTROL_FUNCTION}}
+      }
+      
+      // Update the background rectangle whenever the dependencies change.
+      scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
+        
+        // wait to add the background until all dependencies are available (only add this once)
+        if ( scratchpad.{{NAME}}BackgroundRectangle.parents.length === 0 ) {
+          sharedData.scene.addChild( {{NAME}}BackgroundRectangle );
+          {{NAME}}BackgroundRectangle.moveToBack();
         }
         
-        // Update the background rectangle whenever the dependencies change.
-        scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-          const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
+        // the function may not be implemented
+        if ( backgroundColorString ) {
           {{NAME}}BackgroundRectangle.fill = backgroundColorString;
-        } );
-      }
+        }
+        
+        {{NAME}}BackgroundRectangle.setRect( 0, 0, sharedData.displaySize.width, sharedData.displaySize.height );
+      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
     `,
     onProgramRemoved: `
       // Remove the background rectangle from the view.
@@ -175,7 +189,7 @@ const ViewComponentTemplates = {
       
       // Remove the multilink if there were any dependencies
       if ( scratchpad.{{NAME}}BackgroundMultilinkId ) {
-        phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, {{NAME}}BackgroundMultilinkId );
+        phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}BackgroundMultilinkId );
         delete scratchpad.{{NAME}}BackgroundMultilinkId;
       }
     `
@@ -187,17 +201,20 @@ const ViewComponentTemplates = {
       {{NAME}}ImageElement.src = 'media/images/{{FILE_NAME}}';
       const {{NAME}}Image = new phet.scenery.Image( {{NAME}}ImageElement );
       
+      const {{NAME}}ImageLoadProperty = new phet.axon.Property( false );
+      {{NAME}}ImageElement.addEventListener( 'load', () => { {{NAME}}ImageLoadProperty.value = true; } );
+      
       sharedData.scene.addChild( {{NAME}}Image );
       scratchpad.{{NAME}}Image = {{NAME}}Image;
       
-      // Update the image when a dependency changes.
+      // Update the image when a dependency changes, and redraw if the board resizes
       scratchpad.{{NAME}}ImageMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         
         // the functions that are available for this view type
         {{CONTROL_FUNCTIONS}}
       
         {{CONTROL_FUNCTION}}
-      } );
+      }, { otherProperties: [ phet.paperLand.displaySizeProperty, {{NAME}}ImageLoadProperty ] } );
     `,
     onProgramRemoved: `
       // Remove the image from the view.
@@ -236,11 +253,26 @@ const ViewComponentTemplates = {
       // Update the shape when a dependency changes.
       scratchpad.{{NAME}}PathMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
+        // We have to recreate the shape every change (especially important for a resize) - this is done first though
+        // because the user control functions might change the shape further.
+        {{SHAPE_CREATOR_CODE}}
+        scratchpad.{{NAME}}Path.setShape( {{NAME}}Shape );
+        
+        // now mutate with options that might depend on the shape or layout changes (again, user might override this 
+        // so do before the control function)
+        scratchpad.{{NAME}}Path.mutate( {
+          // if initial position is zero, do not set that explicitly because it will break shape points 
+          centerX: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_X}}) ? phet.paperLand.utils.paperToBoardX( {{CENTER_X}}, sharedData.displaySize.width ) : {{CENTER_X}},
+          centerY: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_Y}}) ? phet.paperLand.utils.paperToBoardY( {{CENTER_Y}}, sharedData.displaySize.height) : {{CENTER_Y}},
+          scale: {{SCALE}},
+          rotation: {{ROTATION}}
+        } );
+      
         // the functions that are available for this view type
         {{CONTROL_FUNCTIONS}}
         
         {{CONTROL_FUNCTION}}
-      } );
+      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
     `,
     onProgramRemoved: `
     

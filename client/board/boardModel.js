@@ -42,6 +42,10 @@ paperLand.modelComponentRemovedEmitter = new window.phet.axon.Emitter();
 // Map<number, {Object<string,number}> - keys are program numbers, values are any JavaScript object
 const programDataMap = new Map();
 
+// A global that represents the display size and will notify listeners when it changes.
+const DEFAULT_DISPLAY_SIZE = new phet.dot.Dimension2( 640, 480 );
+paperLand.displaySizeProperty = new phet.axon.Property( DEFAULT_DISPLAY_SIZE );
+
 /**
  * Adds a model component to the model Object with the provided name. Emits events so client code can observe
  * changes to the model.
@@ -450,10 +454,20 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
  *
  * @param {string[]} componentNames
  * @param {function} listener - the callback for the Multilink
- * @param {boolean} [lazy=false] - If true, a LazyMultiLInk
+ * @param {Object} providedOptions - options for this call
  * @return {number}
  */
-paperLand.addModelPropertyMultilink = ( componentNames, listener, lazy = false ) => {
+paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOptions ) => {
+
+  const options = phet.phetCore.merge( {
+
+    // If true, the link is added lazily (callbacks are not called until first Property changes)
+    lazy: false,
+
+    // Additional Properties to include in the Multilink that may not be associated with the board model.
+    otherProperties: []
+  }, providedOptions );
+
   let multilink = null;
 
   return paperLand.addMultiModelObserver(
@@ -468,7 +482,7 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, lazy = false )
         throw new Error( 'Multilink already exists.' );
       }
 
-      multilink = new phet.axon.Multilink( components, listener, lazy );
+      multilink = new phet.axon.Multilink( [ ...components, ...options.otherProperties ], listener, options.lazy );
     },
 
     // detach - detach the multilink
