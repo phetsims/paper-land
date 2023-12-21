@@ -7,6 +7,7 @@ import xhr from 'xhr';
 import clientConstants from '../clientConstants.js';
 import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString, sortProgramsByName } from '../utils';
+import CameraControls from './CameraControls.js';
 import styles from './CameraMain.css';
 import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
@@ -1138,28 +1139,31 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
 
-                {/*camera selection section of accordion box, only included if multiple cameras are available*/}
-                {this.state.availableCameras.length > 1 ? (
-                  <Accordion.Item eventKey='5'>
-                    <Accordion.Header>Camera</Accordion.Header>
-                    <Accordion.Body>
-                      <CameraSelector
-                        selectedCameraDeviceId={this.state.selectedCameraDeviceId}
-                        availableCameras={this.state.availableCameras}
-                        onSelectionChanged={event => {
-                          const selectedCamera = this.state.availableCameras.find(
-                            cam => cam.label === event.target.value
-                          );
-                          this.setState( { selectedCameraDeviceId: selectedCamera.deviceId } );
-                          this.props.onConfigChange( {
-                            ...this.props.config,
-                            selectedCameraDeviceId: selectedCamera.deviceId
-                          } );
-                        }}
+                {/*camera selection section of accordion box and controls*/}
+                <Accordion.Item eventKey='5'>
+                  <Accordion.Header>Camera</Accordion.Header>
+                  <Accordion.Body>
+                    <CameraSelector
+                      selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+                      availableCameras={this.state.availableCameras}
+                      onSelectionChanged={event => {
+                        const selectedCamera = this.state.availableCameras.find(
+                          cam => cam.label === event.target.value
+                        );
+                        this.setState( { selectedCameraDeviceId: selectedCamera.deviceId } );
+                        this.props.onConfigChange( {
+                          ...this.props.config,
+                          selectedCameraDeviceId: selectedCamera.deviceId
+                        } );
+                      }}
+                    />
+                    <div className={styles.sidebarSection}>
+                      <CameraControls
+                        data={this.state}
                       />
-                    </Accordion.Body>
-                  </Accordion.Item>
-                ) : ( '' )}
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
               </Accordion>
 
             </div>
