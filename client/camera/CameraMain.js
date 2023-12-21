@@ -1165,7 +1165,6 @@ export default class CameraMain extends React.Component {
                   </Accordion.Body>
                 </Accordion.Item>
               </Accordion>
-
             </div>
           </div>
         </div>

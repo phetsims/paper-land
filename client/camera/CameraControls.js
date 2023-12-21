@@ -5,9 +5,10 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import React from 'react';
-import styles from './CameraMain.css';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
+import React from 'react';
+import Button from 'react-bootstrap/Button';
+import styles from './CameraMain.css';
 
 class CameraControls extends React.Component {
 
@@ -180,6 +181,43 @@ class CameraControls extends React.Component {
             }}
           />
         </>
+
+        {/*Platform info button*/}
+        <br></br>
+        <Button
+          onClick={() => {
+
+            // Get a list of the supported constraints for the devices available from this browser.
+            const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();
+            console.log( '------------- Supported Constraints -------------------' );
+            console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );
+
+            // Get a list of all media devices and log some of the information to the console.
+            navigator.mediaDevices
+              .enumerateDevices()
+              .then( devices => {
+                console.log( '------------- Device List -------------------' );
+                devices.forEach( device => {
+                  console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );
+                } );
+              } )
+              .catch( err => {
+                console.error( `${err.name}: ${err.message}` );
+              } );
+
+            // Get a list of all devices that support video.
+            navigator.mediaDevices.getUserMedia( { video: true } ).then( mediaStream => {
+              const track = mediaStream.getVideoTracks()[ 0 ];
+              if ( track ) {
+                console.log( `---------------- found track = ${track.label}, capabilities below -----------------` );
+                console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );
+              }
+            } );
+          }
+          }
+        >
+          Test Button
+        </Button>
       </>
     );
   }
