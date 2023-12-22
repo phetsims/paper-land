@@ -90,6 +90,10 @@ export default class ViewCodeGenerator {
         ${componentNameString}.moveToFront();
       };
       
+      const moveToBack = () => {
+        ${componentNameString}.moveToBack();
+      };
+      
       const setRotation = ( rotation ) => {
         ${componentNameString}.rotation = rotation;
       };
@@ -201,9 +205,29 @@ export default class ViewCodeGenerator {
     else if ( viewType === 'ImageViewComponent' ) {
       codeStrings.push( `
         const setImage = imageName => {
-          let ${componentNameString}ImageElement = document.createElement( 'img' );
-          ${componentNameString}ImageElement.src = 'media/images/' + imageName;
-          ${componentNameString}.image = ${componentNameString}ImageElement;
+        
+          // Get the current image name relative to the local paper playground path
+          let currentImageName;
+          if ( ${componentNameString}.image ) {
+            const startIndex = ${componentNameString}.image.src.indexOf( 'media/images/' );
+            currentImageName = ${componentNameString}.image.src.substring( startIndex );
+          }
+          else {
+            currentImageName = '';
+          }
+          
+          const newImageName = 'media/images/' + imageName;
+          
+          // only update the image if there is a change
+          if ( currentImageName !== newImageName ) {
+            const ${componentNameString}ImageElement = document.createElement( 'img' );
+            ${componentNameString}ImageElement.src = newImageName;
+            ${componentNameString}.image = ${componentNameString}ImageElement;
+            
+            // CODE GENERATOR - This image load Property is created elsewhere in the ViewComponentTemplate.
+            // This listener will make sure that the image is repositioned after the image data changes.
+            ${componentNameString}ImageElement.addEventListener( 'load', () => { ${componentNameString}LoadProperty.value = ${componentNameString}LoadProperty.value + 1; } );
+          }
         };
       ` );
     }

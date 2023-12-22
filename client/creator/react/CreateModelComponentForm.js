@@ -12,6 +12,7 @@ import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import NamedNumberProperty from '../model/NamedNumberProperty.js';
 import NamedObservableArray from '../model/NamedObservableArray.js';
 import NamedProperty from '../model/NamedProperty.js';
+import NamedStringProperty from '../model/NamedStringProperty.js';
 import NamedVector2Property from '../model/NamedVector2Property.js';
 import styles from './../CreatorMain.css';
 import CreateArrayForm from './CreateArrayForm.js';
@@ -23,6 +24,7 @@ import CreateDerivedForm from './CreateDerivedForm.js';
 import CreateEnumerationForm from './CreateEnumerationForm.js';
 import CreateNumberForm from './CreateNumberForm.js';
 import CreatePositionForm from './CreatePositionForm.js';
+import CreateStringForm from './CreateStringForm.js';
 import FormInvalidReasons from './FormInvalidReasons.js';
 
 export default function CreateModelComponentForm( props ) {
@@ -53,6 +55,7 @@ export default function CreateModelComponentForm( props ) {
   const [ booleanFormInvalidReasons, setBooleanFormInvalidReasons ] = useState( [] );
   const [ numberFormInvalidReasons, setNumberFormInvalidReasons ] = useState( [] );
   const [ positionFormInvalidReasons, setPositionFormInvalidReasons ] = useState( [] );
+  const [ stringFormInvalidReasons, setStringFormInvalidReasons ] = useState( [] );
   const [ enumerationFormInvalidReasons, setEnumerationFormInvalidReasons ] = useState( [] );
   const [ derivedFormInvalidReasons, setDerivedFormInvalidReasons ] = useState( [] );
   const [ boundsFormInvalidReasons, setBoundsFormInvalidReasons ] = useState( [] );
@@ -63,6 +66,7 @@ export default function CreateModelComponentForm( props ) {
   const getNumberFormInvalidReasons = validStrings => setNumberFormInvalidReasons( validStrings );
   const getEnumerationFormInvalidReasons = validStrings => setEnumerationFormInvalidReasons( validStrings );
   const getPositionFormInvalidReasons = validStrings => setPositionFormInvalidReasons( validStrings );
+  const getStringFormInvalidReasons = validStrings => setStringFormInvalidReasons( validStrings );
   const getDerivedFormInvalidReasons = validStrings => setDerivedFormInvalidReasons( validStrings );
   const getBoundsFormInvalidReasons = validStrings => setBoundsFormInvalidReasons( validStrings );
   const getArrayFormInvalidReasons = validStrings => setArrayFormInvalidReasons( validStrings );
@@ -73,6 +77,9 @@ export default function CreateModelComponentForm( props ) {
 
   // An object with { { x: number, y: number} }
   const positionDataRef = useRef( {} );
+
+  // An object with { defaultValue: string }
+  const stringDataRef = useRef( {} );
 
   // An object with { min: number, max: number, default: number }
   const numberDataRef = useRef( {} );
@@ -94,6 +101,7 @@ export default function CreateModelComponentForm( props ) {
   const getDataForEnumeration = data => { enumerationDataRef.current = data; };
   const getDataForBoolean = data => { booleanDataRef.current = data; };
   const getDataForPosition = data => { positionDataRef.current = data; };
+  const getDataForString = data => { stringDataRef.current = data; };
   const getDataForDerived = data => { derivedDataRef.current = data; };
   const getDataForBounds = data => { boundsDataRef.current = data; };
   const getDataForArrayItem = data => { arrayItemDataRef.current = data; };
@@ -114,6 +122,9 @@ export default function CreateModelComponentForm( props ) {
     }
     else if ( selectedTab === 'position' ) {
       setSelectedTabFormValid( positionFormInvalidReasons.length === 0 && isComponentNameValid() );
+    }
+    else if ( selectedTab === 'string' ) {
+      setSelectedTabFormValid( stringFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'derived' ) {
       setSelectedTabFormValid( derivedFormInvalidReasons.length === 0 && isComponentNameValid() );
@@ -161,6 +172,9 @@ export default function CreateModelComponentForm( props ) {
         component.defaultX = positionData.defaultX;
         component.defaultY = positionData.defaultY;
       }
+      else if ( selectedTab === 'string' ) {
+        component.defaultValue = stringDataRef.current.defaultValue;
+      }
       else if ( selectedTab === 'enumeration' ) {
         component.values = enumerationDataRef.current.values;
       }
@@ -206,6 +220,9 @@ export default function CreateModelComponentForm( props ) {
       else if ( selectedTab === 'position' ) {
         const positionData = positionDataRef.current;
         activeProgram.modelContainer.addVector2Property( componentName, positionData.defaultX, positionData.defaultY );
+      }
+      else if ( selectedTab === 'string' ) {
+        activeProgram.modelContainer.addStringProperty( componentName, stringDataRef.current.defaultValue );
       }
       else if ( selectedTab === 'derived' ) {
         const dependencyNames = derivedDataRef.current.dependencyNames;
@@ -280,6 +297,9 @@ export default function CreateModelComponentForm( props ) {
     else if ( selectedTab === 'position' ) {
       return positionFormInvalidReasons;
     }
+    else if ( selectedTab === 'string' ) {
+      return stringFormInvalidReasons;
+    }
     else if ( selectedTab === 'derived' ) {
       return derivedFormInvalidReasons;
     }
@@ -308,6 +328,9 @@ export default function CreateModelComponentForm( props ) {
       }
       else if ( component instanceof NamedVector2Property ) {
         return 'position';
+      }
+      else if ( component instanceof NamedStringProperty ) {
+        return 'string';
       }
       else if ( component instanceof NamedDerivedProperty ) {
         return 'derived';
@@ -365,6 +388,9 @@ export default function CreateModelComponentForm( props ) {
         </Tab>
         <Tab disabled={tabDisabled} eventKey='position' title='Position' tabClassName={styles.tab}>
           <CreatePositionForm activeEdit={activeEdit} isFormValid={getPositionFormInvalidReasons} getFormData={getDataForPosition}></CreatePositionForm>
+        </Tab>
+        <Tab disabled={tabDisabled} eventKey='string' title='String' tabClassName={styles.tab}>
+          <CreateStringForm activeEdit={activeEdit} isFormValid={getStringFormInvalidReasons} getFormData={getDataForString}></CreateStringForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='enumeration' title='Enumeration' tabClassName={styles.tab}>
           <CreateEnumerationForm activeEdit={activeEdit} isFormValid={getEnumerationFormInvalidReasons} getFormData={getDataForEnumeration}></CreateEnumerationForm>

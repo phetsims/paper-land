@@ -201,8 +201,8 @@ const ViewComponentTemplates = {
       {{NAME}}ImageElement.src = 'media/images/{{FILE_NAME}}';
       const {{NAME}}Image = new phet.scenery.Image( {{NAME}}ImageElement );
       
-      const {{NAME}}ImageLoadProperty = new phet.axon.Property( false );
-      {{NAME}}ImageElement.addEventListener( 'load', () => { {{NAME}}ImageLoadProperty.value = true; } );
+      const {{NAME}}ImageLoadProperty = new phet.axon.Property( 0 );
+      {{NAME}}ImageElement.addEventListener( 'load', () => { {{NAME}}ImageLoadProperty.value = {{NAME}}ImageLoadProperty.value + 1; } );
       
       sharedData.scene.addChild( {{NAME}}Image );
       scratchpad.{{NAME}}Image = {{NAME}}Image;
