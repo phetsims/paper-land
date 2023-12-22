@@ -11,6 +11,7 @@ import NamedDerivedProperty from './NamedDerivedProperty.js';
 import NamedEnumerationProperty from './NamedEnumerationProperty.js';
 import NamedNumberProperty from './NamedNumberProperty.js';
 import NamedObservableArray from './NamedObservableArray.js';
+import NamedStringProperty from './NamedStringProperty.js';
 import NamedVector2Property from './NamedVector2Property.js';
 
 export default class ProgramModelContainer extends ComponentContainer {
@@ -24,6 +25,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedEnumerationProperties = phet.axon.createObservableArray();
     this.namedDerivedProperties = phet.axon.createObservableArray();
     this.namedBounds2Properties = phet.axon.createObservableArray();
+    this.namedStringProperties = phet.axon.createObservableArray();
     this.namedObservableArrays = phet.axon.createObservableArray();
     this.namedArrayItems = phet.axon.createObservableArray();
     this.namedArrayItemReferences = phet.axon.createObservableArray();
@@ -92,6 +94,27 @@ export default class ProgramModelContainer extends ComponentContainer {
     const index = this.namedBounds2Properties.indexOf( namedProperty );
     assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
     this.namedBounds2Properties.splice( index, 1 );
+    this.removeFromAllComponents( namedProperty );
+  }
+
+  /**
+   * Adds a named StringProperty to this container.
+   */
+  addStringProperty( name, defaultValue ) {
+    const newNamedProperty = new NamedStringProperty( name, defaultValue );
+    this.namedStringProperties.push( newNamedProperty );
+    this.addToAllComponents( newNamedProperty );
+
+    this.registerChangeListeners( newNamedProperty, this.removeStringProperty.bind( this ) );
+  }
+
+  /**
+   * Removes a named StringProperty from this container.
+   */
+  removeStringProperty( namedProperty ) {
+    const index = this.namedStringProperties.indexOf( namedProperty );
+    assert && assert( index > -1, 'Property does not exist and cannot be removed.' );
+    this.namedStringProperties.splice( index, 1 );
     this.removeFromAllComponents( namedProperty );
   }
 
@@ -277,7 +300,8 @@ export default class ProgramModelContainer extends ComponentContainer {
       namedBounds2Properties: this.namedBounds2Properties.map( namedProperty => namedProperty.save() ),
       namedObservableArrays: this.namedObservableArrays.map( namedProperty => namedProperty.save() ),
       namedArrayItems: this.namedArrayItems.map( namedArrayItem => namedArrayItem.save() ),
-      namedArrayItemReferences: this.namedArrayItemReferences.map( namedArrayItemReference => namedArrayItemReference.save() )
+      namedArrayItemReferences: this.namedArrayItemReferences.map( namedArrayItemReference => namedArrayItemReference.save() ),
+      namedStringProperties: this.namedStringProperties.map( namedProperty => namedProperty.save() )
     };
   }
 
@@ -295,6 +319,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     const namedBounds2Properties = stateObject.namedBounds2Properties || [];
     const namedArrayItemReferences = stateObject.namedArrayItemReferences || [];
     const namedArrayStateObjects = stateObject.namedObservableArrays || [];
+    const namedStringProperties = stateObject.namedStringProperties || [];
 
     namedBooleanProperties.forEach( namedBooleanPropertyData => {
       enforceKeys( namedBooleanPropertyData, [ 'name', 'defaultValue' ], `Error during load for BooleanProperty, ${namedBooleanPropertyData.name}` );
@@ -318,6 +343,13 @@ export default class ProgramModelContainer extends ComponentContainer {
         namedNumberPropertyData.min,
         namedNumberPropertyData.max,
         namedNumberPropertyData.defaultValue
+      );
+    } );
+    namedStringProperties.forEach( namedStringPropertyData => {
+      enforceKeys( namedStringPropertyData, [ 'name', 'defaultValue' ], `Error during load for StringProperty, ${namedStringPropertyData.name}` );
+      this.addStringProperty(
+        namedStringPropertyData.name,
+        namedStringPropertyData.defaultValue
       );
     } );
     namedEnumerationProperties.forEach( namedEnumerationPropertyData => {
@@ -410,6 +442,7 @@ export default class ProgramModelContainer extends ComponentContainer {
     this.namedEnumerationProperties.dispose();
     this.namedDerivedProperties.dispose();
     this.namedBounds2Properties.dispose();
+    this.namedStringProperties.dispose();
     this.namedObservableArrays.dispose();
     this.namedArrayItems.dispose();
     this.namedArrayItemReferences.dispose();

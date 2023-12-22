@@ -1,5 +1,4 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
 import NamedEnumerationProperty from '../model/NamedEnumerationProperty.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';

@@ -6,7 +6,7 @@ import NamedProperty from './NamedProperty.js';
 
 export default class NamedEnumerationProperty extends NamedProperty {
   constructor( name, values, defaultValue ) {
-    super( name, 'StringProperty' );
+    super( name, 'EnumerationProperty' );
 
     this.values = values;
     this.defaultValue = defaultValue;

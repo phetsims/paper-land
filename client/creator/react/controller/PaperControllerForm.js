@@ -114,7 +114,7 @@ export default function PaperControllerForm( props ) {
     else if ( selectedComponentType === 'NumberProperty' ) {
       setComponentFormValid( numberFormValid.length === 0 && componentName.length > 0 );
     }
-    else if ( selectedComponentType === 'StringProperty' ) {
+    else if ( selectedComponentType === 'EnumerationProperty' ) {
       setComponentFormValid( enumerationFormValid.length === 0 && componentName.length > 0 );
     }
     else {
@@ -158,7 +158,7 @@ export default function PaperControllerForm( props ) {
         editingComponent.selectedControlTypeFamily = numberDataRef.current.controlTypeFamily;
         editingComponent.relationshipControlType = PropertyController.controlTypeStringToValue( numberDataRef.current.relationshipControlType, NumberPropertyController.RelationshipControlType );
       }
-      else if ( selectedComponentType === 'StringProperty' ) {
+      else if ( selectedComponentType === 'EnumerationProperty' ) {
         editingComponent.controlType = PropertyController.controlTypeStringToValue( enumerationDataRef.current.controlType, EnumerationPropertyController.ControlType );
       }
     }
@@ -191,7 +191,7 @@ export default function PaperControllerForm( props ) {
         );
         activeProgram.controllerContainer.addNumberPropertyController( numberController );
       }
-      else if ( selectedComponentType === 'StringProperty' ) {
+      else if ( selectedComponentType === 'EnumerationProperty' ) {
         const enumerationController = new EnumerationPropertyController( componentName, selectedComponent, enumerationDataRef.current.controlType );
         activeProgram.controllerContainer.addEnumerationPropertyController( enumerationController );
       }
@@ -210,7 +210,7 @@ export default function PaperControllerForm( props ) {
     else if ( selectedComponentType === 'NumberProperty' ) {
       return numberFormValid;
     }
-    else if ( selectedComponentType === 'StringProperty' ) {
+    else if ( selectedComponentType === 'EnumerationProperty' ) {
       return enumerationFormValid;
     }
     else if ( selectedComponentType === 'Bounds2Property' ) {
@@ -251,7 +251,7 @@ export default function PaperControllerForm( props ) {
          getFormData={getDataForBounds}
          isFormValid={getIsBoundsFormValid}>
        </CreateBounds2ControllerForm> :
-       selectedComponentType === 'StringProperty' ?
+       selectedComponentType === 'EnumerationProperty' ?
        <CreateEnumerationControllerForm
          activeEdit={activeEdit}
          getFormData={getDataForEnumeration}

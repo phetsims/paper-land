@@ -11,7 +11,7 @@ class NamedProperty extends Component {
 
   /**
    * @param {string} name
-   * @param {'BooleanProperty'|'NumberProperty'|'StringProperty'|'Vector2Property'|'DerivedProperty'|'Bounds2Property'|'ObservableArray' | 'ArrayItem' | 'NamedArrayItemReference' } propertyType - A name for the type of Property this is, to categorize UI controls
+   * @param {'BooleanProperty'|'NumberProperty'|'EnumerationProperty'|'Vector2Property'|'DerivedProperty'|'Bounds2Property'|'ObservableArray' | 'ArrayItem' | 'NamedArrayItemReference' | 'StringProperty' } propertyType - A name for the type of Property this is, to categorize UI controls
    */
   constructor( name, propertyType ) {
     super( name );
@@ -32,11 +32,12 @@ class NamedProperty extends Component {
     this.propertyType = stateObject.propertyType;
   }
 
+  /**
+   * Returns a schema describing the data for this component. Used by React form validation and loading so that
+   * React components know how to save/structure form data.
+   */
   static getStateSchema() {
-    return {
-      ...Component.getInitialState(),
-      propertyType: this.propertyType
-    };
+    throw new Error( 'Subclasses must override' );
   }
 }
 

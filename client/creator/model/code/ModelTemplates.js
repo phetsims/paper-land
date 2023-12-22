@@ -21,6 +21,16 @@ const ModelComponentTemplates = {
       phet.paperLand.removeModelComponent( '{{NAME}}' );
     `
   },
+  StringProperty: {
+    onProgramAdded: `
+      const {{NAME}} = new phet.axon.StringProperty( '{{DEFAULT_VALUE}}' );
+      phet.paperLand.addModelComponent( '{{NAME}}', {{NAME}} );
+    `,
+    onProgramRemoved: `
+      // Remove the component from the model
+      phet.paperLand.removeModelComponent( '{{NAME}}' );
+    `
+  },
   Vector2Property: {
     onProgramAdded: `
       const {{NAME}} = new phet.dot.Vector2Property(
@@ -33,7 +43,7 @@ const ModelComponentTemplates = {
       phet.paperLand.removeModelComponent( '{{NAME}}' );
     `
   },
-  StringProperty: {
+  EnumerationProperty: {
     onProgramAdded: `
       const {{NAME}} = new phet.axon.StringProperty( '{{DEFAULT_VALUE}}', {
         validValues: [ {{VALUES}} ]

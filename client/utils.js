@@ -326,10 +326,13 @@ export function getComponentDocumentation( namedProperty ) {
   else if ( type === 'BooleanProperty' ) {
     usabilityDocumentation = 'This is a boolean value `true` or `false`';
   }
+  else if ( type === 'StringProperty' ) {
+    usabilityDocumentation = 'This is a string.';
+  }
   else if ( type === 'DerivedProperty' ) {
     usabilityDocumentation = 'This could be any type, depending on how you created your DerivedProperty.';
   }
-  else if ( type === 'StringProperty' ) {
+  else if ( type === 'EnumerationProperty' ) {
     const valuesList = namedProperty.values.join( ', ' );
     usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
   }
@@ -370,6 +373,9 @@ export function createSetterFunctionString( component ) {
     argumentDocumentation = 'Provide a new boolean value, true or false.';
   }
   else if ( type === 'StringProperty' ) {
+    argumentDocumentation = 'Provide a new string.';
+  }
+  else if ( type === 'EnumerationProperty' ) {
     argumentDocumentation = 'Provide a new string.';
   }
   else if ( type === 'Bounds2Property' ) {

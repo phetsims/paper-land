@@ -355,7 +355,7 @@ export default class ProgramCodeGenerator {
         DEFAULT_MAX_Y: modelComponent.defaultMaxY
       };
     }
-    else if ( modelComponent.propertyType === 'StringProperty' ) {
+    else if ( modelComponent.propertyType === 'EnumerationProperty' ) {
       data = {
         DEFAULT_VALUE: modelComponent.defaultValue,
 
@@ -450,6 +450,13 @@ export default class ProgramCodeGenerator {
 
       // No data for the array item reference
       data = {};
+    }
+    else if ( modelComponent.propertyType === 'StringProperty' ) {
+
+      // The string component just has a default value
+      data = {
+        DEFAULT_VALUE: modelComponent.defaultValue
+      };
     }
     else {
       throw new Error( `Could not get model data for component ${modelComponent.propertyType} during code generation.` );
