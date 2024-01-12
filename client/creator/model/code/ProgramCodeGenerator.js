@@ -561,10 +561,6 @@ export default class ProgramCodeGenerator {
     const componentType = controllerComponent.constructor.name;
     const controlledName = controllerComponent.namedProperty.nameProperty.value;
 
-    if ( controllerComponent.controlType === NumberPropertyController.NumberPropertyControlType.MARKER_LOCATION ) {
-      throw new Error( 'Sorry, marker location controller is not supported yet for code generation.' );
-    }
-
     let data = {};
     if ( componentType === 'NumberPropertyController' ) {
       data = {
@@ -582,6 +578,13 @@ export default class ProgramCodeGenerator {
           controllerComponent.markerColor
         ),
         PROGRAM_MARKERS_REMOVED_CODE: ControllerCodeGenerator.getNumberControllerMarkersRemovedCode(
+          controllerComponent.selectedControlTypeFamily,
+          controllerComponent.controlType,
+          controllerComponent.relationshipControlType,
+          controlledName,
+          controllerComponent.markerColor
+        ),
+        PROGRAM_MARKERS_CHANGED_POSITION_CODE: ControllerCodeGenerator.getNumberControllerMarkersChangedPositionCode(
           controllerComponent.selectedControlTypeFamily,
           controllerComponent.controlType,
           controllerComponent.relationshipControlType,

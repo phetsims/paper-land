@@ -4,7 +4,8 @@ const ControllerComponentTemplates = {
     onProgramRemoved: '{{PROGRAM_REMOVED_CODE}}',
     onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}',
     onProgramMarkersAdded: '{{PROGRAM_MARKERS_ADDED_CODE}}',
-    onProgramMarkersRemoved: '{{PROGRAM_MARKERS_REMOVED_CODE}}'
+    onProgramMarkersRemoved: '{{PROGRAM_MARKERS_REMOVED_CODE}}',
+    onProgramMarkersChangedPosition: '{{PROGRAM_MARKERS_CHANGED_POSITION_CODE}}'
   },
   BoundsPropertyController: {
     onProgramChangedPosition: '{{PROGRAM_CHANGED_POSITION_CODE}}'
