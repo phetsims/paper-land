@@ -61,6 +61,21 @@ const boardUtils = {
   },
 
   /**
+   * Returns the normalized vertical position of the a marker on its paper, filtering out
+   * markers that are not the provided color. Returns null if there are no markers of the specified
+   * color.
+   * @param markers
+   * @param colorName
+   * @returns {number|null}
+   */
+  getNormalizedVerticalMarkerPositionOnPaper( markers, colorName ) {
+    const marker = colorName === 'all' ? markers[ 0 ] : markers.find( marker => marker.colorName === colorName );
+
+    // The positionOnPaper is relative to the paper origin (top left)
+    return marker ? ( 1 - marker.positionOnPaper.y ) : null;
+  },
+
+  /**
    * Returns the center of the program in paper coordinates.
    * @param points - points of the paper, provided by paper programming API.
    * @return dot.Vector2

@@ -60,6 +60,32 @@ class ControllerCodeGenerator {
     }
   }
 
+  static getNumberControllerMarkersChangedPositionCode( controlTypeFamily, controlType, relationshipControlType, controlledName, colorName ) {
+    if ( controlTypeFamily === 'MARKERS' && controlType === NumberPropertyController.NumberPropertyControlType.MARKER_LOCATION ) {
+
+      // control type might be null for no selected control types (which we allow here and assume linear behavior)
+      if ( relationshipControlType !== null && relationshipControlType !== NumberPropertyController.RelationshipControlType.LINEAR ) {
+        throw new Error( `Sorry, only linear relationships are supported at this time. Can't generate code for ${relationshipControlType} control of ${controlledName}.` );
+      }
+
+      // Get the position of the marker within the program - this callbac has access to current markers on the
+      // program, and each marker has the normalized position on the program. In a single line so that
+      // it can easily be inserted into a function.
+      const createComputeValueCode = modelPropertyName => {
+
+        // Make sure there is a marker of the provided color, otherwise we won't change the value
+        return `phet.paperLand.utils.getNormalizedVerticalMarkerPositionOnPaper( markers, '${colorName}' ) !== null ?
+        phet.paperLand.utils.getNormalizedVerticalMarkerPositionOnPaper( markers, '${colorName}' ) * ( ${modelPropertyName}.range.getLength() ) + ${modelPropertyName}.range.min :
+        phet.paperLand.getModelComponent( '${controlledName}' ).value`;
+      };
+
+      return ControllerCodeGenerator.getModelControllerCode( controlledName, createComputeValueCode );
+    }
+    else {
+      return '';
+    }
+  }
+
   /**
    * Get the controller code for a NamedBounds2Property. There is only one control type for now, setting
    * the bounds to match the paper dimensions.
