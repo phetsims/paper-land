@@ -57,7 +57,7 @@ export default class ProgramCodeGenerator {
    * @param string
    */
   static replaceNewLinesForCodeComments( string ) {
-    
+
     // Split the string into lines
     const lines = string.split( '\n' );
 
@@ -68,6 +68,7 @@ export default class ProgramCodeGenerator {
       if ( index === 0 ) {
         return line;
       }
+      
       // Add '// ' to the beginning of each subsequent line
       return '// ' + line;
     } ).join( '\n' );
