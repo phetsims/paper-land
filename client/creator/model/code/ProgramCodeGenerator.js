@@ -1,5 +1,4 @@
 import { parse } from 'acorn';
-import NumberPropertyController from '../controllers/NumberPropertyController.js';
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ListenerCodeGenerator from './ListenerCodeGenerator.js';
@@ -15,9 +14,9 @@ export default class ProgramCodeGenerator {
     const data = {
 
       // metadata
-      TITLE: program.titleProperty.value,
-      KEYWORDS: program.keywordsProperty.value,
-      DESCRIPTION: program.descriptionProperty.value,
+      TITLE: ProgramCodeGenerator.replaceNewLinesForCodeComments( program.titleProperty.value ),
+      KEYWORDS: ProgramCodeGenerator.replaceNewLinesForCodeComments( program.keywordsProperty.value ),
+      DESCRIPTION: ProgramCodeGenerator.replaceNewLinesForCodeComments( program.descriptionProperty.value ),
       TOP_WHISKER_LENGTH: program.topWhiskerLengthProperty.value,
       RIGHT_WHISKER_LENGTH: program.rightWhiskerLengthProperty.value,
       BOTTOM_WHISKER_LENGTH: program.bottomWhiskerLengthProperty.value,
@@ -49,6 +48,29 @@ export default class ProgramCodeGenerator {
     }
 
     return generatedCode;
+  }
+
+  /**
+   * Given a string that has line breaks in code comments, pad the line breaks with
+   * forward slashes so that the content doesn't leave the code comment.
+   * This function assumes that the input string starts with a comment.
+   * @param string
+   */
+  static replaceNewLinesForCodeComments( string ) {
+    
+    // Split the string into lines
+    const lines = string.split( '\n' );
+
+    // Map each line to ensure it starts with '// '
+    return lines.map( ( line, index ) => {
+
+      // Don't add '// ' to the first line as it's assumed to already be a comment
+      if ( index === 0 ) {
+        return line;
+      }
+      // Add '// ' to the beginning of each subsequent line
+      return '// ' + line;
+    } ).join( '\n' );
   }
 
   /**
