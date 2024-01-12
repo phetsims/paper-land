@@ -355,7 +355,13 @@
 }
 
 :local(.detectionControlInput) {
-  padding: 5px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+
+:local(.detectionControlLabel) {
+  display: block;
+  padding-top: 10px;
 }
 
 :local(.detectionControlValidation) {

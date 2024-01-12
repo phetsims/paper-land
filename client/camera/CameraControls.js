@@ -128,7 +128,8 @@ export default function CameraControls( props ) {
       }
       track.applyConstraints( constraints )
         .then( () => {
-          console.log( 'Video constraints applied successfully' );
+
+          // success! Nothing to be done here.
         } )
         .catch( e => {
           console.log( `Error applying constraints: e = ${e}` );
@@ -138,165 +139,184 @@ export default function CameraControls( props ) {
   }, [ exposureMode, exposureTime, focusMode, focusDistance, contrast, sharpness ] );
 
   return (
-    <>{track === null ? (
-      <p>Awaiting video track info...</p>
-    ) : (
-         <>
-           <h3 className={styles.headerWithOption}>Camera Settings</h3>
+    <>
+      <h3 className={styles.headerWithOption}>Camera Settings</h3>
 
-           {/*Exposure control*/}
-           {supportsExposureMode && supportsExposureTime ? (
-             <>
-               <p>Exposure:</p>
-               <BootstrapSwitchButton
-                 checked={exposureMode === 'continuous'}
-                 width={100}
-                 size='sm'
-                 onlabel='Auto'
-                 offlabel='Manual'
-                 onChange={checked => {
-                   setExposureMode( checked ? 'continuous' : 'manual' );
-                 }}
-               />
-               <br/>
-               {exposureMode === 'manual' ? (
-                 <input
-                   name='exposure'
-                   type='range'
-                   min={trackCapabilities.exposureTime.min.toString()}
-                   max={trackCapabilities.exposureTime.max.toString()}
-                   step={trackCapabilities.exposureTime.step.toString()}
-                   value={exposureTime}
-                   onChange={event => {
-                     setExposureTime( event.target.valueAsNumber );
-                   }}
-                 /> ) : ( '' )}
-             </>
-           ) : ''}
-           <br></br>
+      {/*Camera flip controls*/}
+      <label className={styles.detectionControlLabel}>Flip Camera Feed:</label>
+      <div className={styles.detectionControlInput}>
+        <input id='flip-x-checkbox' type='checkbox' checked={props.flipCameraFeedX} onChange={event => {
+          props.onCameraFlipChanged( event.target.checked, props.flipCameraFeedY );
+        }}/><label htmlFor='flip-x-checkbox'>X</label><br/>
+        <input id='flip-y-checkbox' type='checkbox' checked={props.flipCameraFeedY} onChange={event => {
+          props.onCameraFlipChanged( props.flipCameraFeedX, event.target.checked );
+        }}/><label htmlFor='flip-y-checkbox'>Y</label><br/>
+      </div>
 
-           {/*Focus control*/}
-           {supportsFocusMode && supportsFocusDistance ? (
-             <>
-               <p>Focus:</p>
-               <BootstrapSwitchButton
-                 checked={focusMode === 'continuous'}
-                 width={100}
-                 size='sm'
-                 onlabel='Auto'
-                 offlabel='Manual'
-                 onChange={checked => {
-                   setFocusMode( checked ? 'continuous' : 'manual' );
-                 }}
-               />
-               <br/>
-               {focusMode === 'manual' ? (
-                 <input
-                   name='focus'
-                   type='range'
-                   min={trackCapabilities.focusDistance.min.toString()}
-                   max={trackCapabilities.focusDistance.max.toString()}
-                   step={trackCapabilities.focusDistance.step.toString()}
-                   value={focusDistance}
-                   onChange={event => {
-                     setFocusDistance( event.target.valueAsNumber );
-                   }}
-                 /> ) : ( '' )}
-             </>
-           ) : ''}
-           <br></br>
+      <>{track === null ? (
+        <p>Awaiting video track info...</p>
+      ) : (
+           <>
 
-           {/*Contrast control*/}
-           {supportsContrast ? (
-             <>
-               <p>Contrast:</p>
-               <input
-                 name='contrast'
-                 type='range'
-                 min={trackCapabilities.contrast.min.toString()}
-                 max={trackCapabilities.contrast.max.toString()}
-                 step={trackCapabilities.contrast.step.toString()}
-                 value={contrast}
-                 onChange={event => {
-                   setContrast( event.target.valueAsNumber );
-                 }}
-               />
-             </>
-           ) : ''}
-           <br></br>
+             {/*Exposure control*/}
+             {supportsExposureMode && supportsExposureTime ? (
+               <>
+                 <label className={styles.detectionControlLabel}>Exposure:</label>
+                 <div className={styles.detectionControlInput}>
+                   <BootstrapSwitchButton
+                     checked={exposureMode === 'continuous'}
+                     width={100}
+                     size='sm'
+                     onlabel='Auto'
+                     offlabel='Manual'
+                     onChange={checked => {
+                       setExposureMode( checked ? 'continuous' : 'manual' );
+                     }}
+                   />
+                   <br/>
+                   {exposureMode === 'manual' ? (
+                     <input
+                       name='exposure'
+                       type='range'
+                       min={trackCapabilities.exposureTime.min.toString()}
+                       max={trackCapabilities.exposureTime.max.toString()}
+                       step={trackCapabilities.exposureTime.step.toString()}
+                       value={exposureTime}
+                       onChange={event => {
+                         setExposureTime( event.target.valueAsNumber );
+                       }}
+                     /> ) : ( '' )}
+                 </div>
+               </>
+             ) : ''}
 
-           {/*Sharpness control*/}
-           {supportsSharpness ? (
-             <>
-               <p>Sharpness:</p>
-               <input
-                 name='sharpness'
-                 type='range'
-                 min={trackCapabilities.sharpness.min.toString()}
-                 max={trackCapabilities.sharpness.max.toString()}
-                 step={trackCapabilities.sharpness.step.toString()}
-                 value={sharpness}
-                 onChange={event => {
-                   setSharpness( event.target.valueAsNumber );
-                 }}
-               />
-             </>
-           ) : ''}
-           <br></br>
+             {/*Focus control*/}
+             {supportsFocusMode && supportsFocusDistance ? (
+               <>
+                 <label className={styles.detectionControlLabel}>Focus:</label>
+                 <div className={styles.detectionControlInput}>
+                   <BootstrapSwitchButton
+                     checked={focusMode === 'continuous'}
+                     width={100}
+                     size='sm'
+                     onlabel='Auto'
+                     offlabel='Manual'
+                     onChange={checked => {
+                       setFocusMode( checked ? 'continuous' : 'manual' );
+                     }}
+                   />
+                   <br/>
+                   {focusMode === 'manual' ? (
+                     <input
+                       name='focus'
+                       type='range'
+                       min={trackCapabilities.focusDistance.min.toString()}
+                       max={trackCapabilities.focusDistance.max.toString()}
+                       step={trackCapabilities.focusDistance.step.toString()}
+                       value={focusDistance}
+                       onChange={event => {
+                         setFocusDistance( event.target.valueAsNumber );
+                       }}
+                     /> ) : ( '' )}
+                 </div>
+               </>
+             ) : ''}
 
-           {/*Reset button*/}
-           <Button
-             onClick={() => {
-               setExposureMode( 'continuous' );
-               setExposureTime( DEFAULT_EXPOSURE_TIME );
-               setFocusMode( 'continuous' );
-               setFocusDistance( DEFAULT_FOCUS_DISTANCE );
-               setContrast( DEFAULT_CONTRAST );
-               setSharpness( DEFAULT_SHARPNESS );
-             }}
-           >
-             Reset
-           </Button>
-           <br></br>
+             {/*Contrast control*/}
+             {supportsContrast ? (
+               <>
+                 <label className={styles.detectionControlLabel}>Contrast:</label>
+                 <div className={styles.detectionControlInput}>
+                   <input
+                     name='contrast'
+                     type='range'
+                     min={trackCapabilities.contrast.min.toString()}
+                     max={trackCapabilities.contrast.max.toString()}
+                     step={trackCapabilities.contrast.step.toString()}
+                     value={contrast}
+                     onChange={event => {
+                       setContrast( event.target.valueAsNumber );
+                     }}
+                   />
+                 </div>
+               </>
+             ) : ''}
+
+             {/*Sharpness control*/}
+             {supportsSharpness ? (
+               <>
+                 <label className={styles.detectionControlLabel}>Sharpness:</label>
+                 <div className={styles.detectionControlInput}>
+                   <input
+                     name='sharpness'
+                     type='range'
+                     min={trackCapabilities.sharpness.min.toString()}
+                     max={trackCapabilities.sharpness.max.toString()}
+                     step={trackCapabilities.sharpness.step.toString()}
+                     value={sharpness}
+                     onChange={event => {
+                       setSharpness( event.target.valueAsNumber );
+                     }}
+                   />
+                 </div>
+               </>
+
+             ) : ''}
+
+             {/*Reset button*/}
+             <Button
+               onClick={() => {
+                 setExposureMode( 'continuous' );
+                 setExposureTime( DEFAULT_EXPOSURE_TIME );
+                 setFocusMode( 'continuous' );
+                 setFocusDistance( DEFAULT_FOCUS_DISTANCE );
+                 setContrast( DEFAULT_CONTRAST );
+                 setSharpness( DEFAULT_SHARPNESS );
+               }}
+             >
+               Reset
+             </Button>
 
 
-           {/*Platform info button*/}
-           {/*<Button*/}
-           {/*  onClick={() => {*/}
+             {/*Platform info button*/}
+             {/*<Button*/}
+             {/*  onClick={() => {*/}
 
-           {/*    // Get a list of the supported constraints for the devices available from this browser.*/}
-           {/*    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();*/}
-           {/*    console.log( '------------- Supported Constraints -------------------' );*/}
-           {/*    console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );*/}
+             {/*    // Get a list of the supported constraints for the devices available from this browser.*/}
+             {/*    const supportedConstraints = navigator.mediaDevices.getSupportedConstraints();*/}
+             {/*    console.log( '------------- Supported Constraints -------------------' );*/}
+             {/*    console.log( `${JSON.stringify( supportedConstraints, null, 2 )}` );*/}
 
-           {/*    // Get a list of all media devices and log some of the information to the console.*/}
-           {/*    navigator.mediaDevices*/}
-           {/*      .enumerateDevices()*/}
-           {/*      .then( devices => {*/}
-           {/*        console.log( '------------- Device List -------------------' );*/}
-           {/*        devices.forEach( device => {*/}
-           {/*          console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );*/}
-           {/*        } );*/}
-           {/*      } )*/}
-           {/*      .catch( err => {*/}
-           {/*        console.error( `${err.name}: ${err.message}` );*/}
-           {/*      } );*/}
+             {/*    // Get a list of all media devices and log some of the information to the console.*/}
+             {/*    navigator.mediaDevices*/}
+             {/*      .enumerateDevices()*/}
+             {/*      .then( devices => {*/}
+             {/*        console.log( '------------- Device List -------------------' );*/}
+             {/*        devices.forEach( device => {*/}
+             {/*          console.log( `${device.kind}: ${device.label} id = ${device.deviceId}` );*/}
+             {/*        } );*/}
+             {/*      } )*/}
+             {/*      .catch( err => {*/}
+             {/*        console.error( `${err.name}: ${err.message}` );*/}
+             {/*      } );*/}
 
-           {/*    // Get a list of all devices that support video.*/}
-           {/*    navigator.mediaDevices.getUserMedia( { video: true } ).then( mediaStream => {*/}
-           {/*      const track = mediaStream.getVideoTracks()[ 0 ];*/}
-           {/*      if ( track ) {*/}
-           {/*        console.log( `---------------- found track = ${track.label}, capabilities below -----------------` );*/}
-           {/*        console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );*/}
-           {/*      }*/}
-           {/*    } );*/}
-           {/*  }*/}
-           {/*  }*/}
-           {/*>*/}
-           {/*  Platform Information*/}
-           {/*</Button>*/}
-         </>
-       )}
+             {/*    // Get a list of all devices that support video.*/}
+             {/*    navigator.mediaDevices.getUserMedia( { video: true } ).then( mediaStream => {*/}
+             {/*      const track = mediaStream.getVideoTracks()[ 0 ];*/}
+             {/*      if ( track ) {*/}
+             {/*        console.log( `---------------- found track = ${track.label}, capabilities below -----------------` );*/}
+             {/*        console.log( `${JSON.stringify( track.getCapabilities(), null, 2 )}` );*/}
+             {/*      }*/}
+             {/*    } );*/}
+             {/*  }*/}
+             {/*  }*/}
+             {/*>*/}
+             {/*  Platform Information*/}
+             {/*</Button>*/}
+           </>
+         )}
+      </>
+
     </>
   );
 }

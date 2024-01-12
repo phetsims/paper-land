@@ -55,6 +55,11 @@ export default class CameraMain extends React.Component {
       // {string} - the deviceId of the currently selected camera
       selectedCameraDeviceId: '',
 
+      // {boolean} - Whether camera feed gets flipped in the horizontal or
+      // vertical direction
+      flipCameraFeedX: false,
+      flipCameraFeedY: false,
+
       // {Object|null} - The program currently selected and being displayed in the editor, null for none.
       programInEditor: null,
 
@@ -1160,6 +1165,22 @@ export default class CameraMain extends React.Component {
                     <div className={styles.sidebarSection}>
                       <CameraControls
                         selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+                        flipCameraFeedX={this.props.config.flipCameraFeedX}
+                        flipCameraFeedY={this.props.config.flipCameraFeedY}
+                        onCameraFlipChanged={( flipX, flipY ) => {
+
+                          this.setState( {
+                            flipCameraFeedX: flipX,
+                            flipCameraFeedY: flipY
+                          } );
+
+                          // Apply the change to localStorage
+                          this.props.onConfigChange( {
+                            ...this.props.config,
+                            flipCameraFeedX: flipX,
+                            flipCameraFeedY: flipY
+                          } );
+                        }}
                       />
                     </div>
                   </Accordion.Body>

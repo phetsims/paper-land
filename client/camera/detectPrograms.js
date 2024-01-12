@@ -170,6 +170,16 @@ export default function detectPrograms( {
   const videoMat = new cv.Mat( videoCapture.video.height, videoCapture.video.width, cv.CV_8UC4 );
   videoCapture.read( videoMat );
 
+  // Flipping the video feed here works for both the display and blob detector -
+  // the video mat is copied to the displayMat and a ROI is taken from
+  // the videoMat for the blob detector.
+  if ( config.flipCameraFeedX ) {
+    cv.flip( videoMat, videoMat, 1 );
+  }
+  if ( config.flipCameraFeedY ) {
+    cv.flip( videoMat, videoMat, 0 );
+  }
+
   const knobPointMatrix = forwardProjectionMatrixForPoints( config.knobPoints );
   const mapToKnobPointMatrix = point => {
     return mult( projectPoint( point, knobPointMatrix ), { x: videoMat.cols, y: videoMat.rows } );
@@ -414,7 +424,7 @@ export default function detectPrograms( {
     }
 
     if ( !config.requireAllCorners ) {
-      
+
       // Take the average of all potential points for each unknown point.
       for ( let i = 0; i < 4; i++ ) {
         if ( potentialPoints[ i ] ) {
