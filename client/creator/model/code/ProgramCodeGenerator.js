@@ -68,7 +68,7 @@ export default class ProgramCodeGenerator {
       if ( index === 0 ) {
         return line;
       }
-      
+
       // Add '// ' to the beginning of each subsequent line
       return '// ' + line;
     } ).join( '\n' );

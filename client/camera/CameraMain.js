@@ -1159,7 +1159,7 @@ export default class CameraMain extends React.Component {
                     />
                     <div className={styles.sidebarSection}>
                       <CameraControls
-                        data={this.state}
+                        selectedCameraDeviceId={this.state.selectedCameraDeviceId}
                       />
                     </div>
                   </Accordion.Body>

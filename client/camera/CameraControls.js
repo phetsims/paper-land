@@ -37,15 +37,36 @@ export default function CameraControls( props ) {
   // {MediaStreamTrack|null} - the video track of the camera that is watching the papers
   const [ track, setTrack ] = useState( null );
 
+  // {MediaStream|null} - the media stream that contains the video track, reference is kept so we
+  // can clear it before switching to a new camera
+  const [ currentMediaStream, setCurrentMediaStream ] = useState( null );
+
   // {MediaTrackCapabilities|null} - the capabilities of the track
   const [ trackCapabilities, setTrackCapabilities ] = useState( null );
 
   // as soon as the component is mounted, get the track and its capabilities
   useEffect( () => {
 
+    // If there is a current media stream, stop it. This prevent an error like
+    // "NotReadableError: Could not start video source" when switching cameras.
+    if ( currentMediaStream ) {
+      currentMediaStream.getTracks().forEach( track => {
+        track.stop();
+      } );
+    }
+
+    // If there is a selected camera, request that one specifically.
+    const selectedDeviceId = props.selectedCameraDeviceId;
+    const constraints = {
+      video: { deviceId: selectedDeviceId ? { exact: selectedDeviceId } : undefined }
+    };
+
     // Get the media stream.
-    navigator.mediaDevices.getUserMedia( { video: true } )
+    navigator.mediaDevices.getUserMedia( constraints )
       .then( mediaStream => {
+
+        // Save the media stream so we can stop it if the camera is changed.
+        setCurrentMediaStream( mediaStream );
 
         // Create a local reference to the video track - saved to a local variable because the state won't be updated
         // until the next render cycle.
@@ -81,7 +102,7 @@ export default function CameraControls( props ) {
       .catch( e => {
         console.log( `Error getting media track: e = ${e}` );
       } );
-  }, [] );
+  }, [ props.selectedCameraDeviceId ] ); // Update the track when the selected camera changes
 
   // Whenever a constraint state variable changes, apply the changes to the track.
   useEffect( () => {
