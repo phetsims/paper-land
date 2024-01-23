@@ -231,6 +231,42 @@ export default class ViewCodeGenerator {
         };
       ` );
     }
+    else if ( viewType === 'DescriptionViewComponent' ) {
+
+      // From the ViewComponentTemplates, we will have access to an Utterance
+      // with this name.
+      const utteranceComponentName = `${componentName}DescriptionUtterance`;
+
+      codeStrings.push( `
+      
+        // Stop all speech and clear the queue
+        const interruptSpeech = () => {
+          phet.scenery.voicingUtteranceQueue.cancel();;
+        };
+        
+        // Mute/unmute the utterance queue
+        const setMuted = ( v ) => {
+          phet.scenery.voicingUtteranceQueue.setMuted( v );
+        };
+        
+        // Sets the priority of this utterance in the queue
+        const setPriority = ( v ) => {
+          scratchpad.${utteranceComponentName}.priorityProperty.value = v;
+        }
+        
+        const setAlertStableDelay = ( v ) => {
+          scratchpad.${utteranceComponentName}.setAlertStableDelay( v );
+        };
+        
+        const setVoiceRate = ( v ) => {
+          phet.scenery.voicingManager.voiceRateProperty.value = v;
+        };
+        
+        const setVoicePitch = ( v ) => {
+          phet.scenery.voicingManager.voicePitchProperty.value = v;
+        };
+      ` );
+    }
 
     return codeStrings.join( '\n' );
   }

@@ -502,7 +502,8 @@ export default class ProgramCodeGenerator {
 
       // If lazy, we wait to speak something until the paper is added.
       data = {
-        LAZY: viewComponent.lazyLink
+        LAZY: viewComponent.lazyLink,
+        CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, {} )
       };
     }
     else if ( componentType === 'ShapeViewComponent' ) {

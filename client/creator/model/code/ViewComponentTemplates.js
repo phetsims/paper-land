@@ -83,6 +83,10 @@ const ViewComponentTemplates = {
     onProgramAdded: `
       // Speak the description whenever the dependencies change.
       const {{NAME}}DescriptionFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
+        // in a local scope, define the functions that the user can use to manipulate the text
+        {{CONTROL_FUNCTIONS}}
+      
         {{CONTROL_FUNCTION}}
       }
       
