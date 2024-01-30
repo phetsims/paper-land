@@ -40,12 +40,10 @@ export default function ViewComponentControls( props ) {
         <Accordion.Item eventKey='0'>
           <Accordion.Header>Custom Function</Accordion.Header>
           <Accordion.Body>
-            <hr/>
-            <div className={styles.controlElement}>
-              <h4>Model dependencies</h4>
-              <p className={styles.controlElement}>{props.componentsPrompt}</p>
+            <div>
               <ModelComponentSelector
                 allModelComponents={props.allModelComponents}
+                componentsPrompt={props.componentsPrompt}
                 selectedModelComponents={selectedModelComponents}
                 handleChange={selectedComponents => {
                   props.handleChange( { modelComponentNames: selectedComponents.map( component => component.nameProperty.value ) } );

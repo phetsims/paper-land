@@ -287,3 +287,39 @@ code {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
 }
+
+:local(.customSwitchContainer ) {
+  display: flex; /* Use flexbox for layout */
+  align-items: center; /* Align items vertically in the center */
+  justify-content: flex-end; /* Horizontally center content */
+}
+
+:local( .labelLeft ) {
+  margin-right: 10px;
+}
+
+:local( .labelRight ) {
+  margin-left: 10px;
+}
+
+:local(.removeButton) {
+  display: inline;
+  padding: 0;
+}
+
+:local(.alignItemsCenter) {
+  display: flex;
+  align-items: center; /* This vertically centers the content */
+  white-space: nowrap; /*so that characters to the right of the component name do not wrap to another line*/
+}
+
+:local(.justifyLeft) {
+  display: flex;
+  justify-content: flex-start;
+}
+
+:local(.justifyRight) {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
