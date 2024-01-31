@@ -291,7 +291,7 @@ code {
 :local(.customSwitchContainer ) {
   display: flex; /* Use flexbox for layout */
   align-items: center; /* Align items vertically in the center */
-  justify-content: flex-end; /* Horizontally center content */
+  justify-content: center; /* Horizontally center content */
 }
 
 :local( .labelLeft ) {

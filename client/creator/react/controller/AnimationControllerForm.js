@@ -89,13 +89,10 @@ export default function AnimationControllerForm( props ) {
   return (
     <>
       <hr></hr>
-      <p>Select the model components you want to control and use the available functions to update them with animation.
-        The function you write will be called every few miliseconds.
-      </p>
-      <h4>Controlled Components</h4>
       <ModelComponentSelector
         allModelComponents={usableModelComponents}
         selectedModelComponents={selectedControlledComponents}
+        componentsPrompt={'Select controlled model components. These components will be updated by the control function. The control function will be called every few miliseconds.'}
 
         handleChange={selectedComponents => {
           handleChange( { controlledPropertyNames: selectedComponents.map( component => component.nameProperty.value ) } );

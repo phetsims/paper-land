@@ -14,6 +14,7 @@ import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import styles from './../CreatorMain.css';
 import AIHelperChat from './AIHelperChat.js';
 import CreatorMonacoEditor from './CreatorMonacoEditor.js';
+import ModelComponentSelector from './ModelComponentSelector.js';
 import useEditableForm from './useEditableForm.js';
 
 export default function CreateDerivedForm( props ) {
@@ -66,49 +67,14 @@ export default function CreateDerivedForm( props ) {
   return (
     <>
       <div className={styles.controlElement}>
-        <p>Select dependency model components. This component will compute a new value whenever any dependency changes.</p>
-        <Container>
-          {
-            usableModelComponents.map( ( component, index ) => {
-              if ( index % 3 === 0 ) {
-                const nextThreeComponents = usableModelComponents.slice( index, index + 3 );
-
-                // We will fill the array with entries for layout so that the row is full, even
-                // if there isn't a component to render in that column
-                while ( nextThreeComponents.length < 3 ) {
-                  nextThreeComponents.push( undefined );
-                }
-
-                return (
-                  <Row key={`component-checkbox-row-${index}`}>
-                    {
-                      nextThreeComponents.map( ( innerComponent, innerIndex ) => {
-                        return (
-                          <Col key={`inner-row-${innerIndex}`}>
-                            {innerComponent ?
-                             <Form.Check
-                               checked={formData.dependencyNames.includes( innerComponent.nameProperty.value )}
-                               type={'checkbox'}
-                               id={`dependency-checkbox-${innerIndex}`}
-                               label={innerComponent.nameProperty.value}
-                               onChange={event => {
-                                 handleCheckboxChange( event, innerComponent.nameProperty.value );
-                               }}
-                             /> : ''
-                            }
-                          </Col>
-                        );
-                      } )
-                    }
-                  </Row>
-                );
-              }
-              else {
-                return '';
-              }
-            } )
-          }
-        </Container>
+        <ModelComponentSelector
+          allModelComponents={usableModelComponents}
+          componentsPrompt={'Select dependency model components. This component will compute a new value whenever any dependency changes.'}
+          selectedModelComponents={formData.dependencyNames.map( name => findDependency( name ) )}
+          handleChange={selectedComponents => {
+            handleChange( { dependencyNames: selectedComponents.map( component => component.nameProperty.value ) } );
+          }}
+        ></ModelComponentSelector>
       </div>
       <div hidden={usableModelComponents.length === 0}>
         <p className={styles.controlElement}>Write the body of a function that returns the desired value.</p>
