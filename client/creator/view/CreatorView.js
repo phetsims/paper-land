@@ -192,13 +192,24 @@ export default class CreatorView extends phet.scenery.Node {
         this.saveProjectButton.enabled = editEnabledProperty.value;
         this.newProgramButton.enabled = editEnabledProperty.value;
         this.newProgramFromTemplateButton.enabled = editEnabledProperty.value;
+
+        // you can only load a new state into this project if not restricted
+        this.loadProjectJSONButton.enabled = editEnabledProperty.value;
+        this.saveProjectJSONButton.enabled = true;
+
+        // You cannot edit projects but you can always send a project to the space
         this.sendToPaperLandButton.enabled = true;
       }
       else {
         model.clear();
 
+        // Everythign is disabled until you have selected a space and project.
         this.saveProjectButton.enabled = false;
+        this.newProgramButton.enabled = false;
+        this.newProgramFromTemplateButton.enabled = false;
         this.sendToPaperLandButton.enabled = false;
+        this.loadProjectJSONButton.enabled = false;
+        this.saveProjectJSONButton.enabled = false;
       }
     };
     phet.axon.Multilink.multilink( [ model.spaceNameProperty, model.projectNameProperty, editEnabledProperty ], updateProject );
