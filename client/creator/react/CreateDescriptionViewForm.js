@@ -43,7 +43,7 @@ export default function CreateDescriptionViewForm( props ) {
       <Form.Check
         type={'checkbox'}
         id={'lazy-link-checkbox'}
-        label={'Wait for change to speak'}
+        label={'Wait For Change - If checked, you will not hear speech when you add the program. Speech will wait until the model changes.'}
         checked={formData.lazyLink}
         onChange={event => {
           handleChange( { lazyLink: event.target.checked } );
@@ -73,7 +73,7 @@ export default function CreateDescriptionViewForm( props ) {
     <div>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
-        typeSpecificControls={typeSpecificControls}
+        typeSpecificEndControls={typeSpecificControls}
         typeSpecificFunctions={descriptionFunctions}
         isFormValid={props.isFormValid}
         formData={formData}

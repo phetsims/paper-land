@@ -8,8 +8,12 @@ export default function StyledButton( props ) {
 
   // Additional class names you can provide to further style the button
   const otherClassNames = props.otherClassNames || '';
+  const overrideClassName = props.overrideClassName || '';
+
+  // Use the override if provided, otherwise it will be a combination of default styling with additionals
+  const className = overrideClassName || `${styles.controlElement} ${styles.inlineBlock} ${otherClassNames}`;
   return (
-    <div className={`${styles.controlElement} ${styles.inlineBlock} ${otherClassNames}`}>
+    <div className={className}>
       <Button
         onClick={props.onClick}
         disabled={disabled}

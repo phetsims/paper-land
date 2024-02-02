@@ -70,9 +70,19 @@
   padding-bottom: 10px;
 }
 
+/*For a paragraph that should appear larger but shouldn't be a header*/
+:local(.largerText) {
+  font-size: 20px;
+}
+
 :local(.extraPadding) {
   padding-top: 20px;
   padding-bottom: 20px;
+}
+
+:local(.reducedVerticalPadding) {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 :local(.horizontalPadding) {

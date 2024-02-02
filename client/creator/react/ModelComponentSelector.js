@@ -19,6 +19,11 @@ export default function ModelComponentSelector( props ) {
   const allModelComponents = props.allModelComponents;
   const selectedModelComponents = props.selectedModelComponents;
 
+  // If true, the dependency/reference switch will not be shown.
+  // TODO: Temporary until references are supported.
+  // const hideDependencyControl = props.hideDependencyControl || false;
+  const hideDependencyControl = props.hideDependencyControl || true;
+
   const [ showingDialog, setShowingDialog ] = useState( false );
 
   // A function to be called whenever any checkbox changes.
@@ -41,25 +46,24 @@ export default function ModelComponentSelector( props ) {
         selectedModelComponents={selectedModelComponents}
         handleChange={handleChange}
       ></SelectComponentsDialog>
-      <Container>
-        <div>
-          <h4>Connections</h4>
-          <p className={styles.controlElement}>{props.componentsPrompt}</p>
+      <div>
+        <h3>Connections</h3>
+        <p className={`${styles.controlElement} ${styles.largerText}`}>{props.componentsPrompt}</p>
 
-          <SelectedComponentsList
-            selectedModelComponents={selectedModelComponents}
-            handleRemoveComponent={handleRemoveComponent}
-          ></SelectedComponentsList>
+        <SelectedComponentsList
+          selectedModelComponents={selectedModelComponents}
+          handleRemoveComponent={handleRemoveComponent}
+          hideDependencyControl={hideDependencyControl}
+        ></SelectedComponentsList>
 
-          <StyledButton
-            onClick={() => {
-              setShowingDialog( true );
-            }}
-            name={'Add Components'}
-          >
-          </StyledButton>
-        </div>
-      </Container>
+        <StyledButton
+          onClick={() => {
+            setShowingDialog( true );
+          }}
+          name={'Add Components'}
+        >
+        </StyledButton>
+      </div>
     </>
   );
 }
@@ -74,22 +78,27 @@ function SelectedComponentsList( props ) {
   const selectedComponents = props.selectedModelComponents;
   return (
     <>
-      <h4>Selected Components</h4>
-      <Container>
-        <ul>
-          {
-            selectedComponents.map( ( component, index ) => {
-              return (
-                <SelectedComponentListItem
-                  key={`selected-component-${index}`}
-                  component={component}
-                  handleRemoveComponent={props.handleRemoveComponent}
-                ></SelectedComponentListItem>
-              );
-            } )
-          }
-        </ul>
-      </Container>
+      {selectedComponents.length > 0 && (
+        <>
+          <h4>Selected Components</h4>
+          <Container>
+            <ul>
+              {
+                selectedComponents.map( ( component, index ) => {
+                  return (
+                    <SelectedComponentListItem
+                      key={`selected-component-${index}`}
+                      component={component}
+                      handleRemoveComponent={props.handleRemoveComponent}
+                      hideDependencyControl={props.hideDependencyControl}
+                    ></SelectedComponentListItem>
+                  );
+                } )
+              }
+            </ul>
+          </Container>
+        </>
+      )}
     </>
   );
 }
@@ -98,18 +107,22 @@ function SelectedComponentsList( props ) {
  * A list item for selected components, with buttons to toggle dependency type and remove this component from the list.
  */
 function SelectedComponentListItem( props ) {
+  const hideDependencyControl = props.hideDependencyControl || false;
   return (
     <>
       <li>
-        <Row className={styles.alignItemsCenter}>
+        <Row className={`${styles.alignItemsCenter}`}>
           <Col md={8} className={styles.justifyLeft}>
-            <b>{`${props.component.nameProperty.value} - `}</b>
+            <b>{props.component.nameProperty.value}</b>
           </Col>
           <Col md={3} className={styles.justifyRight}>
-            <CustomSwitch
-              labelLeft={'Reference'}
-              labelRight={'Dependency'}
-            ></CustomSwitch>
+            {!hideDependencyControl && (
+              <CustomSwitch
+                labelLeft={'Reference'}
+                labelRight={'Dependency'}
+              ></CustomSwitch>
+            )
+            }
           </Col>
           <Col md={1} className={styles.justifyRight}>
             <StyledButton
@@ -117,6 +130,7 @@ function SelectedComponentListItem( props ) {
                 props.handleRemoveComponent( props.component );
               }}
               name={'X'}
+              overrideClassName={styles.reducedVerticalPadding}
             ></StyledButton>
           </Col>
         </Row>
@@ -164,6 +178,11 @@ function SelectComponentsDialog( props ) {
   const handleChange = props.handleChange;
 
   const handleClose = () => {
+
+    // Clear the newSelectedComponents so that it is empty for the next time this dialog is open and we don't
+    // accidentally add the same components again.
+    setNewSelectedComponents( [] );
+
     props.setShowing( false );
   };
 
@@ -378,7 +397,7 @@ function ComponentsCheckboxList( props ) {
                             {innerComponent ?
                              <Form.Check
                                type={'checkbox'}
-                               id={`dependency-checkbox-${innerIndex}`}
+                               id={`dependency-checkbox-${index}-${innerIndex}`}
                                label={innerComponent.nameProperty.value}
                                onChange={event => {
                                  handleCheckboxChange( event, innerComponent );

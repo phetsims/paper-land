@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Container from 'react-bootstrap/Container';
 import { isNameValid } from '../../../utils.js';
 import Component from '../../model/Component.js';
 import MultilinkListenerComponent from '../../model/controllers/MultilinkListenerComponent.js';
@@ -99,31 +100,43 @@ export default function MultilinkControllerForm( props ) {
   return (
     <div>
       <hr></hr>
-      <h4>Dependency Properties</h4>
-      <ModelComponentSelector
-        allModelComponents={usableModelComponents}
-        selectedModelComponents={selectedModelComponents}
+      <h3>Dependency Components</h3>
+      <p>Select components that will control the value of others.</p>
+      <Container>
+        <ModelComponentSelector
+          allModelComponents={usableModelComponents}
+          selectedModelComponents={selectedModelComponents}
 
-        handleChange={selectedComponents => {
+          // All components in this section are dependencies for the multilink
+          hideDependencyControl={true}
+          handleChange={selectedComponents => {
 
-          handleChange( {
-            dependencyNames: selectedComponents.map( component => component.nameProperty.value ),
+            handleChange( {
+              dependencyNames: selectedComponents.map( component => component.nameProperty.value ),
 
-            // if the selectedComponents contanins a controlled component, that component is no longer controllable
-            controlledPropertyNames: selectedControlledComponents.filter( component => !selectedComponents.includes( component ) ).map( component => component.nameProperty.value )
-          } );
-        }}
-      />
+              // if the selectedComponents contanins a controlled component, that component is no longer controllable
+              controlledPropertyNames: selectedControlledComponents.filter( component => !selectedComponents.includes( component ) ).map( component => component.nameProperty.value )
+            } );
+          }}
+        />
+      </Container>
       <hr></hr>
-      <h4>Controlled Components</h4>
-      <ModelComponentSelector
-        allModelComponents={controllableComponents}
-        selectedModelComponents={selectedControlledComponents}
+      <h3>Controlled Components</h3>
+      <p>Select components whose value you want to derive from a dependency components.</p>
+      <Container>
+        <ModelComponentSelector
+          allModelComponents={controllableComponents}
+          selectedModelComponents={selectedControlledComponents}
 
-        handleChange={selectedComponents => {
-          handleChange( { controlledPropertyNames: selectedComponents.map( component => component.nameProperty.value ) } );
-        }}
-      />
+          // All dependencies in this section are controlled - they are updated by the control function
+          hideDependencyControl={true}
+
+          handleChange={selectedComponents => {
+            handleChange( { controlledPropertyNames: selectedComponents.map( component => component.nameProperty.value ) } );
+          }}
+        />
+      </Container>
+      <hr></hr>
       <VariableDocumentationList
         components={allSelectedComponents}
       ></VariableDocumentationList>

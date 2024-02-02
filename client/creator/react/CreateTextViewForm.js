@@ -59,7 +59,7 @@ export default function CreateTextViewForm( props ) {
         formData={formData}
         handleChange={handleChange}
         functionPrompt={'Write a function using the variables to control the Text. All view coordinates in pixels.'}
-        componentsPrompt={'Function is called when selected components change.'}
+        componentsPrompt={'Add model components that will control the Text.'}
         additionalControlFunctions={formatFunctionListForPrompt( TEXT_FUNCTIONS )}
       ></ViewComponentControls>
     </div>

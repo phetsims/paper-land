@@ -61,7 +61,7 @@ const GeneralAccordionItem = ( { formData, handleChange } ) => {
   };
 
   return (
-    <Accordion.Item eventKey='0'>
+    <Accordion.Item eventKey={null}>
       <Accordion.Header className={styles.cardHeader}>General Options</Accordion.Header>
       <Accordion.Body className={styles.cardBody}>
         <div className={styles.controlElement}>

@@ -105,6 +105,11 @@ export default function CreateSoundViewForm( props ) {
           }}
         ></FileUploader>
       </div>
+    </div>
+  );
+
+  const additionalControls = (
+    <>
       <div className={styles.controlElement}>
         <Form.Check
           type='checkbox'
@@ -118,15 +123,14 @@ export default function CreateSoundViewForm( props ) {
       <div className={styles.controlElement}>
         <Form.Check
           type='checkbox'
-          label='Autoplay sounds'
+          label='Autoplay sounds - When checked, sounds play every component change. Uncheck for more custom control over when sounds play.'
           checked={formData.autoplay}
           onChange={event => {
             handleChange( { autoplay: event.target.checked } );
           }}
         />
-        <p>When checked, sounds play every component change. Uncheck for more custom control over when sounds play.</p>
       </div>
-    </div>
+    </>
   );
 
   // A list of functions that can be used in the code string by the user.
@@ -153,6 +157,7 @@ export default function CreateSoundViewForm( props ) {
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificControls={soundFileSelector}
+        typeSpecificEndControls={additionalControls}
         typeSpecificFunctions={soundFunctions}
         formData={formData}
         handleChange={handleChange}

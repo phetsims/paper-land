@@ -92,6 +92,10 @@ export default function AnimationControllerForm( props ) {
       <ModelComponentSelector
         allModelComponents={usableModelComponents}
         selectedModelComponents={selectedControlledComponents}
+
+        // All components in this section are controlled in the step function, they cannot be changed to be
+        // a dependency/reference
+        hideDependencyControl={true}
         componentsPrompt={'Select controlled model components. These components will be updated by the control function. The control function will be called every few miliseconds.'}
 
         handleChange={selectedComponents => {

@@ -75,8 +75,8 @@ export default function CreateShapeViewForm( props ) {
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
-        functionPrompt='Use the available functions and variables to control the shape.'
-        componentsPrompt='Select the model components that will control the shape.'
+        functionPrompt='Write a JavaScript function using the available variables and functions to control the shape.'
+        componentsPrompt='Select model components that will control the shape.'
       ></ViewComponentControls>
     </>
   );

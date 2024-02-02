@@ -127,8 +127,8 @@ export default function CreateImageViewForm( props ) {
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
-        functionPrompt={'Use the available functions and variables to control the image.'}
-        componentsPrompt={'Function is called whenever a selected component changes.'}
+        functionPrompt={'Write a JavaScript function using the available variables and functions to control the image.'}
+        componentsPrompt={'Add model components that will control the image.'}
         additionalControlFunctions={`${formatFunctionListForPrompt( NODE_COMPONENT_FUNCTIONS )}\n${formatFunctionListForPrompt( IMAGE_FUNCTIONS )}`}
       ></ViewComponentControls>
     </div>

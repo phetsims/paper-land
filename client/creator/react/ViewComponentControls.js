@@ -52,20 +52,28 @@ export default function ViewComponentControls( props ) {
             </div>
             <hr/>
             <div>
-              <p className={styles.controlElement}>{props.functionPrompt}</p>
-              <p>Available variables:</p>
-              <ListGroup>
-                {
-                  selectedModelComponents.map( ( selectedComponent, index ) => {
-                    return (
-                      <ListGroup.Item
-                        key={`component-documentation-${index}`}
-                        className={styles.listGroupItem}
-                      >{getComponentDocumentation( selectedComponent )}</ListGroup.Item>
-                    );
-                  } )
-                }
-              </ListGroup>
+              <p className={`${styles.controlElement} ${styles.largerText}`}>{props.functionPrompt}</p>
+              {
+                selectedModelComponents.length === 0 ? (
+                  <p className={styles.controlElement}>No components selected.</p>
+                ) : (
+                  <>
+                    <p>Available variables: </p>
+                    <ListGroup>
+                      {
+                        selectedModelComponents.map( ( selectedComponent, index ) => {
+                          return (
+                            <ListGroup.Item
+                              key={`component-documentation-${index}`}
+                              className={styles.listGroupItem}
+                            >{getComponentDocumentation( selectedComponent )}</ListGroup.Item>
+                          );
+                        } )
+                      }
+                    </ListGroup>
+                  </>
+                )
+              }
               {props.typeSpecificFunctions ? props.typeSpecificFunctions : ''}
               <CreatorMonacoEditor
                 controlFunctionString={props.formData.controlFunctionString}
@@ -82,6 +90,14 @@ export default function ViewComponentControls( props ) {
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
+
+      {/*Controls that are specific to this view component that you want to layout after the function editor.*/}
+      {props.typeSpecificEndControls && (
+        <>
+          <hr/>
+          {props.typeSpecificEndControls}
+        </>
+      )}
     </>
   );
 }
