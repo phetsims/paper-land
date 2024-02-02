@@ -2,13 +2,33 @@ import Matrix from 'node-matrices';
 
 // A list of reserved keywords that cannot be used in component names.
 const RESERVED_KEYWORDS = [
+
+  // kewwords
   'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger',
   'default', 'delete', 'do', 'else', 'export', 'extends', 'false',
   'finally', 'for', 'function', 'if', 'import', 'in', 'instanceof',
   'new', 'null', 'return', 'super', 'switch', 'this', 'throw',
   'true', 'try', 'typeof', 'var', 'void', 'while', 'with', 'yield',
   'let', 'static', 'await', 'enum', 'implements', 'package', 'protected',
-  'interface', 'private', 'public', 'console'
+  'interface', 'private', 'public', 'console',
+
+  // Built-in objects and types
+  'Array', 'Boolean', 'Date', 'Error', 'Function', 'JSON', 'Math', 'Number',
+  'Object', 'Promise', 'RegExp', 'String', 'Symbol', 'Set', 'Map', 'WeakSet', 'WeakMap',
+  'ArrayBuffer', 'SharedArrayBuffer', 'Atomics', 'DataView', 'Float32Array', 'Float64Array',
+  'Int8Array', 'Int16Array', 'Int32Array', 'Uint8Array', 'Uint8ClampedArray', 'Uint16Array',
+  'Uint32Array', 'BigInt', 'BigInt64Array', 'BigUint64Array', 'Infinity', 'NaN',
+  'undefined', 'eval', 'isFinite', 'isNaN', 'parseFloat', 'parseInt', 'decodeURI',
+  'decodeURIComponent', 'encodeURI', 'encodeURIComponent', 'globalThis', 'Reflect', 'Proxy',
+
+  // Error types
+  'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError', 'TypeError', 'URIError',
+
+  // Internationalization
+  'Intl',
+
+  // WebAssembly
+  'WebAssembly'
 ];
 
 export function norm( vector ) {
