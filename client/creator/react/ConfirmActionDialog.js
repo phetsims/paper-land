@@ -1,3 +1,9 @@
+/**
+ * A subclass of the ConfirmationDialog - When the model indicates a general confirmation is required, this
+ * dialog is displayed. The model will emit an event when the dialog should be shown with the work
+ * to be done on confirmation. Upon confirm, we close the dialog and handle the action.
+ */
+
 import React, { useEffect, useState } from 'react';
 import ConfirmationDialog from './ConfirmationDialog.js';
 
