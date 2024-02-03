@@ -143,7 +143,7 @@ export default class CreatorView extends phet.scenery.Node {
 
     // Creates a ProgramNode when it is added
     model.programAddedEmitter.addListener( newProgram => {
-      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty, editEnabledProperty, this.availableBoundsProperty );
+      const newProgramNode = new ProgramNode( newProgram, model.activeEditProperty, editEnabledProperty, this.availableBoundsProperty, model.confirmRequestEmitter );
       this.allProgramNodes.push( newProgramNode );
       programLayerNode.addChild( newProgramNode );
 

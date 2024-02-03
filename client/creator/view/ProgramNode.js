@@ -37,8 +37,9 @@ export default class ProgramNode extends phet.scenery.Node {
    * @param {Property<null|ActiveEdit>} activeEditProperty
    * @param {Property<boolean>} editEnabledProperty
    * @param {Property<Bounds2>} availableBoundsProperty - total space available for programs
+   * @param {Emitter} confirmRequestEmitter - for requesting confirmation from the user to delete this program
    */
-  constructor( model, activeEditProperty, editEnabledProperty, availableBoundsProperty ) {
+  constructor( model, activeEditProperty, editEnabledProperty, availableBoundsProperty, confirmRequestEmitter ) {
     super();
     this.model = model;
 
@@ -190,7 +191,14 @@ export default class ProgramNode extends phet.scenery.Node {
       } );
       this.deleteButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => model.deleteEmitter.emit(),
+        listener: () => {
+          confirmRequestEmitter.emit( {
+            message: `Are you sure you want to delete program ${model.numberProperty.value}? This cannot be undone.`,
+            action: () => {
+              model.deleteEmitter.emit();
+            }
+          } );
+        },
         enabledProperty: editEnabledProperty
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
@@ -283,7 +291,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
     const registerComponentListListener = ( observableArray, parentNode ) => {
       observableArray.elementAddedEmitter.addListener( addedComponent => {
-        const newItemNode = new ComponentListItemNode( model, addedComponent, WIDTH, model.activeEditProperty, editEnabledProperty );
+        const newItemNode = new ComponentListItemNode( model, addedComponent, WIDTH, model.activeEditProperty, editEnabledProperty, confirmRequestEmitter );
         parentNode.addChild( newItemNode );
 
         this.allListItemNodes.push( newItemNode );

@@ -6,6 +6,7 @@ import React, { useRef } from 'react';
 import SceneryDisplay from '../common/SceneryDisplay.js';
 import styles from './CreatorMain.css';
 import CreatorModel from './model/CreatorModel.js';
+import ConfirmActionDialog from './react/ConfirmActionDialog.js';
 import CreatorControls from './react/CreatorControls.js';
 import ErrorDialog from './react/ErrorDialog.js';
 import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
@@ -140,6 +141,9 @@ export default function CreatorMain( props ) {
         <ErrorDialog
           creatorModel={creatorModel}
         ></ErrorDialog>
+        <ConfirmActionDialog
+          creatorModel={creatorModel}
+        ></ConfirmActionDialog>
       </div>
       <div className={styles.rowContainer}>
         <div

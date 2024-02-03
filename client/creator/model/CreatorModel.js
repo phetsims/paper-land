@@ -71,6 +71,21 @@ export default class CreatorModel {
     // {Emitter} - Emits when the programs are successfully sent to Paper Playground.
     this.sendSuccessfulEmitter = new phet.axon.Emitter();
 
+    // {Emitter} - Emits an event whenever the user makes an action that requires a general confirmation. For
+    // example, deleting a program or deleting a component. Takes a message and an action - a callback that
+    // will be done if the user confirms the action.
+    this.confirmRequestEmitter = new phet.axon.Emitter( {
+      parameters: [
+        {
+
+          // Instead of a class with valueType check, lets ensure that the object has the correct keys.
+          isValidValue: value => {
+            return value.hasOwnProperty( 'message' ) && value.hasOwnProperty( 'action' );
+          }
+        }
+      ]
+    } );
+
     // {Emitter} - Emits when the save template request to the server is successful.
     this.saveTemplateSuccessfulEmitter = new phet.axon.Emitter();
 

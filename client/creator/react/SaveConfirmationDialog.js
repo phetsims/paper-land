@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import styles from './../CreatorMain.css';
 import ConfirmationDialog from './ConfirmationDialog.js';
-import StyledButton from './StyledButton.js';
 
 export default function SaveConfirmationDialog( props ) {
   if ( !props.creatorModel ) {

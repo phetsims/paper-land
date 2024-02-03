@@ -11,8 +11,9 @@ export default class ComponentListItemNode extends phet.scenery.Node {
    * @param programWidth
    * @param {Property<ActiveEdit|null>} activeEditProperty
    * @param {Property<boolean>} editEnabledProperty
+   * @param {Emitter} confirmRequestEmitter
    */
-  constructor( program, component, programWidth, activeEditProperty, editEnabledProperty ) {
+  constructor( program, component, programWidth, activeEditProperty, editEnabledProperty, confirmRequestEmitter ) {
     super();
 
     // @public (read-only) - to identify this ItemNode
@@ -60,7 +61,14 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       } );
       const deleteButton = new phet.sun.RectangularPushButton( _.merge( {}, {
         content: imageNode,
-        listener: () => component.deleteEmitter.emit(),
+        listener: () => {
+          confirmRequestEmitter.emit( {
+            message: `Are you sure you want to delete ${component.nameProperty.value}? This cannot be undone.`,
+            action: () => {
+              component.deleteEmitter.emit();
+            }
+          } );
+        },
         enabledProperty: editEnabledProperty
       }, ViewConstants.RECTANGULAR_BUTTON_OPTIONS ) );
 
