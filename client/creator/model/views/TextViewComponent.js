@@ -3,8 +3,8 @@ import ViewComponent from './ViewComponent.js';
 
 export default class TextViewComponent extends ViewComponent {
 
-  constructor( name, modelComponents, controlFunctionString ) {
-    super( name, modelComponents, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString, providedOptions ) {
+    super( name, modelComponents, controlFunctionString, providedOptions );
   }
 
   /**
@@ -15,7 +15,9 @@ export default class TextViewComponent extends ViewComponent {
     return new TextViewComponent(
       stateObject.name,
       dependencies,
-      stateObject.controlFunctionString
+      stateObject.controlFunctionString, {
+        referenceComponentNames: stateObject.referenceComponentNames
+      }
     );
   }
 }

@@ -226,10 +226,21 @@ export default class ProgramCodeGenerator {
       if ( template ) {
         const componentData = ProgramCodeGenerator.getViewComponentData( viewComponent );
 
+        // Distribute model components into reference components and dependencies. Reference components
+        // are available as references but are not dependencies of the multilink. The dependencies are
+        // all the model components that are not reference components.
+        const referenceNames = viewComponent.referenceComponentNames;
+        const dependencyNames = viewComponent.modelComponentNames.filter( name => !referenceNames.includes( name ) );
+
+        // Convert the referenceNames into a series of const variable declarations
+        const referenceNamesCode = referenceNames.map( name => `const ${name} = phet.paperLand.getModelComponent('${name}').value;` ).join( '\n' );
+
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: viewComponent.nameProperty.value,
-          DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( viewComponent.modelComponentNames ),
-          DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( viewComponent.modelComponentNames ),
+          DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
+          DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
+          REFERENCE_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( referenceNames ),
+          REFERENCE_DECLARATIONS: referenceNamesCode,
           CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( viewComponent.controlFunctionString ),
           ...componentData
         } );

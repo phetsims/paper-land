@@ -10,11 +10,12 @@ export default class BackgroundViewComponent extends ViewComponent {
    * @param {Object} providedOptions - options for this view component
    */
   constructor( name, modelComponents, controlFunctionString, providedOptions ) {
-    super( name, modelComponents, controlFunctionString );
 
     const options = phet.phetCore.merge( {
       fillColor: 'green'
     }, providedOptions );
+
+    super( name, modelComponents, controlFunctionString, options );
 
     this.fillColor = options.fillColor;
   }
@@ -44,7 +45,8 @@ export default class BackgroundViewComponent extends ViewComponent {
       dependencies,
       stateObject.controlFunctionString,
       {
-        fillColor: stateObject.fillColor
+        fillColor: stateObject.fillColor,
+        referenceComponentNames: stateObject.referenceComponentNames
       }
     );
   }

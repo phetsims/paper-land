@@ -4,11 +4,7 @@
  */
 
 import React from 'react';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
-import Row from 'react-bootstrap/Row';
 import { getComponentDocumentation } from '../../utils.js';
 import NamedDerivedProperty from '../model/NamedDerivedProperty.js';
 import styles from './../CreatorMain.css';
@@ -74,6 +70,9 @@ export default function CreateDerivedForm( props ) {
           handleChange={selectedComponents => {
             handleChange( { dependencyNames: selectedComponents.map( component => component.nameProperty.value ) } );
           }}
+
+          // For the DerivedProperty, we assume that all components are dependencies.
+          hideDependencyControl={true}
         ></ModelComponentSelector>
       </div>
       <div hidden={usableModelComponents.length === 0}>

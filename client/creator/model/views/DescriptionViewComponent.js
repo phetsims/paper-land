@@ -16,7 +16,8 @@ export default class DescriptionViewComponent extends ViewComponent {
       dependencies,
       stateObject.controlFunctionString,
       {
-        lazyLink: stateObject.lazyLink
+        lazyLink: stateObject.lazyLink,
+        referenceComponentNames: stateObject.referenceComponentNames
       }
     );
   }

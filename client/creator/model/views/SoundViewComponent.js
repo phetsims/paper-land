@@ -10,9 +10,10 @@ export default class SoundViewComponent extends ViewComponent {
    * @param {string} soundFileName - a sound file that exists in www/media/sounds
    * @param {boolean} loop - whether or not to loop the sound
    * @param {boolean} autoplay - Does the sound play every component change or only from custom code?
+   * @param {Object} providedOptions - options for this view component
    */
-  constructor( name, modelComponents, controlFunctionString, soundFileName, loop, autoplay ) {
-    super( name, modelComponents, controlFunctionString );
+  constructor( name, modelComponents, controlFunctionString, soundFileName, loop, autoplay, providedOptions ) {
+    super( name, modelComponents, controlFunctionString, providedOptions );
     this.soundFileName = soundFileName;
 
     // may be undefined when loading
@@ -45,7 +46,10 @@ export default class SoundViewComponent extends ViewComponent {
       stateObject.controlFunctionString,
       stateObject.soundFileName,
       stateObject.loop,
-      stateObject.autoplay
+      stateObject.autoplay,
+      {
+        referenceComponentNames: stateObject.referenceComponentNames
+      }
     );
   }
 

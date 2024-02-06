@@ -34,8 +34,13 @@ export default class ImageViewComponent extends NodeViewComponent {
       stateObject.name,
       dependencies,
       stateObject.controlFunctionString,
-      stateObject.imageFileName,
-      stateObject.defaultViewOptions
+      stateObject.imageFileName, {
+
+        // the defaultViewOptions are saved specially but are passed as general options to the constructor,
+        // so we deconstruct them here
+        ...stateObject.defaultViewOptions,
+        referenceComponentNames: stateObject.referenceComponentNames
+      }
     );
   }
 

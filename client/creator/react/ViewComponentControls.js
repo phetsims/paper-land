@@ -44,9 +44,21 @@ export default function ViewComponentControls( props ) {
               <ModelComponentSelector
                 allModelComponents={props.allModelComponents}
                 componentsPrompt={props.componentsPrompt}
+                referenceComponentNames={props.formData.referenceComponentNames}
                 selectedModelComponents={selectedModelComponents}
-                handleChange={selectedComponents => {
-                  props.handleChange( { modelComponentNames: selectedComponents.map( component => component.nameProperty.value ) } );
+                handleChange={( selectedComponents, referenceComponentNames ) => {
+
+                  const newObject = {
+                    modelComponentNames: selectedComponents.map( component => component.nameProperty.value )
+                  };
+
+                  // If the second argument is null, this means a change (likely adding) to the model components but
+                  // no change to the reference components.
+                  if ( referenceComponentNames ) {
+                    newObject.referenceComponentNames = referenceComponentNames;
+                  }
+
+                  props.handleChange( newObject );
                 }}
               ></ModelComponentSelector>
             </div>

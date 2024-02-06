@@ -7,8 +7,9 @@ import ViewComponent from './ViewComponent.js';
 
 export default class NodeViewComponent extends ViewComponent {
   constructor( name, modelComponents, controlFunctionString, providedOptions ) {
-    super( name, modelComponents, controlFunctionString );
+    super( name, modelComponents, controlFunctionString, providedOptions );
 
+    // Now handle scenery Node specific options and assign to defaultViewOptions
     const viewOptions = {
       centerX: 0.5,
       centerY: 0.5,

@@ -465,24 +465,44 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
     lazy: false,
 
     // Additional Properties to include in the Multilink that may not be associated with the board model.
-    otherProperties: []
+    otherProperties: [],
+
+    // Additional Properties to include in the addMultiModelObserver but not in the Multilink. This is useful
+    // for Properties that are needed in the observer callback, but should NOT be included as dependencies in the
+    // Multilink.
+    //
+    // {string[]} - the list of names for the references
+    otherReferences: []
   }, providedOptions );
 
   let multilink = null;
 
-  return paperLand.addMultiModelObserver(
-    componentNames,
+  // The list of components that are required to exist to create the multilink (Note this is NOT the list
+  // of dependencies for the multilink)
+  const requiredComponents = [ ...componentNames, ...options.otherReferences ];
 
-    // attach - Multilink to all components when they exist
-    components => {
-      if ( !components.every( component => component.link ) ) {
+  return paperLand.addMultiModelObserver(
+    requiredComponents,
+
+    // attach - Attach the multilink when all components exist
+    allComponents => {
+      if ( !allComponents.every( component => component.link ) ) {
         throw new Error( 'Model component must be an axon.Property for addModelPropertyMultilink' );
       }
       if ( multilink !== null ) {
         throw new Error( 'Multilink already exists.' );
       }
 
-      multilink = new phet.axon.Multilink( [ ...components, ...options.otherProperties ], listener, options.lazy );
+      // Get the list of components to assign to the multilink - this is the list of provided components
+      // without the otherReferences
+      const boardMultilinkComponents = componentNames.map( name => {
+        if ( !boardModel.has( name ) ) {
+          throw new Error( 'We are inside the multimodel observer, so all components should exist.' );
+        }
+        return boardModel.get( name );
+      } );
+
+      multilink = new phet.axon.Multilink( [ ...boardMultilinkComponents, ...options.otherProperties ], listener, options.lazy );
     },
 
     // detach - detach the multilink
@@ -504,9 +524,21 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
  * @param {string[]} componentNames
  * @param {number} linkId
  */
-paperLand.removeModelPropertyMultilink = ( componentNames, linkId ) => {
+paperLand.removeModelPropertyMultilink = ( componentNames, linkId, providedOptions ) => {
+
+  const options = phet.phetCore.merge( {
+
+    // Additional Properties that were included in the addMultiModelObserver but not in the Multilink.
+    // If you added these in the addModelPropertyMultilink, you must provide the same reference names
+    // here to fully remove the observer.
+    //
+    // {string[]} - the list of names for the references
+    otherReferences: []
+  } );
+
+  const requiredComponents = [ ...componentNames, ...options.otherReferences ];
   paperLand.removeMultiModelObserver(
-    componentNames,
+    requiredComponents,
     linkId
   );
 };

@@ -156,12 +156,15 @@ export default function CreateViewComponentForm( props ) {
     const selectedModelComponents = Component.findComponentsByName( usableModelComponents, componentNames );
     const controlFunctionString = generalDataRef.current.controlFunctionString;
 
+    const referenceComponentNames = generalDataRef.current.referenceComponentNames;
+
     if ( activeEdit && activeEdit.component ) {
       const editingComponent = activeEdit.component;
 
       // basic updates
       editingComponent.nameProperty.value = componentName;
       editingComponent.setModelComponents( selectedModelComponents );
+      editingComponent.setReferenceComponentNames( referenceComponentNames );
       editingComponent.controlFunctionString = controlFunctionString;
 
       // component specific data
@@ -187,34 +190,38 @@ export default function CreateViewComponentForm( props ) {
     }
     else {
 
+      // Create and add the new view component. Reference is kept so we can assign reference component connections
+      // at the end.
+      let newComponent;
+
       if ( selectedTab === 'sounds' ) {
         const soundFileName = soundsDataRef.current.soundFileName;
         const loop = soundsDataRef.current.loop;
         const autoplay = soundsDataRef.current.autoplay;
-        const soundViewComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay );
-        activeProgram.viewContainer.addSoundView( soundViewComponent );
+        newComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay );
+        activeProgram.viewContainer.addSoundView( newComponent );
       }
       else if ( selectedTab === 'description' ) {
-        const descriptionViewComponent = new DescriptionViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+        newComponent = new DescriptionViewComponent( componentName, selectedModelComponents, controlFunctionString, {
           lazyLink: lazyLink
         } );
-        activeProgram.viewContainer.addDescriptionView( descriptionViewComponent );
+        activeProgram.viewContainer.addDescriptionView( newComponent );
       }
       else if ( selectedTab === 'background' ) {
-        const backgroundViewComponent = new BackgroundViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+        newComponent = new BackgroundViewComponent( componentName, selectedModelComponents, controlFunctionString, {
           fillColor: backgroundDataRef.current.fillColor
         } );
-        activeProgram.viewContainer.addBackgroundView( backgroundViewComponent );
+        activeProgram.viewContainer.addBackgroundView( newComponent );
       }
       else if ( selectedTab === 'images' ) {
         const imageFileName = imagesDataRef.current.imageFileName;
         const options = imagesDataRef.current.defaultShapeOptions;
-        const imageViewComponent = new ImageViewComponent( componentName, selectedModelComponents, controlFunctionString, imageFileName, options );
-        activeProgram.viewContainer.addImageView( imageViewComponent );
+        newComponent = new ImageViewComponent( componentName, selectedModelComponents, controlFunctionString, imageFileName, options );
+        activeProgram.viewContainer.addImageView( newComponent );
       }
       else if ( selectedTab === 'text' ) {
-        const textViewComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString );
-        activeProgram.viewContainer.addTextView( textViewComponent );
+        newComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString );
+        activeProgram.viewContainer.addTextView( newComponent );
       }
       else if ( selectedTab === 'shapes' ) {
 
@@ -223,36 +230,53 @@ export default function CreateViewComponentForm( props ) {
           ...shapesDataRef.current.defaultShapeOptions,
           ...shapesDataRef.current.defaultViewOptions
         };
-        const shapeViewComponent = new ShapeViewComponent( componentName, selectedModelComponents, controlFunctionString, shapeOptions );
-        activeProgram.viewContainer.addShapeView( shapeViewComponent );
+        newComponent = new ShapeViewComponent( componentName, selectedModelComponents, controlFunctionString, shapeOptions );
+        activeProgram.viewContainer.addShapeView( newComponent );
       }
+
+      assert && assert( newComponent, `No component created for component type ${selectedTab}` );
+
+      // assign the reference components to the new view component
+      newComponent.setReferenceComponentNames( referenceComponentNames );
     }
 
     props.onComponentCreated();
   };
 
   const getInvalidReasonsForSelectedTab = () => {
+    let invalidReasons = [];
     if ( selectedTab === 'shapes' ) {
-      return shapesFormInvalidReasons;
+      invalidReasons = shapesFormInvalidReasons;
     }
     else if ( selectedTab === 'sounds' ) {
-      return soundsFormInvalidReasons;
+      invalidReasons = soundsFormInvalidReasons;
     }
     else if ( selectedTab === 'description' ) {
-      return descriptionFormInvalidReasons;
+      invalidReasons = descriptionFormInvalidReasons;
     }
     else if ( selectedTab === 'background' ) {
-      return backgroundFormInvalidReasons;
+      invalidReasons = backgroundFormInvalidReasons;
     }
     else if ( selectedTab === 'images' ) {
-      return imagesFormInvalidReasons;
+      invalidReasons = imagesFormInvalidReasons;
     }
     else if ( selectedTab === 'text' ) {
-      return textFormInvalidReasons;
+      invalidReasons = textFormInvalidReasons;
     }
     else {
-      return [];
+      invalidReasons = [];
     }
+
+    // At least one model component must be a dependency - they can't all be references
+    const referenceComponentNames = generalDataRef.current.referenceComponentNames;
+    const modelComponentNames = generalDataRef.current.modelComponentNames;
+    if ( referenceComponentNames && modelComponentNames && // if they are both defined
+         referenceComponentNames.length > 0 && // if there are reference components
+         referenceComponentNames.length >= modelComponentNames.length ) {
+      invalidReasons.push( 'At least one model component must be a dependency.' );
+    }
+
+    return invalidReasons;
   };
 
   // If there is an active edit, you cannot change tabs

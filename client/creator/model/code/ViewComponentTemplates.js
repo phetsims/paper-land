@@ -15,6 +15,7 @@ const ViewComponentTemplates = {
 
       // Play the sound when any dependencies change value.
       scratchpad.{{NAME}}SoundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        
         // in a local scope, define the functions that the user can use to manipulate the sound
         const setOutputLevel = ( level ) => {
         
@@ -63,9 +64,13 @@ const ViewComponentTemplates = {
         if ( {{AUTOPLAY}} ) {
           play();
         }
+        
+        // declare the references so that they can be used in the control function
+        {{REFERENCE_DECLARATIONS}}
       
         {{CONTROL_FUNCTION}}
-            
+      }, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}},
       } );       
       
       // Assign the sound to the scratchpad so that we can remove it later
@@ -75,7 +80,9 @@ const ViewComponentTemplates = {
       phet.tambo.soundManager.removeSoundGenerator( scratchpad.{{NAME}}SoundClip );
       delete scratchpad.{{NAME}}SoundClip;
       
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}SoundMultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}SoundMultilinkId, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+       } );
       delete scratchpad.{{NAME}}SoundMultilinkId;
     `
   },
@@ -83,6 +90,9 @@ const ViewComponentTemplates = {
     onProgramAdded: `
       // Speak the description whenever the dependencies change.
       const {{NAME}}DescriptionFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
+        // get the additional reference constants so they are available in the control function
+        {{REFERENCE_DECLARATIONS}}
       
         // in a local scope, define the functions that the user can use to manipulate the text
         {{CONTROL_FUNCTIONS}}
@@ -105,11 +115,16 @@ const ViewComponentTemplates = {
             phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance ); 
           }
         }
-      }, { lazy: {{LAZY}} } ); 
+      }, {
+        lazy: {{LAZY}},
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } ); 
     `,
     onProgramRemoved: `
       // Remove the description multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}DescriptionMultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}DescriptionMultilinkId, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+       } );
       delete scratchpad.{{NAME}}DescriptionMultilinkId;
       
       // Remove the utterance
@@ -127,12 +142,18 @@ const ViewComponentTemplates = {
       // Update the text when a dependency changes.
       scratchpad.{{NAME}}TextMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
+        // the additional reference constants
+        {{REFERENCE_DECLARATIONS}}
+      
         // in a local scope, define the functions that the user can use to manipulate the text
         {{CONTROL_FUNCTIONS}}
 
         // the function that the user wrote to update the text      
         {{CONTROL_FUNCTION}}
-      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
+      }, {
+        otherProperties: [ phet.paperLand.displaySizeProperty ],
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
     `,
     onProgramRemoved: `
       // Remove the text from the view.
@@ -140,7 +161,9 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Text;
       
       // Remove the multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}TextMultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}TextMultilinkId, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      });
       delete scratchpad.{{NAME}}TextMultilinkId;
     `
   },
@@ -165,11 +188,16 @@ const ViewComponentTemplates = {
 
       // Get a new background color whenever a dependency changes. The control function should return a color string.
       const {{NAME}}BackgroundFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      
+        // bring in the references so they are available in the control function
+        {{REFERENCE_DECLARATIONS}}
+      
         {{CONTROL_FUNCTION}}
       }
       
       // Update the background rectangle whenever the dependencies change.
       scratchpad.{{NAME}}BackgroundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+    
         const backgroundColorString = {{NAME}}BackgroundFunction( {{DEPENDENCY_ARGUMENTS}} );
         
         // wait to add the background until all dependencies are available (only add this once)
@@ -184,7 +212,10 @@ const ViewComponentTemplates = {
         }
         
         {{NAME}}BackgroundRectangle.setRect( 0, 0, sharedData.displaySize.width, sharedData.displaySize.height );
-      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
+      }, {
+        otherProperties: [ phet.paperLand.displaySizeProperty ],
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
     `,
     onProgramRemoved: `
       // Remove the background rectangle from the view.
@@ -193,7 +224,9 @@ const ViewComponentTemplates = {
       
       // Remove the multilink if there were any dependencies
       if ( scratchpad.{{NAME}}BackgroundMultilinkId ) {
-        phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}BackgroundMultilinkId );
+        phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}BackgroundMultilinkId, {
+          otherReferences: {{REFERENCE_NAMES_ARRAY}}
+        } );
         delete scratchpad.{{NAME}}BackgroundMultilinkId;
       }
     `
@@ -216,9 +249,15 @@ const ViewComponentTemplates = {
         
         // the functions that are available for this view type
         {{CONTROL_FUNCTIONS}}
+        
+        // bring in the reference components so they are available in the control function
+        {{REFERENCE_DECLARATIONS}}
       
         {{CONTROL_FUNCTION}}
-      }, { otherProperties: [ phet.paperLand.displaySizeProperty, {{NAME}}ImageLoadProperty ] } );
+      }, {
+        otherProperties: [ phet.paperLand.displaySizeProperty, {{NAME}}ImageLoadProperty ],
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
     `,
     onProgramRemoved: `
       // Remove the image from the view.
@@ -226,7 +265,9 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Image;
       
       // Remove the multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}ImageMultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}ImageMultilinkId, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
       delete scratchpad.{{NAME}}ImageMultilinkId;
     `
   },
@@ -275,8 +316,14 @@ const ViewComponentTemplates = {
         // the functions that are available for this view type
         {{CONTROL_FUNCTIONS}}
         
+        // bring in the reference components so they are available in the control function
+        {{REFERENCE_DECLARATIONS}}
+        
         {{CONTROL_FUNCTION}}
-      }, { otherProperties: [ phet.paperLand.displaySizeProperty ] } );
+      }, {
+        otherProperties: [ phet.paperLand.displaySizeProperty ],
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
     `,
     onProgramRemoved: `
     
@@ -285,7 +332,9 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}Path;
       
       // Remove the multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}PathMultilinkId );
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}PathMultilinkId, {
+        otherReferences: {{REFERENCE_NAMES_ARRAY}}
+      } );
       delete scratchpad.{{NAME}}PathMultilinkId;
     `
   }

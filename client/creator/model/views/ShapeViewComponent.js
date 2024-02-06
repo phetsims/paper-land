@@ -74,7 +74,9 @@ export default class ShapeViewComponent extends NodeViewComponent {
       stateObject.controlFunctionString,
       {
         ...stateObject.defaultViewOptions,
-        ...stateObject.defaultShapeOptions
+        ...stateObject.defaultShapeOptions,
+
+        referenceComponentNames: stateObject.referenceComponentNames
       }
     );
   }

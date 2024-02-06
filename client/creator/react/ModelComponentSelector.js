@@ -16,13 +16,24 @@ import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
 export default function ModelComponentSelector( props ) {
+
+  // All possible model components in the project.
   const allModelComponents = props.allModelComponents;
+
+  // The selected components for the component being worked on.
   const selectedModelComponents = props.selectedModelComponents;
 
   // If true, the dependency/reference switch will not be shown.
-  // TODO: Temporary until references are supported.
-  // const hideDependencyControl = props.hideDependencyControl || false;
-  const hideDependencyControl = props.hideDependencyControl || true;
+  const hideDependencyControl = props.hideDependencyControl || false;
+
+  if ( !hideDependencyControl ) {
+    if ( !props.referenceComponentNames ) {
+      throw new Error( 'If reference controls are available, referenceComponentNames are required.' );
+    }
+  }
+
+  // A sub-list from selectedModelComponents that will be used to
+  const referenceComponentNames = props.referenceComponentNames;
 
   const [ showingDialog, setShowingDialog ] = useState( false );
 
@@ -30,11 +41,53 @@ export default function ModelComponentSelector( props ) {
   const handleChange = props.handleChange || ( () => {} );
 
   const handleRemoveComponent = component => {
-    const arrayCopy = selectedModelComponents.slice();
-    const index = arrayCopy.indexOf( component );
+
+    // remove from the list of components
+    const componentsCopy = selectedModelComponents.slice();
+    const index = componentsCopy.indexOf( component );
     if ( index < 0 ) { throw new Error( 'This component was not in the list...' ); }
-    arrayCopy.splice( index, 1 );
-    handleChange( arrayCopy );
+    componentsCopy.splice( index, 1 );
+
+    if ( referenceComponentNames ) {
+
+      // If this component supports reference connections, we need to remove the component from the list
+      // of reference components if it is there.
+      const referenceCopy = referenceComponentNames.slice();
+      const referenceIndex = referenceCopy.indexOf( component.nameProperty.value );
+      if ( referenceIndex >= 0 ) {
+        referenceCopy.splice( referenceIndex, 1 );
+      }
+
+      handleChange( componentsCopy, referenceCopy );
+    }
+    else {
+
+      // No support for reference components, just update the list of selected components.
+      handleChange( componentsCopy, null );
+    }
+  };
+
+  // Adds a component to the list of reference components for connections to this component.
+  const addReferenceComponent = componentName => {
+
+    assert && assert( referenceComponentNames, 'Reference component names are required for this operation.' );
+    const referenceCopy = referenceComponentNames.slice();
+    referenceCopy.push( componentName );
+
+    handleChange( selectedModelComponents, referenceCopy );
+  };
+
+  // Removes a component from the list of reference components for connections to this component.
+  const removeReferenceComponent = componentName => {
+
+    assert && assert( referenceComponentNames, 'Reference component names are required for this operation.' );
+    const referenceCopy = referenceComponentNames.slice();
+    const index = referenceCopy.indexOf( componentName );
+
+    assert && assert( index >= 0, 'This component was not in the list of reference components.' );
+    referenceCopy.splice( index, 1 );
+
+    handleChange( selectedModelComponents, referenceCopy );
   };
 
   return (
@@ -54,6 +107,9 @@ export default function ModelComponentSelector( props ) {
           selectedModelComponents={selectedModelComponents}
           handleRemoveComponent={handleRemoveComponent}
           hideDependencyControl={hideDependencyControl}
+          addReferenceComponent={addReferenceComponent}
+          removeReferenceComponent={removeReferenceComponent}
+          getCurrentReferenceComponentNames={() => referenceComponentNames || []}
         ></SelectedComponentsList>
 
         <StyledButton
@@ -76,21 +132,38 @@ export default function ModelComponentSelector( props ) {
  */
 function SelectedComponentsList( props ) {
   const selectedComponents = props.selectedModelComponents;
+
+  // Callbacks that will add/remove a reference component from the list - optional because
+  // not all components support reference connections.
+  const addReferenceComponent = props.addReferenceComponent || ( () => {} );
+  const removeReferenceComponent = props.removeReferenceComponent || ( () => {} );
+
+  const getCurrentReferenceComponentNames = props.getCurrentReferenceComponentNames || ( () => [] );
+
+  // alphabetize the selectedComponents by name so that they appear in consistent order as you add/remove
+  // them
+  const sortedComponents = selectedComponents.slice().sort( ( a, b ) => {
+    return a.nameProperty.value.localeCompare( b.nameProperty.value );
+  } );
+
   return (
     <>
-      {selectedComponents.length > 0 && (
+      {sortedComponents.length > 0 && (
         <>
           <h4>Selected Components</h4>
           <Container>
             <ul>
               {
-                selectedComponents.map( ( component, index ) => {
+                sortedComponents.map( ( component, index ) => {
                   return (
                     <SelectedComponentListItem
                       key={`selected-component-${index}`}
                       component={component}
                       handleRemoveComponent={props.handleRemoveComponent}
                       hideDependencyControl={props.hideDependencyControl}
+                      addReferenceComponent={addReferenceComponent}
+                      removeReferenceComponent={removeReferenceComponent}
+                      getCurrentReferenceComponentNames={getCurrentReferenceComponentNames}
                     ></SelectedComponentListItem>
                   );
                 } )
@@ -108,6 +181,15 @@ function SelectedComponentsList( props ) {
  */
 function SelectedComponentListItem( props ) {
   const hideDependencyControl = props.hideDependencyControl || false;
+
+  const addReferenceComponent = props.addReferenceComponent || ( () => {} );
+  const removeReferenceComponent = props.removeReferenceComponent || ( () => {} );
+
+  // Props provides a callback that will give us a reference to the current selected reference components -
+  // this allows us to control the checked state of the switch with state
+  const currentReferenceComponentNames = props.getCurrentReferenceComponentNames();
+  const switchChecked = !currentReferenceComponentNames.includes( props.component.nameProperty.value );
+
   return (
     <>
       <li>
@@ -120,6 +202,10 @@ function SelectedComponentListItem( props ) {
               <CustomSwitch
                 labelLeft={'Reference'}
                 labelRight={'Dependency'}
+                componentName={props.component.nameProperty.value}
+                addReferenceComponent={addReferenceComponent}
+                removeReferenceComponent={removeReferenceComponent}
+                checked={switchChecked}
               ></CustomSwitch>
             )
             }
@@ -140,15 +226,36 @@ function SelectedComponentListItem( props ) {
 }
 
 function CustomSwitch( props ) {
+
+  const componentName = props.componentName;
+  assert && assert( componentName, 'Component name is required for CustomSwitch' );
+
+  // Callbacks that will add/remove the component from the list of reference component when
+  // this switch changes. Optional because not all components support reference connections.
+  const addReferenceComponent = props.addReferenceComponent || ( () => {} );
+  const removeReferenceComponent = props.removeReferenceComponent || ( () => {} );
+
   return (
     <div className={styles.customSwitchContainer}>
       <span className={styles.labelLeft}>{props.labelLeft}</span>
       <Form.Check
         type='switch'
         id='custom-switch'
-        defaultChecked={true}
+        checked={props.checked}
         label=''
         onChange={event => {
+
+          if ( event.target.checked ) {
+
+            // this is now a dependency component
+            removeReferenceComponent( componentName );
+
+          }
+          else {
+
+            // this is now a reference component
+            addReferenceComponent( componentName );
+          }
 
           // Eventually this is going to modify the list of reference components.
         }}
@@ -202,8 +309,8 @@ function SelectComponentsDialog( props ) {
       selectedComponentsCopy.push( component );
     } );
 
-    // update the state
-    handleChange( selectedComponentsCopy );
+    // update the state - no change to the reference component names here
+    handleChange( selectedComponentsCopy, null );
 
     // close the dialog
     handleClose();
