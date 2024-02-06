@@ -88,11 +88,11 @@ const ViewConstants = {
 
   // The line dash for the different types of wires that represent connections between components.
   // TODO: see https://github.com/phetsims/paper-land/issues/208, we want to find distinct line dashes for each one.
-  VIEW_WIRE_LINE_DASH: [ 8, 2 ],
-  CONTROLLER_WIRE_LINE_DASH: [ 8, 2 ],
-  DERIVED_WIRE_LINE_DASH: [ 8, 2 ],
-  LINK_WIRE_LINE_DASH: [ 8, 2 ],
-  ARRAY_WIRE_LINE_DASH: [ 8, 2 ],
+  VIEW_WIRE_LINE_DASH: [ 15, 3 ],
+  CONTROLLER_WIRE_LINE_DASH: [ 10, 3 ],
+  DERIVED_WIRE_LINE_DASH: [ 6, 1 ],
+  LINK_WIRE_LINE_DASH: [ 1, 2 ],
+  ARRAY_WIRE_LINE_DASH: [ 3, 3 ],
 
   TEXT_OPTIONS: {
     font: TEXT_FONT,
