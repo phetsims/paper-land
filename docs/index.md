@@ -53,10 +53,10 @@ See Setup section for installation and device setup instruction. See Documentati
 
 | Setup      | Documentation |
 | ----------- | ----------- |
-| [Installation](./setup/install.md)          | [Tutorial](./use/tutorial.md)                      |
+| [Installation](./setup/install.md)          | [Tutorial](./setup/tutorial.md)                      |
 | [Device Setup](./setup/device-setup.md)     | [Board API Documentation](./use/board-api.md)      |
 | [Device Recommendations](./setup/reqs.md)   | [Example Paper Programs](./use/example-program.md) |
-| [Camera Setup Tips](./setup/camera-tips.md) | [Model-View-Controller Framework](./use/mvc.md)    |
+| [Creator Tutorial](./setup/creator.md) | [Model-View-Controller Framework](./use/mvc.md)    |
 |                                             | [Resources and Downloads](./use/resources.md)      |
 
 ## What is coming?

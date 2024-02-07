@@ -120,20 +120,19 @@ markdown_extensions:
 
 nav:
     - Home: index.md
-    - Setup:
+    - Getting Started:
       - Hardware Recommendations: setup/reqs.md
       - Step 1 Installation: setup/install.md
       - Step 2 Device Setup: setup/device-setup.md
-      - Webcam Tips: setup/camera-tips.md
-    - Documentation: 
-      - Tutorial: use/tutorial.md
-      - Creator Tutorial: use/creator.md
-      - Board API: use/board-api.md
+      - Tutorial: setup/tutorial.md
+      - Creator Tutorial: setup/creator.md
+    - Resources: 
       - Model-View-Controller Framework: use/mvc.md
+      - paper-land API: use/board-api.md
       - Design Tips: use/designing-programs.md
-      - Example JavaScript Papers: use/example-program.md
-      - Resources: use/resources.md
-    - Media:
+      - Example Papers (deprecated): use/example-program.md
+      - Downloadables: use/resources.md
+    - Examples:
       - Gallery: media-gallery.md
     - Community:
       - Join Us: community.md 

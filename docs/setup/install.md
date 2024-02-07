@@ -16,7 +16,7 @@ The Paper Playground client runs locally and can utilize a remote database for c
 6. Open [localhost:3000](http://localhost:3000/) in your browser and follow the links on the landing page.
 
 
-You should be good to go! Move on to [setting up your devices](device-setup.md) or straight to the [overview and tutorial](../use/tutorial.md).
+You should be good to go! Move on to [setting up your devices](../setup/device-setup.md) or straight to the [overview and tutorial](../setup/tutorial.md).
 
 ### Recommended Start Up
 

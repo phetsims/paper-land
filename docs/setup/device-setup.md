@@ -7,7 +7,7 @@
 
 This page will guide you through setting up your devices so your computer can detect your printed paper programs and you can (optionally) project visuals onto them!
 
-If you're already setup, then head over the [Tutorial](../use/tutorial.md) for a run-down of the interface and how to get started making programs!
+If you're already setup, then head over the [Tutorial](../setup/tutorial.md) for a run-down of the interface and how to get started making programs!
 
 ## Board Projector Setup
 
@@ -19,7 +19,7 @@ If you are using a projector to display visual elements in your playspace or on 
 
 Find a place to place your projector that will let you move your paper programs easily in the projection space. Ideally, you are able to mount the projector above you, pointed toward the floor for the most natural interaction between the papers and anyone working with you. Webcam/projector configurations parallel to the floor (e.g., pointing at a wall) are possible, especially using tape, sticky tack, or magnets (in the case of e.g., a whiteboard).
 
-You may later find that you need to adjust the relative positions of your projector and webcam in order to get the best program detection and most space to move papers around. See [Fine-tuning program detection](#fine-tuning-program-detection) and [Webcam tips](camera-tips.md) for more advice on improving program detection.
+You may later find that you need to adjust the relative positions of your projector and webcam in order to get the best program detection and most space to move papers around. See [Fine-tuning program detection](#fine-tuning-program-detection) and [Webcam tips](#webcam-optimization-tips) for more advice on improving program detection.
 
 After powering on your projector and connecting it to your computer, open the Board interface (board.html) in a separate window and move it into the projector window.
 
@@ -81,6 +81,22 @@ Calibration also sets the average dot size. This will determine how large dots n
 
       You can test how big your markers need to be in the camera view by bringing your paper closer to the camera which will "enlarge" your dots relative to the camera view.
 
+#### Webcam Optimization Tips
+
+If you have control over the software of your webcam, you can optimize some parameters to help with dot/program detection. Your camera may not feature every parameter mentioned or may use different language for the same parameter.
+
+You are looking for dots to be stably detected and might need to iteratively switch between adjusting parameters and [color calibration](device-setup.md#color-calibrating-your-webcam-for-program-detection).
+
+We have found the following parameters to be most influential:
+
+- TURN OFF any Auto setting for: Zoom, Exposure, White Balance
+- Adjust Exposure to see papers clearly (not too dark or bright)
+- Adjust: Zoom (clearest text)
+- Adjust White Balance (make sure blacks look black, and not blue or green, vice versa)
+- (optional) Adjust contrast
+- (optional) Raise Sharpness if edges look fuzzy
+
+
 #### Fine-tuning program detection
 
 If your setup is not detecting all of the dots on your papers, you will not be able to calibrate them and your programs will not be detected (or will be detected intermittently).
@@ -120,3 +136,5 @@ Look under the Detection header in the sidebar of Camera.html and adjust the con
 If you're using the legacy Canvas (projector.html) page to send visual elements to the web canvas, rather than the Display (board.html), you'll follow these intructions instead:
 
 Power on the projector and separate [http://localhost:3000/projector.html](http://localhost:3000/projector.html) to its own window. Move this window to the projector's display and enter fullscreen mode (Ctrl/Cmd+Shift+F). If you encounter issues (e.g., a recently created program not displaying), refreshing the page should help.
+
+

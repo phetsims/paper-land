@@ -12,7 +12,7 @@
 
 The primary vision of Creator is to bring the relationships between the components of your project to the forefront. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc).
 
-Creator is organized around the [Model-View-Component framework](mvc.md).
+Creator is organized around the [Model-View-Component framework](../use/mvc.md).
 
 Simply stated: You create **Model components** (pieces of your idea that other components will need to use or change to make your project work), to be controlled by **Controller components** and display the information dynamically as a visual (e.g., text, image, shape), sound, speech, and more using **View components**
 
@@ -57,7 +57,7 @@ The files will now appear in the dropdown selection for those components!
 </figure>
 
 
-## MVC Draft
+<!-- ## MVC Draft
 
 Alright kiddo, imagine you're playing a simple card game on your computer or tablet. In this card game, you can see cards, click on them to play, and the computer tells you if you won or lost. The Model-View-Controller, or MVC for short, is a way for programmers to organize this game. Let's break it down:
 
@@ -224,4 +224,4 @@ Sure, let's list out some typical JavaScript components you might encounter in t
    }
    ```
 
-In both scenarios, the **Model** holds the main data and logic, the **View** manages the presentation (what users see and hear), and the **Controller** deals with user inputs and communicates between the Model and View.
+In both scenarios, the **Model** holds the main data and logic, the **View** manages the presentation (what users see and hear), and the **Controller** deals with user inputs and communicates between the Model and View. -->

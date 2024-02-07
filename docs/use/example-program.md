@@ -4,7 +4,7 @@ Below you will find a set of example paper programs that create the abstract ide
 
 !!! note
 
-        These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the Interactive Board (board.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [Paper API](paper-api.md).
+        These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the Interactive Board (board.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [legacy Paper API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md).
 
 ## Model Program
 

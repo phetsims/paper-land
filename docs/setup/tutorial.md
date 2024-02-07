@@ -145,4 +145,4 @@ When you're ready to print that program as a real piece of paper, click the Prin
 !!! note
       Paper Playground looks for a comment on the first line of the file and uses that as the program's name. It will use the keywords on the second line for search purposes.
 
-At this point you should have everything you need to start building a collaborative Paper Playground "play" Space and a working interactive paper program experience! Look at the [Board API reference](board-api.md) for more information about the functions available to your programs.
+At this point you should have everything you need to start building a collaborative Paper Playground "play" Space and a working interactive paper program experience! Look at the [Board API reference](../use/board-api.md) for more information about the functions available to your programs.
