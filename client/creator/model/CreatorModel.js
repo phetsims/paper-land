@@ -401,15 +401,18 @@ export default class CreatorModel {
    * Returns an array of objects with program number and code for this project. Used to move code to the
    * paper-playground database of programs.
    */
-  convertToProgramData() {
-    const programStrings = [];
-    this.programs.forEach( program => {
-      programStrings.push( {
+  async convertToProgramData() {
+
+    const programStringsPromises = this.programs.map( async program => {
+      const code = await program.convertToProgramString();
+      return {
         number: program.numberProperty.value,
-        code: program.convertToProgramString()
-      } );
+        code: code
+      };
     } );
-    return programStrings;
+
+    // Use Promise.all to wait for all program strings to be processed
+    return Promise.all( programStringsPromises );
   }
 
   /**
@@ -421,7 +424,7 @@ export default class CreatorModel {
     // Convert model to code for the database. If this throws an error for some reason (like an unsupported type),
     // the promise should reject.
     try {
-      const dataForServer = this.convertToProgramData();
+      const dataForServer = await this.convertToProgramData();
 
       try {
 

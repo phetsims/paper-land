@@ -1,16 +1,16 @@
-import { parse } from 'acorn';
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ListenerCodeGenerator from './ListenerCodeGenerator.js';
 import ListenerComponentTemplates from './ListenerComponentTemplates.js';
 import ModelComponentTemplates from './ModelTemplates.js';
+import ProgramCodeValidator from './ProgramCodeValidator.js';
 import programTemplate from './programTemplate.js';
 import ShapeCodeFunctions from './ShapeCodeFunctions.js';
 import ViewCodeGenerator from './ViewCodeGenerator.js';
 import ViewComponentTemplates from './ViewComponentTemplates.js';
 
 export default class ProgramCodeGenerator {
-  static convertToCode( program ) {
+  static async convertToCode( program ) {
     const data = {
 
       // metadata
@@ -37,17 +37,15 @@ export default class ProgramCodeGenerator {
 
     const generatedCode = ProgramCodeGenerator.fillInTemplate( programTemplate, data );
 
-
     // Use acorn to look for syntax errors before returning the generated code.
     try {
-      parse( generatedCode, { ecmaVersion: 'latest' } );
+      await ProgramCodeValidator.validate( generatedCode, program.number );
+      return generatedCode;
     }
     catch( error ) {
       console.log( generatedCode );
-      throw new Error( `Sorry, syntax error in generated code for program ${program.numberProperty.value}. Inspect your custom code or please report an issue to the developer.` );
+      throw new Error( error.message );
     }
-
-    return generatedCode;
   }
 
   /**

@@ -189,7 +189,7 @@ export default class ProgramModel {
    * Converts this program to a string of code that will actually be used in the paper-playground
    * framework.
    */
-  convertToProgramString() {
+  async convertToProgramString() {
     return ProgramCodeGenerator.convertToCode( this );
   }
 
