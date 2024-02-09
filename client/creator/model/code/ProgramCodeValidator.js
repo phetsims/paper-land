@@ -99,7 +99,7 @@ export default class ProgramCodeValidator {
                   const imageName = usedPath.substring( path.length );
 
                   let errorMessage = `${capitalizedMediaTypeWithArticle} is missing and cannot be used: ${imageName}.\n
-                    Please upload ${mediaTypeWithArticle} or select an alternative.`;
+                    Please upload ${mediaTypeWithArticle} with that name or select an alternative.`;
 
                   // If this type uses setters, add a note about how to correctly use the setter functions
                   if ( inspectSetters ) {
