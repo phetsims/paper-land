@@ -190,7 +190,12 @@ export default class ViewCodeGenerator {
         };
         
         const setFontSize = ( size ) => {
-          ${componentNameString}.fontSize = size;
+        
+          // RichText has no setter for size, so we need to create a new font. Use
+          // state from the old font to maintain the family.
+          const currentFont = ${componentNameString}.font;
+          const newFont = new phet.scenery.Font( { size: size, family: currentFont.family } );
+          ${componentNameString}.font = newFont;
         };
 
         const setTextColor = ( color ) => {
@@ -198,7 +203,12 @@ export default class ViewCodeGenerator {
         };
 
         const setFontFamily = ( family ) => {
-          ${componentNameString}.fontFamily = family;
+        
+          // RichText has no setter for fontFamily, so we need to create a new font. Use
+          // state from the old font to maintain the size.
+          const currentFont = ${componentNameString}.font;
+          const newFont = new phet.scenery.Font( { size: currentFont.size, family: family } );
+          ${componentNameString}.font = newFont;
         };
       ` );
     }
