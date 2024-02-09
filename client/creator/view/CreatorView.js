@@ -85,7 +85,15 @@ export default class CreatorView extends phet.scenery.Node {
     } ) );
     this.sendToPaperLandButton = new phet.sun.TextPushButton( 'Send to Playground', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
-        model.sendRequestedEmitter.emit();
+
+        // Sending to the playground will delete all existing programs in the space so we need to confirm
+        // with the user that this is OK, unless they have opted to skip the warning.
+        if ( model.skipSendRequestWarningProperty.value ) {
+          model.sendConfirmedEmitter.emit();
+        }
+        else {
+          model.sendRequestedEmitter.emit();
+        }
       }
     } ) );
     this.saveProjectJSONButton = new phet.sun.TextPushButton( 'Download Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {

@@ -199,6 +199,13 @@
   color: textColor;
 }
 
+:local(.dialogFooterContent) {
+
+  /*Means that this content will take up all remaining space in the footer - the result is that this*/
+  /*content will be pushed to the left while the other buttons are aligned to the right.*/
+  flex-grow: 1;
+}
+
 /**
   * Override the default styling for the accordion component
   */

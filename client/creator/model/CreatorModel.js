@@ -57,6 +57,10 @@ export default class CreatorModel {
     // to the selected space.
     this.sendConfirmedEmitter = new phet.axon.Emitter();
 
+    // {Property} - If true, we do not wait for the user to confirm the send request. The user
+    // can elect to skip that confirmation if they want to.
+    this.skipSendRequestWarningProperty = new phet.axon.Property( false );
+
     // {Emitter} - Emits when some error happens that the user should be aware of, such as error during code
     // generation, load, or a failed request to the server.
     this.errorOccurredEmitter = new phet.axon.Emitter( { parameters: [ { valueType: 'string' } ] } );

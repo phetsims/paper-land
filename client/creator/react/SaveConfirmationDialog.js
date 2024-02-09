@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Form from 'react-bootstrap/Form';
 import ConfirmationDialog from './ConfirmationDialog.js';
 
 export default function SaveConfirmationDialog( props ) {
@@ -34,6 +35,21 @@ export default function SaveConfirmationDialog( props ) {
 
   const activeSpaceName = creatorModel.spaceNameProperty.value;
 
+  // Lets the user disable the send confirmation dialog after this request. Once this is checked,
+  // the dialog will not show again for this session.
+  const skipConfirmationCheckbox = (
+    <div>
+      <Form.Check
+        type='checkbox'
+        label={'Don\'t show this again.'}
+        onChange={event => {
+          creatorModel.skipSendRequestWarningProperty.value = event.target.checked;
+        }}
+        id={'skipConfirmationCheckbox'}
+      />
+    </div>
+  );
+
   return (
     <ConfirmationDialog
       showing={show}
@@ -46,6 +62,7 @@ export default function SaveConfirmationDialog( props ) {
           <p>This project will also be saved.</p>
         </div>
       }
+      footerContent={skipConfirmationCheckbox}
       confirmString={'Send to Playground'}
     ></ConfirmationDialog>
   );

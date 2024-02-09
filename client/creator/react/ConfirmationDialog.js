@@ -43,6 +43,7 @@ export default function ConfirmationDialog( props ) {
         </Modal.Header>
         <Modal.Body className={styles.dialog}>{props.confirmationContent}</Modal.Body>
         <Modal.Footer className={styles.dialog}>
+          <div className={styles.dialogFooterContent}>{props.footerContent}</div>
           <StyledButton variant='secondary' onClick={handleCancel} name={'Cancel'}></StyledButton>
           <StyledButton variant='primary' onClick={handleConfirm} name={confirmString}></StyledButton>
         </Modal.Footer>
