@@ -9,7 +9,7 @@ import CreatorModel from './model/CreatorModel.js';
 import ConfirmActionDialog from './react/ConfirmActionDialog.js';
 import CreatorControls from './react/CreatorControls.js';
 import ErrorDialog from './react/ErrorDialog.js';
-import SaveConfirmationDialog from './react/SaveConfirmationDialog.js';
+import SendConfirmationDialog from './react/SendConfirmationDialog.js';
 import CreatorView from './view/CreatorView.js';
 import ViewConstants from './view/ViewConstants.js';
 
@@ -135,9 +135,9 @@ export default function CreatorMain( props ) {
   return (
     <div>
       <div>
-        <SaveConfirmationDialog
+        <SendConfirmationDialog
           creatorModel={creatorModel}
-        ></SaveConfirmationDialog>
+        ></SendConfirmationDialog>
         <ErrorDialog
           creatorModel={creatorModel}
         ></ErrorDialog>

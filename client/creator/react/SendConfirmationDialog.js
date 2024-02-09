@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import ConfirmationDialog from './ConfirmationDialog.js';
 
-export default function SaveConfirmationDialog( props ) {
+export default function SendConfirmationDialog( props ) {
   if ( !props.creatorModel ) {
-    throw new Error( 'SaveConfirmationDialog requires a reference to the creatorModel.' );
+    throw new Error( 'SendConfirmationDialog requires a reference to the creatorModel.' );
   }
   const creatorModel = props.creatorModel;
 
