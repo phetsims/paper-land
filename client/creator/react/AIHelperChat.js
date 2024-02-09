@@ -60,7 +60,7 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
 
   finalPromptString += '{{ROLE}} You are a code snippet creator helping a user to create code that goes inside the body of a JavaScript function using the MVC framework. ';
   finalPromptString += '{{CONTEXT}} The code you generate is being used to create JavaScript programs connected to real encoded physical papers that are detected using computer vision. Code organization is arranged by paper. ';
-  finalPromptString += '{{RULES}} You will only provide the code that belongs inside of the function declaration. '; 
+  finalPromptString += '{{RULES}} You will only provide the code that belongs inside of the function declaration. ';
   finalPromptString += 'Do not wrap the code in a function declaration. ';
   // finalPromptString += '\n\nIf you have to create new variables, please assign them to the \'window\' object. DO NOT assign provided variables to the window.';
   finalPromptString += '\n\nHere is an example of the output I might expect.';
@@ -91,7 +91,7 @@ const createInitialPromptString = ( settableComponents, variableComponents, addi
     finalPromptString += '\n' + additionalContent;
   }
 
-  finalPromptString += '```\n\nVerify the code is as simple and short as possible and only use the functions and variables that you need.'; 
+  finalPromptString += '```\n\nVerify the code is as simple and short as possible and only use the functions and variables that you need.';
   finalPromptString += '\nLastly, can you briefly explain each line as if I were a novice developer?';
 
   return finalPromptString;
@@ -192,7 +192,7 @@ const AIHelperChat = props => {
                       <strong>AI: </strong>
                       {message.text.split( '```' ).map( ( part, partIndex ) => {
                         if ( partIndex % 2 === 0 ) {
-                          return <div className={styles.aiResponse} key={partIndex}>{part}</div>;
+                          return <div className={styles.allowMultiline} key={partIndex}>{part}</div>;
                         }
                         else {
                           return (

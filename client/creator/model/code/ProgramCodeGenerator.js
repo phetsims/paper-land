@@ -497,12 +497,19 @@ export default class ProgramCodeGenerator {
     return data;
   }
 
+  static formatFileNameForCode( fileName ) {
+
+    // Remove a leading '/' if it is there, we fill in the path in the template
+    return fileName.startsWith( '/' ) ? fileName.slice( 1 ) : fileName;
+  }
+
   static getViewComponentData( viewComponent ) {
     const componentType = viewComponent.constructor.name;
     let data = {};
     if ( componentType === 'SoundViewComponent' ) {
+      const soundFileName = ProgramCodeGenerator.formatFileNameForCode( viewComponent.soundFileName );
       data = {
-        FILE_NAME: viewComponent.soundFileName,
+        FILE_NAME: soundFileName,
         LOOP: viewComponent.loop,
         AUTOPLAY: viewComponent.autoplay
       };
@@ -550,7 +557,7 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'ImageViewComponent' ) {
       data = {
-        FILE_NAME: viewComponent.imageFileName,
+        FILE_NAME: ProgramCodeGenerator.formatFileNameForCode( viewComponent.imageFileName ),
         CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions )
       };
     }

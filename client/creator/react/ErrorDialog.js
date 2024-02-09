@@ -39,7 +39,9 @@ export default function ErrorDialog( props ) {
         <Modal.Header className={styles.dialog}>
           <Modal.Title>{'\u26A0 Error!'}</Modal.Title>
         </Modal.Header>
-        <Modal.Body className={styles.dialog}>{errorMessage}</Modal.Body>
+        <Modal.Body className={styles.dialog}>
+          <p className={styles.allowMultiline}>{errorMessage}</p>
+        </Modal.Body>
         <Modal.Footer className={styles.dialog}>
           <StyledButton variant='primary' onClick={handleClose} name={'OK'}></StyledButton>
         </Modal.Footer>

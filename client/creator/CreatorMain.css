@@ -247,10 +247,10 @@ code {
   color: #A4B7C3; /* Light gray */
 }
 
-:local(.aiResponse) {
+/*Allows multiline line breaks in paragraphs*/
+:local(.allowMultiline) {
   white-space: pre-line;
 }
-
 
 :local(.dropZone) {
   flex: 1;
