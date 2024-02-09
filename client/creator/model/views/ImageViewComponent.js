@@ -8,7 +8,7 @@ export default class ImageViewComponent extends NodeViewComponent {
    * @param {NamedProperty[]} modelComponents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
    * @param {string} imageFileName - an image file that exists in www/media/images
-   * @param {Object} options - options for the NodeViewComponent
+   * @param {Object} [options] - options for the NodeViewComponent
    */
   constructor( name, modelComponents, controlFunctionString, imageFileName, options ) {
     super( name, modelComponents, controlFunctionString, options );
