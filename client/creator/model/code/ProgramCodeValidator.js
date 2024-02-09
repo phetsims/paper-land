@@ -23,7 +23,6 @@ export default class ProgramCodeValidator {
 
     try {
       await this.checkForMissingAssets( programCode, 'image', true );
-      debugger;
       await this.checkForMissingAssets( programCode, 'sound', false );
     }
     catch( error ) {
@@ -51,8 +50,9 @@ export default class ProgramCodeValidator {
 
     return new Promise( ( resolve, reject ) => {
 
-      debugger;
-      const regexPattern = mediaType === 'image' ? /media\/images\/(uploads\/)?\w+\.\w+/g : /media\/sounds\/(uploads\/)?\w+\.\w+/g;
+      // There is duplication in the patterns here but when I try to refactor them, the regex doesn't work. Something
+      // about escaped characters, but I couldn't figure it out. This is a small enough duplication that it's fine.
+      const regexPattern = mediaType === 'image' ? /media\/images\/(uploads\/)?[\w-]+\.\w+/g : /media\/sounds\/(uploads\/)?[\w-]+\.\w+/g;
       const assetPathsInCode = programCode.match( regexPattern ) || [];
 
       if ( inspectSetters ) {
@@ -85,22 +85,29 @@ export default class ProgramCodeValidator {
           else {
             if ( response.body && response.body[ `${apiSuffix}` ] && Array.isArray( response.body[ `${apiSuffix}` ] ) ) {
               const files = response.body[ `${apiSuffix}` ];
-
               const filesWithMediaPath = files.map( fileName => `${path}${ProgramCodeValidator.trimPath( fileName )}` );
 
               for ( let i = 0; i < uniqueAssetPathsInCode.length; i++ ) {
-
-                // the used path in the code, removing an extra / if it's there, its fine either way
-                const usedPath = ProgramCodeValidator.trimPath( uniqueAssetPathsInCode[ i ] );
+                const usedPath = uniqueAssetPathsInCode[ i ];
                 if ( !filesWithMediaPath.includes( usedPath ) ) {
 
-                  // TODO: For next time, add information about how the to add the path.
-                  // TODO: Add a hint about how to add the file to the project.
+                  // customizations for the error message
+                  const mediaTypeString = mediaType === 'image' ? 'image' : 'sound';
+                  const mediaTypeWithArticle = mediaType === 'image' ? 'an image' : 'a sound';
+                  const capitalizedMediaTypeWithArticle = mediaType === 'image' ? 'An image' : 'A sound';
+                  const exampleFileType = mediaType === 'image' ? 'png' : 'mp3';
                   const imageName = usedPath.substring( path.length );
+
+                  let errorMessage = `${capitalizedMediaTypeWithArticle} is missing and cannot be used: ${imageName}.\n
+                    Please upload ${mediaTypeWithArticle} or select an alternative.`;
+
+                  // If this type uses setters, add a note about how to correctly use the setter functions
+                  if ( inspectSetters ) {
+                    errorMessage += `\n\nIf setting from uploads in custom code, be sure to include the directory like "uploads/my-${mediaTypeString}.${exampleFileType}".`;
+                  }
+
                   reject(
-                    new Error(
-                      `This project is trying to use an asset that is not available - ${imageName}.\n
-                     If setting using uploads, include the directory like "uploads/my-image.png".` )
+                    new Error( errorMessage )
                   );
                 }
               }
@@ -121,7 +128,8 @@ export default class ProgramCodeValidator {
   }
 
   /**
-   * Trims a path of an extra leading / if it's there.
+   * Trims a path of an extra leading '/' if it's there. Useful for combining paths, since the start may have a
+   * leading '/'.
    * @param path
    * @return {string|*}
    */
