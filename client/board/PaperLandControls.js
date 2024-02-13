@@ -45,9 +45,9 @@ export default function PaperLandControls( props ) {
               props.sceneryDisplay.setWidthHeight( width, height );
               phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( width, height );
 
-              // take up the full window
-              props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
-              phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
+              // // take up the full window
+              // props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
+              // phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
 
               // remove the observer right away, this should only be done the first time we enter full screen
               resizeObserver.disconnect();
