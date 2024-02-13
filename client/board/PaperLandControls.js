@@ -50,7 +50,7 @@ export default function PaperLandControls( props ) {
               // phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
 
               // remove the observer right away, this should only be done the first time we enter full screen
-              resizeObserver.disconnect();
+              // resizeObserver.disconnect();
             }
           } );
 
