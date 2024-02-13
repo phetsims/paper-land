@@ -34,9 +34,28 @@ export default function PaperLandControls( props ) {
           props.sceneryDisplay.domElement.classList.remove( styles.simDisplayPanel );
           props.sceneryDisplay.domElement.classList.remove( styles.boardPanel );
 
-          // take up the full window
-          props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
-          phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
+          // There is a delay between when the resize happens and when the values for window dimensions are updated.
+          // Waiting until the resize event confirms that we will set the scenery display and paper-land display
+          // size to accurate values.
+          const resizeObserver = new ResizeObserver( entries => {
+            for ( const entry of entries ) {
+
+              // Assuming we are observing the full-screen element
+              const { width, height } = entry.contentRect;
+              props.sceneryDisplay.setWidthHeight( width, height );
+              phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( width, height );
+
+              // take up the full window
+              props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
+              phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
+
+              // remove the observer right away, this should only be done the first time we enter full screen
+              resizeObserver.disconnect();
+            }
+          } );
+
+          // Start observing a target element at some point in your code
+          resizeObserver.observe( props.sceneryDisplay.domElement ); // Or another target element
         }
         else {
           const smallWidth = 640;

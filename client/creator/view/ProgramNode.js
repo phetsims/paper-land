@@ -53,11 +53,11 @@ export default class ProgramNode extends phet.scenery.Node {
     } );
 
     this.titleText = new phet.scenery.Text( '', {
-      maxWidth: this.background.width - 5,
+      maxWidth: this.background.width - OUTER_MARGIN * 2,
       font: TITLE_FONT
     } );
     this.programNumber = new phet.scenery.Text( model.numberProperty.value, {
-      maxWidth: this.background.width - 5,
+      maxWidth: this.background.width - OUTER_MARGIN * 2,
       font: TITLE_FONT
     } );
 
