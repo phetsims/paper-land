@@ -2,7 +2,7 @@
  * Controls that impact the behavior of the board in paper-land.
  */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import styles from './BoardMain.css';
@@ -25,6 +25,9 @@ export default function PaperLandControls( props ) {
   const [ consoleVisible, setConsoleVisible ] = useState( true );
   const [ printSpeechSynthesis, setPrintSpeechSynthesis ] = useState( false );
 
+  // A reference to the resize observer which will be created when we enter full-screen, and removed when we exit
+  const resizeObserverRef = useRef( null );
+
   useEffect( () => {
     const fullScreenListener = fullScreen => {
       if ( props.sceneryDisplay ) {
@@ -34,30 +37,33 @@ export default function PaperLandControls( props ) {
           props.sceneryDisplay.domElement.classList.remove( styles.simDisplayPanel );
           props.sceneryDisplay.domElement.classList.remove( styles.boardPanel );
 
+          // If we still have a resize observer, make sure it is disconnected
+          if ( resizeObserverRef.current ) {
+            resizeObserverRef.current.disconnect();
+          }
+
           // There is a delay between when the resize happens and when the values for window dimensions are updated.
           // Waiting until the resize event confirms that we will set the scenery display and paper-land display
           // size to accurate values.
-          const resizeObserver = new ResizeObserver( entries => {
+          resizeObserverRef.current = new ResizeObserver( entries => {
             for ( const entry of entries ) {
 
-              // Assuming we are observing the full-screen element
+              // Assumes that we are observing the full-screen element (the Display domElement)
               const { width, height } = entry.contentRect;
               props.sceneryDisplay.setWidthHeight( width, height );
               phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( width, height );
-
-              // // take up the full window
-              // props.sceneryDisplay.setWidthHeight( window.innerWidth, window.innerHeight );
-              // phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( window.innerWidth, window.innerHeight );
-
-              // remove the observer right away, this should only be done the first time we enter full screen
-              // resizeObserver.disconnect();
             }
           } );
-
-          // Start observing a target element at some point in your code
-          resizeObserver.observe( props.sceneryDisplay.domElement ); // Or another target element
+          resizeObserverRef.current.observe( props.sceneryDisplay.domElement );
         }
         else {
+
+          // We are done with the resize observer, disconnect it
+          if ( resizeObserverRef.current ) {
+            resizeObserverRef.current.disconnect();
+            resizeObserverRef.current = null;
+          }
+
           const smallWidth = 640;
           const smallHeight = 480;
 
