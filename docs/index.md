@@ -1,92 +1,71 @@
-<!-- https://squidfunk.github.io/mkdocs-material/reference/admonitions/#supported-types -->
-!!! warning "Under Construction"
-
-    We are constantly working on updating our documentation!
-# Paper Playground
+# Welcome to Paper Playground: Your Interactive Design Space
 
 [![GitHub](https://img.shields.io/badge/github-repo-yellow?logo=github&logoColor=white)](https://www.github.com/phetsims/paper-land/)
 [![Matrix Chat](https://img.shields.io/badge/matrix-chat-green?logo=matrix&logoColor=green)](https://matrix.to/#/#interactive-paper-programming:matrix.org)
 [![Youtube Channel](https://img.shields.io/badge/youtube-channel-red?logo=youtube&logoColor=red)](https://www.youtube.com/@PaperPlaygroundCommunity/)
 [![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](./LICENSE)
 
-## Interactive Play Meets Multimodal Web Development
-
-Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping JavaScript code to real pieces of paper and manipulating the code in your **physical space**. Everything runs on your machine and you can collaborate locally or using a hosting service to collaborate over projects with others in your shared space.
+Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping code to real pieces of paper and manipulating the code in your **physical space**. Everything runs on your machine and you can collaborate locally or using a hosting service to collaborate over projects with others in your shared space.
 
 While Paper Playground can support many uses, our aim to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning technology.
 
-Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [the library stack](https://github.com/scenerystack) used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects based in JavaScript. In creating Paper Playground, we are developing with a particular emphasis on easy addition of multimodal display such as audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in complex web projects.
+Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [SceneryStack](https://github.com/scenerystack), the development stack used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene creator and manager. The project focuses on enabling quick prototyping of web projects based in JavaScript. In creating Paper Playground, we are developing with a particular emphasis on easy addition of multimodal display such as audio features (like sounds and sonifications), speech description (both TTS engines and screen reader descriptions), and other non-visual features that are often difficult to design and develop alongside visual elements in complex web projects.
 
-## Overview of Paper Playground Use
+### Overview of Paper Playground Components
 
-The ideas behind Paper Playground are simple, but the possibilities are infinite.
+Paper Playground is built around a few key components that work together seamlessly:
 
-1. Using code or our low-code interface, Creator, create a project that factors in physical paper movement into the programs.
-2. Print out the dot-covered papers assigned to those programs.
-3. Put those *paper programs* in front of a webcam.
-4. Interact with and experience the output of your programs in your browser or in the world around you using a projector (Display).
-5. Add/remove/slide/rotate/add markers to programs and trigger the mappings between your papers position in space and your code!
-6. Change your programs, iterate, and keep the creativity going!
+- **Program Creation Systems**: Design and iterate on your programs with ease using abstracted program components in *Creator*.
+- **Computer Vision**: Our tool detects your dot-encoded paper programs using a webcam, merging the digital and physical realms.
+- **Execution and Display**: See your code come to life on screen, with outputs displayed in real-time.
+- **Collaboration**: Shared databases allow for asynchronous collaboration, whether you’re working locally or online.
 
 <figure markdown>
-  ![Paper Playground setup detecting paper programs that create a moon lander and control vertical thrust](assets/full-interface.png){ width=900 }
-  <figcaption>The interface in action.</figcaption>
+  ![(Left) Minimal configuration using Creator editor, detected wallet-sized papers, and displaying code output to an up-turned monitor. (Right) Same programs as above using letter-sized programs and visuals displayed using a mini-projector.](assets/configs-efh-horizontal.png)
+  <figcaption>Flexible configurations for detecting paper programs and interacting with your code!</figcaption>
 </figure>
 
-You'll create JavaScript programs to populate a page (Display) with interactive, multimodal components to envision anything you want!
+You’ll interact with Paper Playground through three main interfaces:
 
-Want to create a card game? Maybe an interactive art experience? Or maybe you want to prototype auditory displays (speech and sounds) for a project or idea that you have? It's all possible with Paper Playground.
+1. ***Camera***: Detects your paper programs using an attached camera device.
+2. ***Interactive Display***: Shows the results of your programs, which can be interacted with virtually or projected.
+3. ***Creator***: A low-code interface where you design your programs, step by step.
 
-Every program you write is associated with a sequence of colored (black, red, green, and blue) dots that you will put (or print) on the corners of a piece of paper. We'll refer to the linked papers and code as paper programs from here on out!
+### Getting Started with Your Design
+
+Check out the Getting Started section in the Navigation bar! We recommend reading the [Hardware Recommendations](./setup/reqs.md) first. In general, you will:
+
+1. [**Set Up Your Workspace**](./setup/device-setup.md#setting-up-camera-and-projector-for-paper-detection): Open your interfaces. The Interactive Display can be set up on a separate monitor or projector, showing dot-encoded papers.
+2. [**Calibrate the *Camera***](./setup/device-setup.md#color-calibrating-your-webcam-for-program-detection): Attach a webcam and adjust it according to your lighting conditions to ensure your dot-encoded papers are detected accurately.
+3. [**Design with *Creator***](./setup/creator.md): Build your programs component by component, aligning with your creative vision. Each program gets a unique identity and sequence of dots for easy detection and interaction.
 
 <figure markdown>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/5-GzrdAAva8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-  <figcaption></figcaption>
+  ![Interfaces for Paper Playground. (Left) program detection and play area, Camera. (Middle) Code output and projection, Interactive Display. (Right) Program editor, Creator.](assets/all-interfaces-panel-horizontal.png)
+  <figcaption>Interfaces for Paper Playground: (Left) program detection and play area, Camera. (Middle) Code output and projection, Interactive Display. (Right) Program editor, Creator.</figcaption>
 </figure>
 
-!!! note
-    This project retains the features of [Paper Programs](https://paperprograms.org). Refer to [Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/) regarding legacy features (*including writing code for output to Projector*).
+**Bringing Paper Programs to Life**. After designing, print your paper programs. These can be detected by the *Camera* once in view, executing the associated code. Interact with your creations on the Interactive Display, manipulating papers to trigger events that dynamically update program components and outputs.
 
-### What do I do now? How do I create programs, detect programs, set up my camera and space, and make things happen?
+**Dynamic and Collaborative Design**. Paper Playground supports an iterative design process. Make real-time updates in the *Creator* interface, see changes immediately on the Interactive Display, and collaborate with co-designers to refine your projects. This cycle encourages continuous creativity and improvement.
 
-See Setup section for installation and device setup instruction. See Documentation section for information on creating and using paper programs.
+**Enhancements for Inclusivity and Interaction**. Leveraging the open-source SceneryStack libraries, Paper Playground supports multimodal features like sound, pan and zoom, and alternative input. This makes your projects more accessible and interactive, enhancing the creative experience.
 
-| Setup      | Documentation |
-| ----------- | ----------- |
-| [Installation](./setup/install.md)          | [Tutorial](./setup/tutorial.md)                      |
-| [Device Setup](./setup/device-setup.md)     | [Board API Documentation](./use/board-api.md)      |
-| [Device Recommendations](./setup/reqs.md)   | [Example Paper Programs](./use/example-program.md) |
-| [Creator Tutorial](./setup/creator.md) | [Model-View-Controller Framework](./use/mvc.md)    |
-|                                             | [Resources and Downloads](./use/resources.md)      |
+**Flexible and Creative Setup Options.** Your paper programs can be any size, cut, folded, or decorated, allowing for diverse and flexible setup configurations. Whether you’re working with a desktop setup or projecting onto a wall, Paper Playground adapts to your creative environment.
 
-## What is coming?
+Paper Playground invites you to explore the boundaries of interactive design and collaboration. Whether you’re crafting educational tools, art installations, or experimental projects, this platform offers a unique space for your creativity to flourish. Start designing, collaborating, and seeing your ideas come alive in an interactive, dynamic environment.
 
-Our team is focused on a few large initiatives for integrating other projects into Paper Playground and for making it more friendly for non-technical, non-JavaScript users and designers. If these projects interest you, please join our community and take part in the development and discussion!
+<figure markdown>
+  ![Paper Playground setup detecting paper programs that create a submarine and control vertical position](assets/lunar-lander-craft.gif)
+  <figcaption>Papercraft submarine controlling a virtual submarine!</figcaption>
+</figure>
 
-1. :robot: Using LLMs to support a user answer the question: "How do I turn my idea for a multimodal interactive into data variables, functions, and entire programs?". We are exploring generative models to support user creativity and engage iteratively toward outputting the full suite of programs for their project.
+## Community
 
-2. :unlock: Abstracting the JavaScript code through means of an interface that assembles the components of your programs and highlights the relationships between your programs (e.g., At a quick glance, what information is needed and passed between programs?).
-
-3. :outbox_tray: Easier API integration for paper programs to control or output to other browser displays (besides our [scenery](https://github.com/phetsims/scenery)-focused Board and the legacy canvas-focused Projector), as well as new inputs such as microcontroller integration via Bluetooth and WebSockets.
-
-However, there are **many other areas** that the project can be expanded (see below for Contributing guidelines and suggestions)!
-
-## Please, join our [Community](/docs/community.md)
-
-## Roadmap
-
-### Docs
-
-:books:  Updated setup and tutorial!
-
-### Tool
-
-:page_with_curl:  More examples in the hosted database highlighting the power of multimodal design!
-
-:computer:  A UI for creating basic Papers without deep JavaScript knowledge!
-
-:robot: Investigating use of LLMs to help users go from ideas to your suite of paper programs!
+[🌍 Join the Community 🌍](community.md){ .md-button .md-button--primary }
 
 ## License
 
-This software is licensed under the MIT license. For more information, see the [LICENSE](https://github.com/phetsims/paper-land/blob/main/LICENSE) file.
+This software is covered under the [MIT License](https://github.com/phetsims/paper-land/blob/main/LICENSE).
+
+!!! note
+    This project retains the features of [Paper Programs](https://paperprograms.org). Refer to [Paper Programs documentation](https://github.com/janpaul123/paperprograms/blob/master/docs/) regarding legacy features (*including writing code for output to Projector*).

@@ -1,29 +1,28 @@
 # Using Paper Playground
 
-!!! warning "Under Construction"
-
-      We are working on updating our documentation - more details coming soon!
-
 <!-- https://facelessuser.github.io/pymdown-extensions/extensions/keys/#key-map-index -->
 
-Before we begin, make sure you have [installed Paper Playground](../setup/install.md) and [set up your camera](../setup/device-setup.md).
+Before we begin, make sure you have [installed Paper Playground](../setup/install.md) and [set up your equipment](../setup/device-setup.md).
 
 ## Interface Overview and Startup
+
+!!! abstract inline end "User Flow"
+      ![alt text](../assets/userflow.png)
 
 ### Step 1: Open up all pages of the interface
 
 Navigate to localhost:3000 in your browser and either click the links or open in your browser:
 
-1. Camera.html
-2. Projector.html
-3. Board.html
-4. Creator.html
+1. Camera (camera.html)
+2. Canvas (projector.html)
+3. Interactive Display (board.html)
+4. Creator (creator.html)
 
 ### What is the Camera page?
 
 The Camera page is where all the action happens for turning your paper programs interactive!
 
-![Camera Interface](../assets/camera-page.png)
+![Camera Spaces](../assets/camera-spaces-tab.png)
 
 On this page you will find the preview of your webcam, a preview of the full JavaScript for your currently selected paper program, and a plethora of options in the sidebar. Explore the headings in the sidebar to create and navigate between [spaces](#what-is-a-space), [calibrate your webcam](../setup/device-setup.md#color-calibrating-your-webcam-for-program-detection) to detect paper programs, print and [virtually preview programs and markers](#what-are-preview-papers-eye), and [fine-tune your detection](../setup/device-setup.md#fine-tuning-program-detection).
 
@@ -45,14 +44,18 @@ While a lot more can be done to help the preview papers mimic how you can move a
 - Preview papers can be removed at any time by selecting the red square.
 
 !!! tip
-
       If you'd like to quickly clear the Preview programs, the best option currently is to refresh the Camera page.
 
-##### Preview Markers
+##### Preview Markers :red_circle: :green_circle: :blue_circle: :black_circle:
 
 Just like preview papers, you can simulate physical paper markers under the Preview Markers sidebar menu. Select the eye icon to place a draggable marker into the camera view that triggers marker-related code in your paper programs.
 
 ![Marker Previews](../assets/camera-preview-markers.png)
+
+<figure markdown>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5-GzrdAAva8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <figcaption></figcaption>
+</figure>
 
 ### Organizing your code: Spaces and Projects
 
@@ -61,10 +64,7 @@ Just like preview papers, you can simulate physical paper markers under the Prev
 A space is way of organizing your programs and how you'll locate your programs in the Camera interface to run them. Some software might refer to this as a "workspace", but we prefer to think of it as a playspace!
 
 !!! warning
-
       At the time of writing, Spaces can only be created from the Camera interface ("Add New Space" button). You can select, but not create, Spaces in the Creator interface.
-
-![Camera Spaces](../assets/camera-spaces-tab.png)
 
 All of the programs in a space can be for one project or you can create a series of simpler programs that all exist in the same Space. This is completely up to you and we use them for both purposes. There is no limit to the number of Spaces you can have, so focusing each Space on one idea works well.
 
@@ -73,13 +73,11 @@ You might create your own personal space "my-space" :wink: and fill it with idea
 ##### What is a Creator Project?
 
 !!! info
-
       If you are not familiar with JavaScript development, we highly recommend you begin with the Creator interface!
 
 When working from the Creator interface, you may notice you can create Projects after selecting space. This is one level deeper than a Space and allows you to have multiple version or different sets of programs that you can send to the selected Space in the Camera interface via the **Send to Playground** button.
 
 !!! danger "Don't lose your programs!"
-
       If you select **Send to Playground** for your current project, it will OVERWRITE the programs in the Space. This introduces some incompatibility between editing programs directly in the JavaScript Editor (editor.html) and in Creator. If you only work in Creator and regularly **Save Project**, then you can always select your project and your work will be there.
 
      *If you'd like to directly write JavaScript and Creator, use the Custom Code button on your paper program in Creator. This code will be added to the end of each listed event function in the interface (e.g., onProgramAdded).*
@@ -96,10 +94,9 @@ There are a few helpful additions to this page to help with your creation and pl
 
 ##### Position Interval
 
-You can adjust the sensitivity of your programs to paper movement (in the event of detection jitter) by moving the **Position Interval** slider to the right of the Board display.
+You can adjust the sensitivity of your programs to paper movement (in the event of detection jitter) by moving the **Position Interval** slider to the right of the *Interactive Display*.
 
 !!! warning
-
       Keep this value as low as you can. At high values, your paper will be able to move very far without the program recognizing it has moved. Values as low as **0.1-0.2** work in many cases.
 
 ##### Print Speech
@@ -112,7 +109,7 @@ Regular JavaScript usage of `console.log` will display in your browser's develop
 
 ### What is the Canvas page?
 
-At this time, given the legacy structure of the client, all of the code detected in the Camera is executed through the Canvas. However, in Paper Playground, all development has been focused on paper program output sent to the Display. 
+At this time, given the legacy structure of the client, all of the code detected in the Camera is executed through the Canvas. However, in Paper Playground, all development has been focused on paper program output sent to the Display.
 
 **The Canvas page must be opened to run the code, *but the tab or window does not need to be visible.***
 
@@ -138,11 +135,11 @@ Open that link (make sure you keep the Camera page open at all times) and select
 
 ![The program editor](../assets/editor-example.png)
 
-Make some changes in the editor (try changing what text gets drawn on the canvas for starters) and click the "save" button. The changes should now be reflected in the output of the Board or Projector pages.
+Make some changes in the editor (try changing what text gets drawn on the canvas for starters) and click the "save" button. The changes should now be reflected in the output of the *Display* or Projector pages.
 
 When you're ready to print that program as a real piece of paper, click the Printer icon beside the program name on the Camera page. Place the newly printed paper in your webcam's view.
 
 !!! note
       Paper Playground looks for a comment on the first line of the file and uses that as the program's name. It will use the keywords on the second line for search purposes.
 
-At this point you should have everything you need to start building a collaborative Paper Playground "play" Space and a working interactive paper program experience! Look at the [Board API reference](../use/board-api.md) for more information about the functions available to your programs.
+At this point you should have everything you need to start building a collaborative Paper Playground "play" Space and a working interactive paper program experience! Look at the [paperLand API reference](../use/board-api.md) for more information about the functions available to your programs.

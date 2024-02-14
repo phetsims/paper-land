@@ -121,14 +121,14 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Getting Started:
-      - Hardware Recommendations: setup/reqs.md
-      - Step 1 Installation: setup/install.md
-      - Step 2 Device Setup: setup/device-setup.md
-      - Tutorial: setup/tutorial.md
+      - 1. Hardware Recommendations: setup/reqs.md
+      - 2. Installation: setup/install.md
+      - Device Setup: setup/device-setup.md
+      - Interface Overview: setup/tutorial.md
       - Creator Tutorial: setup/creator.md
     - Resources: 
       - Model-View-Controller Framework: use/mvc.md
-      - paper-land API: use/board-api.md
+      - paperLand API: use/board-api.md
       - Design Tips: use/designing-programs.md
       - Example Papers (deprecated): use/example-program.md
       - Downloadables: use/resources.md

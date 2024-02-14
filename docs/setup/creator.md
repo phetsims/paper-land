@@ -3,225 +3,192 @@
 !!! warning "Under Construction"
 
       We are working on updating our documentation - more details coming soon!
-
+      
 ## What is Creator?
 
 !!! warning "In Development"
 
       The Creator interface is in development! The current feature set likely does not reflect the final vision of the tool. Follow the development in [GitHub](https://github.com/phetsims/paper-land) or in our community channels!
 
-The primary vision of Creator is to bring the relationships between the components of your project to the forefront. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc).
+Creator is where you will add code to your paper programs before printing and playing with them in the *Camera*! The primary vision of Creator is to bring the relationships between the components of your project to the forefront, with significantly less code than using pure JavaScript. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc). Making programs in Creator is organized around the Model-View-Controller (MVC) software design pattern.
 
-Creator is organized around the [Model-View-Component framework](../use/mvc.md).
+### What is MVC?
 
-Simply stated: You create **Model components** (pieces of your idea that other components will need to use or change to make your project work), to be controlled by **Controller components** and display the information dynamically as a visual (e.g., text, image, shape), sound, speech, and more using **View components**
+MVC stands for [Model-View-Controller](../use/mvc.md), a design pattern that divides your program into three interconnected components:
 
-Watch the videos for two simple examples below for creating an "Audio Pendulum" or "Paper Organ".
+- **Model**: This is the heart of your application, managing the data and logic. Think of it as the brain that knows everything but doesn't show anything.
+- **View**: The View is all about presentation and user interface. It takes information from the Model and displays it in a way that you can understand and interact with.
+- **Controller**: Acting as a bridge between you and the system, the Controller interprets user inputs and interactions, then decides what to do with them.
+
+This separation makes it easier to manage complex interactions, especially when changes in one area need to reflect in others.
+
+In *Creator* you will **create programs**: Just like laying out papers on a desk, you can create, organize, and iterate on your programs within the *Creator* interface. Each program is like a piece of paper that you can move, collapse, or duplicate. Here you'll add components to your programs:
+
+- **Model Components**: These are the building blocks of your application's logic and data. You'll define what each component does, how it interacts with others, and how it should be controlled.
+- **View Components**: Decide how your application will present data and respond to user interactions. This could be through visuals, sounds, or even speech.
+- **Controller Components**: These components are all about action. They determine how user inputs modify the Model or trigger changes in the View.
+
+### Linking to the *Camera* Interface
+
+!!! note inline end "Hide/Show dependency connections"
+      ![alt text](connections.png)
+
+Once your program is set up, you can link it to the *Camera* interface by pressing the "Send to Playground" button at the top right of the LEFT PANE. Head over to *Camera* and interact with your programs as physical papers. Move them around, and see how they come to life, then come back to *Creator* to make changes!
+
+### Visualizing Relationships
+
+To keep track of how everything is connected, **dependencies** - components that rely on each other - are connected with colorful, dashed arrows. This, optional, visual cue helps you quickly anticipate how changes in one component might affect another or note missing pieces of your programs. They are broken into several categories depending on the components connected together.
+
+## Example *Creator* Project: Audio Pendulum
+
+![alt text](../assets/creator-program-meta-data.png)
+
+We can illustrate the way programs are created, taking the 'Audio Pendulum' project as an example. Audio Pendulum is a simple interactive portraying a pendulum bob exhibiting periodic motion around an anchor, emitting a soft tone at its lowest point.
+
+The project utilizes several Model components: 'bobPosition' and 'anchorPosition' track the pendulum and anchor, 'period' defines the motion's frequency, and 'length' measures the distance from the bob to the anchor.
+
+These components can be integrated into various programs. The project is designed to let users place the anchor and adjust the bob's position interactively. This setup requires two separate programs: one to map the anchor's position to a paper location, and another to set the bob's length based on its distance from another paper.
+
+Controller components 'bobController' and 'anchorPositionController' are used to animate the bob and set the anchor's position, respectively. Additionally, View components create the visual (like circles for the bob and anchor using shape components) and auditory elements (a 'bobSound' function calculates timing of the tone trigger based on the bob's swing position).
+
+**Watch the steps to create Audio Pendulum and the project in action in these videos:**
+
+<figure>
+   <iframe width="877" height="493" src="https://www.youtube.com/embed/9oRPWbRxbNk" title="Paper Playground - Audio Pendulum - Creator Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</figure>
+
+<figure>
+   <iframe width="371" height="659" src="https://www.youtube.com/embed/18B9Z4Ch_08" title="Paper Playground - Audio Pendulum project with pieces of paper" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</figure>
+
+## Adding Model, View, and Controller Components to your Programs
+
+{Content coming soon!}
+
+### Component Details
+=== "Model Components"
+      There will be info on each component in here. Including Arrays and array items!
+
+      ![alt text](../assets/model-form.png)
+
+=== "View Components"
+      There will be info on each view component in here.
+
+      ![alt text](view-form.png)
+
+      **Adding Images and Sounds**
+
+      Adding your own images (.jpg, .png, .gif, etc.) and sounds (.wav, .mp3, etc.) can be done right in *Creator*! Add a View Component, select Image or Sound, and drag/drop your file or select the upload box to open a file dialog.
+
+      Once uploaded, files will live in the paper-land directory under `.../www/media/images/upload` or `.../www/media/sound/upload`. You can also directly add files to this directory for bulk upload.
+
+      The files will now appear in the dropdown selection for those components!
+
+=== "Controller Components"
+      There will be info on each controller component in here.
+
+      ![alt text](controller-form.png)
+
+      ## Paper Controller Components - What can I use to trigger code in my paper programs?**
+
+      !!! inline end tip
+            For advanced users or when using Custom Code, see the [paperLand API](../use/board-api.md) for all paper events.
+
+      ### Paper Movement
+
+      {Content coming soon!}
+
+      ### Paper Markers
+
+      {Content coming soon!}
+
+      ### Whiskers - Paper Proximity
+
+      {Content coming soon!}
+
+### (Custom Functions) Customizing Component Output
+
+{Content coming soon!}
+
+### Adding Connections (component dependencies)
+
+{Content coming soon!}
+
+![alt text](add-components.png)
+
+#### Dependency or Reference?
+
+{Content coming soon!}
+
+![alt text](custom-function.png)
+
+## Using AI chat to create custom component logic and output
+
+{Content coming soon!}
+
+![alt text](../assets/ai-example.png)
+
+## Custom Code
+
+{Content coming soon!}
+
+## Organizing Programs
+
+{Content coming soon!}
+
+![alt text](copy-delete-program.png)
+
+## Managing Projects
+
+![alt text](spaces-and-projects.png)
+
+As mentioned in the [Tutorial](./tutorial.md#organizing-your-code-spaces-and-projects), Projects exist to organize your paper programs in *Creator* only. Sending a project "to the Playground" will *overwrite the active set of papers* for that `space`.
+
+Think of Projects as your way of managing similar sets or variants of sets of paper programs. Perhaps you want to use it as version control? Maybe you want to aggregate sets of papers that have a theme? It's up to you. Just make sure you send the project you would like to play with to the *Camera* with Send to Playground, or you might be a bit confused when your papers do something you don't expect or nothing at all! Use the **New Project** button to get going.
+
+We recommend using the **Copy Project** feature whenever you are looking to start a variant of an existing project (whether it is read-only or you really just don't want to break your existing project). **Note: When you create a project in the `space` you are currently in, you will need to leave the space and re-enter (or refresh the Creator page) to see it appear in the list of projects for that space.**
+
+### Downloading and Loading Projects
+
+{Content coming soon!}
 
 ## Using Templates
 
-You can load in templates using the New Template button in the top left of the interface. These will create a paper or set of papers that are pre-populated with components to create the desired effect. Want a shape that will follow the position of your paper? Select the *Movable Shape* template and the required papers/components will appear, ready to be customized!
+You can load in templates using the "Create from Template" button in the top left of the interface. These will create a paper or set of papers that are pre-populated with components to create the desired effect. Want a shape that will follow the position of your paper? Select the *Movable Shape* template and the required papers/components will appear, ready to be customized!
+
+![alt text](create-from-template-button.png)
+
+!!! warning "Note"
+      At this time, all imported templates are created as new programs. If you'd like to integrate them into existing programs, import the templates into your project and use them as a reference for creating new component in your existing paper programs.
 
 ### Creating Templates
 
-Some templates are already included in Paper Playground. However, if you'd like to use templates for common sets of programs/components
+Some templates are already included in Paper Playground. However, if you'd like to use templates for common sets of programs/components, you can create them globally for all `spaces` or on a per-`space` basis. *Templates exist in their own database separately from the spaces that contain your paper programs.*
 
-## Copying Projects and Programs
+#### Creating New Templates
 
+1. Create a new project in the space of your choice (the `templates` space is the best choice if using our hosted program database).
+2. Create your programs! Populate them with the necessary components to create a self-contained fully functioning (set of) program(s).
+3. Open the "Edit Templates" collapsible menu on the RIGHT PANE.
+4. Make sure you have "New Template" selected from the dropdown. Selecting an existing template will overwrite the programs in the LEFT PANE!
+5. Enter a name, description, and a few comma separated keywords.
+6. Save the Template for globally for all `spaces` or just locally in the `space` you are currently in.
+7. That's it! Check it's been created by using the "Create from Template" button.
 
+![alt text](create-new-template.png)
 
-## Adding Images and Sounds
+#### Editing Templates
 
-Adding your own images (.jpg, .png, .gif, etc.) and sounds (.wav, .mp3, etc.) can be done right in Creator! Add a View Component, select Image or Sound, and drag/drop your file or select the upload box to open a file dialog.
+1. Open your template from the "Edit Templates" collapsible menu ( :danger: this will override any program you current have in the LEFT PANE!)
+2. Make any changes to your programs and their components. You can also edit the Template name and description.
+3. Save changes!
 
-Once uploaded, files will live in the paper-land directory under `.../www/media/images/upload` or `.../www/media/sound/upload`. You can also directly add files to this directory for bulk upload.
+![alt text](edit-template.png)
 
-The files will now appear in the dropdown selection for those components!
+## More walkthroughs
 
-## Using AI chat to create Custom Code
+### Paper Organ Walkthrough
 
-- 
-
-## Audio Pendulum Walkthrough
 <figure>
-<iframe width="877" height="493" src="https://www.youtube.com/embed/9oRPWbRxbNk" title="Paper Playground - Audio Pendulum - Creator Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<iframe width="877" height="493" src="https://www.youtube.com/embed/DnZdQ917vW8" title="Paper Playground - Paper Organ - *Creator* Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </figure>
-
-<figure>
-<iframe width="371" height="659" src="https://www.youtube.com/embed/18B9Z4Ch_08" title="Paper Playground - Audio Pendulum project with pieces of paper" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</figure>
-
-## Paper Organ Walkthrough
-<figure>
-<iframe width="877" height="493" src="https://www.youtube.com/embed/DnZdQ917vW8" title="Paper Playground - Paper Organ - Creator Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</figure>
-
-
-<!-- ## MVC Draft
-
-Alright kiddo, imagine you're playing a simple card game on your computer or tablet. In this card game, you can see cards, click on them to play, and the computer tells you if you won or lost. The Model-View-Controller, or MVC for short, is a way for programmers to organize this game. Let's break it down:
-
-**1. Model (The Brain)**
-Imagine this is the rulebook for the card game. It keeps track of which cards are in play, whose turn it is, and checks if someone has won or lost. It doesn't care about how the game looks or how you play the cards, just the rules and the current state of the game.
-*Example*: If you have a pair of cards that match, the Model knows and will remember it.
-
-**2. View (The Looks)**
-This is like the game board or the table where you see the cards. It's all about the visuals! It shows you the cards, the score, and any messages like "You Win!" The View takes information from the Model and displays it in a way that's easy for you to understand and enjoy.
-*Example*: The fancy designs on the cards and the animations when you get a match.
-
-**3. Controller (The Doer)**
-Imagine the Controller as your hands in the game. When you want to flip a card, the Controller is the one that does it for you. It listens to your actions, like tapping on the screen, and tells the Model and View what to do next. So, it's the middleman between the rulebook and the game board.
-*Example*: You tap on a card, the Controller decides what should happen (like flipping the card), checks with the Model if it's a match, and then tells the View to show the result.
-
-So, in our card game:
-- **Model** is the rulebook and memory.
-- **View** is the game board and the designs.
-- **Controller** is how you play and interact.
-
-By dividing the game into these three parts, programmers can make sure the game runs smoothly and looks great!
-
-Alright, let's imagine you have a cool computer simulation where you can play with virtual magnets and see how they attract or repel each other. The Model-View-Controller, or MVC for short, helps programmers organize this simulation. Let's dive in!
-
-**1. Model (The Brain)**
-Think of the Model as the unseen science teacher. It knows all the rules about how magnets work. If two opposite poles (like North and South) come close, they'll attract. If two similar poles (like North and North) come close, they'll repel. The Model knows and remembers all these rules and facts.
-*Example*: If you bring two opposite poles of the magnets close in the simulation, the Model will recognize that they should attract each other.
-
-**2. View (The Looks)**
-The View is the visual part of the simulation – what you actually see on the screen. It shows you the magnets, the forces between them (maybe as arrows or glowing lines), and any other helpful visuals like labels saying "North" or "South".
-*Example*: The detailed design of the magnet, the glow when two magnets are about to attract or repel, and maybe even animations showing magnetic fields.
-
-**3. Controller (The Doer)**
-Think of the Controller as your virtual hand inside the simulation. When you drag a magnet around on the screen or decide to flip its poles, the Controller makes that happen. It listens to your actions, like clicking or dragging, and tells the Model and View what should happen next.
-*Example*: You decide to move a North pole close to a South pole. As you drag it, the Controller communicates with the Model to check how the magnets should behave and then tells the View to show the attracting force.
-
-So, for our magnetic simulation:
-- **Model** is the science teacher in the background.
-- **View** is the cool graphics and designs you see.
-- **Controller** is the way you interact with the simulation.
-
-By splitting the simulation into these three parts, programmers can create an educational tool that's both accurate in its science and fun to play with!
-
-
-Sure, let's list out some typical JavaScript components you might encounter in these scenarios:
-
-**Card Game:**
-
-*Model:*
-1. **Arrays**: To store the deck of cards, player's hand, and computer's hand.
-   ```javascript
-   let deck = ["Ace", "Two", ...];
-   let playerHand = [];
-   let computerHand = [];
-   ```
-2. **Numbers**: To keep score or count matches.
-   ```javascript
-   let playerScore = 0;
-   let computerScore = 0;
-   ```
-3. **Booleans**: To determine game states, like whether it's a player's turn or if the game is over.
-   ```javascript
-   let isPlayerTurn = true;
-   let gameFinished = false;
-   ```
-
-*View:*
-1. **Strings**: Text messages displayed, e.g., "Player's Turn", "You Win!", "It's a tie!".
-2. **Images**: Visuals for each card, backgrounds, etc.
-   ```javascript
-   let cardBackImage = "path/to/card_back.png";
-   ```
-3. **Sounds**: Sound effects for card flipping, winning, etc.
-   ```javascript
-   let flipSound = new Audio('path/to/flip_sound.mp3');
-   ```
-
-*Controller:*
-1. **Event Listeners**: To detect when a card is clicked.
-   ```javascript
-   cardElement.addEventListener("click", flipCard);
-   ```
-
-
-**Science Simulation (Magnets):**
-
-*Model:*
-1. **Objects**: Represent each magnet with properties like pole and position.
-   ```javascript
-   let magnet1 = { pole: "North", x: 100, y: 200 };
-   let magnet2 = { pole: "South", x: 300, y: 400 };
-   ```
-2. **Booleans**: To determine if two magnets are attracting or repelling.
-   ```javascript
-   let areAttracting = true;
-   ```
-
-*View:*
-1. **Strings**: Labels or descriptions displayed, e.g., "North", "South", "Attracting", "Repelling".
-2. **Images**: Visuals for each magnet, animations, and possibly the magnetic field visualization.
-   ```javascript
-   let northPoleImage = "path/to/north_pole.png";
-   ```
-3. **Sounds**: Sound effects for when magnets come together or push away.
-   ```javascript
-   let attractSound = new Audio('path/to/attract_sound.mp3');
-   ```
-
-*Controller:*
-1. **Event Listeners**: To detect when a magnet is dragged or clicked.
-   ```javascript
-   magnetElement.addEventListener("drag", moveMagnet);
-
-   Absolutely! Introducing the magnetic field and the relationship between distance and force adds another layer of complexity. Here's how you might adapt the components:
-
-**Science Simulation (Magnets with Magnetic Fields):**
-
-*Model:*
-1. **Objects**: Represent each magnet with additional properties like magnetic field strength and perhaps a method to compute the force based on distance.
-   ```javascript
-   let magnet1 = { pole: "North", x: 100, y: 200, fieldStrength: 50 };
-   let magnet2 = { pole: "South", x: 300, y: 400, fieldStrength: 50 };
-   ```
-
-2. **Function**: To calculate the attraction or repulsion force between two magnets based on distance.
-   ```javascript
-   function computeForce(magnet1, magnet2) {
-       let distance = Math.sqrt(Math.pow(magnet2.x - magnet1.x, 2) + Math.pow(magnet2.y - magnet1.y, 2));
-       // Force could be inversely proportional to the square of the distance (like real magnets)
-       return (magnet1.fieldStrength * magnet2.fieldStrength) / (distance * distance);
-   }
-   ```
-
-*View:*
-1. **Strings**: Additional descriptions, e.g., "Force: 10 Newtons", "Distance: 50 pixels".
-2. **Images**: Updated visuals to show magnetic field around each magnet.
-   ```javascript
-   let magneticFieldImage = "path/to/magnetic_field.png";
-   ```
-
-3. **Graphics**: Drawing methods to visually represent the magnetic field's range and intensity. This could involve changing the opacity or size of the field visualization based on the field strength.
-   ```javascript
-   function drawMagneticField(magnet) {
-       // Code to draw the field, might change color or size based on fieldStrength
-   }
-   ```
-
-4. **Sounds**: Updated or additional sounds for when magnets are very close (strong force) vs. far away (weak force).
-
-*Controller:*
-1. **Event Listeners**: As before, but now might update more frequently to show changing force as you drag magnets closer or farther away.
-   ```javascript
-   magnetElement.addEventListener("drag", function(event) {
-       moveMagnet(event);
-       updateForceDisplay(); // Newly added to reflect changing force in real-time
-   });
-   ```
-
-2. **Function**: A new function to update the display (part of the View) based on changing force.
-   ```javascript
-   function updateForceDisplay() {
-       let force = computeForce(magnet1, magnet2);
-       // Update the visuals, e.g., changing colors, text, or animations based on the force magnitude
-   }
-   ```
-
-In both scenarios, the **Model** holds the main data and logic, the **View** manages the presentation (what users see and hear), and the **Controller** deals with user inputs and communicates between the Model and View. -->
