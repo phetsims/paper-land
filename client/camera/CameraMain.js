@@ -83,6 +83,8 @@ export default class CameraMain extends React.Component {
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
     this.saveAlertTimeout = null;
 
+    this.refreshNextUpdate = false;
+
     // Process query parameters.
     const urlSearchParams = new URLSearchParams( window.location.search );
     const params = Object.fromEntries( urlSearchParams.entries() );
@@ -93,6 +95,13 @@ export default class CameraMain extends React.Component {
     window.addEventListener( 'resize', this._updatePageWidth.bind( this ) );
     this._updatePageWidth();
     this._updateSpacesList();
+
+    window.addEventListener( 'storage', event => {
+
+      if ( event.key === clientConstants.CREATOR_REFRESH_TRIGGER ) {
+        this.refreshNextUpdate = true;
+      }
+    } );
 
     // Set up a periodic update of this component's state using animation frames.
     const animationFrameHandler = () => {
@@ -169,6 +178,11 @@ export default class CameraMain extends React.Component {
 
           this.setState( { spaceData: response.body }, () => {
             this._programsChange( this.props.paperProgramsProgramsToRender );
+
+            if ( this.refreshNextUpdate ) {
+              localStorage.setItem( clientConstants.CAMERA_REFRESH_TRIGGER, Date.now().toString() );
+              this.refreshNextUpdate = false;
+            }
 
             // Determine whether the program that is currently selected in the editor is in the selected space.
             const selectedProgramInSpace = !!this.state.programInEditor && this.state.spaceData.programs.find(

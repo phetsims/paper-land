@@ -10,9 +10,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import clientConstants from '../clientConstants.js';
 import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import boardConsole from './boardConsole.js';
-import styles from './BoardMain.css';
 import BoardMain from './BoardMain.js';
 import boardModel from './boardModel.js';
 
@@ -751,7 +751,14 @@ const detachWhiskersForProgram = paperNumber => {
 // as there is at least one paper program in the detection window.
 let paperProgramsInfo = [];
 let currentMarkersInfo = [];
-addEventListener( 'storage', () => {
+addEventListener( 'storage', event => {
+
+  // Programs were sent from creator, and the camera page has received the new programs and is requesting that
+  // we refresh the page. See constants documentation for more info.
+  if ( event.key === clientConstants.CAMERA_REFRESH_TRIGGER ) {
+    window.location.reload();
+  }
+
   const currentPaperProgramsInfo = JSON.parse( localStorage.paperProgramsProgramsToRender );
 
   // Log information about changes to the available data.

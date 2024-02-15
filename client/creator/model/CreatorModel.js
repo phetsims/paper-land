@@ -1,4 +1,5 @@
 import xhr from 'xhr';
+import clientConstants from '../../clientConstants.js';
 import CreatorVisibilityModel from './CreatorVisibilityModel.js';
 import ProgramModel from './ProgramModel.js';
 
@@ -443,6 +444,9 @@ export default class CreatorModel {
           const addUrl = new URL( `api/spaces/${this.spaceNameProperty.value}/programs/add-premade-program`, window.location.origin ).toString();
           await this.sendRequest( addUrl, 'POST', { program: programData } );
         }
+
+        // use local storage to send a message to the other pages to refresh now that all programs are sent
+        localStorage.setItem( clientConstants.CREATOR_REFRESH_TRIGGER, Date.now().toString() );
 
         // If everything succeeds, resolve the promise
         console.log( 'All programs sent successfully!' );

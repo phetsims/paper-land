@@ -7,6 +7,17 @@ const clientConstants = {
   englishColorNames: [ 'red', 'green', 'blue', 'black' ],
   cornerNames: [ 'TL', 'TR', 'BR', 'BL' ],
 
+  // Triggers that are added to local storage to notify pages that a refresh is necessary.
+  // The creator page will use creatorRefreshTrigger to let the camera page know that a full refresh is necessary.
+  // The camera page will receive that event, and then emit with cameraRefreshTrigger AFTER it updates local storage
+  // with the programs that are currently being used. This order is important, otherwise the refresh would happen
+  // on the board before code is updated in local storage.
+  //
+  // All of this is to have the board start fresh when programs are sent from Creator, so that the baord page
+  // behaves correctly (especially after some unrecoverable error from program code).
+  CREATOR_REFRESH_TRIGGER: 'creatorRefreshTrigger',
+  CAMERA_REFRESH_TRIGGER: 'cameraRefreshTrigger',
+
   // default length of paper-land whiskers - normalized relative to the width of the camera view
   defaultWhiskerLength: 0.08,
   cameraVideoConstraints: {
