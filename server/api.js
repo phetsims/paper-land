@@ -830,10 +830,16 @@ router.get( '/api/creator/can-access-space/:spaceName', ( req, res ) => {
 } );
 
 /**
- * Get the project data at the provided space and project name.
+ * Get the project data at the provided space and project name. The space and project names are provided as query
+ * parameters.
+ *
+ * @param spaceName - The name of the space to get the project data from.
+ * @param projectName - The name of the project to get the data from.
  */
-router.get( '/api/creator/:spaceName/:projectName', ( req, res ) => {
-  const { spaceName, projectName } = req.params;
+router.get( '/api/creator/data', ( req, res ) => {
+  const spaceName = req.query.spaceName;
+  const projectName = req.query.projectName;
+
   knex
     .select( 'projectData' )
     .from( 'creator-data' )
@@ -849,10 +855,13 @@ router.get( '/api/creator/:spaceName/:projectName', ( req, res ) => {
 } );
 
 /**
- * Delete the specified project at the provided space name.
+ * Delete the specified project at the provided space name. The project and space names must be
+ * provided as query parameters.
  */
-router.get( '/api/creator/:spaceName/delete/:projectName', ( req, res ) => {
-  const { spaceName, projectName } = req.params;
+router.get( '/api/creator/projects/delete', ( req, res ) => {
+  const spaceName = req.query.spaceName;
+  const projectName = req.query.projectName;
+
   knex( 'creator-data' )
     .where( { spaceName, projectName: projectName } )
     .del()

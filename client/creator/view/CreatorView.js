@@ -181,7 +181,11 @@ export default class CreatorView extends phet.scenery.Node {
     // we clear model programs and disable the save/send buttons.
     const updateProject = () => {
       if ( model.spaceNameProperty.value && model.projectNameProperty.value ) {
-        const url = new URL( `api/creator/${model.spaceNameProperty.value}/${model.projectNameProperty.value}`, window.location.origin ).toString();
+
+        const encodedSpaceName = encodeURIComponent( model.spaceNameProperty.value );
+        const encodedProjectName = encodeURIComponent( model.projectNameProperty.value );
+
+        const url = new URL( `api/creator/data?spaceName=${encodedSpaceName}&projectName=${encodedProjectName}`, window.location.origin ).toString();
         xhr.get( url, { json: true }, ( error, response, body ) => {
           if ( error ) {
             console.error( error );

@@ -150,9 +150,12 @@ const SpaceSelectControls = props => {
 
   // Handle a request to delete a project.
   const handleProjectDelete = () => {
-    if ( selectedSpaceName && selectedSpaceName ) {
+    if ( selectedSpaceName && selectedProjectName ) {
+      const encodedSpaceName = encodeURIComponent( selectedSpaceName );
+      const encodedProjectName = encodeURIComponent( selectedProjectName );
+
       xhr.get(
-        new URL( `api/creator/${selectedSpaceName}/delete/${selectedProjectName}`, window.location.origin ).toString(),
+        new URL( `api/creator/projects/delete?spaceName=${encodedSpaceName}&projectName=${encodedProjectName}`, window.location.origin ).toString(),
         {
           json: {}
         },
