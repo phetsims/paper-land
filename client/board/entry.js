@@ -753,12 +753,6 @@ let paperProgramsInfo = [];
 let currentMarkersInfo = [];
 addEventListener( 'storage', event => {
 
-  // Programs were sent from creator, and the camera page has received the new programs and is requesting that
-  // we refresh the page. See constants documentation for more info.
-  if ( event.key === clientConstants.CAMERA_REFRESH_TRIGGER ) {
-    window.location.reload();
-  }
-
   const currentPaperProgramsInfo = JSON.parse( localStorage.paperProgramsProgramsToRender );
 
   // Log information about changes to the available data.
@@ -793,4 +787,10 @@ addEventListener( 'storage', event => {
 
   // Update the sim design board.
   updateBoard( currentPaperProgramsInfo, currentMarkersInfo );
+
+  // Programs were sent from creator, and the camera page has received the new programs and is requesting that
+  // we refresh the page. See constants documentation for more info.
+  if ( event.key === clientConstants.CAMERA_REFRESH_TRIGGER ) {
+    window.location.reload();
+  }
 } );
