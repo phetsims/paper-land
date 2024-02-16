@@ -55,6 +55,9 @@ export default class CameraMain extends React.Component {
       // {string} - the deviceId of the currently selected camera
       selectedCameraDeviceId: '',
 
+      // State to indicate that the camera is going to be disabled and instead we are going to use only debug programs
+      cameraEnabled: props.config.cameraEnabled,
+
       // {boolean} - Whether camera feed gets flipped in the horizontal or
       // vertical direction
       flipCameraFeedX: false,
@@ -1179,8 +1182,16 @@ export default class CameraMain extends React.Component {
                     <div className={styles.sidebarSection}>
                       <CameraControls
                         selectedCameraDeviceId={this.state.selectedCameraDeviceId}
+
                         flipCameraFeedX={this.props.config.flipCameraFeedX}
                         flipCameraFeedY={this.props.config.flipCameraFeedY}
+
+                        cameraEnabled={this.state.cameraEnabled}
+                        setCameraEnabled={cameraEnabled => {
+                          this.setState( { cameraEnabled } );
+                          this.props.onConfigChange( { ...this.props.config, cameraEnabled } );
+                        }}
+
                         onCameraFlipChanged={( flipX, flipY ) => {
 
                           this.setState( {

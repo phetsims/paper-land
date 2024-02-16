@@ -18,6 +18,14 @@ export default function CameraControls( props ) {
     <>
       <h3 className={styles.headerWithOption}>Camera Settings</h3>
 
+      {/*A checkbox to enable/disable the camera*/}
+      <div className={styles.detectionControlInput}>
+        <input id='camera-enable-checkbox' type='checkbox' checked={props.cameraEnabled} onChange={event => {
+          props.setCameraEnabled( event.target.checked );
+        }}/><label htmlFor='camera-enable-checkbox'>Enable Camera</label><br/>
+        <p>(Uncheck for virtual programs only)</p>
+      </div>
+
       {/*Camera flip controls*/}
       <label className={styles.detectionControlLabel}>Flip Camera Feed:</label>
       <div className={styles.detectionControlInput}>

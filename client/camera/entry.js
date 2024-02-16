@@ -48,7 +48,11 @@ const defaultConfig = {
   // you will want to only detect programs that are fully visible.
   requireAllCorners: false,
 
+  // The ID of the selected camera
   selectedCameraDeviceId: '',
+
+  // If false, teh camera feed is disabled and we just use debug programs
+  cameraEnabled: true,
 
   // {boolean} - Whether camera feed gets flipped in the horizontal or vertical direction
   flipCameraFeedX: false,

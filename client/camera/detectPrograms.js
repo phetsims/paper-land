@@ -168,7 +168,15 @@ export default function detectPrograms( {
   const markerSizeThreshold = avgPaperDotSize + paperDotSizeVariance;
 
   const videoMat = new cv.Mat( videoCapture.video.height, videoCapture.video.width, cv.CV_8UC4 );
-  videoCapture.read( videoMat );
+
+  if ( config.cameraEnabled ) {
+    videoCapture.read( videoMat );
+  }
+  else {
+
+    // set the videoMat to just a black screen
+    videoMat.setTo( new cv.Scalar( 0, 0, 0, 255 ) );
+  }
 
   // Flipping the video feed here works for both the display and blob detector -
   // the video mat is copied to the displayMat and a ROI is taken from
