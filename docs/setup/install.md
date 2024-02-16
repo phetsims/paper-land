@@ -5,7 +5,7 @@
       
       We are working on updating our documentation - more details coming soon!
 
-The Paper Playground client runs locally and can utilize a remote database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
+The Paper Playground client runs locally and can utilize a remote, hosted database for collaboration over sets of paper programs. You may also use a local PostgreSQL database. To run the client, you need a command-line interface and a few other software components:
 
 1. Install [Node.js/npm](https://nodejs.org/en/), [Git](https://git-scm.com/), and a command-line interface (e.g., Bash, Terminal, Command Prompt, etc.).
    > :red_circle: **Note:** Some users have reported issues installing newer versions of Node.js/npm on older macOS versions. Verify the last supported Node.js/npm version for your operating system.
@@ -16,7 +16,7 @@ The Paper Playground client runs locally and can utilize a remote database for c
 6. Open [localhost:3000](http://localhost:3000/) in your browser and follow the links on the landing page.
 
 
-You should be good to go! Move on to [setting up your devices](../setup/device-setup.md) or straight to the [overview and tutorial](../setup/tutorial.md).
+You should be good to go! Move on to [setting up your devices](../setup/device-setup.md) or straight to the [interface overview](../setup/interface-overview.md).
 
 ### Recommended Start Up
 

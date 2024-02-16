@@ -1,16 +1,12 @@
 # Creator Tutorial
 
-!!! warning "Under Construction"
-
-      We are working on updating our documentation - more details coming soon!
-      
-## What is Creator?
-
 !!! warning "In Development"
 
-      The Creator interface is in development! The current feature set likely does not reflect the final vision of the tool. Follow the development in [GitHub](https://github.com/phetsims/paper-land) or in our community channels!
+      The *Creator* interface is in development! The current feature set is evolving and documentation may be out of date. Follow the development in [GitHub](https://github.com/phetsims/paper-land) or our [community channels](../community.md)!
 
-Creator is where you will add code to your paper programs before printing and playing with them in the *Camera*! The primary vision of Creator is to bring the relationships between the components of your project to the forefront, with significantly less code than using pure JavaScript. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc). Making programs in Creator is organized around the Model-View-Controller (MVC) software design pattern.
+## What is *Creator*?
+
+*Creator* is where you will add code to your paper programs before printing and playing with them in the *Camera*! The primary vision of Creator is to bring the relationships between the components of your project to the forefront, with significantly less code than using pure JavaScript. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc). Making programs in Creator is organized around the Model-View-Controller (MVC) software design pattern.
 
 ### What is MVC?
 
@@ -31,7 +27,7 @@ In *Creator* you will **create programs**: Just like laying out papers on a desk
 ### Linking to the *Camera* Interface
 
 !!! note inline end "Hide/Show dependency connections"
-      ![alt text](connections.png)
+      ![alt text](./img/connections.png)
 
 Once your program is set up, you can link it to the *Camera* interface by pressing the "Send to Playground" button at the top right of the LEFT PANE. Head over to *Camera* and interact with your programs as physical papers. Move them around, and see how they come to life, then come back to *Creator* to make changes!
 
@@ -53,28 +49,54 @@ Controller components 'bobController' and 'anchorPositionController' are used to
 
 **Watch the steps to create Audio Pendulum and the project in action in these videos:**
 
-<figure>
-   <iframe width="877" height="493" src="https://www.youtube.com/embed/9oRPWbRxbNk" title="Paper Playground - Audio Pendulum - Creator Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</figure>
+??? abstract "Audio Pendulum - Creator Walkthrough"
+      <figure>
+      <iframe width="877" height="493" src="https://www.youtube.com/embed/9oRPWbRxbNk" title="Paper Playground - Audio Pendulum - Creator Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </figure>
 
-<figure>
-   <iframe width="371" height="659" src="https://www.youtube.com/embed/18B9Z4Ch_08" title="Paper Playground - Audio Pendulum project with pieces of paper" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</figure>
+??? abstract "Audio Pendulum - Demo Video"
+      <figure>
+      <iframe width="371" height="659" src="https://www.youtube.com/embed/18B9Z4Ch_08" title="Paper Playground - Audio Pendulum project with pieces of paper" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </figure>
 
 ## Adding Model, View, and Controller Components to your Programs
 
-{Content coming soon!}
+To add a component to your program, first create a program using the "New Empty Program" button. Then, on the new paper program, select the "New Component" button.
+
+<figure markdown>
+
+![adding a new component](./img/newcomponent.gif)
+
+</figure>
 
 ### Component Details
-=== "Model Components"
-      There will be info on each component in here. Including Arrays and array items!
 
+=== "Model Components"
+
+      - **Boolean**: This is a primitive data type that represents truth values, typically denoted as `true` or `false`. Booleans are often used in conditional statements to control the flow of the program based on certain conditions.
+      - **Number**: Another primitive data type in JavaScript, `Number` represents both integer and floating-point numbers. JavaScript uses double-precision floating-point format for all its numeric values, providing a wide range of values that can be represented.
+      - **Position**: While not a standard JavaScript data type, "Position" can refer to an object structure used to represent the coordinates or location of an element, typically in a graphical or UI context. It often consists of properties like `x` and `y` for 2D spaces or `x`, `y`, and `z` for 3D spaces.
+      - **String**: A primitive data type, `String` represents textual data. It consists of a sequence of characters and is enclosed in single quotes (`'`), double quotes (`"`), or backticks (`` ` ``) for template literals. Strings in JavaScript are immutable, meaning once a string is created, it cannot be modified.
+      - **Enumeration**: JavaScript does not have a native enumeration (enum) type as seen in other languages like C# or Java. However, an enumeration can be simulated using objects or the `Object.freeze()` method, where a set of named constants are represented as properties of an object, often used for better code readability and to prevent changes to the object.
+      - **Derived**: This term doesn't refer to a specific data structure in JavaScript but generally refers to types or structures that are built from other types, often involving object-oriented programming concepts like inheritance where one class (derived class) inherits properties and methods from another class (base class).
+      - **Bounds**: Like "Position", "Bounds" is not a standard JavaScript data type. It typically refers to an object or structure used to describe the size and position of a rectangular area, often in graphical contexts. A "Bounds" object might include properties like `width`, `height`, `top`, `left`, etc., to define the dimensions and location of a rectangle.
+      - **Array**: A global object used to construct arrays, which are high-level, list-like objects. Arrays in JavaScript are used to store multiple values in a single variable and can contain elements of different types. They are zero-indexed, and their length can change dynamically.
+      - **Array Item**: Refers to an individual element within an array. Each item in an array can be accessed by its index, starting from `0` for the first element. Array items can be of any type, including `Number`, `String`, `Boolean`, or even other arrays and objects.
+
+      
       ![alt text](../assets/model-form.png)
 
 === "View Components"
-      There will be info on each view component in here.
 
-      ![alt text](view-form.png)
+      - Shapes
+      - Background
+      - Images
+      - Text
+      - Sounds
+      - Description
+      - Vibration
+
+      ![alt text](../assets/view-form.png)
 
       **Adding Images and Sounds**
 
@@ -85,14 +107,17 @@ Controller components 'bobController' and 'anchorPositionController' are used to
       The files will now appear in the dropdown selection for those components!
 
 === "Controller Components"
-      There will be info on each controller component in here.
 
-      ![alt text](controller-form.png)
+      - Paper
+      - Link
+      - Animation
+
+      ![alt text](../assets/controller-form.png)
 
       ## Paper Controller Components - What can I use to trigger code in my paper programs?**
 
       !!! inline end tip
-            For advanced users or when using Custom Code, see the [paperLand API](../use/board-api.md) for all paper events.
+            For advanced users or when using Custom Code, see the [paperLand API](../use/paperland-api.md) for all paper events.
 
       ### Paper Movement
 
@@ -114,13 +139,13 @@ Controller components 'bobController' and 'anchorPositionController' are used to
 
 {Content coming soon!}
 
-![alt text](add-components.png)
+![alt text](./img/add-components.png)
 
 #### Dependency or Reference?
 
 {Content coming soon!}
 
-![alt text](custom-function.png)
+![alt text](./img/custom-function.png)
 
 ## Using AI chat to create custom component logic and output
 
@@ -136,13 +161,13 @@ Controller components 'bobController' and 'anchorPositionController' are used to
 
 {Content coming soon!}
 
-![alt text](copy-delete-program.png)
+![alt text](./img/copy-delete-program.png)
 
 ## Managing Projects
 
-![alt text](spaces-and-projects.png)
+![alt text](./img/spaces-and-projects.png)
 
-As mentioned in the [Tutorial](./tutorial.md#organizing-your-code-spaces-and-projects), Projects exist to organize your paper programs in *Creator* only. Sending a project "to the Playground" will *overwrite the active set of papers* for that `space`.
+As mentioned in the [Tutorial](./interface-overview.md#organizing-your-code-spaces-and-projects), Projects exist to organize your paper programs in *Creator* only. Sending a project "to the Playground" will *overwrite the active set of papers* for that `space`.
 
 Think of Projects as your way of managing similar sets or variants of sets of paper programs. Perhaps you want to use it as version control? Maybe you want to aggregate sets of papers that have a theme? It's up to you. Just make sure you send the project you would like to play with to the *Camera* with Send to Playground, or you might be a bit confused when your papers do something you don't expect or nothing at all! Use the **New Project** button to get going.
 
@@ -156,7 +181,7 @@ We recommend using the **Copy Project** feature whenever you are looking to star
 
 You can load in templates using the "Create from Template" button in the top left of the interface. These will create a paper or set of papers that are pre-populated with components to create the desired effect. Want a shape that will follow the position of your paper? Select the *Movable Shape* template and the required papers/components will appear, ready to be customized!
 
-![alt text](create-from-template-button.png)
+![alt text](./img/create-from-template-button.png)
 
 !!! warning "Note"
       At this time, all imported templates are created as new programs. If you'd like to integrate them into existing programs, import the templates into your project and use them as a reference for creating new component in your existing paper programs.
@@ -175,7 +200,7 @@ Some templates are already included in Paper Playground. However, if you'd like 
 6. Save the Template for globally for all `spaces` or just locally in the `space` you are currently in.
 7. That's it! Check it's been created by using the "Create from Template" button.
 
-![alt text](create-new-template.png)
+![alt text](./img/create-new-template.png)
 
 #### Editing Templates
 
@@ -183,7 +208,7 @@ Some templates are already included in Paper Playground. However, if you'd like 
 2. Make any changes to your programs and their components. You can also edit the Template name and description.
 3. Save changes!
 
-![alt text](edit-template.png)
+![alt text](./img/edit-template.png)
 
 ## More walkthroughs
 

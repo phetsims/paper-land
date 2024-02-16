@@ -3,7 +3,7 @@
 [![GitHub](https://img.shields.io/badge/github-repo-yellow?logo=github&logoColor=white)](https://www.github.com/phetsims/paper-land/)
 [![Matrix Chat](https://img.shields.io/badge/matrix-chat-green?logo=matrix&logoColor=green)](https://matrix.to/#/#interactive-paper-programming:matrix.org)
 [![Youtube Channel](https://img.shields.io/badge/youtube-channel-red?logo=youtube&logoColor=red)](https://www.youtube.com/@PaperPlaygroundCommunity/)
-[![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](./LICENSE)
+[![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](https://github.com/phetsims/paper-land/blob/main/LICENSE)
 
 Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping code to real pieces of paper and manipulating the code in your **physical space**. Everything runs on your machine and you can collaborate locally or using a hosting service to collaborate over projects with others in your shared space.
 

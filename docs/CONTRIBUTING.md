@@ -13,8 +13,8 @@ We welcome any contributions to the project, including:
 ## Documentation
 Contributions do not have to be code. We welcome any updates to documentation that will help others get more use out of Paper Playground. This includes, but is not limited to:
 	
-- [Tutorial](/TUTORIAL.md) updates
-- [Implementation and API](/IMPLEMENTATION.md) documentation
+- [Creator Tutorial](./setup/creator.md) updates
+- [Implementation and API](./use/paperland-api.md) documentation
 - Example and use-case documentation or video demonstration
 - Updates or fixes to the landing page (localhost:3000)
 - Updates to the documentation structure/website
@@ -24,7 +24,7 @@ Translations are also welcome, but the project is currently under heavy developm
 To make any contributions, please open an issue if one does not exist and then open a pull request with your changes.
   
 ##  Features or bug fixes to the tool
--  See [WISHLIST.md](/WISHLIST.md) 
+-  See [WISHLIST.md](WISHLIST.md) 
 -  Search [open issues by the wishlist label](https://github.com/phetsims/paper-land/labels/wishlist) or [good first issue label](https://github.com/phetsims/paper-land/labels/good%20first%20issue)
 -  Open an issue or [discuss with us](community.md) what you'd like to work on!
 
