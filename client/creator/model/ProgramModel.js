@@ -77,9 +77,26 @@ export default class ProgramModel {
   }
 
   /**
-   * TODO: Remove any other connections with other programs.
+   * Returns an array of all components in all containers of this program.
+   */
+  getAllComponents() {
+    return [
+      ...this.modelContainer.allComponents,
+      ...this.controllerContainer.allComponents,
+      ...this.viewContainer.allComponents,
+      ...this.listenerContainer.allComponents
+    ];
+  }
+
+  /**
+   * Disposes this program and all of its containers. Removes all connections between the components
+   * on this program and other components.
    */
   dispose() {
+
+    // Delete all components - this way connections to all are removed.
+    this.getAllComponents().forEach( component => component.deleteEmitter.emit() );
+
     this.positionProperty.dispose();
 
     this.modelContainer.dispose();

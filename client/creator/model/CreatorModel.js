@@ -312,13 +312,6 @@ export default class CreatorModel {
     assert && assert( this.programs.includes( program ), 'program is not in this list of programs' );
     this.programs.splice( this.programs.indexOf( program ), 1 );
 
-    // Remove any model components in this container from the list of all components
-    program.modelContainer.allComponents.forEach( component => {
-      if ( this.allModelComponents.indexOf( component ) > -1 ) {
-        this.allModelComponents.remove( component );
-      }
-    } );
-
     this.programRemovedEmitter.emit( program );
 
     program.dispose();
