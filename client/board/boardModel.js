@@ -478,7 +478,7 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
  *
  * @param {string[]} componentNames
  * @param {function} listener - the callback for the Multilink
- * @param {Object} providedOptions - options for this call
+ * @param {Object} [providedOptions] - options for this call
  * @return {number}
  */
 paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOptions ) => {
@@ -547,6 +547,7 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
  *
  * @param {string[]} componentNames
  * @param {number} linkId
+ * @param {Object} [providedOptions]
  */
 paperLand.removeModelPropertyMultilink = ( componentNames, linkId, providedOptions ) => {
 

@@ -232,7 +232,7 @@ QUnit.test( 'addModelPropertyMultilink', assert => {
     listenerCount++;
   };
 
-  phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], listener );
+  const multilinkId = phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], listener );
   assert.ok( listenerCount === 0, 'components do not exist in the model and the listener should not have been called' );
 
   phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
@@ -251,11 +251,74 @@ QUnit.test( 'addModelPropertyMultilink', assert => {
   phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
   assert.ok( listenerCount === 3, 'Adding components again, listener should trigger' );
 
-  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], listener );
+  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], multilinkId );
 
   componentAProperty.value = 3;
   assert.ok( listenerCount === 3, 'Multilink was removed, changing value should not call listener' );
 
   phet.paperLand.removeModelComponent( 'componentAProperty' );
   phet.paperLand.removeModelComponent( 'componentAProperty' );
+} );
+
+/**
+ * Tests for the isWaitingForModelComponentProperty - a Property that indicates that the model is in a state where
+ * it is waiting for other components to be added.
+ */
+QUnit.test( 'isWaitingForModelComponentProperty', assert => {
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'initial state' );
+
+  // add model components
+  const componentAProperty = new phet.axon.Property( 0 );
+  const componentBProperty = new phet.axon.Property( 0 );
+
+  // add components - no observers yet so this should have no impact on the Property
+  phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'no observers, no change' );
+
+  phet.paperLand.addModelComponent( 'componentBProperty', componentBProperty );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'no observers, no change' );
+
+  // Add an observer while both are in the model - since both Properties are available upon the link,
+  // the model should not be in a waiting state
+  const multilinkId = phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], () => {} );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'both components are available, no waiting' );
+
+  // Remove the observer - should have no impact on the Property since the observer is totally removed
+  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], multilinkId );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'observer removed, no change' );
+
+  // Remove one of the components, then add back a multilink - Now the model is in a waiting state for the
+  // component to be added back before the observer can be attached
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+  const multilinkId2 = phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], () => {} );
+  assert.ok( phet.paperLand.isWaitingForModelComponentProperty.value, 'componentAProperty is missing, model is waiting' );
+
+  // Add the component back - the model should no longer be waiting
+  phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'componentAProperty added back, no longer waiting' );
+
+  // remove both components, the model should be in a waiting state for both
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+  phet.paperLand.removeModelComponent( 'componentBProperty' );
+  assert.ok( phet.paperLand.isWaitingForModelComponentProperty.value, 'both components are missing, model is waiting' );
+
+  // remove the multilink with both components gone, the model should no longer be waiting
+  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], multilinkId2 );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'multilink removed while both components available, no longer waiting' );
+
+  // Add the multilink back while no components are in the model, the model should be in a waiting state
+  const multilinkId3 = phet.paperLand.addModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], () => {} );
+  assert.ok( phet.paperLand.isWaitingForModelComponentProperty.value, 'no components available, model is waiting' );
+
+  // Add each component back until out of the waiting state
+  phet.paperLand.addModelComponent( 'componentAProperty', componentAProperty );
+  assert.ok( phet.paperLand.isWaitingForModelComponentProperty.value, 'one component available, model is waiting' );
+  phet.paperLand.addModelComponent( 'componentBProperty', componentBProperty );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'both components available, no longer waiting' );
+
+  // remove the components and the multilink
+  phet.paperLand.removeModelComponent( 'componentAProperty' );
+  phet.paperLand.removeModelComponent( 'componentBProperty' );
+  phet.paperLand.removeModelPropertyMultilink( [ 'componentAProperty', 'componentBProperty' ], multilinkId3 );
+  assert.ok( !phet.paperLand.isWaitingForModelComponentProperty.value, 'all removed, no longer waiting' );
 } );
