@@ -98,3 +98,9 @@
   display: inline;
   padding-left: 14px;
 }
+
+/*Custom styling and color for warning text (bootstrap has its own text-warning class but I want my own)*/
+:local(.warningText ) {
+  color: #FFC107;
+  font-size: 32px;
+}

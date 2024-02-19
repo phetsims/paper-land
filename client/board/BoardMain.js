@@ -2,7 +2,7 @@
  * Main react component for the Board page.
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './BoardMain.css';
 import PaperLandConsole from './PaperLandConsole.js';
 import PaperLandControls from './PaperLandControls.js';
@@ -19,6 +19,24 @@ export default function BoardMain( props ) {
 
   // a reference to the Display object, so it can be handed to various components
   const [ sceneryDisplay, setSceneryDisplay ] = useState( null );
+
+  // React state to control the warning message when waiting for the model component.
+  const [ isWatingForModelComponent, setIsWaitingForModelComponent ] = useState( false );
+
+  // Controls the React state from the axon Property.
+  useEffect( () => {
+    const watchingListener = isWaiting => {
+      setIsWaitingForModelComponent( isWaiting );
+    };
+    phet.paperLand.isWaitingForModelComponentProperty.link( watchingListener );
+
+    // A callback with cleanup work is returned by useEffect for every time this component
+    // is rendered
+    return () => {
+      phet.paperLand.isWaitingForModelComponentProperty.unlink( watchingListener );
+    };
+  }, [] );
+
 
   // Get the scenery display once it is created so it can be passed to various other components
   const modifySceneryDisplay = display => {
@@ -49,6 +67,7 @@ export default function BoardMain( props ) {
               sceneryDisplay={sceneryDisplay}
             ></PaperLandControls>
           </div>
+          <p className={styles.warningText} hidden={!isWatingForModelComponent}>&#9888; - Waiting for additional components...</p>
         </div>
       </div>
     </div>

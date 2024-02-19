@@ -25,10 +25,20 @@ let observerId = 0;
 const idToComponentAddedListenerMap = new Map();
 const idToComponentRemovedListenerMap = new Map();
 
+window.idToComponentAddedListenerMap = idToComponentAddedListenerMap;
+
 // Maps the unique ID returned by addModelObserver to a detach function that will remove listeners or do other
 // work when a model component is no longer available. The functions in this map actually detach from the
 // model component.
 const idToComponentDetachMap = new Map();
+
+// A property that notifies if the boardModel is waiting for a model component to be added by some program. Components
+// with connections to other programs may be waiting for another model component before they can be created. This
+// can be confusing for the user. This property is used to show a message to the user when this is happening.
+//
+// NOTE: This Property must be updated any time a listener is added or removed from the idToComponentAddedListenerMap.
+// TODO: Consider using a Property instead of a Map for the listeners, so we can listen for changes to the map.
+paperLand.isWaitingForModelComponentProperty = new window.phet.axon.Property( false );
 
 // Emits events when model components are added or removed, to be used in program code. Emits with two args
 // {string} - name of the model component
@@ -161,6 +171,10 @@ const addListenerToModelChangeEmitter = ( observerId, listener, addOrRemove ) =>
     listenerMap.set( observerId, [] );
   }
   listenerMap.get( observerId ).push( listener );
+
+  // If there are any listeners in the 'component added listener map', then the boardModel is in a state where
+  // it is waiting for a model component to be added.
+  phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
 
 /**
@@ -202,6 +216,10 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
       boardConsole.error( 'listener was not in the array for component' );
     }
   }
+
+  // If there are still any listeners in the 'component added listener map', then the boardModel is in a state where
+  // it is waiting for a model component to be added.
+  phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
 
 /**
@@ -282,13 +300,19 @@ const cleanupListenerMaps = observerId => {
     while ( componentAddedListeners.length > 0 ) {
       paperLand.modelComponentAddedEmitter.removeListener( componentAddedListeners.pop() );
     }
+    idToComponentAddedListenerMap.delete( observerId );
   }
   const componentRemovedListeners = idToComponentRemovedListenerMap.get( observerId );
   if ( componentRemovedListeners ) {
     while ( componentRemovedListeners.length > 0 ) {
       paperLand.modelComponentRemovedEmitter.removeListener( componentRemovedListeners.pop() );
     }
+    idToComponentRemovedListenerMap.delete( observerId );
   }
+
+  // If there are still any listeners in the 'component added listener map', then the boardModel is in a state where
+  // it is waiting for a model component to be added.
+  phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
 
 /**
