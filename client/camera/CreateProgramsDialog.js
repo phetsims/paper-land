@@ -50,7 +50,10 @@ class CreateProgramsDialog extends React.Component {
 
       // List of programs for the selected space.
       // TODO: This should be summary info instead of full program.
-      programsForSelectedSpace: []
+      programsForSelectedSpace: [],
+
+      // The filter string for searching through available programs to copy from.
+      copyProgramListFilterString: ''
     };
 
     this._setSpaceAndRequestPrograms( this.state.sourceSpace );
@@ -61,7 +64,7 @@ class CreateProgramsDialog extends React.Component {
    */
   _getFilteredProgramNames( programs ) {
     return programs
-      .filter( program => programMatchesFilterString( program.currentCode, this.props.data.copyProgramListFilterString ) )
+      .filter( program => programMatchesFilterString( program.currentCode, this.state.copyProgramListFilterString ) )
       .sort( ( programA, programB ) =>
         codeToName( programA.currentCode ).localeCompare( codeToName( programB.currentCode ) )
       );
@@ -175,7 +178,18 @@ class CreateProgramsDialog extends React.Component {
   render() {
 
     const {
-      data, setSearchString, hideDialog
+
+      // {boolean} - Controls showing state of this dialog
+      showCreateProgramDialog,
+
+      // {string[]} - List of available spaces
+      availableSpaces,
+
+      // {string} - Name of the selected space
+      selectedSpaceName,
+
+      // {function} - Hides the dialog
+      hideDialog
     } = this.props;
 
     const closeDialog = () => {
@@ -188,7 +202,7 @@ class CreateProgramsDialog extends React.Component {
         <Modal
           dialogClassName={styles.createProgramDialog}
           contentClassName={styles.createProgramContent}
-          show={data.showCreateProgramDialog}
+          show={showCreateProgramDialog}
           className={styles.dialog}
 
           // Called when the background pane is clicked
@@ -252,7 +266,7 @@ class CreateProgramsDialog extends React.Component {
                             checked={!this.state.selectFromAllSpaces}
                             onChange={() => {
                               this.setState( { selectFromAllSpaces: false } );
-                              this._setSpaceAndRequestPrograms( this.props.data.availableSpaces[ 0 ] );
+                              this._setSpaceAndRequestPrograms( availableSpaces[ 0 ] );
                             }}
                           />
                         </div>
@@ -265,7 +279,7 @@ class CreateProgramsDialog extends React.Component {
                            this._setSpaceAndRequestPrograms( event.target.value );
                          }}
                        >
-                         {data.availableSpaces.map( spaceName => {
+                         {availableSpaces.map( spaceName => {
                            return <option
                              key={spaceName}
                              value={spaceName}
@@ -279,8 +293,10 @@ class CreateProgramsDialog extends React.Component {
                         <input
                           name='filterCopyProgramListOn'
                           style={{ margin: '10px' }}
-                          value={data.copyProgramListFilterString}
-                          onChange={e => setSearchString( e.target.value )}
+                          value={this.state.copyProgramListFilterString}
+                          onChange={e => {
+                            this.setState( { copyProgramListFilterString: e.target.value } );
+                          }}
                         />
                       </label>
                       <Form.Group as={Col} controlId='my_multiselect_field'>
@@ -346,8 +362,7 @@ class CreateProgramsDialog extends React.Component {
             <Button
               variant='light'
               onClick={async () => {
-                await this._handleCreateNewProgramsButtonClicked( data.selectedSpaceName );
-                alert( `Created ${this.state.codeFromSelectedPrograms.length} new program(s).` );
+                await this._handleCreateNewProgramsButtonClicked( selectedSpaceName );
                 closeDialog();
               }}
               disabled={this.state.programCreateMode === ProgramCreateModes.COPY_EXISTING &&

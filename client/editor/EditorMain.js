@@ -3,6 +3,7 @@ import randomColor from 'randomcolor';
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
+import CreateProgramsDialog from '../camera/CreateProgramsDialog.js';
 import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, getSaveString, programMatchesFilterString } from '../utils';
 import CodeSnippetsDialog from './CodeSnippetsDialog.js';
@@ -23,7 +24,10 @@ export default class EditorMain extends React.Component {
       debugInfo: {},
       showSnippetsDialog: false,
       saveSuccess: true, // Did the save command succeed?
-      showSaveModal: false
+      showSaveModal: false,
+
+      // True when the user has requested to create a new program
+      showCreateProgramDialog: false
     };
 
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
@@ -31,6 +35,7 @@ export default class EditorMain extends React.Component {
   }
 
   componentDidMount() {
+    this._updateSpacesList();
     this._pollSpaceUrl();
     this._pollDebugUrl();
   }
@@ -158,6 +163,25 @@ export default class EditorMain extends React.Component {
     );
   }
 
+  /**
+   * Retrieve the list of spaces that are available to copy programs from and use it to
+   * populate the spaces for the CreateProgramsDialog.
+   * @private
+   */
+  _updateSpacesList = () => {
+    const spacesListUrl = new URL( 'api/spaces-list', window.location.origin ).toString();
+    xhr.get( spacesListUrl, { json: true }, ( error, response ) => {
+      if ( error ) {
+        console.error( error );
+      }
+      else {
+        if ( Array.isArray( response.body ) ) {
+          this.setState( { availableSpaces: response.body } );
+        }
+      }
+    } );
+  };
+
   _print = () => {
     const { code } = this.state;
     xhr.post(
@@ -232,6 +256,7 @@ export default class EditorMain extends React.Component {
     const errors = this.state.debugInfo.errors || [];
     const logs = this.state.debugInfo.logs || [];
     const showSnippetsDialog = this.state.showSnippetsDialog;
+    const showCreateProgramDialog = this.state.showCreateProgramDialog;
 
     return (
       <div className={styles.root}>
@@ -265,6 +290,14 @@ export default class EditorMain extends React.Component {
           <CodeSnippetsDialog
             onClose={() => this.setState( { showSnippetsDialog: false } )}
           ></CodeSnippetsDialog>
+        )}
+        {showCreateProgramDialog && (
+          <CreateProgramsDialog
+            showCreateProgramDialog={showCreateProgramDialog}
+            availableSpaces={this.state.availableSpaces}
+            selectedSpaceName={this.props.spaceName}
+            hideDialog={() => this.setState( { showCreateProgramDialog: false } )}
+          />
         )}
         <div className={styles.sidebar}>
 
@@ -318,6 +351,10 @@ export default class EditorMain extends React.Component {
                   );
                 } )}
             </select>
+          </div>
+
+          <div className={styles.sidebarSection}>
+            <button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create New Program(s)</button>
           </div>
 
           {selectedProgram && (
