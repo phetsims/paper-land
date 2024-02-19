@@ -1,5 +1,7 @@
 /* global cv */
 
+/* eslint-disable author-annotation */
+
 // This file uses an object destructuring technique for function parameters that PhET doesn't use, and that triggers
 // some of PhET's lint rules.  To compensate, indentation checking is not done for this file.
 /* eslint-disable indent */
@@ -150,6 +152,38 @@ function colorIndexesForShape( shape, keyPoints, videoMat, colorsRGB ) {
   return shapeColors.map( color => colorIndexForColor( color, closestColors ) );
 }
 
+/**
+ * Find the program that the marker is on. Based no based on
+ * http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
+ *
+ * @param markerPosition - center of the marker
+ * @param listOfPrograms - all Programs to see if the marker is inside any of them
+ * @returns {*} - program object or null if not inside a program
+ */
+function findProgramContainingMarker( markerPosition, listOfPrograms ) {
+  return listOfPrograms.find( ( { points } ) => {
+    for ( let i = 0; i < 4; i++ ) {
+      const a = i;
+      const b = ( i + 1 ) % 4;
+
+      const sideA = diff( points[ a ], markerPosition );
+      const sideB = diff( points[ b ], markerPosition );
+
+      let angle = Math.atan2( sideB.y, sideB.x ) - Math.atan2( sideA.y, sideA.x );
+
+      if ( sideB.y < 0 && sideA.y > 0 ) {
+        angle += 2 * Math.PI;
+      }
+
+      if ( angle > Math.PI || angle < 0 ) {
+        return false;
+      }
+    }
+
+    return true;
+  } );
+}
+
 export default function detectPrograms( {
                                           config,
                                           videoCapture,
@@ -169,12 +203,12 @@ export default function detectPrograms( {
 
   const videoMat = new cv.Mat( videoCapture.video.height, videoCapture.video.width, cv.CV_8UC4 );
 
+  // Read the video feed from the camera and set pixels to the videoMat if the camera is enabled. Otherwise
+  // set the videoMat to just a black screen.
   if ( config.cameraEnabled ) {
     videoCapture.read( videoMat );
   }
   else {
-
-    // set the videoMat to just a black screen
     videoMat.setTo( new cv.Scalar( 0, 0, 0, 255 ) );
   }
 
@@ -224,260 +258,309 @@ export default function detectPrograms( {
   const videoROI = knobPointsToROI( config.knobPoints, videoMat );
   const clippedVideoMat = videoMat.roi( videoROI );
 
-  const allPoints = simpleBlobDetector( clippedVideoMat, {
-    filterByCircularity: true,
-    minCircularity: 0.9,
-    filterByInertia: false,
+  // The points detected by the blob detector using OpenCV
+  let allPoints = [];
 
-    // values that are controlled by the interface
-    faster: config.faster,
-    thresholdStep: config.thresholdStep,
-    minThreshold: config.minThreshold,
-    maxThreshold: config.maxThreshold,
-    minArea: config.minArea,
-    maxArea: config.maxArea,
-    minDistBetweenBlobs: config.minDistBetweenBlobs,
-    scaleFactor: scaleFactor
-  } );
+  // Points that are large enough to be considered markers
+  let markers = [];
 
-  clippedVideoMat.delete();
-  allPoints.forEach( keyPoint => {
-    keyPoint.matchedShape = false; // is true if point has been recognised as part of a shape
-    keyPoint.pt.x += videoROI.x;
-    keyPoint.pt.y += videoROI.y;
+  // All detected points from the blob detector that are not markers
+  let keyPoints = [];
 
-    // Give each `keyPoint` an `avgColor` and `colorIndex`.
-    keyPoint.avgColor = keyPointToAvgColor( keyPoint, videoMat );
-    keyPoint.colorIndex =
-      keyPoint.colorIndex || colorIndexForColor( keyPoint.avgColor, config.colorsRGB );
-  } );
+  // The list of found programs to render
+  const programsToRender = [];
 
-  let [ markers, keyPoints ] = allBlobsAreKeyPoints
-                               ? [ [], allPoints ]
-                               : partition( allPoints, ( { size } ) => size > markerSizeThreshold );
+  // The vectors between corners of the detected programs
+  const vectorsBetweenCorners = { ...( dataToRemember.vectorsBetweenCorners || {} ) };
 
-  // Sort by x position. We rely on this when scanning through the circles
-  // to find connected components, and when calibrating.
-  keyPoints = sortBy( keyPoints, keyPoint => keyPoint.pt.x );
+  // If the camera is enabled, run the blob detector, parse detected keypoints, and use them to find programs.
+  // Otherwise skip to get better performance when using debug programs.
+  if ( config.cameraEnabled ) {
+    allPoints = simpleBlobDetector( clippedVideoMat, {
+      filterByCircularity: true,
+      minCircularity: 0.9,
+      filterByInertia: false,
 
-  // Build connected components by scanning through the `keyPoints`, which
-  // are sorted by x-position.
-  const neighborIndexes = [];
-  for ( let i = 0; i < keyPoints.length; i++ ) {
-    neighborIndexes[ i ] = neighborIndexes[ i ] || [];
-    for ( let j = i + 1; j < keyPoints.length; j++ ) {
-      neighborIndexes[ j ] = neighborIndexes[ j ] || [];
+      // values that are controlled by the interface
+      faster: config.faster,
+      thresholdStep: config.thresholdStep,
+      minThreshold: config.minThreshold,
+      maxThreshold: config.maxThreshold,
+      minArea: config.minArea,
+      maxArea: config.maxArea,
+      minDistBetweenBlobs: config.minDistBetweenBlobs,
+      scaleFactor: scaleFactor
+    } );
 
-      // Break early if we are too far on the right anyway.
-      if ( keyPoints[ j ].pt.x - keyPoints[ i ].pt.x > keyPoints[ i ].size * 3 ) {break;}
+    allPoints.forEach( keyPoint => {
+      keyPoint.matchedShape = false; // is true if point has been recognised as part of a shape
+      keyPoint.pt.x += videoROI.x;
+      keyPoint.pt.y += videoROI.y;
 
-      if (
-        norm( diff( keyPoints[ i ].pt, keyPoints[ j ].pt ) ) <
-        ( keyPoints[ i ].size + keyPoints[ j ].size ) * 0.9
-      ) {
-        neighborIndexes[ i ].push( j );
-        neighborIndexes[ j ].push( i );
+      // Give each `keyPoint` an `avgColor` and `colorIndex`.
+      keyPoint.avgColor = keyPointToAvgColor( keyPoint, videoMat );
+      keyPoint.colorIndex =
+        keyPoint.colorIndex || colorIndexForColor( keyPoint.avgColor, config.colorsRGB );
+    } );
 
-        if ( displayMat && config.showOverlayComponentLines ) {
+    [ markers, keyPoints ] = allBlobsAreKeyPoints
+                             ? [ [], allPoints ]
+                             : partition( allPoints, ( { size } ) => size > markerSizeThreshold );
 
-          // Draw lines between components.
-          cv.line( displayMat, keyPoints[ i ].pt, keyPoints[ j ].pt, [ 255, 255, 255, 255 ] );
-        }
-      }
-    }
-  }
+    // Sort by x position. We rely on this when scanning through the circles
+    // to find connected components, and when calibrating.
+    keyPoints = sortBy( keyPoints, keyPoint => keyPoint.pt.x );
 
-  // Find acyclical shapes of 7, and put ids into `newDataToRemember`.
-  const seenIndexes = new window.Set();
-  const keyPointSizes = [];
-  const pointsById = {};
-  const directionVectorsById = {};
-  for ( let i = 0; i < keyPoints.length; i++ ) {
-    if ( neighborIndexes[ i ].length === 1 && !seenIndexes.has( i ) ) {
-      const shape = [ i ]; // Initialise with the first index, then run findShape with 7-1.
-      if ( findShape( shape, neighborIndexes, 7 - 1 ) ) {
-        shape.forEach( index => seenIndexes.add( index ) );
+    // Build connected components by scanning through the `keyPoints`, which
+    // are sorted by x-position.
+    const neighborIndexes = [];
+    for ( let i = 0; i < keyPoints.length; i++ ) {
+      neighborIndexes[ i ] = neighborIndexes[ i ] || [];
+      for ( let j = i + 1; j < keyPoints.length; j++ ) {
+        neighborIndexes[ j ] = neighborIndexes[ j ] || [];
 
-        // Reverse the array if it's the wrong way around.
-        const mag = cross(
-          diff( keyPoints[ shape[ 0 ] ].pt, keyPoints[ shape[ 3 ] ].pt ),
-          diff( keyPoints[ shape[ 6 ] ].pt, keyPoints[ shape[ 3 ] ].pt )
-        );
-        if ( mag > 100 ) {
+        // Break early if we are too far on the right anyway.
+        if ( keyPoints[ j ].pt.x - keyPoints[ i ].pt.x > keyPoints[ i ].size * 3 ) {break;}
 
-          // Use 100 to avoid straight line. We already depend on sorting by x for that.
-          shape.reverse();
-        }
+        if (
+          norm( diff( keyPoints[ i ].pt, keyPoints[ j ].pt ) ) <
+          ( keyPoints[ i ].size + keyPoints[ j ].size ) * 0.9
+        ) {
+          neighborIndexes[ i ].push( j );
+          neighborIndexes[ j ].push( i );
 
-        const colorIndexes = colorIndexesForShape( shape, keyPoints, videoMat, config.colorsRGB );
-        const id = shapeToId( colorIndexes );
-        const cornerNum = shapeToCornerNum( colorIndexes );
+          if ( displayMat && config.showOverlayComponentLines ) {
 
-        if ( cornerNum > -1 ) {
-
-          // Store the colorIndexes so we can render them later for debugging.
-          colorIndexes.forEach( ( colorIndex, shapePointIndex ) => {
-            keyPoints[ shape[ shapePointIndex ] ].colorIndex = colorIndex;
-          } );
-
-          pointsById[ id ] = pointsById[ id ] || [];
-          pointsById[ id ][ cornerNum ] = keyPoints[ shape[ 3 ] ].pt;
-          directionVectorsById[ id ] = directionVectorsById[ id ] || [];
-          directionVectorsById[ id ][ cornerNum ] = diff(
-            keyPoints[ shape[ 6 ] ].pt,
-            keyPoints[ shape[ 3 ] ].pt
-          );
-
-          shape.forEach( index => keyPointSizes.push( keyPoints[ index ].size ) );
-
-          if ( displayMat && config.showOverlayShapeId ) {
-
-            // Draw id and corner name.
-            cv.putText(
-              displayMat,
-              `${id},${clientConstants.cornerNames[ cornerNum ]}`,
-              div( add( keyPoints[ shape[ 0 ] ].pt, keyPoints[ shape[ 6 ] ].pt ), { x: 2, y: 2 } ),
-              cv.FONT_HERSHEY_DUPLEX,
-              0.5,
-              [ 0, 0, 255, 255 ]
-            );
+            // Draw lines between components.
+            cv.line( displayMat, keyPoints[ i ].pt, keyPoints[ j ].pt, [ 255, 255, 255, 255 ] );
           }
         }
       }
     }
-  }
-  const avgKeyPointSize =
-    keyPointSizes.reduce( ( sum, value ) => sum + value, 0 ) / keyPointSizes.length;
 
-  allPoints.forEach( keyPoint => {
-    if ( displayMat ) {
-      if ( config.showOverlayKeyPointCircles ) {
+    // Find acyclical shapes of 7, and put ids into `newDataToRemember`.
+    const seenIndexes = new window.Set();
+    const keyPointSizes = [];
+    const pointsById = {};
+    const directionVectorsById = {};
+    for ( let i = 0; i < keyPoints.length; i++ ) {
+      if ( neighborIndexes[ i ].length === 1 && !seenIndexes.has( i ) ) {
+        const shape = [ i ]; // Initialise with the first index, then run findShape with 7-1.
+        if ( findShape( shape, neighborIndexes, 7 - 1 ) ) {
+          shape.forEach( index => seenIndexes.add( index ) );
 
-        // Draw circles around `keyPoints`.
-        const color = config.colorsRGB[ keyPoint.colorIndex ];
-        cv.circle( displayMat, keyPoint.pt, keyPoint.size / 2 + 3, color, 2 );
-      }
+          // Reverse the array if it's the wrong way around.
+          const mag = cross(
+            diff( keyPoints[ shape[ 0 ] ].pt, keyPoints[ shape[ 3 ] ].pt ),
+            diff( keyPoints[ shape[ 6 ] ].pt, keyPoints[ shape[ 3 ] ].pt )
+          );
+          if ( mag > 100 ) {
 
-      if ( config.showOverlayKeyPointText ) {
+            // Use 100 to avoid straight line. We already depend on sorting by x for that.
+            shape.reverse();
+          }
 
-        // Draw text inside circles.
-        cv.putText(
-          displayMat,
-          clientConstants.colorNames[ keyPoint.colorIndex ],
-          add( keyPoint.pt, { x: -6, y: 6 } ),
-          cv.FONT_HERSHEY_DUPLEX,
-          0.6,
-          [ 255, 255, 255, 255 ]
-        );
-      }
-    }
-  } );
+          const colorIndexes = colorIndexesForShape( shape, keyPoints, videoMat, config.colorsRGB );
+          const id = shapeToId( colorIndexes );
+          const cornerNum = shapeToCornerNum( colorIndexes );
 
-  const programsToRender = [];
-  const vectorsBetweenCorners = { ...( dataToRemember.vectorsBetweenCorners || {} ) };
-  Object.keys( pointsById ).forEach( id => {
-    const points = pointsById[ id ];
-    const potentialPoints = [];
-    vectorsBetweenCorners[ id ] = vectorsBetweenCorners[ id ] || {};
-    const dirVecs = directionVectorsById[ id ];
+          if ( cornerNum > -1 ) {
 
-    // Store/update the angles and magnitudes between known points.
-    for ( let i = 0; i < 4; i++ ) {
-      for ( let j = 0; j < 4; j++ ) {
-        if ( i !== j && points[ i ] && points[ j ] ) {
-          const diffVec = diff( points[ j ], points[ i ] );
-          vectorsBetweenCorners[ id ][ `${i}->${j}` ] = {
-            angle: Math.atan2( diffVec.y, diffVec.x ) - Math.atan2( dirVecs[ i ].y, dirVecs[ i ].x ),
-            magnitude: norm( diffVec ),
+            // Store the colorIndexes so we can render them later for debugging.
+            colorIndexes.forEach( ( colorIndex, shapePointIndex ) => {
+              keyPoints[ shape[ shapePointIndex ] ].colorIndex = colorIndex;
+            } );
 
-            // Once we see two corners for real, mark them as not mirrored, so
-            // we won't override this when mirroring angles/magnitudes.
-            mirrored: false
-          };
+            pointsById[ id ] = pointsById[ id ] || [];
+            pointsById[ id ][ cornerNum ] = keyPoints[ shape[ 3 ] ].pt;
+            directionVectorsById[ id ] = directionVectorsById[ id ] || [];
+            directionVectorsById[ id ][ cornerNum ] = diff(
+              keyPoints[ shape[ 6 ] ].pt,
+              keyPoints[ shape[ 3 ] ].pt
+            );
+
+            shape.forEach( index => keyPointSizes.push( keyPoints[ index ].size ) );
+
+            if ( displayMat && config.showOverlayShapeId ) {
+
+              // Draw id and corner name.
+              cv.putText(
+                displayMat,
+                `${id},${clientConstants.cornerNames[ cornerNum ]}`,
+                div( add( keyPoints[ shape[ 0 ] ].pt, keyPoints[ shape[ 6 ] ].pt ), { x: 2, y: 2 } ),
+                cv.FONT_HERSHEY_DUPLEX,
+                0.5,
+                [ 0, 0, 255, 255 ]
+              );
+            }
+          }
         }
       }
     }
+    const avgKeyPointSize =
+      keyPointSizes.reduce( ( sum, value ) => sum + value, 0 ) / keyPointSizes.length;
 
-    // Assuming the paper is rectangular, mirror angles/magnitudes.
-    for ( let i = 0; i < 4; i++ ) {
-      for ( let j = 0; j < 4; j++ ) {
-        const thisSide = `${i}->${j}`;
-        const otherSide = `${( i + 2 ) % 4}->${( j + 2 ) % 4}`;
-        if (
-          vectorsBetweenCorners[ id ][ thisSide ] &&
-          ( !vectorsBetweenCorners[ id ][ otherSide ] || vectorsBetweenCorners[ id ][ otherSide ].mirrored )
-        ) {
-          vectorsBetweenCorners[ id ][ otherSide ] = {
-            ...vectorsBetweenCorners[ id ][ thisSide ],
-            mirrored: true
-          };
-        }
-      }
-    }
-
-    // Find potential point for unknown points if we know the angle+magnitude with
-    // another point.
-    for ( let i = 0; i < 4; i++ ) {
-      for ( let j = 0; j < 4; j++ ) {
-        if ( points[ i ] && !points[ j ] && vectorsBetweenCorners[ id ][ `${i}->${j}` ] ) {
-          const { angle, magnitude } = vectorsBetweenCorners[ id ][ `${i}->${j}` ];
-          const newAngle = angle + Math.atan2( dirVecs[ i ].y, dirVecs[ i ].x );
-          potentialPoints[ j ] = potentialPoints[ j ] || [];
-          potentialPoints[ j ].push( {
-            x: points[ i ].x + magnitude * Math.cos( newAngle ),
-            y: points[ i ].y + magnitude * Math.sin( newAngle )
-          } );
-        }
-      }
-    }
-
-    if ( !config.requireAllCorners ) {
-
-      // Take the average of all potential points for each unknown point.
-      for ( let i = 0; i < 4; i++ ) {
-        if ( potentialPoints[ i ] ) {
-          points[ i ] = { x: 0, y: 0 };
-          potentialPoints[ i ].forEach( vec => {
-            points[ i ].x += vec.x / potentialPoints[ i ].length;
-            points[ i ].y += vec.y / potentialPoints[ i ].length;
-          } );
-        }
-      }
-    }
-
-    if ( points[ 0 ] && points[ 1 ] && points[ 2 ] && points[ 3 ] ) {
-      const scaledPoints = shrinkPoints( avgKeyPointSize * 0.75, points ).map( point =>
-        projectPointToUnitSquare( point, videoMat, config.knobPoints )
-      );
-
-      const programToRender = {
-        points: scaledPoints,
-        number: id,
-        projectionMatrix: forwardProjectionMatrixForPoints( scaledPoints ).adjugate()
-      };
-      programsToRender.push( programToRender );
-
+    allPoints.forEach( keyPoint => {
       if ( displayMat ) {
-        const reprojectedPoints = programToRender.points.map( mapToKnobPointMatrix );
+        if ( config.showOverlayKeyPointCircles ) {
 
-        if ( config.showOverlayProgram ) {
-          cv.line( displayMat, reprojectedPoints[ 0 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
-          cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
-          cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 3 ], [ 0, 0, 255, 255 ] );
-          cv.line( displayMat, reprojectedPoints[ 3 ], reprojectedPoints[ 0 ], [ 0, 0, 255, 255 ] );
-          cv.line(
+          // Draw circles around `keyPoints`.
+          const color = config.colorsRGB[ keyPoint.colorIndex ];
+          cv.circle( displayMat, keyPoint.pt, keyPoint.size / 2 + 3, color, 2 );
+        }
+
+        if ( config.showOverlayKeyPointText ) {
+
+          // Draw text inside circles.
+          cv.putText(
             displayMat,
-            div( add( reprojectedPoints[ 2 ], reprojectedPoints[ 3 ] ), { x: 2, y: 2 } ),
-            div( add( reprojectedPoints[ 0 ], reprojectedPoints[ 1 ] ), { x: 2, y: 2 } ),
-            [ 0, 0, 255, 255 ]
+            clientConstants.colorNames[ keyPoint.colorIndex ],
+            add( keyPoint.pt, { x: -6, y: 6 } ),
+            cv.FONT_HERSHEY_DUPLEX,
+            0.6,
+            [ 255, 255, 255, 255 ]
           );
         }
-        if ( config.showWhiskerLines ) {
-          drawWhiskers( programToRender.points, displayMat, programToRender.number );
+      }
+    } );
+
+    Object.keys( pointsById ).forEach( id => {
+      const points = pointsById[ id ];
+      const potentialPoints = [];
+      vectorsBetweenCorners[ id ] = vectorsBetweenCorners[ id ] || {};
+      const dirVecs = directionVectorsById[ id ];
+
+      // Store/update the angles and magnitudes between known points.
+      for ( let i = 0; i < 4; i++ ) {
+        for ( let j = 0; j < 4; j++ ) {
+          if ( i !== j && points[ i ] && points[ j ] ) {
+            const diffVec = diff( points[ j ], points[ i ] );
+            vectorsBetweenCorners[ id ][ `${i}->${j}` ] = {
+              angle: Math.atan2( diffVec.y, diffVec.x ) - Math.atan2( dirVecs[ i ].y, dirVecs[ i ].x ),
+              magnitude: norm( diffVec ),
+
+              // Once we see two corners for real, mark them as not mirrored, so
+              // we won't override this when mirroring angles/magnitudes.
+              mirrored: false
+            };
+          }
         }
       }
-    }
-  } );
+
+      // Assuming the paper is rectangular, mirror angles/magnitudes.
+      for ( let i = 0; i < 4; i++ ) {
+        for ( let j = 0; j < 4; j++ ) {
+          const thisSide = `${i}->${j}`;
+          const otherSide = `${( i + 2 ) % 4}->${( j + 2 ) % 4}`;
+          if (
+            vectorsBetweenCorners[ id ][ thisSide ] &&
+            ( !vectorsBetweenCorners[ id ][ otherSide ] || vectorsBetweenCorners[ id ][ otherSide ].mirrored )
+          ) {
+            vectorsBetweenCorners[ id ][ otherSide ] = {
+              ...vectorsBetweenCorners[ id ][ thisSide ],
+              mirrored: true
+            };
+          }
+        }
+      }
+
+      // Find potential point for unknown points if we know the angle+magnitude with
+      // another point.
+      for ( let i = 0; i < 4; i++ ) {
+        for ( let j = 0; j < 4; j++ ) {
+          if ( points[ i ] && !points[ j ] && vectorsBetweenCorners[ id ][ `${i}->${j}` ] ) {
+            const { angle, magnitude } = vectorsBetweenCorners[ id ][ `${i}->${j}` ];
+            const newAngle = angle + Math.atan2( dirVecs[ i ].y, dirVecs[ i ].x );
+            potentialPoints[ j ] = potentialPoints[ j ] || [];
+            potentialPoints[ j ].push( {
+              x: points[ i ].x + magnitude * Math.cos( newAngle ),
+              y: points[ i ].y + magnitude * Math.sin( newAngle )
+            } );
+          }
+        }
+      }
+
+      if ( !config.requireAllCorners ) {
+
+        // Take the average of all potential points for each unknown point.
+        for ( let i = 0; i < 4; i++ ) {
+          if ( potentialPoints[ i ] ) {
+            points[ i ] = { x: 0, y: 0 };
+            potentialPoints[ i ].forEach( vec => {
+              points[ i ].x += vec.x / potentialPoints[ i ].length;
+              points[ i ].y += vec.y / potentialPoints[ i ].length;
+            } );
+          }
+        }
+      }
+
+      if ( points[ 0 ] && points[ 1 ] && points[ 2 ] && points[ 3 ] ) {
+        const scaledPoints = shrinkPoints( avgKeyPointSize * 0.75, points ).map( point =>
+          projectPointToUnitSquare( point, videoMat, config.knobPoints )
+        );
+
+        const programToRender = {
+          points: scaledPoints,
+          number: id,
+          projectionMatrix: forwardProjectionMatrixForPoints( scaledPoints ).adjugate()
+        };
+        programsToRender.push( programToRender );
+
+        if ( displayMat ) {
+          const reprojectedPoints = programToRender.points.map( mapToKnobPointMatrix );
+
+          if ( config.showOverlayProgram ) {
+            cv.line( displayMat, reprojectedPoints[ 0 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
+            cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 1 ], [ 0, 0, 255, 255 ] );
+            cv.line( displayMat, reprojectedPoints[ 2 ], reprojectedPoints[ 3 ], [ 0, 0, 255, 255 ] );
+            cv.line( displayMat, reprojectedPoints[ 3 ], reprojectedPoints[ 0 ], [ 0, 0, 255, 255 ] );
+            cv.line(
+              displayMat,
+              div( add( reprojectedPoints[ 2 ], reprojectedPoints[ 3 ] ), { x: 2, y: 2 } ),
+              div( add( reprojectedPoints[ 0 ], reprojectedPoints[ 1 ] ), { x: 2, y: 2 } ),
+              [ 0, 0, 255, 255 ]
+            );
+          }
+          if ( config.showWhiskerLines ) {
+            drawWhiskers( programToRender.points, displayMat, programToRender.number );
+          }
+        }
+      }
+    } );
+
+    // Markers
+    markers = markers.map( ( {
+                               colorIndex, avgColor, pt, size
+                             } ) => {
+      const markerPosition = projectPointToUnitSquare( pt, videoMat, config.knobPoints );
+
+      const colorName = {
+        0: 'red',
+        1: 'green',
+        2: 'blue',
+        3: 'black'
+      }[ colorIndex ];
+
+      // find out on which paper the marker is
+      const matchingProgram = findProgramContainingMarker( markerPosition, programsToRender );
+
+      // draw the marker to the camera video
+      if ( displayMat ) {
+        const color = config.colorsRGB[ colorIndex ];
+        cv.circle( displayMat, pt, size / 2 + 3, color, cv.FILLED );
+      }
+
+      return {
+        positionOnPaper:
+          matchingProgram && projectPoint( markerPosition, matchingProgram.projectionMatrix ),
+        paperNumber: matchingProgram && matchingProgram.number,
+        size,
+        position: markerPosition,
+        color: avgColor,
+        colorName
+      };
+    } );
+  }
 
   // Debug programs
   debugPrograms.forEach( ( { points, number } ) => {
@@ -496,71 +579,6 @@ export default function detectPrograms( {
     if ( displayMat && config.showWhiskerLines ) {
       drawWhiskers( scaledPoints, displayMat, debugProgram.number );
     }
-  } );
-
-  /**
-   * Find the program that the marker is on. Based no based on
-   * http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
-   *
-   * @param markerPosition - center of the marker
-   * @param listOfPrograms - all Programs to see if the marker is inside any of them
-   * @returns {*} - program object or null if not inside a program
-   */
-  const findProgramContainingMarker = ( markerPosition, listOfPrograms ) => {
-    return listOfPrograms.find( ( { points } ) => {
-      for ( let i = 0; i < 4; i++ ) {
-        const a = i;
-        const b = ( i + 1 ) % 4;
-
-        const sideA = diff( points[ a ], markerPosition );
-        const sideB = diff( points[ b ], markerPosition );
-
-        let angle = Math.atan2( sideB.y, sideB.x ) - Math.atan2( sideA.y, sideA.x );
-
-        if ( sideB.y < 0 && sideA.y > 0 ) {
-          angle += 2 * Math.PI;
-        }
-
-        if ( angle > Math.PI || angle < 0 ) {
-          return false;
-        }
-      }
-
-      return true;
-    } );
-  };
-
-  // Markers
-  markers = markers.map( ( {
-                             colorIndex, avgColor, pt, size
-                           } ) => {
-    const markerPosition = projectPointToUnitSquare( pt, videoMat, config.knobPoints );
-
-    const colorName = {
-      0: 'red',
-      1: 'green',
-      2: 'blue',
-      3: 'black'
-    }[ colorIndex ];
-
-    // find out on which paper the marker is
-    const matchingProgram = findProgramContainingMarker( markerPosition, programsToRender );
-
-    // draw the marker to the camera video
-    if ( displayMat ) {
-      const color = config.colorsRGB[ colorIndex ];
-      cv.circle( displayMat, pt, size / 2 + 3, color, cv.FILLED );
-    }
-
-    return {
-      positionOnPaper:
-        matchingProgram && projectPoint( markerPosition, matchingProgram.projectionMatrix ),
-      paperNumber: matchingProgram && matchingProgram.number,
-      size,
-      position: markerPosition,
-      color: avgColor,
-      colorName
-    };
   } );
 
   // Debug markers
@@ -585,7 +603,9 @@ export default function detectPrograms( {
     } );
   } );
 
+  // memory management, Mats must be manually deleted
   videoMat.delete();
+  clippedVideoMat.delete();
 
   return {
     keyPoints,
