@@ -639,11 +639,6 @@ export default class CameraMain extends React.Component {
     // variable for event keys in the accordion box
     let accordionItemEventKey = 0;
 
-    // Update the readOnly state of the editor if necessary.
-    if ( this._editor && this._editor.getConfiguration().readOnly !== !okayToEditSelectedProgram ) {
-      this._editor.updateOptions( { readOnly: !okayToEditSelectedProgram } );
-    }
-
     const filteredPrograms = this.state.spaceData.programs.filter( program => programMatchesFilterString(
       program.currentCode, this.state.programListFilterString
     ) );
@@ -765,10 +760,10 @@ export default class CameraMain extends React.Component {
                     language='javascript'
                     theme='vs-dark'
                     value={this.state.codeInEditor || '// Select Program'}
-                    onChange={code => this.setState( { codeInEditor: code } )}
                     editorDidMount={this._onEditorDidMount.bind( this )}
                     width={videoAndEditorWidth}
                     options={{
+                      readOnly: true,
                       tabSize: 2,
                       fontSize: '16px',
                       minimap: { enabled: false },
