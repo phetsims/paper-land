@@ -20,7 +20,6 @@ import { printCalibrationPage, printPage } from './printPdf';
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
 const CAMERA_DATA_POLLING_PERIOD = 2; // in seconds
-const PROGRAM_DELETE_WARNING = 'This will remove the program for all users of the database.\nAre you sure you want to delete this program?';
 const OPEN_SIDEBAR_WIDTH = parseInt( styles.cameraMainSidebarWidth, 10 );
 
 // Produces a unique ID for each debug marker component, important for React to
@@ -192,16 +191,11 @@ export default class CameraMain extends React.Component {
               program => program.number === this.state.programInEditor.number
             ) !== undefined;
 
-            // If an edit came from the Creator, we want to allow full overwrite of all code and programs
-            if ( !selectedProgramInSpace || localStorage.paperProgramsCreatedWithCreator === 'true' ) {
+            if ( !selectedProgramInSpace ) {
 
               // The selected space does not contain the currently selected program, probably because the user changed
               // which space was selected.  Load a default program from the currently selected space into the editor.
               this._loadEditorWithDefault();
-
-              // we just loaded programs, clear the flag - this is set to true by the Creator application, to
-              // notify the camera that a full overwrite of all programs is necessary
-              localStorage.paperProgramsCreatedWithCreator = false;
             }
           } );
         }
@@ -502,34 +496,6 @@ export default class CameraMain extends React.Component {
   }
 
   /**
-   * Delete the specified program.
-   * @param {string} spaceName
-   * @param {string|number} programNumber
-   * @private
-   */
-  _deleteProgram( spaceName, programNumber ) {
-    xhr.get(
-      getApiUrl( spaceName, `/delete/${programNumber}` ),
-      {
-        json: {}
-      },
-      ( error, response ) => {
-        if ( error ) {
-          alert( `Error deleting program: ${error}` );
-        }
-        else if ( response.body.numberOfProgramsDeleted !== 1 ) {
-          if ( response.body.numberOfProgramsDeleted === 0 ) {
-            alert( 'Delete failed - program not found in database.' );
-          }
-          else {
-            alert( `Unexpected number of programs deleted: ${response.body.numberOfProgramsDeleted}` );
-          }
-        }
-      }
-    );
-  }
-
-  /**
    * Load the editor with the default program, which is the program with the lowest number if there are some, or a
    * default string if not.
    * @private
@@ -737,19 +703,6 @@ export default class CameraMain extends React.Component {
                       <span className={styles.iconButtonSpan}>
                         <img src={'media/images/upload.svg'} alt={'Save icon'}/>
                         Save to DB
-                      </span>
-                    </Button>
-                    <Button
-                      className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
-                      onClick={() => {
-                        if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
-                          this._deleteProgram( this.state.selectedSpaceName, this.state.programInEditor.number );
-                        }
-                      }}
-                    >
-                      <span className={styles.iconButtonSpan}>
-                        <img src={'media/images/trash3.svg'} alt={'Delete icon'}/>
-                        Delete
                       </span>
                     </Button>
                   </>

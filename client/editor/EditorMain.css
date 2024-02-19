@@ -48,6 +48,11 @@
   font: 20px sans-serif;
 }
 
+:local(.iconButtonSpan) {
+  display: flex;
+  gap: 5px;
+}
+
 :local(.saveAlert ) {
   position: fixed;
   top: 50%;

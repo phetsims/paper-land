@@ -4,9 +4,12 @@ import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import SaveAlert from '../common/SaveAlert.js';
-import { codeToName, getApiUrl, getSaveString, inDevMode, programMatchesFilterString } from '../utils';
+import { codeToName, getApiUrl, getSaveString, programMatchesFilterString } from '../utils';
 import CodeSnippetsDialog from './CodeSnippetsDialog.js';
 import styles from './EditorMain.css';
+
+// constants
+const PROGRAM_DELETE_WARNING = 'This will remove the program for all users of the database.\nAre you sure you want to delete this program?';
 
 export default class EditorMain extends React.Component {
 
@@ -20,11 +23,7 @@ export default class EditorMain extends React.Component {
       debugInfo: {},
       showSnippetsDialog: false,
       saveSuccess: true, // Did the save command succeed?
-      showSaveModal: false,
-
-      // Because editing a program claims it, we keep track of whether the program was claimed when it was selected to
-      // help determine if it is okay to edit it.
-      programClaimedWhenSelected: false
+      showSaveModal: false
     };
 
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
@@ -45,21 +44,6 @@ export default class EditorMain extends React.Component {
       }
       else {
         const state = { spaceData: response.body };
-
-        // In 'dev' mode, we will watch for updates from the creator editor and update the code
-        // when the space is re-created.
-        if ( inDevMode() && localStorage.paperProgramsCreatedWithCreator === 'true' ) {
-          const program = this._selectedProgram( this.state.selectedProgramNumber );
-          if ( program ) {
-            const remoteProgram = response.body.programs.find( p => p.number === program.number );
-            state.code = remoteProgram.currentCode;
-          }
-
-          // clear the flag now that we have received the update
-          localStorage.paperProgramsCreatedWithCreator = false;
-        }
-
-        // this.setState( { spaceData: response.body } );
         this.setState( state );
       }
 
@@ -141,6 +125,39 @@ export default class EditorMain extends React.Component {
     );
   };
 
+  /**
+   * Delete the specified program.
+   * @private
+   */
+  _deleteProgram() {
+
+    const { selectedProgramNumber } = this.state;
+    xhr.get(
+      getApiUrl( this.props.spaceName, `/delete/${selectedProgramNumber}` ),
+      {
+        json: {}
+      },
+      ( error, response ) => {
+        if ( error ) {
+          alert( `Error deleting program: ${error}` );
+        }
+        else if ( response.body.numberOfProgramsDeleted !== 1 ) {
+          if ( response.body.numberOfProgramsDeleted === 0 ) {
+            alert( 'Delete failed - program not found in database.' );
+          }
+          else {
+            alert( `Unexpected number of programs deleted: ${response.body.numberOfProgramsDeleted}` );
+          }
+        }
+        else {
+
+          // success - update code and displayed programs right away
+          this._pollSpaceUrl();
+        }
+      }
+    );
+  }
+
   _print = () => {
     const { code } = this.state;
     xhr.post(
@@ -204,22 +221,14 @@ export default class EditorMain extends React.Component {
   _getEditorHeadingText() {
     let editorHeadingText = 'Select a program on the right to get started.';
     if ( this.state.selectedProgramNumber !== '' ) {
-      const selectedProgram = this._selectedProgram( this.state.selectedProgramNumber );
-      if ( this.state.programClaimedWhenSelected || selectedProgram.editorInfo.readOnly ) {
-        editorHeadingText = `Viewing program ${this.state.selectedProgramNumber} (read-only)`;
-      }
-      else {
-        editorHeadingText = `Editing program ${this.state.selectedProgramNumber}`;
-      }
+      editorHeadingText = `Editing program ${this.state.selectedProgramNumber}`;
     }
     return editorHeadingText;
   }
 
   render() {
     const selectedProgram = this._selectedProgram( this.state.selectedProgramNumber );
-    const okayToEditSelectedProgram = selectedProgram &&
-                                      !selectedProgram.editorInfo.readOnly &&
-                                      !selectedProgram.editorInfo.claimed;
+    const okayToEditSelectedProgram = !!selectedProgram;
     const errors = this.state.debugInfo.errors || [];
     const logs = this.state.debugInfo.logs || [];
     const showSnippetsDialog = this.state.showSnippetsDialog;
@@ -314,6 +323,24 @@ export default class EditorMain extends React.Component {
           {selectedProgram && (
             <div className={styles.sidebarSection}>
               <button onClick={this._save}>{getSaveString()}</button>
+              {' '}
+            </div>
+          )}
+
+          {selectedProgram && (
+            <div className={styles.sidebarSection}>
+              <button
+                className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
+                onClick={() => {
+                  if ( confirm( PROGRAM_DELETE_WARNING ) === true ) {
+                    this._deleteProgram();
+                  }
+                }}>
+                <span className={styles.iconButtonSpan}>
+                  <img src={'media/images/trash3-black.svg'} alt={'Delete icon'}/>
+                  Delete
+                </span>
+              </button>
               {' '}
             </div>
           )}
