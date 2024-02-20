@@ -1,4 +1,6 @@
 import Matrix from 'node-matrices';
+import xhr from 'xhr';
+import helloWorld from './common/helloWorld.js';
 
 // A list of reserved keywords that cannot be used in component names.
 const RESERVED_KEYWORDS = [
@@ -172,6 +174,76 @@ export function codeToName( code ) {
   else {
     return '???';
   }
+}
+
+/**
+ * Returns true if a potential space name is valid.
+ * @param spaceName - proposed name
+ * @param availableSpaces - list of existing names
+ * @param showErrors - whether to alert on errors
+ * @return {boolean}
+ */
+export function isValidSpaceName( spaceName, availableSpaces, showErrors = false ) {
+  let isValid = true;
+  let errorMessage = '';
+  if ( isValid && spaceName.length === 0 ) {
+    isValid = false;
+    errorMessage = 'Space name too short.';
+  }
+  if ( isValid && spaceName.match( /[^A-Za-z0-9\-_]+/ ) !== null ) {
+    isValid = false;
+    errorMessage = 'Invalid characters in space name.';
+    errorMessage += '\n\nNames can contain upper- and lower-case letters, numbers, dashes, and/or underscores.';
+  }
+  if ( isValid && availableSpaces.includes( spaceName ) ) {
+    isValid = false;
+    errorMessage = `Space ${spaceName} already exists.`;
+  }
+
+  if ( showErrors && errorMessage.length ) {
+    window.alert( `Error: ${errorMessage}` );
+  }
+
+  return isValid;
+}
+
+/**
+ * Add a new space to the DB.  Since the DB doesn't REALLY have separate spaces, this is done be adding an initial
+ * program with this new space name as the space value.
+ * @param {string} spaceName
+ * @param {string[]} availableSpaces
+ * @private
+ */
+export function addNewSpace( spaceName, availableSpaces ) {
+  let succeeded = false;
+  if ( isValidSpaceName( spaceName, availableSpaces, true ) ) {
+    xhr.post(
+      getApiUrl( spaceName, '/programs' ),
+      { json: { code: helloWorld } },
+      error => {
+        if ( error ) {
+          console.error( error );
+        }
+        else {
+
+          // success!
+        }
+      }
+    );
+    succeeded = true;
+  }
+
+  // TODO: This was pulled from the camera page when proting space controls to the editor...but
+  //    I don't think it does anything?
+  const addSpaceUrl = new URL( 'api/add-space', window.location.origin ).toString();
+  const addRequestedSpaceUrl = `${addSpaceUrl}/${spaceName}`;
+  xhr.get( addRequestedSpaceUrl, { json: true }, error => {
+    if ( error ) {
+      console.error( `error adding space: ${error}` );
+    }
+  } );
+
+  return succeeded;
 }
 
 /**

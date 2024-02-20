@@ -18,7 +18,7 @@ import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils.js';
 import styles from './EditorMain.css';
-import helloWorld from './helloWorld';
+import helloWorld from './../common/helloWorld.js';
 
 // constants
 const ProgramCreateModes = {

@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import xhr from 'xhr';
-import { getApiUrl, isValidProjectName } from '../../utils.js';
+import { addNewSpace, getApiUrl, isValidProjectName } from '../../utils.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
 
@@ -23,11 +23,17 @@ const SpaceSelectControls = props => {
   // Are we creating a new project in the selected space?
   const [ creatingNewProject, setCreatingNewProject ] = useState( false );
 
+  // Are we creating a new space?
+  const [ creatingNewSpace, setCreatingNewSpace ] = useState( false );
+
   // Are we about to delete an existing project?
   const [ deletingProject, setDeletingProject ] = useState( false );
 
   // The new project name when we are creating a new project
   const [ newProjectName, setNewProjectName ] = useState( '' );
+
+  // The new space name when we are creating a new space
+  const [ newSpaceName, setNewSpaceName ] = useState( '' );
 
   // The project that we are currently working with
   const [ selectedProjectName, setSelectedProjectName ] = useState( '' );
@@ -208,6 +214,54 @@ const SpaceSelectControls = props => {
                 </option>;
               } )}
             </Form.Select>
+            {
+              creatingNewSpace ? (
+                <div className={styles.controlElement}>
+                  <Form onSubmit={event => {
+                    event.preventDefault();
+                    if ( addNewSpace( newSpaceName, availableSpaces ) ) {
+                      setCreatingNewSpace( false );
+
+                      // Add this new space to the list of available spaces
+                      setAvailableSpaces( [ ...availableSpaces, newSpaceName ] );
+
+                      // Set the new space as the selected space
+                      setSelectedSpaceName( newSpaceName );
+
+                      // clear the project name since we are in a new space
+                      setSelectedProjectName( '' );
+                    }
+                  }}>
+                    <label>
+                      Name:&nbsp;
+                      <input
+                        type='text'
+                        onChange={event => { setNewSpaceName( event.target.value ); }}
+                      />
+                    </label>
+                    <br/>
+                    <Row>
+                      <Col>
+                        <StyledButton name={'Confirm'} type='submit'></StyledButton>
+                      </Col>
+                      <Col>
+                        <StyledButton name={'Cancel'} onClick={() => setCreatingNewSpace( false )}></StyledButton>
+                      </Col>
+                    </Row>
+                  </Form>
+                </div>
+              ) : (
+                <Row>
+                  <Col>
+                    <StyledButton
+                      name={'New Space'}
+                      hidden={!selectedSpaceName}
+                      onClick={() => setCreatingNewSpace( true )}
+                    ></StyledButton>
+                  </Col>
+                </Row>
+              )
+            }
           </Col>
           <Col>
             <Col>
