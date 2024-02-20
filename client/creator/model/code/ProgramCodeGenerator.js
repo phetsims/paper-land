@@ -233,13 +233,15 @@ export default class ProgramCodeGenerator {
         // Convert the referenceNames into a series of const variable declarations
         const referenceNamesCode = referenceNames.map( name => `const ${name} = phet.paperLand.getModelComponent('${name}').value;` ).join( '\n' );
 
+        const usableControlFunction = ProgramCodeGenerator.modifyControlFunction( viewComponent.controlFunctionString );
+
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: viewComponent.nameProperty.value,
           DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
           DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
           REFERENCE_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( referenceNames ),
           REFERENCE_DECLARATIONS: referenceNamesCode,
-          CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( viewComponent.controlFunctionString ),
+          CONTROL_FUNCTION: ProgramCodeGenerator.formatStringForMonaco( usableControlFunction ),
           ...componentData
         } );
       }
@@ -343,6 +345,21 @@ export default class ProgramCodeGenerator {
     }
 
     return this.formatStringForMonaco( programCode );
+  }
+
+  /**
+   * This function does a bit of extra work around the control function provided by the user. For example,
+   * we need setImage view function to be async, but we don't force the user to write await in their code.
+   * Instead, await is added here.
+   *
+   * @param controlFunctionString
+   * @return {string}
+   */
+  static modifyControlFunction( controlFunctionString ) {
+
+    // Add an await before each of the user's setImage calls so that we wait for the image to load before
+    // doing other work like positioning it.
+    return controlFunctionString.replace( /setImage/g, 'await setImage' );
   }
 
   /**

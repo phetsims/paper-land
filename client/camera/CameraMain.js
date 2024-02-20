@@ -176,9 +176,8 @@ export default class CameraMain extends React.Component {
           this.setState( { spaceData: response.body }, () => {
             this._programsChange( this.props.paperProgramsProgramsToRender );
 
-            // If the code editor is open and the code for the selected program has changed, update
-            // the code in the editor.
-            if ( this.state.codeAccordionOpen && !!this.state.programInEditor ) {
+            // If the code for the selected program has changed, update the code in the editor.
+            if ( this.state.programInEditor ) {
               this._updateEditorCode();
             }
 

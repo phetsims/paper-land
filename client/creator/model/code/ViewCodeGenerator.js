@@ -214,30 +214,36 @@ export default class ViewCodeGenerator {
     }
     else if ( viewType === 'ImageViewComponent' ) {
       codeStrings.push( `
-        const setImage = imageName => {
+      
+        // This is async so that we can wait for the image to load before doing other things
+        const setImage = async imageName => {
         
-          // Get the current image name relative to the local paper playground path
-          let currentImageName;
-          if ( ${componentNameString}.image ) {
-            const startIndex = ${componentNameString}.image.src.indexOf( 'media/images/' );
-            currentImageName = ${componentNameString}.image.src.substring( startIndex );
-          }
-          else {
-            currentImageName = '';
-          }
+          return new Promise( (resolve, reject) => {
           
-          const newImageName = 'media/images/' + imageName;
-          
-          // only update the image if there is a change
-          if ( currentImageName !== newImageName ) {
-            const ${componentNameString}ImageElement = document.createElement( 'img' );
-            ${componentNameString}ImageElement.src = newImageName;
-            ${componentNameString}.image = ${componentNameString}ImageElement;
+            // Get the current image name relative to the local paper playground path
+            let currentImageName;
+            if ( ${componentNameString}.image ) {
+              const startIndex = ${componentNameString}.image.src.indexOf( 'media/images/' );
+              currentImageName = ${componentNameString}.image.src.substring( startIndex );
+            }
+            else {
+              currentImageName = '';
+            }
             
-            // CODE GENERATOR - This image load Property is created elsewhere in the ViewComponentTemplate.
-            // This listener will make sure that the image is repositioned after the image data changes.
-            ${componentNameString}ImageElement.addEventListener( 'load', () => { ${componentNameString}LoadProperty.value = ${componentNameString}LoadProperty.value + 1; } );
-          }
+            const newImageName = 'media/images/' + imageName;
+            
+            // only update the image if there is a change
+            if ( currentImageName !== newImageName ) {
+              const ${componentNameString}ImageElement = document.createElement( 'img' );
+              ${componentNameString}ImageElement.src = newImageName;
+              ${componentNameString}.image = ${componentNameString}ImageElement;
+
+              // Wait for the image to load before resolving              
+              ${componentNameString}ImageElement.addEventListener( 'load', () => {
+                resolve();
+              } );
+            }
+          } );
         };
       ` );
     }

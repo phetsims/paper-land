@@ -237,15 +237,18 @@ const ViewComponentTemplates = {
       let {{NAME}}ImageElement = document.createElement( 'img' );
       {{NAME}}ImageElement.src = 'media/images/{{FILE_NAME}}';
       const {{NAME}}Image = new phet.scenery.Image( {{NAME}}ImageElement );
-      
+
+      // As soon as the image loads, update a Property added to the multilink so that the control
+      // function is called again to update the positioning.       
       const {{NAME}}ImageLoadProperty = new phet.axon.Property( 0 );
       {{NAME}}ImageElement.addEventListener( 'load', () => { {{NAME}}ImageLoadProperty.value = {{NAME}}ImageLoadProperty.value + 1; } );
       
       sharedData.scene.addChild( {{NAME}}Image );
       scratchpad.{{NAME}}Image = {{NAME}}Image;
       
-      // Update the image when a dependency changes, and redraw if the board resizes
-      scratchpad.{{NAME}}ImageMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      // Update the image when a dependency changes, and redraw if the board resizes. This is async because
+      // function in the control function might be async to support loading images.
+      scratchpad.{{NAME}}ImageMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, async ( {{DEPENDENCY_ARGUMENTS}} ) => {
         
         // the functions that are available for this view type
         {{CONTROL_FUNCTIONS}}
