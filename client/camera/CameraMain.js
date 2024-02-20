@@ -176,6 +176,12 @@ export default class CameraMain extends React.Component {
           this.setState( { spaceData: response.body }, () => {
             this._programsChange( this.props.paperProgramsProgramsToRender );
 
+            // If the code editor is open and the code for the selected program has changed, update
+            // the code in the editor.
+            if ( this.state.codeAccordionOpen && !!this.state.programInEditor ) {
+              this._updateEditorCode();
+            }
+
             if ( this.refreshNextUpdate ) {
               localStorage.setItem( clientConstants.CAMERA_REFRESH_TRIGGER, Date.now().toString() );
               this.refreshNextUpdate = false;
@@ -204,6 +210,26 @@ export default class CameraMain extends React.Component {
 
   _updatePageWidth() {
     this.setState( { pageWidth: window.innerWidth } );
+  }
+
+  /**
+   * Check the space data to see if the code for the selected program has changed.  If it has, update the code in the
+   * editor.
+   * @private
+   */
+  _updateEditorCode() {
+
+    // Get the current code
+    const currentProgramFromSpaceData = this.state.spaceData.programs.find(
+      program => program.number === this.state.programInEditor.number
+    );
+
+    if ( currentProgramFromSpaceData ) {
+      const currentCode = currentProgramFromSpaceData.currentCode;
+      if ( currentCode !== this.state.codeInEditor ) {
+        this.setState( { codeInEditor: currentCode } );
+      }
+    }
   }
 
   /**
