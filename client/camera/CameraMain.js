@@ -12,9 +12,7 @@ import styles from './CameraMain.css';
 import CameraSelector from './CameraSelector.js';
 import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
-import CreateProgramsDialog from './CreateProgramsDialog.js';
 import DetectorControls from './DetectorControls.js';
-import helloWorld from './helloWorld';
 import { printCalibrationPage, printPage } from './printPdf';
 
 // constants
@@ -81,9 +79,6 @@ export default class CameraMain extends React.Component {
 
     // @private {number} - time of the last update of the available camera information in epoch time
     this._timeOfLastCameraDataUpdate = Number.NEGATIVE_INFINITY;
-
-    // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
-    this.saveAlertTimeout = null;
 
     this.refreshNextUpdate = false;
 
@@ -204,44 +199,6 @@ export default class CameraMain extends React.Component {
         this._timeOfLastSpaceDataUpdate = Date.now();
       }
       this._spaceDataUpdateInProgress = false;
-    } );
-  }
-
-  /**
-   * Add a new space to the DB.  Since the DB doesn't REALLY have separate spaces, this is done be adding an initial
-   * program with this new space name as the space value.
-   * @param {string} spaceName
-   * @private
-   */
-  _addNewSpace( spaceName ) {
-
-    xhr.post(
-      getApiUrl( spaceName, '/programs' ),
-      { json: { code: helloWorld } },
-      error => {
-        if ( error ) {
-          console.error( error );
-        }
-        else {
-
-          // The request to add a new space succeeded, so add this to the list of available spaces.
-          this.setState( { availableSpaces: [ ...this.state.availableSpaces, spaceName ] } );
-
-          // Select this space.
-          this.setState( { selectedSpaceName: spaceName } );
-
-          // Update the space data.
-          this._updateSpaceData();
-        }
-      }
-    );
-
-    const addSpaceUrl = new URL( 'api/add-space', window.location.origin ).toString();
-    const addRequestedSpaceUrl = `${addSpaceUrl}/${spaceName}`;
-    xhr.get( addRequestedSpaceUrl, { json: true }, error => {
-      if ( error ) {
-        console.error( `error adding space: ${error}` );
-      }
     } );
   }
 
@@ -398,104 +355,6 @@ export default class CameraMain extends React.Component {
   }
 
   /**
-   * Validate a potential space name.  This optionally puts up alert dialogs for invalid values.
-   * @param {string} spaceName
-   * @param {boolean} [showErrors]
-   * @returns {boolean}
-   * @private
-   */
-  _isValidSpaceName( spaceName, showErrors = false ) {
-    let isValid = true;
-    let errorMessage = '';
-    if ( isValid && spaceName.length === 0 ) {
-      isValid = false;
-      errorMessage = 'Space name too short.';
-    }
-    if ( isValid && spaceName.match( /[^A-Za-z0-9\-_]+/ ) !== null ) {
-      isValid = false;
-      errorMessage = 'Invalid characters in space name.';
-      errorMessage += '\n\nNames can contain upper- and lower-case letters, numbers, dashes, and/or underscores.';
-    }
-    if ( isValid && this.state.availableSpaces.includes( spaceName ) ) {
-      isValid = false;
-      errorMessage = `Space ${spaceName} already exists.`;
-    }
-
-    if ( showErrors && errorMessage.length ) {
-      window.alert( `Error: ${errorMessage}` );
-    }
-
-    return isValid;
-  }
-
-  /**
-   * Handler for when the user submits a new space name.
-   * @param {Event} event
-   * @returns boolean - true if name is valid and space creation request was successfully submitted
-   * @private
-   */
-  _handleNewSpaceNameSubmit( event ) {
-    let succeeded = false;
-    const newSpaceName = this.state.newSpaceName;
-    if ( this._isValidSpaceName( newSpaceName, true ) ) {
-      this._addNewSpace( newSpaceName );
-      succeeded = true;
-    }
-    event.preventDefault();
-    return succeeded;
-  }
-
-  _saveProgram() {
-    const { programInEditor, codeInEditor } = this.state;
-    if ( !programInEditor ) {
-      alert( 'Error: No program selected, save operation not possible.' );
-    }
-    else if ( programInEditor.currentCode === codeInEditor ) {
-      console.warn( 'Save attempted with unsaved code, ignoring.' );
-    }
-    else {
-
-      // Save this program by sending it to the server.
-      xhr.put(
-        getApiUrl( this.state.selectedSpaceName, `/programs/${programInEditor.number}` ),
-        {
-          json: { code: codeInEditor }
-        },
-        error => {
-          if ( error ) {
-            this.setState( { saveSuccess: false } );
-          }
-          else {
-
-            // The save succeeded.  Update the code associated with the editor.
-            const programInEditor = this.state.programInEditor;
-            programInEditor.currentCode = codeInEditor;
-            this.setState( { programInEditor } );
-
-            // Initiate an immediate update of the space data, since this should update the program code too and keep
-            // it in sync with what is in the editor.
-            this._updateSpaceData();
-
-            this.setState( { saveSuccess: true } );
-          }
-
-          // Show the save alert element.
-          this.setState( { showSaveModal: true } );
-
-          // Clear previous timeout for the save alert if one is still running.
-          window.clearTimeout( this.saveAlertTimeout );
-
-          // Remove the save alert notification after a brief time.
-          this.saveAlertTimeout = window.setTimeout( () => {
-            this.setState( { showSaveModal: false } );
-            this.saveAlertTimeout = null;
-          }, 2000 );
-        }
-      );
-    }
-  }
-
-  /**
    * Load the editor with the default program, which is the program with the lowest number if there are some, or a
    * default string if not.
    * @private
@@ -530,10 +389,6 @@ export default class CameraMain extends React.Component {
   _onEditorDidMount( editor, monaco ) {
 
     this._loadEditorWithDefault();
-
-    // Add the hot key for saving changes in the editor.
-    // eslint-disable-next-line no-bitwise
-    editor.addCommand( monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, this._saveProgram.bind( this ) );
 
     // Save a reference to the editor so that its configuration can be changed if necessary.
     this._editor = editor;
@@ -615,13 +470,6 @@ export default class CameraMain extends React.Component {
       <div className={styles.root}>
         <div className={styles.appRoot}>
 
-          {/* The modal dialog used to create a new program by copying an existing program. */}
-          <CreateProgramsDialog
-            data={this.state}
-            hideDialog={() => this.setState( { showCreateProgramDialog: false } )}
-            setSearchString={str => this.setState( { copyProgramListFilterString: str } )}
-          />
-
           {/*The 'save alert' element, which is briefly shown after a program is successfully saved to the server.*/}
           <SaveAlert
             success={this.state.saveSuccess}
@@ -698,7 +546,6 @@ export default class CameraMain extends React.Component {
                     <Button
                       className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
                       disabled={!this._isCodeChanged()}
-                      onClick={this._saveProgram.bind( this )}
                     >
                       <span className={styles.iconButtonSpan}>
                         <img src={'media/images/upload.svg'} alt={'Save icon'}/>

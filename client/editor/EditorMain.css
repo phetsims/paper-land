@@ -2,13 +2,15 @@
 
 @value paddingSize: 20px;
 
+@value backgroundColor: #2E4152;
+
 :local(.root) {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #2E4152;
+  background-color: backgroundColor;
 }
 
 :local(.container) {
@@ -18,9 +20,20 @@
 }
 
 :local(.editorHeading) {
-  margin-top: paddingSize;
+  /*margin-top: paddingSize;*/
   margin-left: paddingSize;
-  font: 22px sans-serif;
+}
+
+:local(.headingRow) {
+  line-height: normal;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+:local(.changeSpaceButton) {
+  font-size: 24px;
 }
 
 :local(.editor) {
@@ -44,8 +57,22 @@
 }
 
 :local(.dialog) {
-  color: black;
-  font: 20px sans-serif;
+  color: white;
+}
+
+:local(.createProgramContent) {
+  background: backgroundColor;
+}
+
+:local(.createProgramDialog) {
+  min-width: 90%;
+  padding: 0;
+}
+
+:local(.changeSpaceDialogBodyContainer) {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 :local(.iconButtonSpan) {

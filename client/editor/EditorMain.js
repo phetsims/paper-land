@@ -3,9 +3,10 @@ import randomColor from 'randomcolor';
 import React from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
-import CreateProgramsDialog from '../camera/CreateProgramsDialog.js';
 import SaveAlert from '../common/SaveAlert.js';
+import CreateProgramsDialog from '../editor/CreateProgramsDialog.js';
 import { codeToName, getApiUrl, getSaveString, programMatchesFilterString } from '../utils';
+import ChangeSpaceDialog from './ChangeSpaceDialog.js';
 import CodeSnippetsDialog from './CodeSnippetsDialog.js';
 import styles from './EditorMain.css';
 
@@ -26,8 +27,14 @@ export default class EditorMain extends React.Component {
       saveSuccess: true, // Did the save command succeed?
       showSaveModal: false,
 
+      // The list of all spaces in the database
+      availableSpaces: [],
+
       // True when the user has requested to create a new program
-      showCreateProgramDialog: false
+      showCreateProgramDialog: false,
+
+      // True when the user has requested to change the space
+      showSpaceDialog: false
     };
 
     // A reference to the timeout that will hide the save alert, so we can clear it early if we need to.
@@ -245,7 +252,7 @@ export default class EditorMain extends React.Component {
   _getEditorHeadingText() {
     let editorHeadingText = 'Select a program on the right to get started.';
     if ( this.state.selectedProgramNumber !== '' ) {
-      editorHeadingText = `Editing program ${this.state.selectedProgramNumber}`;
+      editorHeadingText = `Space: ${this.props.spaceName} | Program ${this.state.selectedProgramNumber}`;
     }
     return editorHeadingText;
   }
@@ -257,12 +264,22 @@ export default class EditorMain extends React.Component {
     const logs = this.state.debugInfo.logs || [];
     const showSnippetsDialog = this.state.showSnippetsDialog;
     const showCreateProgramDialog = this.state.showCreateProgramDialog;
+    const showSpaceDialog = this.state.showSpaceDialog;
 
     return (
       <div className={styles.root}>
 
         <div className={styles.container}>
-          <h1 className={styles.editorHeading}>{this._getEditorHeadingText()}</h1>
+          <div className={styles.headingRow}>
+            <h1 className={styles.editorHeading}>{this._getEditorHeadingText()}</h1>
+            <button
+              className={styles.changeSpaceButton}
+              onClick={() => {
+                this.setState( { showSpaceDialog: true } );
+              }}
+            >Change Space
+            </button>
+          </div>
           {selectedProgram && (
             <div className={styles.editor}>
               <MonacoEditor
@@ -299,12 +316,28 @@ export default class EditorMain extends React.Component {
             hideDialog={() => this.setState( { showCreateProgramDialog: false } )}
           />
         )}
+        {showSpaceDialog && (
+          <ChangeSpaceDialog
+            contentClassName={styles.createProgramContent}
+            showing={showSpaceDialog}
+            availableSpaces={this.state.availableSpaces}
+            changeSpace={newSpaceName => {
+              if ( !newSpaceName ) {
+                alert( 'Sorry, there was an error while changing spaces.' );
+              }
+
+              // This is where we switch to a difference space. For the editor page,
+              // this is done by changing the URL to use a query parameter for the space name.
+              const newUrl = new URL( window.location.href );
+              newUrl.search = newSpaceName;
+              window.location.href = newUrl.toString();
+            }}
+            hideDialog={() => this.setState( { showSpaceDialog: false } )}
+          />
+        )}
         <div className={styles.sidebar}>
-
-          <h2>Edit Program</h2>
-
           <label>
-            Filter on:
+            {'Filter on: '}
             <input
               name='filterProgramsOn'
               style={{ marginBottom: '10px' }}
@@ -359,7 +392,12 @@ export default class EditorMain extends React.Component {
 
           {selectedProgram && (
             <div className={styles.sidebarSection}>
-              <button onClick={this._save}>{getSaveString()}</button>
+              <button onClick={this._save}>
+                <span className={styles.iconButtonSpan}>
+                  <img src={'media/images/upload-black.svg'} alt={'Save icon'}/>
+                  {getSaveString()}
+                </span>
+              </button>
               {' '}
             </div>
           )}

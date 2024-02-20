@@ -53,6 +53,8 @@ class CodeSnippetsDialog extends React.Component {
           show={true}
           size='xl'
           className={styles.dialog}
+          dialogClassName={styles.createProgramDialog}
+          contentClassName={styles.createProgramContent}
           onHide={onClose}
         >
           <Modal.Header closeButton>

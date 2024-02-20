@@ -17,7 +17,7 @@ import Row from 'react-bootstrap/Row';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import { codeToName, getApiUrl, programMatchesFilterString } from '../utils.js';
-import styles from './CameraMain.css';
+import styles from './EditorMain.css';
 import helloWorld from './helloWorld';
 
 // constants
