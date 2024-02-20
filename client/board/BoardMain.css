@@ -104,3 +104,8 @@
   color: #FFC107;
   font-size: 32px;
 }
+
+/*Use visibility to hide certain content that without changing the layout*/
+:local(.hidden) {
+  visibility: hidden;
+}
