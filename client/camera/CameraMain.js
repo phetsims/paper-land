@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
 import clientConstants from '../clientConstants.js';
-import SaveAlert from '../common/SaveAlert.js';
 import { codeToName, getApiUrl, programMatchesFilterString, sortProgramsByName } from '../utils';
 import CameraControls from './CameraControls.js';
 import styles from './CameraMain.css';
@@ -43,8 +42,9 @@ export default class CameraMain extends React.Component {
       copyProgramListFilterString: '',
       showCreateProgramDialog: false,
       sidebarOpen: true,
-      showSaveModal: false,
-      saveSuccess: false,
+
+      // True when the code is open for viewing.
+      codeAccordionOpen: false,
 
       // {InputDeviceInfo[]} - a list of the cameras that are available on the current project
       availableCameras: [],
@@ -395,36 +395,29 @@ export default class CameraMain extends React.Component {
   }
 
   /**
-   * Get a boolean value indicating whether the code in the editor has changed since the last time the program was
-   * saved.
-   * @returns {boolean}
-   * @private
-   */
-  _isCodeChanged() {
-    return !!this.state.programInEditor && this.state.programInEditor.currentCode !== this.state.codeInEditor;
-  }
-
-  /**
    * Get the text that should be used as the label for the editor component.  This varies based on the state of the
    * program, which is why there is a method for getting it.
    * @returns {string}
    * @private
    */
   _getEditorLabelText() {
-    let editorLabelText = 'No program selected.';
-    if ( this.state.programInEditor ) {
+    let editorLabelText = '';
+
+    if ( !this.state.codeAccordionOpen ) {
+
+      // A title for the accordion that shows preview of the selected program code
+      return 'Preview Selected Program Code';
+    }
+    else if ( this.state.programInEditor ) {
       const program = this.state.programInEditor;
-      if ( this.state.programInEditor.editorInfo.readOnly ||
-           this.state.programInEditor.editorInfo.claimed ) {
 
-        // The text should indicate that the file is only available for viewing, not editing.
-        editorLabelText = `Viewing (read-only): Program #${program.number}`;
-      }
-      else {
+      // The program is in a state where the user should be able to view.
+      editorLabelText = `Viewing Program #${program.number}`;
+    }
+    else {
 
-        // The program is in a state where the user should be able to edit it.
-        editorLabelText = `Editing: Program #${program.number}`;
-      }
+      // The accordion is open but no program is selected, prompt the user to select a program.
+      editorLabelText = 'No program selected.';
     }
     return editorLabelText;
   }
@@ -469,13 +462,6 @@ export default class CameraMain extends React.Component {
     return (
       <div className={styles.root}>
         <div className={styles.appRoot}>
-
-          {/*The 'save alert' element, which is briefly shown after a program is successfully saved to the server.*/}
-          <SaveAlert
-            success={this.state.saveSuccess}
-            show={this.state.showSaveModal}
-          ></SaveAlert>
-
           {/* Title bar and sidebar control button that goes across the top */}
           <div className={styles.pageTitle}>
             <h4>Camera & Editor View</h4>
@@ -540,37 +526,33 @@ export default class CameraMain extends React.Component {
 
               {/* editor with title/control bar */}
               <div className={styles.containerWithBackground}>
-                <div className={styles.editorTitleBar}>
-                  <h5>{this._getEditorLabelText()}</h5>
-                  <>
-                    <Button
-                      className={okayToEditSelectedProgram ? 'visible' : 'invisible'}
-                      disabled={!this._isCodeChanged()}
-                    >
-                      <span className={styles.iconButtonSpan}>
-                        <img src={'media/images/upload.svg'} alt={'Save icon'}/>
-                        Save to DB
-                      </span>
-                    </Button>
-                  </>
-                </div>
-
-                <div className={styles.editor}>
-                  <MonacoEditor
-                    language='javascript'
-                    theme='vs-dark'
-                    value={this.state.codeInEditor || '// Select Program'}
-                    editorDidMount={this._onEditorDidMount.bind( this )}
-                    width={videoAndEditorWidth}
-                    options={{
-                      readOnly: true,
-                      tabSize: 2,
-                      fontSize: '16px',
-                      minimap: { enabled: false },
-                      automaticLayout: true
-                    }}
-                  />
-                </div>
+                <Accordion defaultActiveKey={null} onSelect={
+                  eventKey => {
+                    this.setState( { codeAccordionOpen: eventKey === 0 } );
+                  }
+                }>
+                  <Accordion.Item eventKey={0}>
+                    <Accordion.Header>{this._getEditorLabelText()}</Accordion.Header>
+                    <Accordion.Body>
+                      <div className={styles.editor}>
+                        <MonacoEditor
+                          language='javascript'
+                          theme='vs-dark'
+                          value={this.state.codeInEditor || '// Select Program'}
+                          editorDidMount={this._onEditorDidMount.bind( this )}
+                          width={videoAndEditorWidth}
+                          options={{
+                            readOnly: true,
+                            tabSize: 2,
+                            fontSize: '16px',
+                            minimap: { enabled: false },
+                            automaticLayout: true
+                          }}
+                        />
+                      </div>
+                    </Accordion.Body>
+                  </Accordion.Item>
+                </Accordion>
               </div>
             </div>
 
@@ -656,15 +638,6 @@ export default class CameraMain extends React.Component {
                              className={styles.horizontalRow}
                              style={{ marginTop: '15px' }}
                            >
-                             <Button
-                               style={{ marginRight: '15px' }}
-                               onClick={() => {
-                                 this.setState( { isAddingNewSpace: true } );
-                                 this.setState( { newSpaceName: '' } );
-                               }}
-                             >
-                               Add New Space
-                             </Button>
                              <a
                                href={editorUrl}
                                target='_blank'
