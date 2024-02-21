@@ -1076,11 +1076,12 @@ openAIRouter.post( '/', async ( req, res ) => {
     const completion = await openai.chat.completions.create( {
       messages: [ { role: 'user', content: promptString } ],
 
-      // slow but maybe better?
-      // model: 'gpt-4'
+      // slower, more expensive, but better - OpenAI claims this version of gpt-4
+      // has less 'laziness'.
+      model: 'gpt-4-0125-preview'
 
       // faster
-      model: 'gpt-3.5-turbo'
+      // model: 'gpt-3.5-turbo'
     } );
 
     const response = completion.choices[ 0 ];
