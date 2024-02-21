@@ -71,30 +71,189 @@ To add a component to your program, first create a program using the "New Empty 
 
 ### Component Details
 
-=== "Model Components"
+??? info "Model Components"
 
-      - **Boolean**: This is a primitive data type that represents truth values, typically denoted as `true` or `false`. Booleans are often used in conditional statements to control the flow of the program based on certain conditions.
-      - **Number**: Another primitive data type in JavaScript, `Number` represents both integer and floating-point numbers. JavaScript uses double-precision floating-point format for all its numeric values, providing a wide range of values that can be represented.
-      - **Position**: While not a standard JavaScript data type, "Position" can refer to an object structure used to represent the coordinates or location of an element, typically in a graphical or UI context. It often consists of properties like `x` and `y` for 2D spaces or `x`, `y`, and `z` for 3D spaces.
-      - **String**: A primitive data type, `String` represents textual data. It consists of a sequence of characters and is enclosed in single quotes (`'`), double quotes (`"`), or backticks (`` ` ``) for template literals. Strings in JavaScript are immutable, meaning once a string is created, it cannot be modified.
-      - **Enumeration**: JavaScript does not have a native enumeration (enum) type as seen in other languages like C# or Java. However, an enumeration can be simulated using objects or the `Object.freeze()` method, where a set of named constants are represented as properties of an object, often used for better code readability and to prevent changes to the object.
-      - **Derived**: This term doesn't refer to a specific data structure in JavaScript but generally refers to types or structures that are built from other types, often involving object-oriented programming concepts like inheritance where one class (derived class) inherits properties and methods from another class (base class).
-      - **Bounds**: Like "Position", "Bounds" is not a standard JavaScript data type. It typically refers to an object or structure used to describe the size and position of a rectangular area, often in graphical contexts. A "Bounds" object might include properties like `width`, `height`, `top`, `left`, etc., to define the dimensions and location of a rectangle.
-      - **Array**: A global object used to construct arrays, which are high-level, list-like objects. Arrays in JavaScript are used to store multiple values in a single variable and can contain elements of different types. They are zero-indexed, and their length can change dynamically.
-      - **Array Item**: Refers to an individual element within an array. Each item in an array can be accessed by its index, starting from `0` for the first element. Array items can be of any type, including `Number`, `String`, `Boolean`, or even other arrays and objects.
+    - **Boolean**
+  
+        - *Description*: Represents a property that holds a boolean value (`true` or `false`).
+        - *Usage*: Used to track state that has two states, such as a toggle button being on or off.
+        
+        ??? example "JS Example"
+            ```js
+            const isVisible = new phet.axon.BooleanProperty(true);
+            phet.paperLand.addModelComponent('isVisible', isVisible);
+            ```
+
+    - **Number**
+        - *Description*: Holds a numerical value within a specified range.
+        - *Usage*: Useful for representing quantities, scores, or any numerical parameter that needs to be constrained within a minimum and maximum value.
+        
+        ??? example "JS Example"
+            ```js
+            const score = new phet.axon.NumberProperty(0, {
+            range: new phet.dot.Range(0, 100)
+            });
+            phet.paperLand.addModelComponent('score', score);
+            ```
+
+    - **String**
+        - *Description*: Stores a string value.
+        - *Usage*: Ideal for text-based data, such as user input or dynamic text content within the application.
+
+        ??? example "JS Example"
+            ```js
+            const userName = new phet.axon.StringProperty('Anonymous');
+            phet.paperLand.addModelComponent('userName', userName);
+            ```
+
+    - **Position (Vector2)**
+        - *Description*: Represents a two-dimensional vector.
+        - *Usage*: Useful for tracking positions, velocities, or any other two-dimensional vector quantities in simulations.
+
+        ??? example "JS Example"
+            ```js
+            const position = new phet.dot.Vector2Property(new phet.dot.Vector2(0, 0));
+            phet.paperLand.addModelComponent('position', position);
+            ```
+
+    - **Enumeration**
+        - *Description*: Used for properties that can take on a set of predefined values.
+        - *Usage*: Ideal for states, modes, or any other property that should be limited to a specific set of values.
+
+        ??? example "JS Example"
+            ```js
+            const colorMode = new phet.axon.StringProperty('dark', {
+            validValues: ['dark', 'light']
+            });
+            phet.paperLand.addModelComponent('colorMode', colorMode);
+            ```
+
+    - **Derived**
+        - *Description*: A property that is derived from one or more other properties. The value of a DerivedProperty is computed based on the values of these dependencies.
+        - *Usage*: Useful for properties that should automatically update when their dependencies change.
+
+        ??? example "JS Example"
+            ```js
+            const totalScore = new phet.axon.Property(null);
+            phet.paperLand.addModelPropertyMultilink(['score', 'bonus'], (score, bonus) => {
+            totalScore.value = score + bonus;
+            });
+            phet.paperLand.addModelComponent('totalScore', totalScore);
+            ```
+
+    - **Bounds**
+        - *Description*: Represents a rectangular boundary, defined by minimum and maximum points in 2D space.
+        - *Usage*: Useful for defining areas within a simulation, such as the boundaries of a playing field or the viewable area of a screen.
+
+        ??? example "JS Example"
+            ```js
+            const viewBounds = new phet.axon.Property(
+            new phet.dot.Bounds2(0, 0, 800, 600)
+            );
+            phet.paperLand.addModelComponent('viewBounds', viewBounds);
+            ```
+
+    - **Array**
+        - *Description*: An array that notifies observers when items are added or removed, or when the array is otherwise modified.
+        - *Usage*: Ideal for managing collections of items where changes to the collection need to be tracked.
+
+        ??? example "JS Example"
+            ```js
+            const items = new phet.axon.Property([]);
+            phet.paperLand.addModelComponent('items', items);
+            ```
+
+    - **Array Item**
+        - *Description*: Represents an item within an observable array, with logic for adding, updating, and removing items based on dependencies.
+        - *Usage*: Useful for complex arrays where items depend on other model components and where item lifecycle management is required.
 
       
       ![alt text](../assets/model-form.png)
 
-=== "View Components"
+??? info "View Components"
 
-      - Shapes
-      - Background
-      - Images
-      - Text
-      - Sounds
-      - Description
-      - Vibration
+    - **Sounds**
+  
+        - *Description*: Manages and plays audio clips, with options for looping, playback rate, and output level.
+        - *Usage*: This component is used to add sound effects to the application, enhancing user interaction through auditory feedback.
+        
+        ??? example "JS Example"
+            ```js
+            // Assuming createAndLoadWrappedAudioBuffer and other utilities are defined
+            const clickSoundClip = new phet.tambo.SoundClip(clickSoundWrappedAudioBuffer, {
+              loop: false,
+              initialOutputLevel: 0.5
+            });
+            phet.tambo.soundManager.addSoundGenerator(clickSoundClip);
+            ```
+
+    - **Description/Speech**
+        - *Description*: Provides a mechanism to programmatically generate and speak textual descriptions, improving accessibility.
+        - *Usage*: Useful for applications that need to support screen readers, providing dynamic descriptions of the current state or changes within the application.
+        
+        ??? example "JS Example"
+            ```js
+            // Assuming addModelPropertyMultilink and other utilities are defined
+            phet.paperLand.addModelPropertyMultilink(dependencies, () => {
+              const description = "The current score is now 10.";
+              // Logic to speak the description
+            });
+            ```
+
+    - **Text**
+        - *Description*: Displays text within the application, with support for rich formatting.
+        - *Usage*: Ideal for showing dynamic text content such as scores, instructions, or any information that changes over time.
+        
+        ??? example "JS Example"
+            ```js
+            const scoreText = new phet.scenery.RichText('Score: 0', { fill: 'white' });
+            sharedData.scene.addChild(scoreText);
+            ```
+
+    - **Background**
+        - *Description*: Creates a background rectangle, potentially dynamic based on application state.
+        - *Usage*: Used to set the background color or image of a scene or a specific area within the application.
+        
+        ??? example "JS Example"
+            ```js
+            const backgroundRectangle = new phet.scenery.Rectangle(0, 0, width, height, {
+              fill: 'blue'
+            });
+            sharedData.scene.addChild(backgroundRectangle);
+            ```
+
+    - **Images/Sprites**
+        - *Description*: Displays an image, with support for dynamic changes based on the application's state.
+        - *Usage*: Useful for showing icons, backgrounds, or any other static or dynamic imagery.
+        
+        ??? example "JS Example"
+            ```js
+            let imageElement = document.createElement('img');
+            imageElement.src = 'media/images/logo.png';
+            const logoImage = new phet.scenery.Image(imageElement);
+            sharedData.scene.addChild(logoImage);
+            ```
+
+    - **Shapes**
+        - *Description*: Draws and manages vector shapes, with properties for fill, stroke, scaling, and rotation.
+        - *Usage*: Ideal for drawing custom geometric shapes or illustrations that are responsive to the application's state.
+        
+        ??? example "JS Example"
+            ```js
+            // Assuming kite.Shape is defined and utilities for conversion are available
+            const customShape = new kite.Shape()
+              .moveTo(0, 0)
+              .lineTo(100, 0)
+              .lineTo(50, 100)
+              .close();
+            const customPath = new phet.scenery.Path(customShape, {
+              fill: 'red',
+              stroke: 'black',
+              lineWidth: 3
+            });
+            sharedData.scene.addChild(customPath);
+            ```
+
 
       ![alt text](../assets/view-form.png)
 
@@ -102,34 +261,119 @@ To add a component to your program, first create a program using the "New Empty 
 
       Adding your own images (.jpg, .png, .gif, etc.) and sounds (.wav, .mp3, etc.) can be done right in *Creator*! Add a View Component, select Image or Sound, and drag/drop your file or select the upload box to open a file dialog.
 
-      Once uploaded, files will live in the paper-land directory under `.../www/media/images/upload` or `.../www/media/sound/upload`. You can also directly add files to this directory for bulk upload.
+      Once uploaded, files are stored in the paper-land directory under `.../www/media/images/upload` or `.../www/media/sound/upload`. You can also directly add files to this directory for bulk upload. 
 
       The files will now appear in the dropdown selection for those components!
 
-=== "Controller Components"
+      Remember, if you reinstall Paper Playground, your uploads will not be there. *Back up your Uploads folder if they are crucial to your projects!*
 
-      - Paper
-      - Link
-      - Animation
+??? info "Controller Components"
 
-      ![alt text](../assets/controller-form.png)
+    !!! tip
+        For advanced users or when using Custom Code, see the [paperLand API](../use/paperland-api.md) for all paper events.
 
-      ## Paper Controller Components - What can I use to trigger code in my paper programs?**
+    - **Paper Position**
+  
+        - *Description*: This component tracks and responds to changes in the physical position of a piece of paper within the camera's view. It's useful for applications where the physical location of the paper triggers digital events or actions.
+        - *Usage*: Implement this component to update the digital model or view based on the paper's movement. For example, moving a paper piece could change the position of a digital object on the screen.
 
-      !!! inline end tip
-            For advanced users or when using Custom Code, see the [paperLand API](../use/paperland-api.md) for all paper events.
+        ??? example "JS Example"
+            ```js
+            const onProgramChangedPosition = (paperProgramNumber, paperPoints, scratchpad, sharedData) => {
+            const newPosition = phet.paperLand.utils.calculateCenter(paperPoints);
+            phet.paperLand.console.log(`Paper moved to new position: x=${newPosition.x}, y=${newPosition.y}`);
+            // Update a model component to reflect this new position
+            const modelPosition = phet.paperLand.getModelComponent('modelPosition');
+            if (modelPosition) {
+            modelPosition.set(newPosition);
+            }
+            };
+            ```
 
-      ### Paper Movement
+    - **Paper Rotation**
+        - *Description*: Monitors the rotation of a paper piece detected by the camera and applies corresponding updates to the digital model or view. This can be used to simulate rotational dynamics or to control aspects of the application by rotating paper.
+        - *Usage*: Use this controller to create interactions based on the paper's orientation. For example, rotating the paper could adjust the rotation of a digital object or change its state.
 
-      {Content coming soon!}
+        ??? example "JS Example"
+            ```js
+            const onProgramChangedPosition = (paperProgramNumber, paperPoints, scratchpad, sharedData) => {
+            const rotation = phet.paperLand.utils.getNormalizedProgramRotation(paperPoints);
+            phet.paperLand.console.log(`Paper rotated to a normalized value of: ${rotation}`);
+            // Adjust a model component based on paper rotation
+            const modelRotation = phet.paperLand.getModelComponent('modelRotation');
+            if (modelRotation) {
+            modelRotation.set(rotation * 360); // Assuming modelRotation expects degrees
+            }
+            };
+            ```
 
-      ### Paper Markers
+    - **Markers (large dots)**
+        - *Description*: Reacts to the addition, removal, or movement of markers on the paper. Markers can be used as input devices, allowing users to interact with the digital environment by placing or moving markers on the paper.
+        - *Usage*: Implement interactions where markers control digital elements, such as moving a marker to navigate a character or change settings.
 
-      {Content coming soon!}
+            ??? example "JS Example"
+                ```js
+                const onProgramMarkersAdded = (paperProgramNumber, scratchpad, sharedData, markersOnProgram) => {
+                phet.paperLand.console.log(`Marker added. Total markers on program: ${markersOnProgram.length}`);
+                // Example: Adjust game character position based on marker
+                if (markersOnProgram.length > 0) {
+                const characterPosition = phet.paperLand.getModelComponent('characterPosition');
+                if (characterPosition) {
+                const markerPosition = markersOnProgram[0].positionOnPaper; // Assuming first marker controls character
+                characterPosition.set(markerPosition);
+                }
+                }
+                };
+                ```
 
-      ### Whiskers - Paper Proximity
+    - **Whiskers (Proximity)**
+        - *Description*: Utilizes "whiskers," or virtual lines extending from the paper, to detect adjacency to other pieces of paper. This can be used for interactions where papers need to recognize their neighbors to perform combined actions or updates.
+        - *Usage*: Use this component for applications requiring collaboration or interaction between multiple physical papers, such as combining resources in a game or merging data from different papers.
 
-      {Content coming soon!}
+            ??? example "**JS Example**"
+                ```js
+                const onProgramAdjacent = (paperProgramNumber, otherPaperNumber, direction, scratchpad, sharedData) => {
+                phet.paperLand.console.log(`${otherPaperNumber} is adjacent to ${paperProgramNumber} on the ${direction}`);
+                // Example: Combine data from adjacent papers
+                const dataFromThisPaper = phet.paperLand.getProgramData(paperProgramNumber, 'dataName');
+                const dataFromOtherPaper = phet.paperLand.getProgramData(otherPaperNumber, 'dataName');
+                // Logic to combine data and update model accordingly
+                };
+                ```
+
+    - **Animations**
+        - *Description*: This component is designed to update the model or view based on time or frame-based animations. It listens for elapsed time changes and performs actions accordingly, making it essential for creating dynamic, animated behaviors in the application.
+        - *Usage*: Use this component to animate properties over time, such as moving an object across the screen, changing colors, or any time-dependent transformation.
+
+        ??? example "JS Example"
+            ```js
+            const moveObjectAnimationListener = dt => {
+            if (phet.paperLand.hasAllModelComponents(['position'])) {
+            const elapsedTime = phet.paperLand.elapsedTimeProperty.value;
+            // Assuming a position model component exists and is a Vector2Property
+            const position = phet.paperLand.getModelComponent('position');
+            position.value = position.value.plus(new phet.dot.Vector2(dt * 10, 0)); // Move 10 units per second to the right
+            }
+            };
+            phet.axon.stepTimer.addListener(moveObjectAnimationListener);
+            ```
+
+    - **Link (Multilink Listener)**
+        - *Description*: Listens for changes in multiple model properties (dependencies) and updates other model components based on those changes. It's particularly useful for coordinating complex interactions between different parts of the model, where the change in one or more properties should trigger updates elsewhere.
+        - *Usage*: Ideal for scenarios where multiple model states need to be considered before making an update, such as enabling a button only when specific conditions are met or updating a calculation based on several inputs.
+
+    ??? example "JS Example"
+        ```js
+        scratchpad.customUpdateMultilinkId = phet.paperLand.addModelPropertyMultilink(['input1', 'input2'], (input1, input2) => {
+        if (phet.paperLand.hasAllModelComponents(['output'])) {
+        const output = phet.paperLand.getModelComponent('output');
+        // Example: updating the output based on the sum of input1 and input2
+        output.value = input1 + input2;
+        }
+        });
+
+
+    ![alt text](../assets/controller-form.png)
 
 ### (Custom Functions) Customizing Component Output
 
