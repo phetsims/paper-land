@@ -560,8 +560,6 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'TextViewComponent' ) {
       data = {
-
-        // TODO: TextVieCOmponent should extend NodeViewComponent so that it can use the same setters and have a defaultViewOptions
         CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions || {} )
       };
     }

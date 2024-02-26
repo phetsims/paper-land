@@ -1,7 +1,7 @@
 import Component from '../Component.js';
-import ViewComponent from './ViewComponent.js';
+import NodeViewComponent from './NodeViewComponent.js';
 
-export default class TextViewComponent extends ViewComponent {
+export default class TextViewComponent extends NodeViewComponent {
 
   constructor( name, modelComponents, controlFunctionString, providedOptions ) {
     super( name, modelComponents, controlFunctionString, providedOptions );

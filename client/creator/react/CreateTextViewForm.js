@@ -3,13 +3,12 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { formatFunctionListForPrompt } from '../../utils.js';
 import TextViewComponent from '../model/views/TextViewComponent.js';
 import styles from './../CreatorMain.css';
+import NodeComponentFunctionsList, { NODE_COMPONENT_FUNCTIONS } from './NodeComponentFunctionsList.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
 const TEXT_FUNCTIONS = [
   'setString() - A string, sets the content of the text.',
-  'setCenterX() - A number, sets x position of the text.',
-  'setCenterY() - A number, sets y position of the text.',
   'setFontSize() - A number, sets the font size of the text.',
   'setTextColor() - A string, sets the font color of the text.',
   'setFontFamily() - A string, sets the font family of the text.'
@@ -37,7 +36,10 @@ export default function CreateTextViewForm( props ) {
 
   const typeSpecificFunctions = (
     <div className={styles.controlElement}>
-      <p>Available functions:</p>
+      <hr/>
+      <NodeComponentFunctionsList></NodeComponentFunctionsList>
+      <hr/>
+      <p>Text functions:</p>
       <ListGroup>
         {
           TEXT_FUNCTIONS.map( ( functionString, index ) => {
@@ -60,7 +62,7 @@ export default function CreateTextViewForm( props ) {
         handleChange={handleChange}
         functionPrompt={'Write a function using the variables to control the Text. All view coordinates in pixels.'}
         componentsPrompt={'Add model components that will control the Text.'}
-        additionalControlFunctions={formatFunctionListForPrompt( TEXT_FUNCTIONS )}
+        additionalControlFunctions={`${formatFunctionListForPrompt( NODE_COMPONENT_FUNCTIONS )}\n${formatFunctionListForPrompt( TEXT_FUNCTIONS )}`}
       ></ViewComponentControls>
     </div>
   );
