@@ -12,7 +12,7 @@ import sortBy from 'lodash/sortBy';
 import clientConstants from '../clientConstants';
 import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import { code8400 } from '../dotCodes';
-import { add, clamp, cross, diff, div, forwardProjectionMatrixForPoints, mult, norm, projectPoint, shrinkPoints } from '../utils';
+import { add, clamp, cross, diff, div, findProgramContainingMarker, forwardProjectionMatrixForPoints, mult, norm, projectPoint, shrinkPoints } from '../utils';
 import simpleBlobDetector from './simpleBlobDetector';
 
 const WHISKER_COLOR = [ 139, 0, 0, 255 ];
@@ -150,38 +150,6 @@ function colorIndexesForShape( shape, keyPoints, videoMat, colorsRGB ) {
   } );
 
   return shapeColors.map( color => colorIndexForColor( color, closestColors ) );
-}
-
-/**
- * Find the program that the marker is on. Based no based on
- * http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
- *
- * @param markerPosition - center of the marker
- * @param listOfPrograms - all Programs to see if the marker is inside any of them
- * @returns {*} - program object or null if not inside a program
- */
-function findProgramContainingMarker( markerPosition, listOfPrograms ) {
-  return listOfPrograms.find( ( { points } ) => {
-    for ( let i = 0; i < 4; i++ ) {
-      const a = i;
-      const b = ( i + 1 ) % 4;
-
-      const sideA = diff( points[ a ], markerPosition );
-      const sideB = diff( points[ b ], markerPosition );
-
-      let angle = Math.atan2( sideB.y, sideB.x ) - Math.atan2( sideA.y, sideA.x );
-
-      if ( sideB.y < 0 && sideA.y > 0 ) {
-        angle += 2 * Math.PI;
-      }
-
-      if ( angle > Math.PI || angle < 0 ) {
-        return false;
-      }
-    }
-
-    return true;
-  } );
 }
 
 export default function detectPrograms( {

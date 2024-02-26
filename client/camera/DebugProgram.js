@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { add, rotateAboutXY } from '../utils';
+import { add, findProgramContainingMarker, rotateAboutXY } from '../utils';
 import styles from './DebugProgram.css';
 import DebugProgramCorner from './DebugProgramCorner.js';
 
@@ -27,6 +27,10 @@ export default class CameraMain extends React.Component {
     // rotation to it with a css transform. So the program points without any rotation are saved
     // so that we can first draw the debugging program from these positions.
     this.pointsWithoutRotation = this.props.program.points.slice();
+
+    // The markers that are on the program when the program is grabbed, so that they can be moved with the program
+    // during dragging.
+    this.attachedMarkersOnStart = [];
 
     this.state = {
       program: props.program,
@@ -108,6 +112,12 @@ export default class CameraMain extends React.Component {
     const rotating = event.target === this._rotateEl;
     const grabbed = !resizing && !rotating;
 
+    // As we enter the grabbed state, find markers that are attached to this program so that they will be moved
+    // with the paper.
+    if ( grabbed ) {
+      this.attachedMarkersOnStart = this.props.debugMarkers.filter( marker => !!findProgramContainingMarker( marker.position, [ this.state.program ] ) );
+    }
+
     this.setState( {
       grabbed,
       rotating,
@@ -122,6 +132,9 @@ export default class CameraMain extends React.Component {
     this.setState( { grabbed: false, resizing: false, rotating: false } );
     document.removeEventListener( 'mouseup', this._onMouseUp, false );
     document.removeEventListener( 'mousemove', this._onMouseMove, false );
+
+    // clear attached debug markers
+    this.attachedMarkersOnStart = [];
   };
 
   _onMouseMove = event => {
@@ -144,6 +157,11 @@ export default class CameraMain extends React.Component {
 
       // apply the translation to program points for the model
       program.points = program.points.map( point => add( point, { x: normx, y: normy } ) );
+
+      // Move any markers that were on this program at the start of drag
+      this.attachedMarkersOnStart.forEach( marker => {
+        marker.position = add( marker.position, { x: normx, y: normy } );
+      } );
     }
 
     if ( this.state.resizing ) {

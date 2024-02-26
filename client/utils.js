@@ -163,6 +163,38 @@ export function getApiUrl( spaceName, suffix = '' ) {
   return new URL( `api/spaces/${spaceName}${suffix}`, window.location.origin ).toString();
 }
 
+/**
+ * Find the program that the marker is on. Based no based on
+ * http://demonstrations.wolfram.com/AnEfficientTestForAPointToBeInAConvexPolygon/
+ *
+ * @param markerPosition - center of the marker
+ * @param listOfPrograms - all Programs to see if the marker is inside any of them
+ * @returns {*} - program object or null if not inside a program
+ */
+export function findProgramContainingMarker( markerPosition, listOfPrograms ) {
+  return listOfPrograms.find( ( { points } ) => {
+    for ( let i = 0; i < 4; i++ ) {
+      const a = i;
+      const b = ( i + 1 ) % 4;
+
+      const sideA = diff( points[ a ], markerPosition );
+      const sideB = diff( points[ b ], markerPosition );
+
+      let angle = Math.atan2( sideB.y, sideB.x ) - Math.atan2( sideA.y, sideA.x );
+
+      if ( sideB.y < 0 && sideA.y > 0 ) {
+        angle += 2 * Math.PI;
+      }
+
+      if ( angle > Math.PI || angle < 0 ) {
+        return false;
+      }
+    }
+
+    return true;
+  } );
+}
+
 const commentRegex = /\s*\/\/\s*(.+)/;
 
 export function codeToName( code ) {

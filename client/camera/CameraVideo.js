@@ -326,6 +326,7 @@ export default class CameraVideo extends React.Component {
                   <DebugProgram
                     key={program.number}
                     program={program}
+                    debugMarkers={this.props.debugMarkers}
                     onMouseEnter={() => this._disableZoomer()}
                     onRelease={() => this._attachZoomer()}
                     videoWidth={this.state.videoWidth}
