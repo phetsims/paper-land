@@ -111,7 +111,7 @@ export default function EditTemplateControls( props ) {
         }}
         confirmationContent={
           <div>
-            <p>⚠ Warning! Loading a different template will delete all current programs.</p>
+            <p>⚠ Warning! Loading a different template will delete all current programs. You may want to make a new empty project to work with templates.</p>
           </div>
         }
       ></ConfirmationDialog>
