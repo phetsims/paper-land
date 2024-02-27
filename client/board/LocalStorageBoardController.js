@@ -9,6 +9,7 @@ import clientConstants from '../clientConstants.js';
 import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import boardConsole from './boardConsole.js';
 import boardModel from './boardModel.js';
+import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
 // constants
 const MAX_MARKER_ID = Number.MAX_SAFE_INTEGER;
@@ -22,32 +23,18 @@ const defaultBoardConfig = {
   removalDelay: 0
 };
 
-// The amount of movement required for a program to be considered "moved" and trigger events
-// related to changing positions. Value is normalized, so a value of 0.2 means it has to move
-// 20% of the screen in either X or Y dimensions.
-const updatePositionInterval = newValue => {
-  saveValueToBoardConfig( 'positionInterval', newValue );
-};
-
-const updateRemovalDelay = newValue => {
-  saveValueToBoardConfig( 'removalDelay', newValue );
-};
-
-// Sets the new value to the runtime config object and local storage for next page load.
-const saveValueToBoardConfig = ( nameString, value ) => {
-  boardConfigObject[ nameString ] = value;
-  localStorage.boardConfig = JSON.stringify( boardConfigObject );
-};
-
 export default class LocalStorageBoardController {
-  constructor( scene, board, localStorageKey ) {
+  constructor( scene ) {
 
+    // The current paper programs and markers in local storage, with information needed to interact with them.
     this.paperProgramsInfo = [];
     this.currentMarkersInfo = [];
 
+    // Maps paper programs to the markers that were detected on them in the last update. Used to observe changes
+    // to markers on programs, and necessary because markers are not uniquely identifiable in Paper Playground.
     this.mapOfPaperProgramNumbersToPreviousMarkers = new Map();
 
-    // timestamp of the last update of paper program information
+    // Timestamp of the last update of paper program information
     this.lastUpdateTime = 0;
 
     // Reusable reference to an array containing all collected markers, accessed through sharedData
@@ -82,6 +69,7 @@ export default class LocalStorageBoardController {
     // The next available ID that will be used to uniquely identify a marker.
     this.nextMarkerId = 0;
 
+    // The root level Node of the scene graph for the board page.
     this.scene = scene;
 
     // Combined config with localStorage overriding defaults. This will change during runtime as new values
@@ -105,9 +93,40 @@ export default class LocalStorageBoardController {
       allMarkers: this.allMarkers
     };
 
+    // Update the model when changes are made to local storage (how paper playground communicates the state
+    // of programs/markers to other pages).
     window.addEventListener( 'storage', this.handleStorageEvent.bind( this ) );
   }
 
+
+  /**
+   * The amount of movement required for a program to be considered "moved" and trigger events
+   * related to changing positions. Value is normalized, so a value of 0.2 means it has to move
+   * 20% of the screen in either X or Y dimensions.
+   */
+  updatePositionInterval( newValue ) {
+    this.saveValueToBoardConfig( 'positionInterval', newValue );
+  }
+
+  /**
+   * Update the amount of time that a program must be missing from the detection window before it is considered
+   * removed. Value is in seconds.
+   */
+  updateRemovalDelay( newValue ) {
+    this.saveValueToBoardConfig( 'removalDelay', newValue );
+  }
+
+  /**
+   * Sets the new value to the runtime config object and local storage for next page load.
+   */
+  saveValueToBoardConfig( nameString, value ) {
+    this.boardConfigObject[ nameString ] = value;
+    localStorage.boardConfig = JSON.stringify( this.boardConfigObject );
+  }
+
+  /**
+   * Returns an ID for the provided marker.
+   */
   getIdForMarker( markerInfo ) {
     return Array.from( this.markerMap.keys() ).find(
       id => _.isEqual( this.markerMap.get( id ), markerInfo )
@@ -339,6 +358,9 @@ export default class LocalStorageBoardController {
     } );
   }
 
+  /**
+   * Detaches all whisker connections for a program.
+   */
   detachWhiskersForProgram( paperNumber ) {
 
     // Detach all programs that are attached to whiskers on this program
@@ -397,6 +419,12 @@ export default class LocalStorageBoardController {
     } );
   }
 
+  /**
+   * Updates the board with the latest paper program and marker information.
+   *
+   * @param presentPaperProgramInfo - Information about the current programs that are detected (in local storage)
+   * @param currentMarkersInfo - Information about the current markers that are detected (in local storage)
+   */
   updateBoard( presentPaperProgramInfo, currentMarkersInfo ) {
 
     const dataByProgramNumber = JSON.parse( localStorage.paperProgramsDataByProgramNumber || '{}' );
@@ -413,7 +441,7 @@ export default class LocalStorageBoardController {
       const previousPaperProgramPoints = this.mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber );
       const currentPaperProgramPoints = paperProgramInstanceInfo.points;
       let paperProgramHasMoved = previousPaperProgramPoints === undefined ||
-                                 !this.areAllPointsEqual( previousPaperProgramPoints, currentPaperProgramPoints, boardConfigObject.positionInterval );
+                                 !this.areAllPointsEqual( previousPaperProgramPoints, currentPaperProgramPoints, this.boardConfigObject.positionInterval );
       const programSpecificData = dataByProgramNumber[ paperProgramNumber ];
 
       // If this paper program contains data that is intended for use by the sim design board, and that data has changed
@@ -425,7 +453,7 @@ export default class LocalStorageBoardController {
         this.lastUpdateTime = programSpecificData.paperPlaygroundData.updateTime;
 
         // If there are no handlers for this program, it means that it just appeared in the detection window.
-        const paperProgramJustAppeared = !mapOfProgramNumbersToEventHandlers.has( paperProgramNumber );
+        const paperProgramJustAppeared = !this.mapOfProgramNumbersToEventHandlers.has( paperProgramNumber );
 
         // If the paper program is in the removal map, detection was just lost - do not want to call removal/addition
         // callbacks if we are in this case.
@@ -438,34 +466,34 @@ export default class LocalStorageBoardController {
             // Since pretty much anything could have changed about the program, we treat this as a removal and re-appearance
             // of the program.
             // NOTE: There is no delay in this case, we assume program attribute change should be reflected right away.
-            const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
+            const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
 
             // first detach any whiskers for this program and others
-            detachWhiskersForProgram( paperProgramNumber );
+            this.detachWhiskersForProgram( paperProgramNumber );
 
             // then trigger events for program removal
             if ( eventHandlers.onProgramRemoved ) {
-              evalProgramFunction( eventHandlers.onProgramRemoved, [
+              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramRemoved, [
                 paperProgramNumber,
-                mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-                sharedData
+                this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+                this.sharedData
               ], 'onProgramRemoved' );
             }
           }
 
           // Extract the event handlers from the program, since they are either new or potentially changed.
-          mapOfProgramNumbersToEventHandlers.set( paperProgramNumber, programSpecificData.paperPlaygroundData.eventHandlers || {} );
+          this.mapOfProgramNumbersToEventHandlers.set( paperProgramNumber, programSpecificData.paperPlaygroundData.eventHandlers || {} );
 
           // Set the scratchpad data to an empty object.
-          mapOfProgramNumbersToScratchpadObjects.set( paperProgramNumber, {} );
+          this.mapOfProgramNumbersToScratchpadObjects.set( paperProgramNumber, {} );
 
           // Run this program's "added" handler, if present (and generally it should be).
-          const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
+          const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
           if ( eventHandlers.onProgramAdded ) {
-            evalProgramFunction( eventHandlers.onProgramAdded, [
+            LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramAdded, [
               paperProgramNumber,
-              mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-              sharedData
+              this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+              this.sharedData
             ], 'onProgramAdded' );
 
             // DO NOT update adjacent papers here because the position change will be detected right after this
@@ -485,17 +513,17 @@ export default class LocalStorageBoardController {
       }
 
       // If the paper has moved and there is a move handler, call it.
-      const eventHandlers = mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
+      const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
       if ( paperProgramHasMoved && eventHandlers && eventHandlers.onProgramChangedPosition ) {
-        evalProgramFunction( eventHandlers.onProgramChangedPosition, [
+        LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramChangedPosition, [
           paperProgramNumber,
           currentPaperProgramPoints,
-          mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-          sharedData
+          this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+          this.sharedData
         ], 'onProgramChangedPosition' );
       }
       if ( paperProgramHasMoved ) {
-        updateWhiskerIntersections( paperProgramInstanceInfo, presentPaperProgramInfo );
+        this.updateWhiskerIntersections( paperProgramInstanceInfo, presentPaperProgramInfo );
       }
 
       // Update the paper program points for the next time through this loop. Only saved if there is sufficient
@@ -506,16 +534,16 @@ export default class LocalStorageBoardController {
 
       // Handle any changing markers - addition/removal/or position change
       const currentMarkersForProgram = _.filter( currentMarkersInfo, marker => parseInt( marker.paperNumber, 10 ) === paperProgramNumber );
-      const previousMarkersForProgram = mapOfPaperProgramNumbersToPreviousMarkers.get( paperProgramNumber ) || [];
+      const previousMarkersForProgram = this.mapOfPaperProgramNumbersToPreviousMarkers.get( paperProgramNumber ) || [];
       let markersMoved = false;
 
       if ( currentMarkersForProgram.length > previousMarkersForProgram.length ) {
         if ( eventHandlers && eventHandlers.onProgramMarkersAdded ) {
-          evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
+          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
             paperProgramNumber,
             currentPaperProgramPoints,
-            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-            sharedData,
+            this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+            this.sharedData,
             currentMarkersForProgram
           ], 'onProgramMarkersAdded' );
         }
@@ -525,17 +553,17 @@ export default class LocalStorageBoardController {
       }
       else if ( currentMarkersForProgram.length < previousMarkersForProgram.length ) {
         if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-          evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
             paperProgramNumber,
             currentPaperProgramPoints,
-            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-            sharedData,
+            this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+            this.sharedData,
             currentMarkersForProgram
           ], 'onProgramMarkersRemoved' );
         }
 
         // A marker was just removed, update the map ()
-        mapOfPaperProgramNumbersToPreviousMarkers.set( paperProgramNumber, currentMarkersForProgram );
+        this.mapOfPaperProgramNumbersToPreviousMarkers.set( paperProgramNumber, currentMarkersForProgram );
       }
       else if ( currentMarkersForProgram.length > 0 ) {
 
@@ -557,7 +585,7 @@ export default class LocalStorageBoardController {
         const zippedPointsDifferent = _.zipWith( sortedCurrent, sortedPrevious, ( a, b ) => {
 
           // graceful when arrays are different length
-          return ( a && b ) ? !arePointsEqual( a, b, boardConfigObject.positionInterval ) : true;
+          return ( a && b ) ? !this.arePointsEqual( a, b, this.boardConfigObject.positionInterval ) : true;
         } );
         markersMoved = _.some( zippedPointsDifferent );
       }
@@ -566,22 +594,22 @@ export default class LocalStorageBoardController {
 
         // At least one marker moved! Use program callback and save markers for next comparison.
         if ( eventHandlers && eventHandlers.onProgramMarkersChangedPosition ) {
-          evalProgramFunction( eventHandlers.onProgramMarkersChangedPosition, [
+          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersChangedPosition, [
             paperProgramNumber,
             currentPaperProgramPoints,
-            mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-            sharedData,
+            this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+            this.sharedData,
             currentMarkersForProgram
           ], 'onProgramMarkersChangedPosition' );
         }
-        mapOfPaperProgramNumbersToPreviousMarkers.set( paperProgramNumber, currentMarkersForProgram );
+        this.mapOfPaperProgramNumbersToPreviousMarkers.set( paperProgramNumber, currentMarkersForProgram );
       }
     } );
 
     // Run removal handlers for any paper programs that have disappeared.
     const presentPaperProgramNumbers = presentPaperProgramInfo.map( info => Number( info.number ) );
 
-    mapOfProgramNumbersToEventHandlers.forEach( ( eventHandlers, paperProgramNumber ) => {
+    this.mapOfProgramNumbersToEventHandlers.forEach( ( eventHandlers, paperProgramNumber ) => {
       if ( !presentPaperProgramNumbers.includes( paperProgramNumber ) ) {
 
         // This paper program has disappeared. Queue it up for removal. If it is still gone after the removal delay,
@@ -597,35 +625,35 @@ export default class LocalStorageBoardController {
 
             // First call any marker removal handlers before removing this program
             if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-              evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
                 paperProgramNumber,
                 this.mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
-                mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-                sharedData,
+                this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+                this.sharedData,
                 [] // empty markers - none since paper is being removed
               ], 'onProgramMarkersRemoved' );
             }
-            mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
+            this.mapOfPaperProgramNumbersToPreviousMarkers.delete( paperProgramNumber );
 
             // remove any whiskers on this program, and any whiskers connecting this program to others
-            detachWhiskersForProgram( paperProgramNumber );
+            this.detachWhiskersForProgram( paperProgramNumber );
 
             // Finally call the program removal handler
             if ( eventHandlers.onProgramRemoved ) {
-              evalProgramFunction( eventHandlers.onProgramRemoved, [
+              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramRemoved, [
                 paperProgramNumber,
-                mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
-                sharedData
+                this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
+                this.sharedData
               ], 'onProgramRemoved' );
             }
 
             // cleanup state maps
-            mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
-            mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
+            this.mapOfProgramNumbersToEventHandlers.delete( paperProgramNumber );
+            this.mapOfProgramNumbersToScratchpadObjects.delete( paperProgramNumber );
 
             // clear the timeout from the map now that it has ocurred
             this.mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
-          }, boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
+          }, this.boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
         }
       }
     } );
@@ -640,21 +668,21 @@ export default class LocalStorageBoardController {
 
       // NOTE: If these are maps, it might be OK if the indices are undefined (map value will then be undefined)
       const currentMarker = currentMarkersInfo[ info.currentMarkerIndex ];
-      const previousMarker = markerMap.get( info.previousMarkerId );
+      const previousMarker = this.markerMap.get( info.previousMarkerId );
 
       if ( currentMarker && previousMarker ) {
 
         // It found that the same marker was detected before/after update -- look for changing positions
         const newPosition = currentMarkersInfo[ info.currentMarkerIndex ].position;
-        const previousPosition = markerMap.get( info.previousMarkerId ).position;
+        const previousPosition = this.markerMap.get( info.previousMarkerId ).position;
 
-        if ( !arePointsEqual( newPosition, previousPosition, boardConfigObject.positionInterval ) ) {
+        if ( !this.arePointsEqual( newPosition, previousPosition, this.boardConfigObject.positionInterval ) ) {
 
           // update the position of that marker
           changedMarkers.push( currentMarkersInfo[ info.currentMarkerIndex ] );
 
           // save the new state to the marker
-          markerMap.get( info.previousMarkerId ).position = newPosition;
+          this.markerMap.get( info.previousMarkerId ).position = newPosition;
         }
       }
       else if ( currentMarker && !previousMarker ) {
@@ -663,14 +691,14 @@ export default class LocalStorageBoardController {
         addedMarkers.push( currentMarker );
 
         // Marker was added, add it to the state
-        markerMap.set( nextMarkerId, currentMarker );
+        this.markerMap.set( this.nextMarkerId, currentMarker );
 
         // NOTE: If you run for a *really* long time, this could make it so markers get overwritten!
-        nextMarkerId = ( nextMarkerId + 1 ) % MAX_MARKER_ID;
+        this.nextMarkerId = ( this.nextMarkerId + 1 ) % MAX_MARKER_ID;
       }
       else if ( previousMarker && !currentMarker ) {
         removedMarkers.push( previousMarker );
-        markerMap.delete( info.previousMarkerId );
+        this.markerMap.delete( info.previousMarkerId );
       }
       else {
         console.error( 'How can we have a change in markers where there is no addition/removal or change in position?' );
@@ -682,6 +710,11 @@ export default class LocalStorageBoardController {
     changedMarkers.length > 0 && markersChangedPositionEmitter.emit( changedMarkers );
   }
 
+  /**
+   * Handles the local storage event, which is triggered when there are paper events from paper playground. This
+   * includes programs added, removed, markers added, removed, and whisker connections occurring, and possibly
+   * others.
+   */
   handleStorageEvent( event ) {
     const currentPaperProgramsInfo = JSON.parse( localStorage.paperProgramsProgramsToRender );
 
