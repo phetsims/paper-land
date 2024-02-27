@@ -25,6 +25,8 @@ document.body.appendChild( simDisplayDiv );
 // Create the root of the scene graph.
 const scene = new phet.scenery.Node();
 
+// Controls the state of the board when changes occur from paper events - which are communicated
+// across local storage.
 const localStorageBoardController = new LocalStorageBoardController( scene );
 
 // Render the scene graph.  Once this is done it updates itself, so there is no other React-based rendering of this
