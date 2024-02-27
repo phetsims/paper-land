@@ -187,6 +187,11 @@ export default function CreateViewComponentForm( props ) {
       if ( selectedTab === 'background' ) {
         editingComponent.fillColor = backgroundDataRef.current.fillColor;
       }
+      else if ( selectedTab === 'text' ) {
+
+        // update options
+        editingComponent.defaultViewOptions = generalDataRef.current.defaultViewOptions;
+      }
     }
     else {
 
@@ -220,7 +225,8 @@ export default function CreateViewComponentForm( props ) {
         activeProgram.viewContainer.addImageView( newComponent );
       }
       else if ( selectedTab === 'text' ) {
-        newComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString );
+        const textOptions = generalDataRef.current.defaultViewOptions;
+        newComponent = new TextViewComponent( componentName, selectedModelComponents, controlFunctionString, textOptions );
         activeProgram.viewContainer.addTextView( newComponent );
       }
       else if ( selectedTab === 'shapes' ) {

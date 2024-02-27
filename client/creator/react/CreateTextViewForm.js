@@ -2,6 +2,7 @@ import React from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { formatFunctionListForPrompt } from '../../utils.js';
 import TextViewComponent from '../model/views/TextViewComponent.js';
+import ViewUnitsSelector from '../model/views/ViewUnitsSelector.js';
 import styles from './../CreatorMain.css';
 import NodeComponentFunctionsList, { NODE_COMPONENT_FUNCTIONS } from './NodeComponentFunctionsList.js';
 import useEditableForm from './useEditableForm.js';
@@ -52,6 +53,11 @@ export default function CreateTextViewForm( props ) {
     </div>
   );
 
+  // Text (like other graphical Nodes) can be positioned in model or pixel units.
+  const typeSpecificControls = (
+    <ViewUnitsSelector formData={formData} handleChange={handleChange}></ViewUnitsSelector>
+  );
+
   return (
     <div>
       <ViewComponentControls
@@ -60,6 +66,7 @@ export default function CreateTextViewForm( props ) {
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
+        typeSpecificControls={typeSpecificControls}
         functionPrompt={'Write a function using the variables to control the Text. All view coordinates in pixels.'}
         componentsPrompt={'Add model components that will control the Text.'}
         additionalControlFunctions={`${formatFunctionListForPrompt( NODE_COMPONENT_FUNCTIONS )}\n${formatFunctionListForPrompt( TEXT_FUNCTIONS )}`}
