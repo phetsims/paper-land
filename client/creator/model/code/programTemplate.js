@@ -1,5 +1,7 @@
 /**
  * A template for program code. The code generator will fill in the template.
+ *
+ * @author Jesse Greenberg (PhET Interactive Simulations)
  */
 
 // Putting the title here on the first line makes it so there isn't an empty blank line when the template is filled in.

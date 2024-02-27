@@ -8,3 +8,4 @@
 require( './BoardModelTests.js' );
 require( './creator/ProgramCodeValidatorTests.js' );
 require( './creator/CreatorModelTests.js' );
+require( './creator/ProgramCodeGeneratorTests.js' );

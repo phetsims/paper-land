@@ -1,3 +1,9 @@
+/**
+ * The main file for code generation. Converts a program into a string of code that can be run in the Paper Land.
+ *
+ * @author Jesse Greenberg (PhET Interactive Simulations)
+ */
+
 import ControllerCodeGenerator from './ControllerCodeGenerator.js';
 import ControllerComponentTemplates from './ControllerComponentTemplates.js';
 import ListenerCodeGenerator from './ListenerCodeGenerator.js';
