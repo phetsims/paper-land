@@ -7,7 +7,7 @@ export default class BackgroundViewComponent extends ViewComponent {
    * @param {string} name - name of this component
    * @param {NamedProperty[]} modelComponents - names of the model components this represents
    * @param {string} controlFunctionString - a function called to change the view whenever the model changes
-   * @param {Object} providedOptions - options for this view component
+   * @param {Object} [providedOptions] - options for this view component
    */
   constructor( name, modelComponents, controlFunctionString, providedOptions ) {
 

@@ -7,6 +7,8 @@
 import BooleanPropertyController from '../../creator/model/controllers/BooleanPropertyController.js';
 import MultilinkListenerComponent from '../../creator/model/controllers/MultilinkListenerComponent.js';
 import CreatorModel from '../../creator/model/CreatorModel.js';
+import BackgroundViewComponent from '../../creator/model/views/BackgroundViewComponent.js';
+import DescriptionViewComponent from '../../creator/model/views/DescriptionViewComponent.js';
 import ImageViewComponent from '../../creator/model/views/ImageViewComponent.js';
 
 QUnit.module( 'CreatorModel' );
@@ -108,6 +110,28 @@ QUnit.test( 'createProgram', assert => {
   assert.ok( creatorModel.programs.length === 0, 'Program deleted from programs list' );
 } );
 
+QUnit.test( 'deleteProgram', assert => {
+
+  // a test CreatorModel with a program that we can add components to
+  const creatorModel = new CreatorModel();
+
+  // create a program
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+  assert.ok( creatorModel.programs.length === 1, 'Program added to the list' );
+
+  // Add components to the test program
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+
+  // make sure that component is in the creator model allModelComponents list
+  assert.ok( creatorModel.allModelComponents.length === 1, 'Boolean component added to allModelComponents' );
+
+  creatorModel.deleteProgram( testProgram );
+  assert.ok( creatorModel.programs.length === 0, 'Program deleted from the list' );
+
+  // make sure that component is removed from the creator model allModelComponents list
+  assert.ok( creatorModel.allModelComponents.length === 0, 'Boolean component removed from allModelComponents' );
+} );
+
 /**
  * Makes sure that expanding all programs from the CreatorModel works correctly.
  */
@@ -129,4 +153,121 @@ QUnit.test( 'setAllProgramsExpanded', assert => {
   creatorModel.setAllProgramsExpanded( false );
   assert.ok( !testProgram.expandedProperty.value, 'Program is collapsed' );
   assert.ok( !testProgram2.expandedProperty.value, 'Program is collapsed' );
+} );
+
+/**
+ * Tests for isNameAvailable - component names are unique.
+ */
+QUnit.test( 'isNameAvailable', assert => {
+
+  // a test CreatorModel with a program that we can add components to
+  const creatorModel = new CreatorModel();
+
+  // create a program
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+
+  const testName1 = 'testName';
+  const testName2 = 'testName2';
+
+  // create a component with the same name as the program
+  const testImageComponent = new ImageViewComponent( testName1, [], '', 'on-bulb.png' );
+  testProgram.viewContainer.addImageView( testImageComponent );
+
+  assert.ok( !creatorModel.isNameAvailable( testName1 ), 'Name is not available' );
+  assert.ok( creatorModel.isNameAvailable( testName2 ), 'Name is available' );
+
+  // remove the first component and name2 should be available
+  testImageComponent.deleteEmitter.emit();
+  assert.ok( creatorModel.isNameAvailable( testName1 ), 'Name is available again' );
+} );
+
+/**
+ * Tests for getUniqueCopyName - makes sure that the copy name is unique, but not modified if it is already unique.
+ */
+QUnit.test( 'getUniqueCopyName', assert => {
+
+  const creatorModel = new CreatorModel();
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+
+  const testName = 'testName';
+  const testName2 = 'testName2';
+
+  testProgram.modelContainer.addBooleanProperty( testName, true );
+  const uniqueCopyName = creatorModel.getUniqueCopyName( testName );
+  assert.ok( uniqueCopyName !== testName && creatorModel.isNameAvailable( uniqueCopyName ), 'Unique name produced that is available.' );
+
+  const uniqueCopyName2 = creatorModel.getUniqueCopyName( testName2 );
+  assert.ok( uniqueCopyName2 === testName2 && creatorModel.isNameAvailable( testName2 ), 'Name is already unique and not modified.' );
+} );
+
+/**
+ * Test save and load functionality by creating a Model, saving it to state, clearing the model, and then restoring
+ * it from the saved state.
+ *
+ * This is not complete at this time (does not save/load every component), but tests basic functionality.
+ */
+QUnit.test( 'save and load', assert => {
+
+  const creatorModel = new CreatorModel();
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+
+  // Add some model components
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  testProgram.modelContainer.addStringProperty( 'testString', 'test' );
+  testProgram.modelContainer.addVector2Property( 'testVector2', 0, 0 );
+  const anyModelComponentReference = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+
+  // Add some view components
+  const testImageComponent = new ImageViewComponent( 'testImage', [ anyModelComponentReference ], '', 'on-bulb.png' );
+  const testDescriptionComponent = new DescriptionViewComponent( 'testDescription', [ anyModelComponentReference ], '', 'test' );
+  const testBackgroundComponent = new BackgroundViewComponent( 'testBackground', [ anyModelComponentReference ], '' );
+  testProgram.viewContainer.addImageView( testImageComponent );
+  testProgram.viewContainer.addDescriptionView( testDescriptionComponent );
+  testProgram.viewContainer.addBackgroundView( testBackgroundComponent );
+
+  // Add some controller components
+  const booleanController = new BooleanPropertyController( 'testBooleanController', anyModelComponentReference, 'MARKER' );
+  testProgram.controllerContainer.addBooleanPropertyController( booleanController );
+
+  // make sure the model is in the expected state
+  assert.ok( creatorModel.allModelComponents.length === 4, 'Model components added' );
+  assert.ok( creatorModel.allViewComponents.length === 3, 'View components added' );
+  assert.ok( creatorModel.allControllerComponents.length === 1, 'Controller components added' );
+
+  // Save the model
+  const saveJSON = creatorModel.save();
+
+  // make sure the model looks reasonable
+  assert.ok( saveJSON.programs.length === 1, 'One program was saved' );
+
+  const modelJSON = saveJSON.programs[ 0 ].modelContainer;
+  assert.ok( modelJSON.namedBooleanProperties.length === 1, 'Boolean property saved' );
+  assert.ok( modelJSON.namedNumberProperties.length === 1, 'Number property saved' );
+  assert.ok( modelJSON.namedStringProperties.length === 1, 'String property saved' );
+  assert.ok( modelJSON.namedVector2Properties.length === 1, 'Vector2 property saved' );
+
+  const viewJSON = saveJSON.programs[ 0 ].viewContainer;
+  assert.ok( viewJSON.imageViews.length === 1, 'Image view saved' );
+  assert.ok( viewJSON.descriptionViews.length === 1, 'Description view saved' );
+  assert.ok( viewJSON.backgroundViews.length === 1, 'Background view saved' );
+
+  const controllerJSON = saveJSON.programs[ 0 ].controllerContainer;
+  assert.ok( controllerJSON.booleanPropertyControllers.length === 1, 'Boolean controller saved' );
+
+  // clear the model and make sure it is empty
+  creatorModel.clear();
+  assert.ok( creatorModel.allModelComponents.length === 0, 'Model components cleared' );
+  assert.ok( creatorModel.allViewComponents.length === 0, 'View components cleared' );
+  assert.ok( creatorModel.allControllerComponents.length === 0, 'Controller components cleared' );
+  assert.ok( creatorModel.programs.length === 0, 'Programs cleared' );
+
+  // load the model from the saved state
+  creatorModel.load( saveJSON );
+
+  // re-verify the state of the model as it was before
+  assert.ok( creatorModel.allModelComponents.length === 4, 'Model components added' );
+  assert.ok( creatorModel.allViewComponents.length === 3, 'View components added' );
+  assert.ok( creatorModel.allControllerComponents.length === 1, 'Controller components added' );
+  assert.ok( creatorModel.programs.length === 1, 'Programs added' );
 } );
