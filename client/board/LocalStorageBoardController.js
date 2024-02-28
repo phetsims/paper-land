@@ -95,9 +95,16 @@ export default class LocalStorageBoardController {
 
     // Update the model when changes are made to local storage (how paper playground communicates the state
     // of programs/markers to other pages).
-    window.addEventListener( 'storage', this.handleStorageEvent.bind( this ) );
+    this.boundHandleStorageEvent = this.handleStorageEvent.bind( this );
+    window.addEventListener( 'storage', this.boundHandleStorageEvent );
   }
 
+  /**
+   * Detach window listeners that will update the board model from events.
+   */
+  dispose() {
+    window.removeEventListener( 'storage', this.boundHandleStorageEvent );
+  }
 
   /**
    * The amount of movement required for a program to be considered "moved" and trigger events
