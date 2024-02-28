@@ -4,18 +4,19 @@
  * @author Jesse Greenberg
  */
 
-import LocalStorageBoardController from '../../board/LocalStorageBoardController.js';
-import CreatorModel from '../../creator/model/CreatorModel.js';
 import { parse } from 'acorn';
 import * as walk from 'acorn-walk';
+import LocalStorageBoardController from '../../board/LocalStorageBoardController.js';
+import CreatorModel from '../../creator/model/CreatorModel.js';
 
 let localStorageBoardController = null;
 
 QUnit.module( 'ProgramCodeGenerator', {
   before: function() {
 
-    // TODO: For next time, how can we mock adding programs to local storage to trigger paper events that
-    //   exercise the generated code?
+    // TODO: Since we are going to use acorn instead, it seems that this is not necessary. Actually running
+    //   the code and seeing how it interacts with the board by sending messages over local storage is too
+    //   complicated, since paper land needs the projector to be running.
     const rootNode = new phet.scenery.Node();
     localStorageBoardController = new LocalStorageBoardController( rootNode );
   },

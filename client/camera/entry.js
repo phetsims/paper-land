@@ -108,7 +108,6 @@ function render() {
       }}
       onProgramsChange={programs => {
 
-        debugger;
         localStorage.paperProgramsProgramsToRender = JSON.stringify( programs );
 
         // save state of whiskers before updating programs as we want them accurate before
