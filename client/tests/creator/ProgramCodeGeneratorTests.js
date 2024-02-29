@@ -119,7 +119,6 @@ QUnit.test( 'Model Components', async assert => {
           node.init && node.init.type === 'NewExpression' && node.init.callee &&
           node.init.callee.property && node.init.callee.property.name === className
         ) {
-          console.log( node.init.arguments );
           stateObject[ createdStateKey ] = true;
         }
       },
