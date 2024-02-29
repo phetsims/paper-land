@@ -1,10 +1,15 @@
-# Example Paper Programs - Altitude Demo
+# Example JavaScript Paper Programs - Altitude Demo
 
-Below you will find a set of example paper programs that create the abstract idea of controlling and mapping displays to an object hovering above the ground, without implementing any physics. We'll create a `Property` for its "altitude" above the ground and then create a few other programs to get the altitude value and control or display it across multiple modalities.
+Below you will find a set of example paper programs written in full JavaScript using the [paperLand API](./paperland-api.md) that create the abstract idea of controlling and mapping displays to an object hovering above the ground, without implementing any physics. 
+
+!!! danger
+    If you are not extremely comfortable with JavaScript, you should move over to the [*Creator* tutorial](../setup/creator.md) for easy paper program creation!
+
+We'll create a `Property` for its "altitude" above the ground and then create a few other programs to get the altitude value and control or display it across multiple modalities.
 
 !!! note
 
-        These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the Interactive Board (board.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [legacy Paper API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md).
+    These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the *Interactive Display* (board.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [legacy Paper API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md).
 
 ## Model Program
 

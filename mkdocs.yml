@@ -67,6 +67,11 @@ plugins:
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - minify:
       minify_html: true
+  - macros:
+      render_by_default: false
+      on_error_fail: false
+      on_undefined: strict
+
 
 # Customization
 extra:
@@ -93,8 +98,8 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.emoji:
-      emoji_generator: !!python/name:materialx.emoji.to_svg
-      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -106,6 +111,11 @@ markdown_extensions:
       user: squidfunk
       repo: mkdocs-material
   - pymdownx.mark
+  - pymdownx.pathconverter:
+      base_path: 'community' # default: ''
+      relative_path: '' # default ''
+      absolute: false # default: false
+      tags: 'a script img link object embed'
   - pymdownx.smartsymbols
   - pymdownx.superfences:
       custom_fences:
@@ -127,11 +137,12 @@ nav:
       - Interface Overview: setup/interface-overview.md
       - Creator Tutorial: setup/creator.md
     - Resources: 
-      - Model-View-Controller Framework: use/mvc.md
+      - Walkthroughs: use/walkthroughs/walkthroughs.md
+      - MVC Framework: use/mvc.md
       - paperLand API: use/paperland-api.md
+      - Extra Resources: use/resources.md
       - Design Tips: use/designing-programs.md
-      - Example Papers (deprecated): use/example-program.md
-      - Downloadables: use/resources.md
+      - Example JS Papers: use/example-program.md
     - Examples:
       - Gallery: media-gallery.md
     - Community:

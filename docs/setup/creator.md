@@ -179,7 +179,6 @@ To add a component to your program, first create a program using the "New Empty 
         
         ??? example "JS Example"
             ```js
-            // Assuming createAndLoadWrappedAudioBuffer and other utilities are defined
             const clickSoundClip = new phet.tambo.SoundClip(clickSoundWrappedAudioBuffer, {
               loop: false,
               initialOutputLevel: 0.5
@@ -193,7 +192,6 @@ To add a component to your program, first create a program using the "New Empty 
         
         ??? example "JS Example"
             ```js
-            // Assuming addModelPropertyMultilink and other utilities are defined
             phet.paperLand.addModelPropertyMultilink(dependencies, () => {
               const description = "The current score is now 10.";
               // Logic to speak the description
@@ -240,7 +238,6 @@ To add a component to your program, first create a program using the "New Empty 
         
         ??? example "JS Example"
             ```js
-            // Assuming kite.Shape is defined and utilities for conversion are available
             const customShape = new kite.Shape()
               .moveTo(0, 0)
               .lineTo(100, 0)
@@ -375,35 +372,68 @@ To add a component to your program, first create a program using the "New Empty 
 
     ![alt text](../assets/controller-form.png)
 
-### (Custom Functions) Customizing Component Output
+### Component Control Functions - Customizing Component Output
 
-{Content coming soon!}
+Sometimes you want to add more complex behavior to a component. Perhaps you want to say "if my position component is inside my bounds component, then I want my sound to get louder!". Ideas like this, and many others that require more complex control structures (case structures like if/else, loops like for loops, etc), are difficult to abstract and not always very difficult to write a simple JavaScript function to accomplish.
 
-### Adding Connections (component dependencies)
+This is where Control Functions come in! You will add the connections to other components you will need in your function output - any component you need information from or would like to control - and write some code that will output from this component.
 
-{Content coming soon!}
+**If you're unfamiliar with JavaScript, this does not need to be scary! In fact, even seemingly complex output from the component can be done with just a couple of lines of code. Additionally, many functions for the component are simplified and included in the documentation right above the Control Function code box.**
 
-![alt text](./img/add-components.png)
+Some components - such as the Link and Animation Controller components, require the use of Control Functions because of the many ways they can be used.
 
-#### Dependency or Reference?
+#### Adding Connections (component dependencies)
 
-{Content coming soon!}
+Start by selecting the "Add Connection" button, from which you'll select the Model components you need information from
 
-![alt text](./img/custom-function.png)
+!!! tip "Model Driven Programming"
+    Remember: Paper Playground, using the MVC framework, is **Model driven**! That means that when the value of a Model Component changes, that drives changes in other Components.
 
-## Using AI chat to create custom component logic and output
+    If one Component is dependent on any given Model Component, then it will update/trigger when the Model Component changes. If you expect changes in, e.g., your Sound View Component, then make sure it is connected to the correct Model Component or if it needs a new Model Component to trigger it when you expect.
 
-{Content coming soon!}
+??? info "Control Function Menu Screenshot"
+    ![alt text](./img/add-components.png)
+    ![alt text](./img/custom-function.png)
 
-![alt text](../assets/ai-example.png)
+##### Dependency or Reference?
+
+By default, when any Connected Component updates, it will trigger the downstream Component to update. That means, if Model `biggestNumber` is marked as a Connection (dependency) of View `biggestNumberImage`, and `biggestNumber` is controlled by Controller `biggestNumberPaperController`, then `biggestNumberImage` will update whenever `biggestNumber` changes, which in turn is updated whenever `biggestNumberPaperController` changes. The relationship is then `biggestNumberPaperController` (Controller) -> `biggestNumber` (Model) -> `biggestNumberImage` (View).
+
+If you only want to use the value of a Model Component (e.g., `biggestNumber`), but do not want the downstream component (e.g., `biggestNumberImage`) to update each time the Model Component changes, then switch the Connected Component from "Dependency" to "Reference" using the toggle in the Control Function menu after adding the Connection.
+
+##### Controlled Dependencies (Controller Component only)
+
+
+##### Using AI chat to create component Control Function logic and output
+
+!!! warning "Requires OpenAI API Key"
+    Currently, the integrated AI assistant is based on the OpenAI Assistant API and uses `gpt-4-0125-preview` as the model. You will need to add an `OPENAI_API_KEY={your api key}` to use this feature.
+
+If you would like assistance in creating a Control Function for any of your components, you can use the AI Assistant menu in a View or Controller Component's Control Function menu.
+
+The AI has knowledge of any selected [connections](#adding-connections-component-dependencies) and the function documentation for the selected component and connections. Ask, in plain language, for your desired output of the function and it will generate an option for you. Continue the conversation and iterate on the function as desired. Make sure to review the response and make sure it makes sense in your context. Otherwise, continue iterating with the AI until you have found your solution.
+
+!!! warning
+    At this time, the AI Assistant has no knowledge of Paper Playground as a whole and only serves as a JavaScript code generator for creating Control Function outputs. The AI Assistant is intended as a convenience feature. You can use other generative AI platforms for assistance generating code if you have access to them.
+
+??? info "AI Assistant Menu Example"
+    ![alt text](../assets/ai-example.png)
 
 ## Custom Code
 
-{Content coming soon!}
+If there is code you wish to add, but is not captured by the existing Components in Creator, then you can select the "Custom Code" button on the bottom of your program. This will open a menu in the RIGHT PANE to add any JavaScript you wish to the Paper Events for your paper program. This will require more knowledge of JavaScript and the necessary definitions and disposal of any model, view, or controller code that you add. See the [paperLand API](../use/paperland-api.md) for information and examples.
+
+!!! note
+    Custom Code is added to the bottom of each Paper Event. If you add `console.log( "Console comment!");` to the `onProgramAdded` Paper Event, then it will be generated after all of the code in `onProgramAdded` for any added Components for your program.
 
 ## Organizing Programs
 
-{Content coming soon!}
+You have many options for organizing your programs in the Creator interface.
+
+- You can MOVE programs by dragging them in the white space of the program body.
+- You can COLLAPSE programs by selecting the :heavy_minus_sign: Minus/Dash icon in the Top Left of a program.
+- You can COPY programs (overlapping squares icon), duplicating the program with the same components (renamed with "_Copy"). They maintain dependencies/Connections!
+- You can DELETE programs by selecting the Trashcan icon in the Top Right of the Program. 
 
 ![alt text](./img/copy-delete-program.png)
 
@@ -419,7 +449,295 @@ We recommend using the **Copy Project** feature whenever you are looking to star
 
 ### Downloading and Loading Projects
 
-{Content coming soon!}
+You can download (export) or load (import) your projects as JSON files. Find the "Download Project" and "Load Project" buttons on the upper-right of the LEFT PANE. This is a great way to do version control or make a back-up before making risky changes to your project.
+
+??? example "Example JSON Output"
+    ```json
+    {
+        "programs": [
+            {
+                "number": 572,
+                "title": "Anchor",
+                "keywords": "",
+                "description": "",
+                "expanded": true,
+                "topWhiskerLength": 0.2,
+                "rightWhiskerLength": 0.2,
+                "bottomWhiskerLength": 0.2,
+                "leftWhiskerLength": 0.2,
+                "positionProperty": {
+                    "x": 267.87279818757077,
+                    "y": 92.6958985222822
+                },
+                "modelContainer": {
+                    "namedBooleanProperties": [],
+                    "namedVector2Properties": [
+                        {
+                            "name": "anchorPosition",
+                            "propertyType": "Vector2Property",
+                            "defaultX": 0,
+                            "defaultY": 0
+                        }
+                    ],
+                    "namedNumberProperties": [],
+                    "namedEnumerationProperties": [],
+                    "namedDerivedProperties": [],
+                    "namedBounds2Properties": [],
+                    "namedObservableArrays": [],
+                    "namedArrayItems": [],
+                    "namedArrayItemReferences": [],
+                    "namedStringProperties": []
+                },
+                "controllerContainer": {
+                    "vector2PropertyControllers": [
+                        {
+                            "name": "anchorPositionController",
+                            "controlledComponentName": "anchorPosition",
+                            "controlType": "MATCH_CENTER",
+                            "controlTypeFamily": ""
+                        }
+                    ],
+                    "boundsPropertyControllers": [],
+                    "booleanPropertyControllers": [],
+                    "numberPropertyControllers": [],
+                    "enumerationPropertyControllers": []
+                },
+                "viewContainer": {
+                    "soundViews": [],
+                    "descriptionViews": [],
+                    "textViews": [],
+                    "shapeViews": [
+                        {
+                            "name": "anchorCircle",
+                            "modelComponentNames": [
+                                "anchorPosition"
+                            ],
+                            "controlFunctionString": "setCenterX( anchorPosition.x );\r\nsetCenterY( anchorPosition.y );",
+                            "lazyLink": false,
+                            "defaultViewOptions": {
+                                "centerX": null,
+                                "centerY": null,
+                                "scale": 1,
+                                "rotation": 0,
+                                "opacity": 1,
+                                "visible": true,
+                                "viewUnits": "model"
+                            },
+                            "defaultShapeOptions": {
+                                "shapeType": "circle",
+                                "fill": "#007BFF",
+                                "stroke": "#001F3F",
+                                "lineWidth": 1,
+                                "rectWidth": 100,
+                                "rectHeight": 50,
+                                "circleRadius": "0.05",
+                                "ellipseRadiusX": 100,
+                                "ellipseRadiusY": 50,
+                                "lineStartX": 0,
+                                "lineStartY": 0,
+                                "lineEndX": 100,
+                                "lineEndY": 100,
+                                "triangleBaseWidth": 100,
+                                "triangleHeight": 100,
+                                "polygonPoints": [
+                                    [
+                                        0,
+                                        0
+                                    ],
+                                    [
+                                        100,
+                                        0
+                                    ],
+                                    [
+                                        100,
+                                        100
+                                    ],
+                                    [
+                                        0,
+                                        100
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "backgroundViews": [],
+                    "imageViews": []
+                },
+                "listenerContainer": {
+                    "linkListeners": [],
+                    "animationListeners": []
+                },
+                "customCodeContainer": {
+                    "onProgramAddedCode": "",
+                    "onProgramRemovedCode": "",
+                    "onProgramChangedPositionCode": "",
+                    "onProgramMarkersAddedCode": "",
+                    "onProgramMarkersRemovedCode": "",
+                    "onProgramMarkersChangedPositionCode": "",
+                    "onProgramAdjacentCode": "",
+                    "onProgramSeparatedCode": ""
+                }
+            },
+            {
+                "number": 1870,
+                "title": "Bob",
+                "keywords": "",
+                "description": "",
+                "expanded": true,
+                "topWhiskerLength": 0.2,
+                "rightWhiskerLength": 0.2,
+                "bottomWhiskerLength": 0.2,
+                "leftWhiskerLength": 0.2,
+                "positionProperty": {
+                    "x": 278.10677402842083,
+                    "y": 349.6368027762089
+                },
+                "modelContainer": {
+                    "namedBooleanProperties": [],
+                    "namedVector2Properties": [
+                        {
+                            "name": "bobPosition",
+                            "propertyType": "Vector2Property",
+                            "defaultX": 0,
+                            "defaultY": 0
+                        }
+                    ],
+                    "namedNumberProperties": [
+                        {
+                            "name": "period",
+                            "propertyType": "NumberProperty",
+                            "min": 0,
+                            "max": 10,
+                            "defaultValue": 5
+                        },
+                        {
+                            "name": "length",
+                            "propertyType": "NumberProperty",
+                            "min": 0,
+                            "max": "1",
+                            "defaultValue": "0.3"
+                        }
+                    ],
+                    "namedEnumerationProperties": [],
+                    "namedDerivedProperties": [],
+                    "namedBounds2Properties": [],
+                    "namedObservableArrays": [],
+                    "namedArrayItems": [],
+                    "namedArrayItemReferences": [],
+                    "namedStringProperties": []
+                },
+                "controllerContainer": {
+                    "vector2PropertyControllers": [],
+                    "boundsPropertyControllers": [],
+                    "booleanPropertyControllers": [],
+                    "numberPropertyControllers": [],
+                    "enumerationPropertyControllers": []
+                },
+                "viewContainer": {
+                    "soundViews": [
+                        {
+                            "name": "bobSound",
+                            "modelComponentNames": [
+                                "anchorPosition",
+                                "bobPosition",
+                                "period",
+                                "length"
+                            ],
+                            "controlFunctionString": "  var lowestPoint = anchorPosition.y + length; // Calculate the lowest point\r\n  var range = 0.0001; // Define a small range around the lowest point\r\n\r\n  if (Math.abs(bobPosition.y - lowestPoint) <= range) { // Check if bob is within the range of the lowest point\r\n    setPlaybackRate(1);\r\n    setOutputLevel(1);\r\n    play();\r\n  }",
+                            "lazyLink": false,
+                            "soundFileName": "c-tone.mp3",
+                            "loop": false,
+                            "autoplay": false
+                        }
+                    ],
+                    "descriptionViews": [],
+                    "textViews": [],
+                    "shapeViews": [
+                        {
+                            "name": "bobCircle",
+                            "modelComponentNames": [
+                                "bobPosition"
+                            ],
+                            "controlFunctionString": "setCenterX( bobPosition.x );\r\nsetCenterY( bobPosition.y );",
+                            "lazyLink": false,
+                            "defaultViewOptions": {
+                                "centerX": null,
+                                "centerY": null,
+                                "scale": 1,
+                                "rotation": 0,
+                                "opacity": 1,
+                                "visible": true,
+                                "viewUnits": "model"
+                            },
+                            "defaultShapeOptions": {
+                                "shapeType": "circle",
+                                "fill": "#007BFF",
+                                "stroke": "#001F3F",
+                                "lineWidth": 1,
+                                "rectWidth": 100,
+                                "rectHeight": 50,
+                                "circleRadius": "0.1",
+                                "ellipseRadiusX": 100,
+                                "ellipseRadiusY": 50,
+                                "lineStartX": 0,
+                                "lineStartY": 0,
+                                "lineEndX": 100,
+                                "lineEndY": 100,
+                                "triangleBaseWidth": 100,
+                                "triangleHeight": 100,
+                                "polygonPoints": [
+                                    [
+                                        0,
+                                        0
+                                    ],
+                                    [
+                                        100,
+                                        0
+                                    ],
+                                    [
+                                        100,
+                                        100
+                                    ],
+                                    [
+                                        0,
+                                        100
+                                    ]
+                                ]
+                            }
+                        }
+                    ],
+                    "backgroundViews": [],
+                    "imageViews": []
+                },
+                "listenerContainer": {
+                    "linkListeners": [],
+                    "animationListeners": [
+                        {
+                            "name": "bobController",
+                            "controlledPropertyNames": [
+                                "anchorPosition",
+                                "bobPosition",
+                                "period",
+                                "length"
+                            ],
+                            "controlFunctionString": "  // Calculate the angle of the pendulum\r\n  const angle = Math.sin((2 * Math.PI / period) * elapsedTime);\r\n\r\n  // Calculate the new position of the bob\r\n  const newX = anchorPosition.x + length * Math.sin(angle);\r\n  const newY = anchorPosition.y + length * Math.cos(angle);\r\n\r\n  // Update the position of the bob\r\n  setBobPosition(new phet.dot.Vector2(newX, newY));"
+                        }
+                    ]
+                },
+                "customCodeContainer": {
+                    "onProgramAddedCode": "",
+                    "onProgramRemovedCode": "",
+                    "onProgramChangedPositionCode": "",
+                    "onProgramMarkersAddedCode": "",
+                    "onProgramMarkersRemovedCode": "",
+                    "onProgramMarkersChangedPositionCode": "",
+                    "onProgramAdjacentCode": "",
+                    "onProgramSeparatedCode": ""
+                }
+            }
+        ]
+    }
+    ```
 
 ## Using Templates
 
@@ -436,7 +754,7 @@ Some templates are already included in Paper Playground. However, if you'd like 
 
 #### Creating New Templates
 
-1. Create a new project in the space of your choice (the `templates` space is the best choice if using our hosted program database).
+1. Create a new project in the space of your choice.
 2. Create your programs! Populate them with the necessary components to create a self-contained fully functioning (set of) program(s).
 3. Open the "Edit Templates" collapsible menu on the RIGHT PANE.
 4. Make sure you have "New Template" selected from the dropdown. Selecting an existing template will overwrite the programs in the LEFT PANE!
@@ -448,16 +766,12 @@ Some templates are already included in Paper Playground. However, if you'd like 
 
 #### Editing Templates
 
-1. Open your template from the "Edit Templates" collapsible menu ( :danger: this will override any program you current have in the LEFT PANE!)
+1. Open your template from the "Edit Templates" collapsible menu ( :warning: this will override any program you current have in the LEFT PANE!)
 2. Make any changes to your programs and their components. You can also edit the Template name and description.
 3. Save changes!
 
 ![alt text](./img/edit-template.png)
 
-## More walkthroughs
+## More Walkthroughs
 
-### Paper Organ Walkthrough
-
-<figure>
-<iframe width="877" height="493" src="https://www.youtube.com/embed/DnZdQ917vW8" title="Paper Playground - Paper Organ - *Creator* Walkthrough" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-</figure>
+[Show me more walkthroughs](../use/walkthroughs/walkthroughs.md){ .md-button .md-button--primary }
