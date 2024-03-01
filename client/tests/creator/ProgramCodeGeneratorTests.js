@@ -32,7 +32,6 @@ QUnit.test( 'Empty Program', async assert => {
  *
  * TODO: Test the array component
  * TODO: Test the derived component - doesn't actually use a new expression, it uses a multilink
- * TODO: Test arguments for each (initial values, valid values, etc.)
  */
 QUnit.test( 'Model Components', async assert => {
 
@@ -47,7 +46,7 @@ QUnit.test( 'Model Components', async assert => {
   testProgram.modelContainer.addNumberProperty( numberName, 0, 10, 5 );
 
   const stringName = 'testString';
-  testProgram.modelContainer.addStringProperty( stringName, '' );
+  testProgram.modelContainer.addStringProperty( stringName, 'Test Value' );
 
   const vector2Name = 'testVector2';
   testProgram.modelContainer.addVector2Property( vector2Name, 5, 10 );
@@ -56,7 +55,7 @@ QUnit.test( 'Model Components', async assert => {
   testProgram.modelContainer.addEnumerationProperty( enumerationName, [ 'a', 'b', 'c' ] );
 
   const bounds2Name = 'testBounds2';
-  testProgram.modelContainer.addBounds2Property( bounds2Name, 0, 0, 10, 10 );
+  testProgram.modelContainer.addBounds2Property( bounds2Name, 0, 3, 10, 13 );
 
   const generatedCode = await testProgram.convertToProgramString();
 
@@ -100,14 +99,23 @@ QUnit.test( 'Model Components', async assert => {
 
   /**
    * Creates a visitor for the AST, checking for code that creates and adds the model component to the boardModel.
+   * This visitor looks for a 'NewExpression' in a variable declaration, so it will work for statements like
+   *
+   *  const variableName = new phet.dot.ClassName();
+   *
+   *  Other types will need a different visitor function.
    *
    * @param {string} variableName - name of the component that should be added with `paperLand.addModelComponent`
    * @param {string} className - name of the class to be constructed for the component
    * @param {string} createdStateKey - key of the stateObject to set if creation code is found
    * @param {string} addedStateKey - key of the stateObject to set if adding code is found
+   * @param {function} [argumentsVisitor] - a visitor function to be used for the arguments of the new expression -
+   *                                        callback takes an array of AST Nodes describing each argument.
    * @return {{CallExpression(*): void, VariableDeclarator(*): void}}
    */
-  const createOnProgramAddedVisitors = ( variableName, className, createdStateKey, addedStateKey ) => {
+  const createOnProgramAddedVisitors = ( variableName, className, createdStateKey, addedStateKey, argumentsVisitor ) => {
+    argumentsVisitor = argumentsVisitor || ( () => {} );
+
     return {
       VariableDeclarator( node ) {
         if (
@@ -119,6 +127,7 @@ QUnit.test( 'Model Components', async assert => {
           node.init && node.init.type === 'NewExpression' && node.init.callee &&
           node.init.callee.property && node.init.callee.property.name === className
         ) {
+          argumentsVisitor( node.init.arguments );
           stateObject[ createdStateKey ] = true;
         }
       },
@@ -161,12 +170,59 @@ QUnit.test( 'Model Components', async assert => {
 
       // the onProgramAdded declaration
       if ( node.id && node.id.name === 'onProgramAdded' ) {
-        walk.simple( node, createOnProgramAddedVisitors( booleanName, 'BooleanProperty', 'booleanCreated', 'booleanAdded' ) );
-        walk.simple( node, createOnProgramAddedVisitors( numberName, 'NumberProperty', 'numberCreated', 'numberAdded' ) );
-        walk.simple( node, createOnProgramAddedVisitors( stringName, 'StringProperty', 'stringCreated', 'stringAdded' ) );
-        walk.simple( node, createOnProgramAddedVisitors( vector2Name, 'Vector2Property', 'vector2Created', 'vector2Added' ) );
-        walk.simple( node, createOnProgramAddedVisitors( enumerationName, 'StringProperty', 'enumerationCreated', 'enumerationAdded' ) );
-        walk.simple( node, createOnProgramAddedVisitors( bounds2Name, 'Property', 'bounds2Created', 'bounds2Added' ) );
+        walk.simple( node, createOnProgramAddedVisitors( booleanName, 'BooleanProperty', 'booleanCreated', 'booleanAdded', argumentNodes => {
+
+          // Make sure that the default value is false (as we set it in the test)
+          assert.ok( argumentNodes.length === 1, 'BooleanProperty has one argument' );
+          assert.ok( argumentNodes[ 0 ].type === 'Literal' && argumentNodes[ 0 ].value === false, 'BooleanProperty has the correct default value' );
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( numberName, 'NumberProperty', 'numberCreated', 'numberAdded', argumentNodes => {
+
+          // Make sure that the default value and range are set correctly
+          assert.ok( argumentNodes.length === 2, 'NumberProperty has two arguments' );
+          assert.ok( argumentNodes[ 0 ].type === 'Literal' && argumentNodes[ 0 ].value === 5, 'NumberProperty has the correct default value' );
+          assert.ok(
+            argumentNodes[ 1 ].type === 'ObjectExpression' && argumentNodes[ 1 ].properties.length === 1 &&
+            argumentNodes[ 1 ].properties[ 0 ].key.name === 'range' && argumentNodes[ 1 ].properties[ 0 ].value.arguments.length === 2 &&
+            argumentNodes[ 1 ].properties[ 0 ].value.arguments[ 0 ].value === 0 && argumentNodes[ 1 ].properties[ 0 ].value.arguments[ 1 ].value === 10,
+            'NumberProperty has the correct values for the range'
+          );
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( stringName, 'StringProperty', 'stringCreated', 'stringAdded', argumentNodes => {
+
+          // Make sure that the default value is the value provided in the creator model
+          assert.ok( argumentNodes.length === 1, 'StringProperty has one argument' );
+          assert.ok( argumentNodes[ 0 ].type === 'Literal' && argumentNodes[ 0 ].value === 'Test Value', 'StringProperty has the correct default value' );
+
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( vector2Name, 'Vector2Property', 'vector2Created', 'vector2Added', argumentNodes => {
+
+          // Make sure that the default value is the value provided in the creator model
+          assert.ok( argumentNodes.length === 1, 'Vector2Property has one argument' );
+          assert.ok( argumentNodes[ 0 ].type === 'NewExpression' && argumentNodes[ 0 ].callee.property.name === 'Vector2' &&
+                     argumentNodes[ 0 ].arguments.length === 2 && argumentNodes[ 0 ].arguments[ 0 ].value === 5 &&
+                     argumentNodes[ 0 ].arguments[ 1 ].value === 10, 'Vector2Property has the correct default value' );
+
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( enumerationName, 'StringProperty', 'enumerationCreated', 'enumerationAdded', argumentNodes => {
+
+          // The AST for an argument that is a StringProperty with provided default and valid values
+          assert.ok( argumentNodes.length === 2, 'EnumerationProperty has two arguments' );
+          assert.ok( argumentNodes[ 0 ].type === 'Literal' && argumentNodes[ 0 ].value === 'a', 'EnumerationProperty has the correct default value' );
+          assert.ok( argumentNodes[ 1 ].type === 'ObjectExpression' && argumentNodes[ 1 ].properties.length === 1 &&
+                     argumentNodes[ 1 ].properties[ 0 ].key.name === 'validValues' && argumentNodes[ 1 ].properties[ 0 ].value.elements.length === 3 &&
+                     argumentNodes[ 1 ].properties[ 0 ].value.elements[ 0 ].value === 'a' && argumentNodes[ 1 ].properties[ 0 ].value.elements[ 1 ].value === 'b' &&
+                     argumentNodes[ 1 ].properties[ 0 ].value.elements[ 2 ].value === 'c', 'EnumerationProperty has the correct valid values' );
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( bounds2Name, 'Property', 'bounds2Created', 'bounds2Added', argumentNodes => {
+
+          // The AST for an argument that is a Bounds2 object with provided default values
+          assert.ok( argumentNodes.length === 1, 'Bounds2Property has one argument' );
+          assert.ok( argumentNodes[ 0 ].type === 'NewExpression' && argumentNodes[ 0 ].callee.property.name === 'Bounds2' &&
+                      argumentNodes[ 0 ].arguments.length === 4 && argumentNodes[ 0 ].arguments[ 0 ].value === 0 &&
+                      argumentNodes[ 0 ].arguments[ 1 ].value === 3 && argumentNodes[ 0 ].arguments[ 2 ].value === 10 &&
+                      argumentNodes[ 0 ].arguments[ 3 ].value === 13, 'Bounds2Property has the correct default value' );
+        } ) );
       }
       if ( node.id && node.id.name === 'onProgramRemoved' ) {
         walk.simple( node, createOnProgramRemovedVisitors( booleanName, 'booleanRemoved' ) );
