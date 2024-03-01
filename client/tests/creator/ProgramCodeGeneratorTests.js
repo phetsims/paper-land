@@ -7,6 +7,7 @@
 import { parse } from 'acorn';
 import * as walk from 'acorn-walk';
 import CreatorModel from '../../creator/model/CreatorModel.js';
+import ShapeViewComponent from '../../creator/model/views/ShapeViewComponent.js';
 
 QUnit.module( 'ProgramCodeGenerator' );
 
@@ -348,4 +349,111 @@ QUnit.test( 'Model Components', async assert => {
   assert.ok( stateObject.arrayCreated, 'ObservableArray was created in onProgramAdded' );
   assert.ok( stateObject.arrayAdded, 'ObservableArray was added in onProgramAdded' );
   assert.ok( stateObject.arrayRemoved, 'ObservableArray was removed in onProgramRemoved' );
+} );
+
+QUnit.test( 'View Components - Line Shape', async assert => {
+
+  const creatorModel = new CreatorModel();
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ), 1 );
+
+  // One model component which we can use to verify model -> view connections
+  const booleanName = 'testBoolean';
+  testProgram.modelContainer.addBooleanProperty( booleanName, false );
+  const booleanReference = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+
+  // ShapeViewComponent
+  const shapeViewComponentName = 'testShapeView';
+  const shapeViewComponent = new ShapeViewComponent( shapeViewComponentName, [ booleanReference ], '', {
+    shapeType: 'line'
+  } );
+  testProgram.viewContainer.addShapeView( shapeViewComponent );
+
+  // The generated code
+  const generatedCode = await testProgram.convertToProgramString();
+
+  console.log( generatedCode );
+
+  // acorn will throw an error if there is a syntax problem
+  const ast = parse( generatedCode, { ecmaVersion: 'latest' } );
+  assert.ok( true, 'program code was generated' );
+
+  const stateObject = {
+
+    // The multilink is expected to update the shape when dependencies change
+    multilinkCreated: false,
+
+    // makes sure that setter functions for the line points are defined
+    setX1Defined: false,
+    setY1Defined: false,
+    setX2Defined: false,
+    setY2Defined: false,
+
+    // makes sure that the setter functions actually update the shape
+    setX1SetsShape: false,
+    setY1SetsShape: false,
+    setX2SetsShape: false,
+    setY2SetsShape: false
+  };
+
+  // Walk down the AST - we expect to find an addModelPropertyMultilink() that will update the shape from dependencies
+  walk.simple( ast, {
+    CallExpression( node ) {
+      if ( node.callee && node.callee.property && node.callee.property.name === 'addModelPropertyMultilink' ) {
+
+        // the arguments of the multilink should include the boolean name
+        assert.ok( node.arguments[ 0 ].elements.length === 1, 'addModelPropertyMultilink has one dependency' );
+        assert.ok( node.arguments[ 0 ].elements[ 0 ].value === booleanName, 'addModelPropertyMultilink has the correct dependency' );
+
+        // the second argument of the multilink should include functions that update the shape
+        const updateFunctionNode = node.arguments[ 1 ];
+        assert.ok( updateFunctionNode.type === 'ArrowFunctionExpression', 'addModelPropertyMultilink has a function' );
+
+        /**
+         * A visitor for the AST walker that looks for a variable declaring a setter function that will update some
+         * field on the shape view component.
+         * @param setterName - the name of the setter function to look for
+         * @param fieldName - the name of the field on the shape view component that the setter should update
+         * @param setterDefinedObjectKey - the key of the stateObject to set if the setter function is found
+         * @param assignmentCorrectObjectKey - the key of the stateObject to set if the setter function updates the
+         *                                     correct field
+         */
+        const createInspectSetterFunctionVisitor = ( setterName, fieldName, setterDefinedObjectKey, assignmentCorrectObjectKey ) => {
+          return {
+            VariableDeclarator( childNode ) {
+              if ( childNode.init.type === 'ArrowFunctionExpression' && childNode.id.name === setterName ) {
+                stateObject[ setterDefinedObjectKey ] = true;
+                walk.simple( childNode, {
+                  AssignmentExpression( assignmentNode ) {
+                    if ( assignmentNode.left.property && assignmentNode.left.property.name === fieldName ) {
+                      stateObject[ assignmentCorrectObjectKey ] = true;
+                    }
+                  }
+                } );
+              }
+            }
+          };
+        };
+
+        // Walk down the function to make sure that the update functions for the Line are as expected
+        walk.simple( updateFunctionNode, createInspectSetterFunctionVisitor( 'setX1', 'shape', 'setX1Defined', 'setX1SetsShape' ) );
+        walk.simple( updateFunctionNode, createInspectSetterFunctionVisitor( 'setY1', 'shape', 'setY1Defined', 'setY1SetsShape' ) );
+        walk.simple( updateFunctionNode, createInspectSetterFunctionVisitor( 'setX2', 'shape', 'setX2Defined', 'setX2SetsShape' ) );
+        walk.simple( updateFunctionNode, createInspectSetterFunctionVisitor( 'setY2', 'shape', 'setY2Defined', 'setY2SetsShape' ) );
+
+        stateObject.multilinkCreated = true;
+      }
+    }
+  } );
+
+  // in case the multilink is missing - if thats the case, other tests in the walk will never run
+  assert.ok( stateObject.multilinkCreated, 'addModelPropertyMultilink was found in the generated code' );
+  assert.ok( stateObject.setX1Defined, 'setX1 is defined in the control function' );
+  assert.ok( stateObject.setX1SetsShape, 'setX1 updates the shape' );
+  assert.ok( stateObject.setY1Defined, 'setY1 is defined in the control function' );
+  assert.ok( stateObject.setY1SetsShape, 'setY1 updates the shape' );
+  assert.ok( stateObject.setX2Defined, 'setX2 is defined in the control function' );
+  assert.ok( stateObject.setX2SetsShape, 'setX2 updates the shape' );
+  assert.ok( stateObject.setY2Defined, 'setY2 is defined in the control function' );
+  assert.ok( stateObject.setY2SetsShape, 'setY2 updates the shape' );
+
 } );

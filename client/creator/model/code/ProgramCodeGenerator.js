@@ -546,7 +546,10 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'ShapeViewComponent' ) {
 
-      // No extra data for shape components yet.
+      // The line component does not support centering options. If the line is centered the end point positions
+      // are complicated and confusing to set in the control function.
+      const skipCenterOptions = viewComponent.defaultShapeOptions.shapeType === 'line';
+
       data = {
         SHAPE_CREATOR_CODE: ShapeCodeFunctions.createShapeCodeFromOptions( viewComponent.nameProperty.value, viewComponent.defaultShapeOptions, viewComponent.defaultViewOptions ),
         CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, viewComponent.defaultViewOptions ),
@@ -555,8 +558,8 @@ export default class ProgramCodeGenerator {
         LINE_WIDTH: viewComponent.defaultShapeOptions.lineWidth,
 
         // Node view options
-        CENTER_X: viewComponent.defaultViewOptions.centerX,
-        CENTER_Y: viewComponent.defaultViewOptions.centerY,
+        CENTER_X: skipCenterOptions ? 'undefined' : viewComponent.defaultViewOptions.centerX,
+        CENTER_Y: skipCenterOptions ? 'undefined' : viewComponent.defaultViewOptions.centerY,
         SCALE: viewComponent.defaultViewOptions.scale,
         ROTATION: viewComponent.defaultViewOptions.rotation,
         OPACITY: viewComponent.defaultViewOptions.opacity,

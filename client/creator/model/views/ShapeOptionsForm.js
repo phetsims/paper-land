@@ -49,6 +49,10 @@ export default function ShapeOptionsForm( props ) {
 
 const GeneralAccordionItem = ( { formData, handleChange } ) => {
 
+  // If you set the center of a line, it will change where the end points are positioned which makes
+  // control function code more complex.  So we hide these options for lines.
+  const hideCenterOptions = formData.defaultShapeOptions.shapeType === 'line';
+
   /**
    * Sets a particular view component option without clearing out all the others.
    * @param optionName
@@ -64,26 +68,33 @@ const GeneralAccordionItem = ( { formData, handleChange } ) => {
     <Accordion.Item eventKey={null}>
       <Accordion.Header className={styles.cardHeader}>General Options</Accordion.Header>
       <Accordion.Body className={styles.cardBody}>
-        <div className={styles.controlElement}>
-          <Form.Label>Center X:</Form.Label>
-          <Form.Control
-            type='number'
-            value={formData.defaultViewOptions.centerX}
-            onChange={event => {
-              setViewOption( 'centerX', event.target.value );
-            }}
-          ></Form.Control>
-        </div>
-        <div className={styles.controlElement}>
-          <Form.Label>Center Y:</Form.Label>
-          <Form.Control
-            type='number'
-            value={formData.defaultViewOptions.centerY}
-            onChange={event => {
-              setViewOption( 'centerY', event.target.value );
-            }}
-          ></Form.Control>
-        </div>
+        {
+          !hideCenterOptions &&
+          (
+            <>
+              <div className={styles.controlElement}>
+                <Form.Label>Center X:</Form.Label>
+                <Form.Control
+                  type='number'
+                  value={formData.defaultViewOptions.centerX}
+                  onChange={event => {
+                    setViewOption( 'centerX', event.target.value );
+                  }}
+                ></Form.Control>
+              </div>
+              <div className={styles.controlElement}>
+                <Form.Label>Center Y:</Form.Label>
+                <Form.Control
+                  type='number'
+                  value={formData.defaultViewOptions.centerY}
+                  onChange={event => {
+                    setViewOption( 'centerY', event.target.value );
+                  }}
+                ></Form.Control>
+              </div>
+            </>
+          )
+        }
         <div className={styles.controlElement}>
           <Form.Label>Scale:</Form.Label>
           <Form.Control

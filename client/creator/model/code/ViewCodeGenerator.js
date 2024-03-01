@@ -141,27 +141,23 @@ export default class ViewCodeGenerator {
         
         // for a line
         const setX1 = ( newX1 ) => {
-          // x1 = newX1;
-          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
-          phet.paperLand.console.warn( 'setX1 not implemented' );
+          x1 = phet.paperLand.utils.paperToBoardX( newX1, sharedData.displaySize.width );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
         };
         
         const setY1 = ( newY1 ) => {
-          // y1 = newY1;
-          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
-          phet.paperLand.console.warn( 'setY1 not implemented' );
+          y1 = phet.paperLand.utils.paperToBoardY( newY1, sharedData.displaySize.height );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
         };
 
         const setX2 = ( newX2 ) => {
-          // x2 = newX2;
-          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
-          phet.paperLand.console.warn( 'setX2 not implemented' );
+          x2 = phet.paperLand.utils.paperToBoardX( newX2, sharedData.displaySize.width );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
         };
         
         const setY2 = ( newY2 ) => {
-          // y2 = newY2;
-          // ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
-          phet.paperLand.console.warn( 'setY2 not implemented' );
+          y2 = phet.paperLand.utils.paperToBoardY( newY2, sharedData.displaySize.height );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
         };
         
         // for a circle
