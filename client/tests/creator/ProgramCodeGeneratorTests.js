@@ -60,6 +60,12 @@ QUnit.test( 'Model Components', async assert => {
   const componentReference = testProgram.modelContainer.namedBooleanProperties[ 0 ];
   testProgram.modelContainer.addDerivedProperty( derivedName, [ componentReference ], 'return 5;' );
 
+  const arrayName = 'testArray';
+  const arrayLengthComponentName = 'testArrayLength';
+  const addedItemReference = 'testArrayAddedItem';
+  const removedItemReference = 'testArrayRemovedItem';
+  testProgram.modelContainer.addObservableArray( arrayName, arrayLengthComponentName, addedItemReference, removedItemReference );
+
   const generatedCode = await testProgram.convertToProgramString();
 
   // acorn will throw an error if there is a syntax problem
@@ -104,7 +110,12 @@ QUnit.test( 'Model Components', async assert => {
     derivedAdded: false,
     derivedMultilinkAdded: false,
     derivedRemoved: false,
-    derivedMultilinkRemoved: false
+    derivedMultilinkRemoved: false,
+
+    // array - creates multiple components to track length and the last item added/removed
+    arrayCreated: false,
+    arrayAdded: false,
+    arrayRemoved: false
   };
 
   /**
@@ -276,6 +287,17 @@ QUnit.test( 'Model Components', async assert => {
             }
           }
         } ) );
+
+        // Make sure that the array and all of its sub components are created and added
+        walk.simple( node, createOnProgramAddedVisitors( arrayName, 'Property', 'arrayCreated', 'arrayAdded', {
+          argumentsVisitorCallback: argumentNodes => {
+
+            // The AST for an argument that is an ObservableArray object with provided default value (an empty array)
+            assert.ok( argumentNodes.length === 1, 'ObservableArray has one argument' );
+            assert.ok( argumentNodes[ 0 ].type === 'ArrayExpression' && argumentNodes[ 0 ].elements.length === 0, 'ObservableArray has the correct default value' );
+          }
+        } ) );
+        walk.simple( node, createOnProgramAddedVisitors( arrayLengthComponentName, 'Property', 'arrayLengthComponentCreated', 'arrayLengthComponentAdded' ) );
       }
       if ( node.id && node.id.name === 'onProgramRemoved' ) {
         walk.simple( node, createOnProgramRemovedVisitors( booleanName, 'booleanRemoved' ) );
@@ -293,6 +315,9 @@ QUnit.test( 'Model Components', async assert => {
             }
           }
         } ) );
+
+        // make sure that array and sub components are removed
+        walk.simple( node, createOnProgramRemovedVisitors( arrayName, 'arrayRemoved' ) );
       }
     }
   } );
@@ -320,4 +345,7 @@ QUnit.test( 'Model Components', async assert => {
   assert.ok( stateObject.derivedRemoved, 'DerivedProperty was removed in onProgramRemoved' );
   assert.ok( stateObject.derivedMultilinkAdded, 'DerivedProperty multilink was added in onProgramAdded' );
   assert.ok( stateObject.derivedMultilinkRemoved, 'DerivedProperty multilink was removed in onProgramRemoved' );
+  assert.ok( stateObject.arrayCreated, 'ObservableArray was created in onProgramAdded' );
+  assert.ok( stateObject.arrayAdded, 'ObservableArray was added in onProgramAdded' );
+  assert.ok( stateObject.arrayRemoved, 'ObservableArray was removed in onProgramRemoved' );
 } );

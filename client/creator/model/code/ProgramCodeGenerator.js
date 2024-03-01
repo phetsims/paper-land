@@ -49,7 +49,6 @@ export default class ProgramCodeGenerator {
       return generatedCode;
     }
     catch( error ) {
-      console.log( generatedCode );
       throw new Error( error.message );
     }
   }
