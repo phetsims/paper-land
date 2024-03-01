@@ -438,9 +438,6 @@ export default class CreatorModel {
           await this.sendRequest( addUrl, 'POST', { program: programData } );
         }
 
-        // use local storage to send a message to the other pages to refresh now that all programs are sent
-        localStorage.setItem( clientConstants.CREATOR_REFRESH_TRIGGER, Date.now().toString() );
-
         // If everything succeeds, resolve the promise
         console.log( 'All programs sent successfully!' );
         return 'All programs sent successfully!';

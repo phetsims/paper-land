@@ -80,8 +80,6 @@ export default class CameraMain extends React.Component {
     // @private {number} - time of the last update of the available camera information in epoch time
     this._timeOfLastCameraDataUpdate = Number.NEGATIVE_INFINITY;
 
-    this.refreshNextUpdate = false;
-
     // Process query parameters.
     const urlSearchParams = new URLSearchParams( window.location.search );
     const params = Object.fromEntries( urlSearchParams.entries() );
@@ -92,13 +90,6 @@ export default class CameraMain extends React.Component {
     window.addEventListener( 'resize', this._updatePageWidth.bind( this ) );
     this._updatePageWidth();
     this._updateSpacesList();
-
-    window.addEventListener( 'storage', event => {
-
-      if ( event.key === clientConstants.CREATOR_REFRESH_TRIGGER ) {
-        this.refreshNextUpdate = true;
-      }
-    } );
 
     // Set up a periodic update of this component's state using animation frames.
     const animationFrameHandler = () => {
@@ -179,11 +170,6 @@ export default class CameraMain extends React.Component {
             // If the code for the selected program has changed, update the code in the editor.
             if ( this.state.programInEditor ) {
               this._updateEditorCode();
-            }
-
-            if ( this.refreshNextUpdate ) {
-              localStorage.setItem( clientConstants.CAMERA_REFRESH_TRIGGER, Date.now().toString() );
-              this.refreshNextUpdate = false;
             }
 
             // Determine whether the program that is currently selected in the editor is in the selected space.

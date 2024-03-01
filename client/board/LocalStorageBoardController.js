@@ -757,12 +757,6 @@ export default class LocalStorageBoardController {
 
     // Update the sim design board.
     this.updateBoard( currentPaperProgramsInfo, this.currentMarkersInfo );
-
-    // Programs were sent from creator, and the camera page has received the new programs and is requesting that
-    // we refresh the page. See constants documentation for more info.
-    if ( event.key === clientConstants.CAMERA_REFRESH_TRIGGER ) {
-      window.location.reload();
-    }
   }
 
   /**
