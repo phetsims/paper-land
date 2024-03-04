@@ -7,76 +7,86 @@ const ViewComponentTemplates = {
         initialOutputLevel: 0.5
        } );
       phet.tambo.soundManager.addSoundGenerator( {{NAME}}SoundClip );
+      scratchpad.{{NAME}}WrappedAudioBuffer = {{NAME}}WrappedAudioBuffer;
       
       let {{NAME}}StopSoundTimeout = null;
       
-      // as a safety measure, sound can only be played every 0.25 seconds
-      let {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
-
-      // Play the sound when any dependencies change value.
-      scratchpad.{{NAME}}SoundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-        
-        // in a local scope, define the functions that the user can use to manipulate the sound
-        const setOutputLevel = ( level ) => {
-        
-          // As a safety measure, don't let the user set a level below zero and above 2.
-          const outputLevel = Math.max( 0, Math.min( 2, level ) );
-          {{NAME}}SoundClip.outputLevel = outputLevel;
-        };
-        const setPlaybackRate = ( rate ) => {
-        
-          // As a safety measure, the playback rate cannot go below zero.
-          const playbackRate = Math.max( 0, rate );
-          {{NAME}}SoundClip.setPlaybackRate( playbackRate );
-        };
-        
-        // a function the user can call to play the sound
-        const play = () => {
-        
-          // Play the sound - if looping, we don't want to start playing again if already playing. The sound
-          // can only be played at a limited interval for safety.
-          if ( ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) && phet.paperLand.elapsedTimeProperty.value - {{NAME}}LastPlayTime > 0.25 ) {
-  
-            // only start playing again if it has been stopped - but we still enter this block to update
-            // the last play time and timeouts        
-            if ( !{{NAME}}SoundClip.isPlaying ) {
-              {{NAME}}SoundClip.play();
-            }
-            {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
-            
-            // Set a timer to turn off the sound when the value stops changing.
-            if ( {{NAME}}StopSoundTimeout ){
-              window.clearTimeout( {{NAME}}StopSoundTimeout );
-            }
-            
-            // only stop if not looping
-            if ( !{{LOOP}} ) {
-              {{NAME}}StopSoundTimeout = window.setTimeout( () => {
-                {{NAME}}SoundClip.stop();
-              }, 5000 );
-            }  
-          }
-        };
-        
-        const stop = () => {
-          // Set a timer to turn off the sound when the value stops changing.
-          if ( {{NAME}}StopSoundTimeout ){
-            window.clearTimeout( {{NAME}}StopSoundTimeout );
-          }
-          {{NAME}}SoundClip.stop();
-        };
-        
-        if ( {{AUTOPLAY}} ) {
-          play();
-        }
-        
-        // declare the references so that they can be used in the control function
-        {{REFERENCE_DECLARATIONS}}
+      // as a safety measure, sound can only be played every 0.25 seconds - initial value is very small
+      // so that it can be played immediately
+      let {{NAME}}LastPlayTime = 0;
       
-        {{CONTROL_FUNCTION}}
-      }, {
-        otherReferences: {{REFERENCE_NAMES_ARRAY}},
-      } );       
+      // The listener that will observe the model and play sounds is added as soon as the sounds are loaded, and
+      // added to the scratch pad so that it can be removed later.
+      scratchpad.{{NAME}}WrappedAudioBufferListener = _buffer => {
+        if ( _buffer ) {
+        
+          // Play the sound when any dependencies change value.
+          scratchpad.{{NAME}}SoundMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+            
+            // in a local scope, define the functions that the user can use to manipulate the sound
+            const setOutputLevel = ( level ) => {
+            
+              // As a safety measure, don't let the user set a level below zero and above 2.
+              const outputLevel = Math.max( 0, Math.min( 2, level ) );
+              {{NAME}}SoundClip.outputLevel = outputLevel;
+            };
+            const setPlaybackRate = ( rate ) => {
+            
+              // As a safety measure, the playback rate cannot go below zero.
+              const playbackRate = Math.max( 0, rate );
+              {{NAME}}SoundClip.setPlaybackRate( playbackRate );
+            };
+            
+            // a function the user can call to play the sound
+            const play = () => {
+            
+              // Play the sound - if looping, we don't want to start playing again if already playing. The sound
+              // can only be played at a limited interval for safety.
+              if ( ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) && phet.paperLand.elapsedTimeProperty.value - {{NAME}}LastPlayTime > 0.25 ) {
+      
+                // only start playing again if it has been stopped - but we still enter this block to update
+                // the last play time and timeouts        
+                if ( !{{NAME}}SoundClip.isPlaying ) {
+                  {{NAME}}SoundClip.play();
+                }
+                {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
+                
+                // Set a timer to turn off the sound when the value stops changing.
+                if ( {{NAME}}StopSoundTimeout ){
+                  window.clearTimeout( {{NAME}}StopSoundTimeout );
+                }
+                
+                // only stop if not looping
+                if ( !{{LOOP}} ) {
+                  {{NAME}}StopSoundTimeout = window.setTimeout( () => {
+                    {{NAME}}SoundClip.stop();
+                  }, 5000 );
+                }  
+              }
+            };
+            
+            const stop = () => {
+              // Set a timer to turn off the sound when the value stops changing.
+              if ( {{NAME}}StopSoundTimeout ){
+                window.clearTimeout( {{NAME}}StopSoundTimeout );
+              }
+              {{NAME}}SoundClip.stop();
+            };
+            
+            if ( {{AUTOPLAY}} ) {
+              play();
+            }
+            
+            // declare the references so that they can be used in the control function
+            {{REFERENCE_DECLARATIONS}}
+          
+            {{CONTROL_FUNCTION}}
+          }, {
+            otherReferences: {{REFERENCE_NAMES_ARRAY}},
+          } );  
+        }
+      };     
+      scratchpad.{{NAME}}WrappedAudioBuffer.audioBufferProperty.link( scratchpad.{{NAME}}WrappedAudioBufferListener );
       
       // Assign the sound to the scratchpad so that we can remove it later
       scratchpad.{{NAME}}SoundClip = {{NAME}}SoundClip;
@@ -84,6 +94,9 @@ const ViewComponentTemplates = {
     onProgramRemoved: `
       phet.tambo.soundManager.removeSoundGenerator( scratchpad.{{NAME}}SoundClip );
       delete scratchpad.{{NAME}}SoundClip;
+      
+      scratchpad.{{NAME}}WrappedAudioBuffer.audioBufferProperty.unlink( scratchpad.{{NAME}}WrappedAudioBufferListener );
+      delete scratchpad.{{NAME}}WrappedAudioBufferListener;
       
       phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}SoundMultilinkId, {
         otherReferences: {{REFERENCE_NAMES_ARRAY}}
