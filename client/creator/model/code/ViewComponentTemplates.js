@@ -36,7 +36,12 @@ const ViewComponentTemplates = {
           // Play the sound - if looping, we don't want to start playing again if already playing. The sound
           // can only be played at a limited interval for safety.
           if ( ( !{{NAME}}SoundClip.isPlaying || !{{LOOP}} ) && phet.paperLand.elapsedTimeProperty.value - {{NAME}}LastPlayTime > 0.25 ) {
-            {{NAME}}SoundClip.play();
+  
+            // only start playing again if it has been stopped - but we still enter this block to update
+            // the last play time and timeouts        
+            if ( !{{NAME}}SoundClip.isPlaying ) {
+              {{NAME}}SoundClip.play();
+            }
             {{NAME}}LastPlayTime = phet.paperLand.elapsedTimeProperty.value;
             
             // Set a timer to turn off the sound when the value stops changing.
@@ -44,8 +49,8 @@ const ViewComponentTemplates = {
               window.clearTimeout( {{NAME}}StopSoundTimeout );
             }
             
-            // only stop if looping
-            if ( {{LOOP}} ) {
+            // only stop if not looping
+            if ( !{{LOOP}} ) {
               {{NAME}}StopSoundTimeout = window.setTimeout( () => {
                 {{NAME}}SoundClip.stop();
               }, 5000 );
