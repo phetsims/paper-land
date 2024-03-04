@@ -141,7 +141,9 @@ export default class ProgramModelContainer extends ComponentContainer {
     // It is possible at this time for the user to manually delete this component,
     // so it might not be available anymore.
     if ( createdLengthProperty ) {
-      this.removeDerivedProperty( createdLengthProperty );
+
+      // Use the delete emitter so that removal listeners can be used and self-unregister
+      createdLengthProperty.deleteEmitter.emit();
     }
 
     const index = this.namedObservableArrays.indexOf( namedObservableArray );
