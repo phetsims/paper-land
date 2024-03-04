@@ -239,6 +239,11 @@ export default class ViewCodeGenerator {
                 resolve();
               } );
             }
+            else {
+              
+              // No change, so resolve immediately
+              resolve();
+            }
           } );
         };
       ` );

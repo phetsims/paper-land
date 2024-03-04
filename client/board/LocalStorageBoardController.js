@@ -27,6 +27,7 @@ const defaultBoardConfig = {
  * provided path and load it into the buffer when complete.  Instances of WrappedAudioBuffer are often needed for
  * creating sounds using the tambo library.
  * TODO: Move this into a namespace like window.paperLand or window.phet.paperLand if retained.
+ *       THis is defined here because it is used in the evaluated program code.
  * @param {string} pathToAudioFile
  */
 const createAndLoadWrappedAudioBuffer = pathToAudioFile => {
