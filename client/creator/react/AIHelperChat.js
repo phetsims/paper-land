@@ -174,7 +174,7 @@ const AIHelperChat = props => {
     <div>
       <Accordion defaultActiveKey={null}>
         <Accordion.Item>
-          <Accordion.Header>AI Assistance &#x2728;</Accordion.Header>
+          <Accordion.Header>AI Custom Function Helper &#x2728;</Accordion.Header>
           <Accordion.Body>
             <div>
               {messages.map( ( message, index ) => (
@@ -222,7 +222,7 @@ const AIHelperChat = props => {
               <Form.Control
                 type='text'
                 value={inputText}
-                placeholder='How can I help you?'
+                placeholder='Tell me what logic and components you need in plain language...'
                 disabled={waitingForResponse}
                 onChange={event => setInputText( event.target.value )}
                 onKeyDown={async event => {
