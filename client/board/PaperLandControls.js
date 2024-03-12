@@ -167,6 +167,56 @@ export default function PaperLandControls( props ) {
           }}
         >Projector Mode</Button>
       </>
+      <>
+        <div>
+          <Button
+            onClick={() => {
+
+              // Request the device for a Bluetooth connection
+              navigator.bluetooth.requestDevice( {
+                acceptAllDevices: true,
+
+                // for the arduino
+                // optionalServices: [ '19b10000-e8f2-537e-4f6c-d104768a1214' ]
+
+                // for the microbit
+                optionalServices: [ 'e95dd91d-251d-470a-a062-fa1922dfa9a8' ],
+                name: 'Micro:bit'
+              } )
+                .then( device => {
+                  console.log( 'Connecting to device...', device );
+                  return device.gatt.connect(); // Connect to GATT Server
+                } )
+                .then( server => {
+                  console.log( 'Getting LED Service...' );
+
+                  // for ardunio
+                  // return server.getPrimaryService( '19b10000-e8f2-537e-4f6c-d104768a1214' ); // Get LED Service
+
+                  // for microbit
+                  return server.getPrimaryService( 'e95dd91d-251d-470a-a062-fa1922dfa9a8' ); // Get LED Service
+                } )
+                .then( service => {
+                  console.log( 'Getting LED Characteristic...' );
+
+                  // for arduino
+                  // return service.getCharacteristic( '19b10001-e8f2-537e-4f6c-d104768a1214' ); // LED Characteristic UUID
+
+                  // for microbit
+                  return service.getCharacteristic( 'e95d7b77-251d-470a-a062-fa1922dfa9a8' ); // LED Characteristic UUID
+                } )
+                .then( characteristic => {
+                  console.log( 'LED Characteristic is ready!' );
+                  window.ledCharacteristic = characteristic; // Make characteristic globally available
+                  // document.querySelector( '#toggleLed' ).disabled = false;
+                } )
+                .catch( error => {
+                  console.error( 'Connection failed', error );
+                } );
+            }}
+          >Connect to BLE</Button>
+        </div>
+      </>
     </div>
   );
 }
