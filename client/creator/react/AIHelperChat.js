@@ -174,7 +174,7 @@ const AIHelperChat = props => {
     <div>
       <Accordion defaultActiveKey={null}>
         <Accordion.Item>
-          <Accordion.Header>AI Custom Function Helper &#x2728;</Accordion.Header>
+          <Accordion.Header>AI Control Function Helper &#x2728;</Accordion.Header>
           <Accordion.Body>
             <div>
               {messages.map( ( message, index ) => (

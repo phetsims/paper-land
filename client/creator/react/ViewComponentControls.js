@@ -38,7 +38,7 @@ export default function ViewComponentControls( props ) {
       <hr/>
       <Accordion hidden={props.allModelComponents.length === 0} defaultActiveKey={'0'}>
         <Accordion.Item eventKey='0'>
-          <Accordion.Header>Custom Function</Accordion.Header>
+          <Accordion.Header>Control Function</Accordion.Header>
           <Accordion.Body>
             <div>
               <ModelComponentSelector
