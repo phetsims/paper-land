@@ -102,7 +102,7 @@
 /*Custom styling and color for warning text (bootstrap has its own text-warning class but I want my own)*/
 :local(.warningText ) {
   color: #FFC107;
-  font-size: 32px;
+  font-size: 24px;
 }
 
 /*Use visibility to hide certain content that without changing the layout*/

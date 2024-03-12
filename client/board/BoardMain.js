@@ -54,9 +54,6 @@ export default function BoardMain( props ) {
         </div>
         <div className={styles.displayWithLog}>
           <SceneryDisplay scene={scene} modifyDisplay={modifySceneryDisplay}/>
-          <p className={
-            !isWatingForModelComponent ? `${styles.warningText} ${styles.hidden}` : `${styles.warningText}`
-          }>&#9888; - Waiting for additional components...</p>
           <PaperLandConsole consoleVisible={consoleVisible}></PaperLandConsole>
         </div>
         <div className={styles.controls}>
@@ -70,6 +67,7 @@ export default function BoardMain( props ) {
               sceneryDisplay={sceneryDisplay}
             ></PaperLandControls>
           </div>
+          <p className={styles.warningText} hidden={!isWatingForModelComponent}>&#9888; - Waiting for additional components...</p>
         </div>
       </div>
     </div>
