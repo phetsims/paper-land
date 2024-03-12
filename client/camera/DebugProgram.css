@@ -1,17 +1,3 @@
-:local(.closeButton) {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 20px;
-  height: 20px;
-  background: rgb(190, 0, 0);
-}
-
-:local(.closeButton):hover {
-  background: rgb(255, 0, 0);
-}
-
-
 :local(.program) {
   font-family: Helvetica;
   background: white;
@@ -21,7 +7,7 @@
 }
 
 :local(.programNumber) {
-  margin-left: 30px;
+  margin-left: 42px;
 }
 
 :local(.programCornerNumber) {
@@ -33,34 +19,45 @@
   margin-left: 20px;
 }
 
-:local(.resizeHandle) {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  width: 20px;
-  height: 20px;
-  background: rgb(100, 100, 100);
-}
-
-:local(.resizeHandle):hover {
-  background: rgb(0, 0, 0);
-}
-
-:local(.rotateHandle) {
+:local(.rotateButton) {
   position: absolute;
   right: 0px;
   top: 0px;
-  width: 20px;
-  height: 20px;
-  background: rgb(100, 190, 100);
-}
 
-:local(.rotateHandle):hover {
-  background: rgb(0, 0, 0);
+  /*to look like the green marker color*/
+  background: #68ba99
 }
 
 :local(.cutButton) {
   position: absolute;
   bottom: 0px;
   left: 0px;
+
+  /*to look like the blue marker color*/
+  background: #91b4ee
+}
+
+:local(.closeButton) {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+
+  /*to look like the red marker color*/
+  background: #d87370;
+}
+
+:local(.resizeButton) {
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+
+  /*to look like the grey/black marker color*/
+  background: #475559
+}
+
+/*Sizing and color for each icon SVG in the debug program corners*/
+:local(.buttonIcon) {
+  width: 24px;
+  height: 32px;
+  fill: white;
 }

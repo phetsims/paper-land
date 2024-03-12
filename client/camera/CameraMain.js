@@ -297,7 +297,7 @@ export default class CameraMain extends React.Component {
   _createDebugProgram( number, programName ) {
     const paperSize = clientConstants.paperSizes[ this.props.config.paperSize ];
     const widthToHeightRatio = paperSize[ 0 ] / paperSize[ 1 ];
-    const height = 0.2;
+    const height = 0.25;
     const width = height * widthToHeightRatio;
 
     const debugPrograms = this.state.debugPrograms;

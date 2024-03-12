@@ -108,8 +108,9 @@ export default class CameraMain extends React.Component {
     const x = event.clientX - rect.x;
     const y = event.clientY - rect.y;
 
-    const resizing = event.target === this._handleEl;
-    const rotating = event.target === this._rotateEl;
+    // Resizing/rotating if clicking on the resize button. Event target may be hte button or its child icon image.
+    const resizing = event.target === this._handleEl || event.target.parentElement === this._handleEl;
+    const rotating = event.target === this._rotateEl || event.target.parentElement === this._rotateEl;
     const grabbed = !resizing && !rotating;
 
     // As we enter the grabbed state, find markers that are attached to this program so that they will be moved
@@ -285,11 +286,18 @@ export default class CameraMain extends React.Component {
           <h3 className={styles.programNumber}>#{this.state.program.number}</h3>
           <p>{this.state.program.programName}</p>
 
-          <div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>
-          <div ref={el => ( this._handleEl = el )} className={styles.resizeHandle}/>
-          <div ref={el => ( this._closeEl = el )} className={styles.closeButton}/>
+          {/*<div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>*/}
+          <button ref={el => ( this._rotateEl = el )} className={styles.rotateButton}>
+            <img className={styles.buttonIcon} src={'media/images/arrows-spin.svg'} alt={'Rotate Program'}/>
+          </button>
+          <button ref={el => ( this._handleEl = el )} className={styles.resizeButton}>
+            <img className={styles.buttonIcon} src={'media/images/resize-white.svg'} alt={'Resize Program'}/>
+          </button>
+          <button onClick={() => this.props.remove()} className={styles.closeButton}>
+            <img className={styles.buttonIcon} src={'media/images/trash3.svg'} alt={'Delete Program'}/>
+          </button>
           <button onClick={() => this._setCutState( true )} className={styles.cutButton}>
-            <img src={'media/images/scissors.svg'} alt={'Cut Program'}/>
+            <img className={styles.buttonIcon} src={'media/images/scissors.svg'} alt={'Cut Program'}/>
           </button>
         </div>
 
