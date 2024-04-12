@@ -53,6 +53,14 @@ const ListenerComponentTemplates = {
       phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}MultilinkId );
       delete scratchpad.{{NAME}}MultilinkId;
     `
+  },
+  BluetoothListenerComponent: {
+    onProgramAdded: `
+      phet.paperLand.console.log( 'Adding a BLE component' );
+    `,
+    onProgramRemoved: `
+     phet.paperLand.console.log( 'Removing a BLE component' );
+    `
   }
 };
 

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import AnimationListenerComponent from '../../model/controllers/AnimationListenerComponent.js';
 import ListenerComponent from '../../model/controllers/ListenerComponent.js';
 import MultilinkListenerComponent from '../../model/controllers/MultilinkListenerComponent.js';
 import PropertyController from '../../model/controllers/PropertyController.js';
 import styles from './../../CreatorMain.css';
 import AnimationControllerForm from './AnimationControllerForm.js';
+import BluetoothControllerForm from './BluetoothControllerForm.js';
 import MultilinkControllerForm from './MultilinkControllerForm.js';
 import PaperControllerForm from './PaperControllerForm.js';
 
@@ -22,8 +24,11 @@ const getTabForActiveEdit = activeEdit => {
     else if ( component instanceof MultilinkListenerComponent ) {
       return 'link';
     }
-    else if ( component instanceof ListenerComponent ) {
+    else if ( component instanceof AnimationListenerComponent ) {
       return 'animation';
+    }
+    else if ( component instanceof ListenerComponent ) {
+      return 'bluetooth'
     }
     else {
       throw new Error( 'Unknown controller type for tabs' );
@@ -100,6 +105,18 @@ export default function CreateModelControllerForm( props ) {
         </Tab>
         <Tab eventKey='animation' title='Animation' tabClassName={styles.tab} disabled={tabDisabled}>
           <AnimationControllerForm
+            activeEdit={activeEdit}
+            isFormValid={() => {}}
+            getFormData={() => {}}
+            allModelComponents={allModelComponents}
+            componentName={componentName}
+            activeEditProperty={activeEditProperty}
+            onComponentCreated={props.onComponentCreated}
+            model={model}
+          />
+        </Tab>
+        <Tab eventKey='bluetooth' title='Bluetooth' tabClassName={styles.tab} disabled={tabDisabled}>
+          <BluetoothControllerForm
             activeEdit={activeEdit}
             isFormValid={() => {}}
             getFormData={() => {}}

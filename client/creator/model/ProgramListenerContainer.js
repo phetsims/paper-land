@@ -1,6 +1,7 @@
 import { replaceReferencesInCode } from '../../utils.js';
 import ComponentContainer from './ComponentContainer.js';
 import AnimationListenerComponent from './controllers/AnimationListenerComponent.js';
+import BluetoothListenerComponent from './controllers/BluetoothListenerComponent.js';
 import MultilinkListenerComponent from './controllers/MultilinkListenerComponent.js';
 
 export default class ProgramListenerContainer extends ComponentContainer {
@@ -12,6 +13,9 @@ export default class ProgramListenerContainer extends ComponentContainer {
 
     // the collection of all animation listeners in this container
     this.animationListeners = phet.axon.createObservableArray();
+
+    // the collection of all bluetooth listeners in this container
+    this.bluetoothListeners = phet.axon.createObservableArray();
   }
 
   /**
@@ -53,12 +57,32 @@ export default class ProgramListenerContainer extends ComponentContainer {
   }
 
   /**
+   * Add a bluetooth listener to this container.
+   */
+  addBluetoothListener( bluetoothListener ) {
+    this.bluetoothListeners.push( bluetoothListener );
+    this.addToAllComponents( bluetoothListener );
+    this.registerChangeListeners( bluetoothListener, this.removeBluetoothListener.bind( this ) );
+  }
+
+  /**
+   * Remove a bluetooth listener from this container.
+   */
+  removeBluetoothListener( bluetoothListener ) {
+    const bluetoothListenerIndex = this.bluetoothListeners.indexOf( bluetoothListener );
+    assert && assert( bluetoothListenerIndex >= 0, 'BluetoothListener not found' );
+    this.bluetoothListeners.splice( bluetoothListenerIndex, 1 );
+    this.removeFromAllComponents( bluetoothListener );
+  }
+
+  /**
    * Save this instance to a serialized JSON for save/load.
    */
   save() {
     return {
       linkListeners: this.linkListeners.map( linkListener => linkListener.save() ),
-      animationListeners: this.animationListeners.map( animationListener => animationListener.save() )
+      animationListeners: this.animationListeners.map( animationListener => animationListener.save() ),
+      bluetoothListeners: this.bluetoothListeners.map( bluetoothListener => bluetoothListener.save() )
     };
   }
 
@@ -68,6 +92,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
   load( json, allComponents ) {
     const linkListeners = json.linkListeners || [];
     const animationListeners = json.animationListeners || [];
+    const bluetoothListeners = json.bluetoothListeners || [];
 
     linkListeners.forEach( linkListenerJSON => {
       const linkListener = MultilinkListenerComponent.fromData( linkListenerJSON, allComponents );
@@ -76,6 +101,10 @@ export default class ProgramListenerContainer extends ComponentContainer {
     animationListeners.forEach( animationListenerJSON => {
       const animationListener = AnimationListenerComponent.fromData( animationListenerJSON, allComponents );
       this.addAnimationListener( animationListener );
+    } );
+    bluetoothListeners.forEach( bluetoothListenerJSON => {
+      const bluetoothListener = BluetoothListenerComponent.fromData( bluetoothListenerJSON, allComponents );
+      this.addBluetoothListener( bluetoothListener );
     } );
   }
 
@@ -98,7 +127,7 @@ export default class ProgramListenerContainer extends ComponentContainer {
         } );
 
         // update the "dependencies" to use the newly copied component if necessary for controller components
-        // that have dependencies (currently the MultilinkListenerComponent)
+        // that have dependencies (currently the MultilinkListenerComponent and BluetoothListenerComponent)
         if ( componentObject.dependencyNames ) {
           componentObject.dependencyNames = componentObject.dependencyNames.map( dependencyName => {
             return nameChangeMap[ dependencyName ] || dependencyName;

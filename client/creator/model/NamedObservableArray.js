@@ -12,7 +12,7 @@ export default class NamedObservableArray extends NamedProperty {
   constructor( name, lengthComponentName, arrayAddedItemReference, arrayRemovedItemReference ) {
     super( name, 'ObservableArray' );
 
-    // The name of the lenth coponent that was created for this array. If it still
+    // The name of the length component that was created for this array. If it still
     // exists when we try to remove this component, we will remove the length component too.
     this.lengthComponentName = lengthComponentName;
 
