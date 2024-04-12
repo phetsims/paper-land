@@ -49,6 +49,7 @@ export default class ProgramCodeGenerator {
       return generatedCode;
     }
     catch( error ) {
+      console.log( generatedCode );
       throw new Error( error.message );
     }
   }
@@ -289,7 +290,6 @@ export default class ProgramCodeGenerator {
     const codeList = program.listenerContainer.allComponents.map( listenerComponent => {
       const componentType = listenerComponent.constructor.name;
 
-      debugger;
       if ( !ListenerComponentTemplates[ componentType ] ) {
         throw new Error( `${componentType} listener is not supported yet for code generation.` );
       }
@@ -616,7 +616,10 @@ export default class ProgramCodeGenerator {
     else if ( componentType === 'BluetoothListenerComponent' ) {
       data = {
         COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
-        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames )
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames ),
+        WRITE_TO_CHARACTERISTIC: listenerComponent.writeToCharacteristic,
+        SERVICE_ID: listenerComponent.serviceId,
+        CHARACTERISTIC_ID: listenerComponent.characteristicId
       };
     }
     else {

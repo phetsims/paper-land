@@ -56,10 +56,29 @@ const ListenerComponentTemplates = {
   },
   BluetoothListenerComponent: {
     onProgramAdded: `
-      phet.paperLand.console.log( 'Adding a BLE component' );
+      phet.paperLand.boardBluetoothServers.addCharacteristicListener(
+        '{{SERVICE_ID}}',
+        '{{CHARACTERISTIC_ID}}',
+        value => {
+          phet.paperLand.console.log( 'Value:', value.getUint8( 0 ) );
+        }
+      )
+      .then( addedListener => {
+        scratchpad.characteristicListener = addedListener;
+      } )
+      .catch( error => {
+        phet.paperLand.console.error( error );
+      } );
     `,
     onProgramRemoved: `
      phet.paperLand.console.log( 'Removing a BLE component' );
+     phet.paperLand.boardBluetoothServers.removeCharacteristicListener(
+       '{{SERVICE_ID}}',
+       '{{CHARACTERISTIC_ID}}',
+       scratchpad.characteristicListener
+     ).catch( error => {
+       phet.paperLand.console.error( error );
+     } );
     `
   }
 };

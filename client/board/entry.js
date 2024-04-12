@@ -13,6 +13,9 @@ import ReactDOM from 'react-dom';
 import BoardMain from './BoardMain.js';
 import LocalStorageBoardController from './LocalStorageBoardController.js';
 
+// So that the servers list is assigned to the namespace and available in program code.
+import './boardBluetoothServers.js';
+
 // Import components so they are available in the namespace
 import './boardUtils.js';
 import './connections/ConnectionElement.js';

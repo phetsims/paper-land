@@ -109,3 +109,8 @@
 :local(.hidden) {
   visibility: hidden;
 }
+
+/*Padding for the top of an element*/
+:local(.paddingTop) {
+  padding-top: 10px;
+}

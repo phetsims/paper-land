@@ -167,6 +167,68 @@ export default function PaperLandControls( props ) {
           }}
         >Projector Mode</Button>
       </>
+      <div
+        className={styles.paddingTop}
+      >
+        <Button
+          onClick={() => {
+
+            // Request the device for a Bluetooth connection
+            navigator.bluetooth.requestDevice( {
+              acceptAllDevices: true,
+
+              // Putting the services here lets us connect even on an insecure origin
+              optionalServices: [ 'e95d6100-251d-470a-a062-fa1922dfa9a8' ]
+            } )
+              .then( device => {
+
+                // Connect to the GATT server of the device.
+                device.gatt.connect().then( server => {
+
+                  // if there is alreadyd a server for this device, it is an error - print it and do no further work
+                  if ( phet.paperLand.boardBluetoothServers.getServerForDevice( device ) ) {
+                    phet.paperLand.console.error( 'ERROR: Server already exists for this device', device.name );
+                    return;
+                  }
+
+                  // When the connection is successful, store the device-server pair.
+                  phet.paperLand.boardBluetoothServers.addServer( device, server );
+
+                  // Handle the disconnection if it happens.
+                  device.addEventListener( 'gattserverdisconnected', event => {
+
+                    const disconnectedDevice = event.target; // this is the device (should equal the device)
+                    phet.paperLand.console.log( 'WARNING: Device has disconnected', disconnectedDevice.name );
+
+                    // Remove the server associated with this device.
+                    const server = phet.paperLand.boardBluetoothServers.getServerForDevice( disconnectedDevice );
+                    if ( server ) {
+                      phet.paperLand.boardBluetoothServers.clearServerForDevice( disconnectedDevice );
+                    }
+                  } );
+
+                  // server.getPrimaryService( 'e95d6100-251d-470a-a062-fa1922dfa9a8' ).then( service => {
+                  //   phet.paperLand.console.log( 'Found service' );
+                  //   return service.getCharacteristic( 'e95d9250-251d-470a-a062-fa1922dfa9a8' );
+                  // } ).then( characteristic => {
+                  //   phet.paperLand.console.log( 'Found characteristic' );
+                  //   return characteristic.readValue();
+                  // } ).catch( error => {
+                  //   console.log( 'could not get characteristic', error );
+                  // } );
+
+                  phet.paperLand.console.log( 'Connected to bluetooth device', device.name );
+                } ).catch( error => {
+
+                  phet.paperLand.console.error( 'Connection to GATT server failed', error );
+                } );
+              } )
+              .catch( error => {
+                phet.paperLand.console.error( 'Connection to device failed', error );
+              } );
+          }}
+        >Connect to BLE</Button>
+      </div>
     </div>
   );
 }
