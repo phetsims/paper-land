@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
+import bluetoothServiceData from '../../../common/bluetoothServiceData.js';
 import { isNameValid } from '../../../utils.js';
 import Component from '../../model/Component.js';
 import BluetoothListenerComponent from '../../model/controllers/BluetoothListenerComponent.js';
@@ -137,26 +138,28 @@ export default function BluetoothControllerForm( props ) {
 
       {/* UUID Text Inputs */}
       <h3>UUID</h3>
-      <Form.Label>Enter the UUID of the bluetooth service you want to use:</Form.Label>
-      <Form.Control
-        type='text'
-        value={formData.serviceId}
+      <Form.Label>Select the UUID of the bluetooth service you want to use:</Form.Label>
+      <ServiceSelector
+        formData={formData}
         onChange={event => {
-          handleChange( { serviceId: event.target.value } );
+          handleChange( {
+            serviceId: event.target.value,
+
+            // Clear out the characteristic ID when the service is changed by the user because the old
+            // characteristic is probably no longer valid.
+            characteristicId: ''
+          } );
         }}
-      ></Form.Control>
+      ></ServiceSelector>
 
       <Form.Label>Enter the UUID of the bluetooth characteristic you want to use:</Form.Label>
-      <Form.Control
-        type='text'
-        value={formData.characteristicId}
+      <CharacteristicSelector
+        formData={formData}
         onChange={event => {
           handleChange( { characteristicId: event.target.value } );
         }}
-      ></Form.Control>
-
+      ></CharacteristicSelector>
       <hr></hr>
-
 
       {/* Component selection and control function, different contents depending on read/write. */}
       <Tabs
@@ -244,5 +247,84 @@ export default function BluetoothControllerForm( props ) {
         activeEditProperty={activeEditProperty}
       ></CreateComponentButton>
     </div>
+  );
+}
+
+const ServiceSelector = ( props ) => {
+  const handleChange = props.onChange;
+  if ( !handleChange ) {
+    throw new Error( 'ServiceSelector requires an onChange prop.' );
+  }
+
+  const formData = props.formData;
+  if ( !formData ) {
+    throw new Error( 'ServiceSelector requires a formData prop.' );
+  }
+
+  return (
+    <Form.Select
+      onChange={handleChange}
+      value={formData.serviceId}
+    >
+      <option value={''}>Select a service</option>
+      {
+        Array.from( bluetoothServiceData.serviceDescriptorToCharacteristicDescriptorMap.keys() ).map( serviceDescriptor => {
+          return <option
+            value={serviceDescriptor.serviceUUID}
+            key={serviceDescriptor.serviceUUID}>
+            {`${serviceDescriptor.name} - (${serviceDescriptor.serviceUUID})`}
+          </option>
+        } )
+      }
+    </Form.Select>
+  );
+}
+
+const CharacteristicSelector = ( props ) => {
+  const handleChange = props.onChange;
+  if ( !handleChange ) {
+    throw new Error( 'CharacteristicSelector requires an onChange Prop.' );
+  }
+
+  const formData = props.formData;
+  if ( !formData ) {
+    throw new Error( 'CharacteristicSelector requires a formData prop.' );
+  }
+
+  // The available options for the characteristic selector will depend on the service selected.
+  const serviceId = formData.serviceId;
+  let characteristicDescriptors = [];
+
+  if ( serviceId ) {
+    const serviceDescriptors = Array.from( bluetoothServiceData.serviceDescriptorToCharacteristicDescriptorMap.keys() );
+    const selectedServiceDescriptor = serviceDescriptors.find( serviceDescriptor => serviceDescriptor.serviceUUID === serviceId );
+
+    // The characteristic descriptors for the selected service.
+    characteristicDescriptors = bluetoothServiceData.serviceDescriptorToCharacteristicDescriptorMap.get( selectedServiceDescriptor );
+  }
+  else {
+
+    // No service selected so no characteristics available.
+    characteristicDescriptors = [];
+  }
+
+
+  return (
+    <Form.Select
+      onChange={handleChange}
+      value={formData.characteristicId}
+    >
+      <option value={''}>Select a characteristic</option>
+
+      {
+        characteristicDescriptors.map( characteristicDescriptor => {
+          return <option
+            value={characteristicDescriptor.characteristicUUID}
+            key={characteristicDescriptor.characteristicUUID}>
+            {`${characteristicDescriptor.name} - (${characteristicDescriptor.characteristicUUID})`}
+          </option>
+        } )
+      }
+    </Form.Select>
   );
 }
