@@ -57,13 +57,18 @@ export default function BluetoothControllerForm( props ) {
   // change
   const getIsFormValid = currentFormData => {
     const controlledGood = currentFormData.controlledPropertyNames.length > 0;
+    const dependenciesGood = currentFormData.dependencyNames.length > 0;
     const controlFunctionGood = currentFormData.controlFunctionString.length > 0;
     const serviceIdGood = currentFormData.serviceId.length > 0;
     const characteristicIdGood = currentFormData.characteristicId.length > 0;
+    const writingToCharacteristic = currentFormData.writeToCharacteristic;
 
     const invalidReasons = [];
-    if ( !controlledGood ) {
-      invalidReasons.push( 'Must select at least one model component.' );
+    if ( !writingToCharacteristic && !controlledGood ) {
+      invalidReasons.push( 'Must select at least one controlled component if reading from device.' );
+    }
+    if ( writingToCharacteristic && !dependenciesGood ) {
+      invalidReasons.push( 'Must select at least one dependency component if writing to device.' );
     }
     if ( !controlFunctionGood ) {
       invalidReasons.push( 'The control function is required.' );
@@ -238,7 +243,7 @@ export default function BluetoothControllerForm( props ) {
           </Container>
           <hr></hr>
           <VariableDocumentationList
-            functionPrompt={'Use available variables to calculate a value. Set the value of the BLE characteristic with characteristic.writeValue( value ). Remember to convert the value to a Uint8Array.'}
+            functionPrompt={'Use available variables to calculate a value. Set the value of the BLE characteristic with writeToCharacteristic( value ). Remember to convert the value to a the format expected by the device (likely Uint8Array).'}
             components={dependencyModelComponents}
           ></VariableDocumentationList>
           <CreatorMonacoEditor
