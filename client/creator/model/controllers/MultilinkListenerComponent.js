@@ -3,19 +3,33 @@ import Component from '../Component.js';
 import ListenerComponent from './ListenerComponent.js';
 
 export default class MultilinkListenerComponent extends ListenerComponent {
-  constructor( name, dependencies, controlledProperties, controlFunctionString ) {
+  constructor( name, dependencies, controlledProperties, controlFunctionString, providedOptions ) {
+
+    const options = _.merge( {
+
+      // List of components by name that will connect with a reference - this means that when the component
+      // changes, it will not re-trigger the listener control function, but the component will be available
+      // to reference in the control function.
+      referenceComponentNames: []
+    }, providedOptions );
+
     super( name, controlledProperties, controlFunctionString );
 
-    // The list of Properties that will call the listener upon changing
+    // The list of Properties that may call the listener upon changing. This is the collection of all dependencies,
+    // but some may be used as references (won't actually trigger a listener, but will be available in a control
+    // function).
     this._dependencies = [];
 
     // The list of names for the dependency NamedProperties.
     this.dependencyNames = [];
 
+    this.referenceComponentNames = options.referenceComponentNames;
+
     // Updates the list of names for dependencies and the control function string if any name changes.
     this.boundUpdateDependencyPropertyNames = this.updateDependencyNames.bind( this );
 
     this.setDependencies( dependencies );
+    this.setReferenceComponentNames( options.referenceComponentNames || [] );
   }
 
   /**
@@ -35,6 +49,11 @@ export default class MultilinkListenerComponent extends ListenerComponent {
     this._dependencies = dependencies;
     this.updateDependencyNames();
 
+    // If any of the reference components are no longer in the list of dependencies, remove them
+    this.referenceComponentNames = this.referenceComponentNames.filter( name => {
+      return this.dependencyNames.includes( name );
+    } );
+
     // add listener to the dependency names so that custom code will automatically update if a name changes
     dependencies.forEach( dependency => {
       dependency.nameProperty.link( this.boundUpdateDependencyPropertyNames );
@@ -48,15 +67,37 @@ export default class MultilinkListenerComponent extends ListenerComponent {
   updateDependencyNames( newName, oldName ) {
     this.dependencyNames = this._dependencies.map( dependency => dependency.nameProperty.value );
 
+    // if the old name is in the list of reference components, we need to update the reference component names
+    // as well
+    if ( oldName && this.referenceComponentNames.includes( oldName ) ) {
+      const indexOfOldName = this.referenceComponentNames.indexOf( oldName );
+      this.referenceComponentNames[ indexOfOldName ] = newName;
+    }
+
     if ( newName && oldName && this.controlFunctionString ) {
       this.controlFunctionString = renameVariableInCode( this.controlFunctionString, newName, oldName );
     }
+  }
+
+  /**
+   * Set the list of components that will be used as references, instead of "dependencies". When these components
+   * change, they will not trigger the listener, but they will be available in the control function.
+   */
+  setReferenceComponentNames( referenceComponentNames ) {
+
+    // Make sure that the reference components are in the list of dependencies
+    referenceComponentNames.forEach( referenceComponentName => {
+      assert && assert( this.dependencyNames.includes( referenceComponentName ), 'Reference component must be in the list of dependencies' );
+    } );
+
+    this.referenceComponentNames = referenceComponentNames;
   }
 
   save() {
     return {
       ...super.save(),
       dependencyNames: this.dependencyNames,
+      referenceComponentNames: this.referenceComponentNames,
       controlFunctionString: this.controlFunctionString
     };
   }
@@ -75,12 +116,15 @@ export default class MultilinkListenerComponent extends ListenerComponent {
       throw new Error( 'Could not find controlled properties for MultilinkController.' );
     }
 
-    return new MultilinkListenerComponent( data.name, dependencies, controlledProperties, data.controlFunctionString );
+    return new MultilinkListenerComponent( data.name, dependencies, controlledProperties, data.controlFunctionString, {
+      referenceComponentNames: data.referenceComponentNames
+    } );
   }
 
   static getStateSchema() {
     return {
       ...ListenerComponent.getStateSchema(),
+      referenceComponentNames: [],
       dependencyNames: []
     };
   }

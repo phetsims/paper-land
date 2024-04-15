@@ -101,18 +101,22 @@ export default function BluetoothControllerForm( props ) {
   }, [ activeEdit ] );
 
   // Get the references to the actual model components from selected form data (name strings)
-  const selectedModelComponents = Component.findComponentsByName( allModelComponents, formData.controlledPropertyNames );
+  const controlledModelComponents = Component.findComponentsByName( allModelComponents, formData.controlledPropertyNames );
+  const dependencyModelComponents = Component.findComponentsByName( allModelComponents, formData.dependencyNames );
+  const referenceModelComponents = Component.findComponentsByName( allModelComponents, formData.referenceComponentNames );
 
   // The Properties that you can control are all the Properties minus the selected model components
   const controllableComponents = allModelComponents.filter( component => {
-    return !selectedModelComponents.includes( component );
+    return !controlledModelComponents.includes( component );
   } );
 
   const createComponent = () => {
     if ( props.activeEdit && props.activeEdit.component instanceof BluetoothListenerComponent ) {
       const component = props.activeEdit.component;
       component.nameProperty.value = props.componentName;
-      component.setControlledProperties( selectedModelComponents );
+      component.setControlledProperties( controlledModelComponents );
+      component.setDependencies( dependencyModelComponents );
+      component.setReferenceComponentNames( formData.referenceComponentNames );
       component.controlFunctionString = formData.controlFunctionString;
       component.writeToCharacteristic = formData.writeToCharacteristic;
       component.serviceId = formData.serviceId;
@@ -121,12 +125,17 @@ export default function BluetoothControllerForm( props ) {
     else {
       const bluetoothComponent = new BluetoothListenerComponent(
         props.componentName,
-        selectedModelComponents,
+        dependencyModelComponents,
+        controlledModelComponents,
         formData.controlFunctionString,
         formData.writeToCharacteristic,
         formData.serviceId,
         formData.characteristicId
       );
+
+      // assign the reference component names
+      bluetoothComponent.setReferenceComponentNames( formData.referenceComponentNames );
+
       props.activeEdit.program.listenerContainer.addBluetoothListener( bluetoothComponent );
     }
 
@@ -180,7 +189,7 @@ export default function BluetoothControllerForm( props ) {
           <Container>
             <ModelComponentSelector
               allModelComponents={controllableComponents}
-              selectedModelComponents={selectedModelComponents}
+              selectedModelComponents={controlledModelComponents}
 
               // All dependencies in this section are controlled - they are updated by the control function
               hideDependencyControl={true}
@@ -194,7 +203,7 @@ export default function BluetoothControllerForm( props ) {
           </Container>
           <hr></hr>
           <ComponentSetterList
-            components={selectedModelComponents}
+            components={controlledModelComponents}
             helperPrompt={'Use the following functions in your code to update model components.'}
           ></ComponentSetterList>
           <CreatorMonacoEditor
@@ -210,20 +219,27 @@ export default function BluetoothControllerForm( props ) {
           <Container>
             <ModelComponentSelector
               allModelComponents={allModelComponents}
-              selectedModelComponents={selectedModelComponents}
-              hideDependencyControl={true}
-              handleChange={selectedComponents => {
+              selectedModelComponents={dependencyModelComponents}
+              referenceComponentNames={formData.referenceComponentNames}
+              handleChange={( ( selectedComponents, referenceComponentNames ) => {
+                const changeObject = {
+                  dependencyNames: selectedComponents.map( component => component.nameProperty.value )
+                };
 
-                handleChange( {
-                  controlledPropertyNames: selectedComponents.map( component => component.nameProperty.value )
-                } );
-              }}
+                // If the second argument is null, this means a change (likely adding) to the model components but
+                // no change to the reference components.
+                if ( referenceComponentNames ) {
+                  changeObject.referenceComponentNames = referenceComponentNames;
+                }
+
+                handleChange( changeObject );
+              } )}
             />
           </Container>
           <hr></hr>
           <VariableDocumentationList
             functionPrompt={'Use available variables to calculate a value. Set the value of the BLE characteristic with characteristic.writeValue( value ). Remember to convert the value to a Uint8Array.'}
-            components={selectedModelComponents}
+            components={dependencyModelComponents}
           ></VariableDocumentationList>
           <CreatorMonacoEditor
             controlFunctionString={formData.controlFunctionString}
@@ -237,8 +253,8 @@ export default function BluetoothControllerForm( props ) {
       <hr></hr>
 
       <AIHelperChat
-        settableComponents={selectedModelComponents}
-        variableComponents={selectedModelComponents}
+        settableComponents={controlledModelComponents}
+        variableComponents={controlledModelComponents}
       ></AIHelperChat>
       <FormInvalidReasons invalidReasons={formInvalidReasons} componentNameValid={isNameValid( activeEditProperty.value, model, componentName )}></FormInvalidReasons>
       <CreateComponentButton

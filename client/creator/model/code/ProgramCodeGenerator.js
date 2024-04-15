@@ -615,8 +615,10 @@ export default class ProgramCodeGenerator {
     }
     else if ( componentType === 'BluetoothListenerComponent' ) {
       data = {
-        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
-        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames ),
+        CONTROLLED_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
+        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames ),
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.referenceComponentNames ),
         WRITE_TO_CHARACTERISTIC: listenerComponent.writeToCharacteristic,
         SERVICE_ID: listenerComponent.serviceId,
         CHARACTERISTIC_ID: listenerComponent.characteristicId

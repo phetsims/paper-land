@@ -14,6 +14,12 @@ const boardBluetoothServers = {
   deviceServerMap: new Map(),
 
   /**
+   * A list of characteristic IDs that are being read from or written to. This is used to throttle the number of
+   * requests to the same characteristic. If a request is already in progress, we will not make another request.
+   */
+  characteristicIdToProgressMap: new Map(),
+
+  /**
    * Adds a server to the list of available servers.
    * @param {BluetoothDevice} device
    * @param {BluetoothRemoteGATTServer} server
@@ -106,6 +112,29 @@ const boardBluetoothServers = {
   async removeCharacteristicListener( serviceUUID, characteristicUUID, listener ) {
     const characteristic = await this.getServiceCharacteristic( serviceUUID, characteristicUUID );
     characteristic.removeEventListener( 'characteristicvaluechanged', listener );
+  },
+
+  /**
+   * Write a value to a characteristic.
+   * @param serviceUUID
+   * @param characteristicUUID
+   * @param value
+   * @returns {Promise<void>}
+   */
+  async writeToCharacteristic( serviceUUID, characteristicUUID, value ) {
+
+    // If we are already trying to write to this characteristic, don't make another request.
+    if ( this.characteristicIdToProgressMap.has( characteristicUUID ) ) {
+      return;
+    }
+
+    this.characteristicIdToProgressMap.set( characteristicUUID, true );
+
+    const characteristic = await this.getServiceCharacteristic( serviceUUID, characteristicUUID );
+    characteristic.writeValue( value );
+
+    // After the await, the write is complete.
+    this.characteristicIdToProgressMap.delete( characteristicUUID );
   }
 };
 

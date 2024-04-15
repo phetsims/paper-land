@@ -1,20 +1,24 @@
 import Component from '../Component.js';
 import ListenerComponent from './ListenerComponent.js';
+import MultilinkListenerComponent from './MultilinkListenerComponent.js';
 
 /**
  * A component that controls OR depends on other components. The controlled components may be updated by a BLE
- * characteristic OR they may be used as dependencies that control a BLE characteristic.
+ * characteristic OR they may be used as dependencies that control a BLE characteristic. Extends a "multilink" listener
+ * component as the bluetooth controller may use dependencies, controlled components, and reference components.
  */
-export default class BluetoothListenerComponent extends ListenerComponent {
+export default class BluetoothListenerComponent extends MultilinkListenerComponent {
   constructor(
     name,
+    dependencies,
     controlledProperties,
     controlFunctionString,
     writeToCharacteristic,
     serviceId,
-    characteristicId
+    characteristicId,
+    providedOptions
   ) {
-    super( name, controlledProperties, controlFunctionString );
+    super( name, dependencies, controlledProperties, controlFunctionString, providedOptions );
 
     // {boolean} - If true, this listener will write to a BLE characteristic. When false, the listener will
     // read from a BLE characteristic.
@@ -43,18 +47,30 @@ export default class BluetoothListenerComponent extends ListenerComponent {
    * Creates a new BluetoothListenerComponent from the serialized state.
    */
   static fromData( data, namedProperties ) {
-    const controlledProperties = Component.findComponentsByName( namedProperties, data.controlledPropertyNames );
-    if ( controlledProperties.length < 1 ) {
-      throw new Error( 'Could not find controlled properties for BluetoothListenerComponent.' );
-    }
+    const controlledPropertyNames = data.controlledPropertyNames || [];
+    const dependencyNames = data.dependencyNames || [];
+
+    const controlledProperties = Component.findComponentsByName( namedProperties, controlledPropertyNames );
+    // if ( controlledProperties.length < 1 ) {
+    //   throw new Error( 'Could not find controlled properties for BluetoothListenerComponent.' );
+    // }
+
+    const dependencies = Component.findComponentsByName( namedProperties, dependencyNames );
+    // if ( dependencies.length < 1 ) {
+    //   throw new Error( 'Could not find dependencies for BluetoothListenerComponent.' );
+    // }
 
     return new BluetoothListenerComponent(
       data.name,
+      dependencies,
       controlledProperties,
       data.controlFunctionString,
       data.writeToCharacteristic,
       data.serviceId,
-      data.characteristicId
+      data.characteristicId,
+      {
+        referenceComponentNames: data.referenceComponentNames
+      }
     );
   }
 
@@ -63,7 +79,7 @@ export default class BluetoothListenerComponent extends ListenerComponent {
    */
   static getStateSchema() {
     return {
-      ...ListenerComponent.getStateSchema(),
+      ...MultilinkListenerComponent.getStateSchema(),
       writeToCharacteristic: true,
       serviceId: '',
       characteristicId: ''

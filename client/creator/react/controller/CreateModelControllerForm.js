@@ -21,14 +21,14 @@ const getTabForActiveEdit = activeEdit => {
     if ( component instanceof PropertyController ) {
       return 'paper';
     }
+    else if ( component instanceof ListenerComponent ) {
+      return 'bluetooth'
+    }
     else if ( component instanceof MultilinkListenerComponent ) {
       return 'link';
     }
     else if ( component instanceof AnimationListenerComponent ) {
       return 'animation';
-    }
-    else if ( component instanceof ListenerComponent ) {
-      return 'bluetooth'
     }
     else {
       throw new Error( 'Unknown controller type for tabs' );

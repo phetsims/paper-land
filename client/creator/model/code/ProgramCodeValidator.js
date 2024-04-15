@@ -18,6 +18,7 @@ export default class ProgramCodeValidator {
       parse( programCode, { ecmaVersion: 'latest' } );
     }
     catch( error ) {
+      console.log( programCode );
       throw new Error( `Sorry, syntax error in generated code for program ${programNumber}. Inspect your custom code or please report an issue to the developer.` );
     }
 

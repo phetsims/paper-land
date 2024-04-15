@@ -58,7 +58,22 @@ const ListenerComponentTemplates = {
     onProgramAdded: `
     
       if ( {{WRITE_TO_CHARACTERISTIC}} ) {
-
+        
+        // Writing to a characteristic, in this case we are controlling the device from the paper playground model.
+        // We can set up a mulilink that will write to the characteristic when the dependency properties change.
+        scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+        
+          // references to each model components that will just be read from (not part of the multilink)
+          {{COMPONENT_REFERENCES}}
+          
+          const writeToCharacteristic = _newCharacteristicValue => {
+            phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
+          };
+          
+          // the code block that the user wrote to change controlled Properties
+          {{CONTROL_FUNCTION}}
+          
+        } );
       }
       else {
       
@@ -69,7 +84,7 @@ const ListenerComponentTemplates = {
           deviceValue => {
           
             // references to each model component controlled by this listener
-            {{COMPONENT_REFERENCES}}
+            {{CONTROLLED_REFERENCES}}
           
             // the functions create in the local scope to manipulate the controlled components
             {{CONTROL_FUNCTIONS}}
@@ -95,6 +110,11 @@ const ListenerComponentTemplates = {
      ).catch( error => {
        phet.paperLand.console.error( error );
      } );
+     
+     if ( scratchpad.{{NAME}}MultilinkId ) {
+       phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}MultilinkId );
+       delete scratchpad.{{NAME}}MultilinkId;
+     }
     `
   }
 };
