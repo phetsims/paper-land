@@ -177,8 +177,8 @@ export default function PaperLandControls( props ) {
             navigator.bluetooth.requestDevice( {
               acceptAllDevices: true,
 
-              // Putting the services here lets us connect even on an insecure origin
-              optionalServices: [ 'e95d6100-251d-470a-a062-fa1922dfa9a8' ]
+              // Putting the services here lets us connect even on an insecure origin.
+              optionalServices: phet.paperLand.boardBluetoothServers.services
             } )
               .then( device => {
 

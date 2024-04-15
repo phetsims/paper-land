@@ -56,11 +56,21 @@ const ListenerComponentTemplates = {
   },
   BluetoothListenerComponent: {
     onProgramAdded: `
+    
+      // NOTE: This is just for readable BLE components, not writable ones yet
       phet.paperLand.boardBluetoothServers.addCharacteristicListener(
         '{{SERVICE_ID}}',
         '{{CHARACTERISTIC_ID}}',
-        value => {
-          phet.paperLand.console.log( 'Value:', value.getUint8( 0 ) );
+        deviceValue => {
+        
+          // references to each model component controlled by this listener
+          {{COMPONENT_REFERENCES}}
+        
+          // the functions create in the local scope to manipulate the controlled components
+          {{CONTROL_FUNCTIONS}}
+          
+          // the function that that the user wrote
+          {{CONTROL_FUNCTION}} 
         }
       )
       .then( addedListener => {
