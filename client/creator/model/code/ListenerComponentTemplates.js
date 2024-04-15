@@ -57,28 +57,34 @@ const ListenerComponentTemplates = {
   BluetoothListenerComponent: {
     onProgramAdded: `
     
-      // NOTE: This is just for readable BLE components, not writable ones yet
-      phet.paperLand.boardBluetoothServers.addCharacteristicListener(
-        '{{SERVICE_ID}}',
-        '{{CHARACTERISTIC_ID}}',
-        deviceValue => {
-        
-          // references to each model component controlled by this listener
-          {{COMPONENT_REFERENCES}}
-        
-          // the functions create in the local scope to manipulate the controlled components
-          {{CONTROL_FUNCTIONS}}
+      if ( {{WRITE_TO_CHARACTERISTIC}} ) {
+
+      }
+      else {
+      
+        // Reading from the characteristic, in this case we are controlling other model components
+        phet.paperLand.boardBluetoothServers.addCharacteristicListener(
+          '{{SERVICE_ID}}',
+          '{{CHARACTERISTIC_ID}}',
+          deviceValue => {
           
-          // the function that that the user wrote
-          {{CONTROL_FUNCTION}} 
-        }
-      )
-      .then( addedListener => {
-        scratchpad.characteristicListener = addedListener;
-      } )
-      .catch( error => {
-        phet.paperLand.console.error( error );
-      } );
+            // references to each model component controlled by this listener
+            {{COMPONENT_REFERENCES}}
+          
+            // the functions create in the local scope to manipulate the controlled components
+            {{CONTROL_FUNCTIONS}}
+            
+            // the function that that the user wrote
+            {{CONTROL_FUNCTION}} 
+          }
+        )
+        .then( addedListener => {
+          scratchpad.characteristicListener = addedListener;
+        } )
+        .catch( error => {
+          phet.paperLand.console.error( error );
+        } );
+      }
     `,
     onProgramRemoved: `
      phet.paperLand.console.log( 'Removing a BLE component' );

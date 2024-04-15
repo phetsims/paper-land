@@ -134,13 +134,7 @@ const bluetoothServiceData = {
    * Map of service descriptors to their characteristic descriptors. This is used to show the user the
    * available characteristics for a service when they are creating a bluetooth component.
    */
-  serviceDescriptorToCharacteristicDescriptorMap: SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP,
-
-  /**
-   * The list of servers that are available to the user. Maps a bluetooth device to a GATT server.
-   * This way we can remove all servers when a device disconnects. Only one server per device.
-   */
-  deviceServerMap: new Map()
+  serviceDescriptorToCharacteristicDescriptorMap: SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP
 };
 
 export default bluetoothServiceData;

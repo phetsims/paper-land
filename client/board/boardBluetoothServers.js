@@ -8,6 +8,12 @@ import paperLand from './paperLand.js';
 const boardBluetoothServers = {
 
   /**
+   * The list of servers that are available to the user. Maps a bluetooth device to a GATT server.
+   * This way we can remove all servers when a device disconnects. Only one server per device.
+   */
+  deviceServerMap: new Map(),
+
+  /**
    * Adds a server to the list of available servers.
    * @param {BluetoothDevice} device
    * @param {BluetoothRemoteGATTServer} server
