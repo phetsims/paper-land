@@ -5,6 +5,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import bluetoothServiceData from '../common/bluetoothServiceData.js';
 import styles from './BoardMain.css';
 
 // Program positions are normalized from 0-1 in both dimensions. So a value of 0.05 means that the program
@@ -178,7 +179,7 @@ export default function PaperLandControls( props ) {
               acceptAllDevices: true,
 
               // Putting the services here lets us connect even on an insecure origin.
-              optionalServices: phet.paperLand.boardBluetoothServers.services
+              optionalServices: bluetoothServiceData.services
             } )
               .then( device => {
 
@@ -207,9 +208,11 @@ export default function PaperLandControls( props ) {
                     }
                   } );
 
-                  // server.getPrimaryService( 'e95d6100-251d-470a-a062-fa1922dfa9a8' ).then( service => {
+                  // For testing, see if you can get the service/characteristic directly from the device
+                  // (without going through Creator generated code).
+                  // server.getPrimaryService( 'e95d9882-251d-470a-a062-fa1922dfa9a8' ).then( service => {
                   //   phet.paperLand.console.log( 'Found service' );
-                  //   return service.getCharacteristic( 'e95d9250-251d-470a-a062-fa1922dfa9a8' );
+                  //   return service.getCharacteristic( 'e95dda90-251d-470a-a062-fa1922dfa9a8' );
                   // } ).then( characteristic => {
                   //   phet.paperLand.console.log( 'Found characteristic' );
                   //   return characteristic.readValue();

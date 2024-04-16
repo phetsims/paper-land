@@ -209,7 +209,7 @@ export default function BluetoothControllerForm( props ) {
           <hr></hr>
           <ComponentSetterList
             components={controlledModelComponents}
-            helperPrompt={'Use the following functions in your code to update model components.'}
+            helperPrompt={'Use the following functions in your code to update model components. The device value is in a variable called `deviceValue`. Remember to decode it from the format of you device.'}
           ></ComponentSetterList>
           <CreatorMonacoEditor
             controlFunctionString={formData.controlFunctionString}

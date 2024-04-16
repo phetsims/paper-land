@@ -126,7 +126,7 @@ const bluetoothServiceData = {
   /**
    * The list of all unique service IDs that are available to the user.
    */
-  services: SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.keys().map(
+  services: Array.from( SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.keys() ).map(
     serviceDescriptor => serviceDescriptor.serviceUUID
   ),
 

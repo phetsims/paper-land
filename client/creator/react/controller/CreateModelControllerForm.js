@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import AnimationListenerComponent from '../../model/controllers/AnimationListenerComponent.js';
+import BluetoothListenerComponent from '../../model/controllers/BluetoothListenerComponent.js';
 import ListenerComponent from '../../model/controllers/ListenerComponent.js';
 import MultilinkListenerComponent from '../../model/controllers/MultilinkListenerComponent.js';
 import PropertyController from '../../model/controllers/PropertyController.js';
@@ -21,7 +22,9 @@ const getTabForActiveEdit = activeEdit => {
     if ( component instanceof PropertyController ) {
       return 'paper';
     }
-    else if ( component instanceof ListenerComponent ) {
+    else if ( component instanceof BluetoothListenerComponent ) {
+
+      // more specific type so this must come first
       return 'bluetooth'
     }
     else if ( component instanceof MultilinkListenerComponent ) {
