@@ -69,7 +69,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'jg-tests' );
 
               setTimeout( () => {
-                setSelectedProjectName( 'bluetooth-tests' );
+                setSelectedProjectName( 'test-project' );
               }, 500 );
             }, 500 );
           }
