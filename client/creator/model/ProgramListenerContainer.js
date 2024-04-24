@@ -134,6 +134,20 @@ export default class ProgramListenerContainer extends ComponentContainer {
           } );
         }
 
+        // update the 'references' to use the newly copied components if necessary
+        if ( componentObject.referenceComponentNames ) {
+
+          componentObject.referenceComponentNames = componentObject.referenceComponentNames.map( referenceName => {
+            return nameChangeMap[ referenceName ] || referenceName;
+          } );
+
+          // make sure that the referenceComponentNames are a subset of the dependencyNames
+          assert && assert( componentObject.dependencyNames, 'Reference components should only be set for components with dependencies' );
+          componentObject.referenceComponentNames.forEach( referenceName => {
+            assert && assert( componentObject.dependencyNames.includes( referenceName ), 'Reference component must be in the list of dependencies' );
+          } );
+        }
+
         // update the derivation function to use the newly copied component if necessary
         for ( const name in nameChangeMap ) {
           const newName = nameChangeMap[ name ];
