@@ -34,6 +34,10 @@ const MICROBIT_IO_PIN_CHARACTERISTIC = 'e95d8d00-251d-470a-a062-fa1922dfa9a8';
 const MICROBIT_EVENT_SERVICE = 'e95d93af-251d-470a-a062-fa1922dfa9a8';
 const MICROBIT_EVENT_CHARACTERISTIC = 'e95d9775-251d-470a-a062-fa1922dfa9a8';
 
+const MICROBIT_UART_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+const MICROBIT_UART_RX_CHARACTERISTIC = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+const MICROBIT_UART_TX_CHARACTERISTIC = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
 // A set of random service (not related to the microbit) UUIDs that the user can optionally connect to with a
 // different device like an Arduino or another microcontroller.
 const RANDOM_SERVICE_1 = '0000aaaa-251d-470a-a062-fa1922dfa9a8';
@@ -97,6 +101,13 @@ const SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP = new Map( [
   [
     new ServiceDescriptor( MICROBIT_EVENT_SERVICE, 'micro:bit events' ),
     [ new CharacteristicDescriptor( MICROBIT_EVENT_CHARACTERISTIC, 'micro:bit event', true, false ) ]
+  ],
+  [
+    new ServiceDescriptor( MICROBIT_UART_SERVICE, 'micro:bit UART' ),
+    [
+      new CharacteristicDescriptor( MICROBIT_UART_RX_CHARACTERISTIC, 'micro:bit UART RX', true, false ),
+      new CharacteristicDescriptor( MICROBIT_UART_TX_CHARACTERISTIC, 'micro:bit UART TX', false, true )
+    ]
   ],
   [
     new ServiceDescriptor( RANDOM_SERVICE_1, 'Random service 1' ),
