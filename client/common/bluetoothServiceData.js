@@ -105,8 +105,8 @@ const SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP = new Map( [
   [
     new ServiceDescriptor( MICROBIT_UART_SERVICE, 'micro:bit UART' ),
     [
-      new CharacteristicDescriptor( MICROBIT_UART_RX_CHARACTERISTIC, 'micro:bit UART RX', true, false ),
-      new CharacteristicDescriptor( MICROBIT_UART_TX_CHARACTERISTIC, 'micro:bit UART TX', false, true )
+      new CharacteristicDescriptor( MICROBIT_UART_RX_CHARACTERISTIC, 'micro:bit UART RX (read)', true, false ),
+      new CharacteristicDescriptor( MICROBIT_UART_TX_CHARACTERISTIC, 'micro:bit UART TX (write)', false, true )
     ]
   ],
   [
