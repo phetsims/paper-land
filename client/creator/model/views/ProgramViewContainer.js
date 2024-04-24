@@ -210,6 +210,16 @@ export default class ProgramViewContainer extends ComponentContainer {
           return nameChangeMap[ dependencyName ] || dependencyName;
         } );
 
+        // update references to the newly copied components
+        componentObject.referenceComponentNames = componentObject.referenceComponentNames.map( referenceName => {
+          return nameChangeMap[ referenceName ] || referenceName;
+        } );
+
+        // make sure that the referenceComponentNames are a subset of the modelComponentNames
+        componentObject.referenceComponentNames.forEach( referenceName => {
+          assert && assert( componentObject.modelComponentNames.includes( referenceName ), 'Reference component must be in the list of model components' );
+        } );
+
         // update the derivation function to use the newly copied component if necessary
         for ( const name in nameChangeMap ) {
           const newName = nameChangeMap[ name ];
