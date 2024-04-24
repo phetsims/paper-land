@@ -271,3 +271,38 @@ QUnit.test( 'save and load', assert => {
   assert.ok( creatorModel.allControllerComponents.length === 1, 'Controller components added' );
   assert.ok( creatorModel.programs.length === 1, 'Programs added' );
 } );
+
+/**
+ * Test program copy functionality for programs that contain components with reference relationships.
+ */
+QUnit.test( 'Copy program with reference relationships', assert => {
+
+  const creatorModel = new CreatorModel();
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+
+  // Add some model components
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  const booleanComponentInstance = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+  const numberComponentInstance = testProgram.modelContainer.namedNumberProperties[ 0 ];
+
+  assert.ok( creatorModel.allModelComponents.length === 2, 'Model components added' );
+
+  const testImageComponent = new ImageViewComponent( 'testImage', [ booleanComponentInstance, numberComponentInstance ], '', 'on-bulb.png', {
+
+    // Make the boolean component a reference component for testing
+    referenceComponentNames: [ booleanComponentInstance.nameProperty.value ]
+  } );
+  testProgram.viewContainer.addImageView( testImageComponent );
+  assert.ok( creatorModel.allViewComponents.length === 1, 'View components added' );
+
+  assert.ok( testImageComponent.referenceComponentNames.length === 1, 'Reference component added to view component' );
+  assert.ok( testImageComponent.referenceComponentNames.includes( booleanComponentInstance.nameProperty.value ), 'Reference component added to view component' );
+
+  // Test copying the program
+  creatorModel.copyProgram( testProgram );
+  assert.ok( creatorModel.programs.length === 2, 'Program copied successfully' );
+
+  assert.ok( creatorModel.allModelComponents.length === 4, 'Model components copied' );
+  assert.ok( creatorModel.allViewComponents.length === 2, 'View components copied' );
+} );

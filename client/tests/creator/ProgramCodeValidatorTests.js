@@ -48,7 +48,7 @@ QUnit.test( 'checkForMissingAssets', async assert => {
 
   // if tests using these fail, make sure they are in images and uploads
   const imageFile = 'on-bulb.png';
-  const uploadsImageFile = 'uploads/real-image.png';
+  const uploadsImageFile = 'uploads/blue-orchid1.png';
 
   // image tests using these fail, make sure they are NOT in images and uploads
   const bogusImageFile = 'not-a-real-image.png';
