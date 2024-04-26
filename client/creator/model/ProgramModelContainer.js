@@ -408,8 +408,15 @@ export default class ProgramModelContainer extends ComponentContainer {
       const dependencies = [];
       dependencyNames.forEach( dependencyName => {
         const foundProperty = allComponents.find( namedProperty => namedProperty.nameProperty.value === dependencyName );
+        if ( !foundProperty ) {
+          throw new Error( 'Error loading derived property, could not find dependency: ' + dependencyName );
+        }
         dependencies.push( foundProperty );
       } );
+
+      if ( dependencies.length !== dependencyNames.length ) {
+        throw new Error( 'Error loading derived property, could not find all dependencies' );
+      }
 
       this.addDerivedProperty(
         namedDerivedPropertyData.name,
