@@ -41,6 +41,12 @@ export default function CreateComponentForm( props ) {
       }
       else {
         setActiveEditObject( null );
+
+        // If there is no active edit, reset the tab to the first tab in the list, and reset the component
+        // name because the user is about to interact with a new component.
+        setSelectedTab( 'model' );
+        setComponentName( '' );
+
       }
     };
     model.activeEditProperty.link( selectedProgramListener );

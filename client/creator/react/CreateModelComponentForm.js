@@ -360,8 +360,15 @@ export default function CreateModelComponentForm( props ) {
 
   // Update the active tab based on the active edit from the model
   useEffect( () => {
-    if ( activeEdit && activeEdit.component ) {
-      setSelectedTab( getTabForActiveEdit() );
+    if ( activeEdit ) {
+      if ( activeEdit.component ) {
+        setSelectedTab( getTabForActiveEdit() );
+      }
+      else {
+
+        // If there is no active component, return to the first tab as the default
+        setSelectedTab( 'boolean' );
+      }
     }
   }, [ activeEdit ] );
 

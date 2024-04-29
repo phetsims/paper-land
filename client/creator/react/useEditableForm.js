@@ -45,6 +45,12 @@ const useEditableForm = ( activeEdit, setIsFormValid, validateFormData, getFormD
       setFormData( serialized );
       getFormData( serialized );
     }
+    else if ( activeEdit.component === null ) {
+
+      // If there is no active component, reset the form data to defaults for this form
+      setFormData( componentStateSchema );
+      getFormData( componentStateSchema );
+    }
   }, [ activeEdit ] );
 
   // Initial checks and state updates.
