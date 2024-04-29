@@ -38,7 +38,8 @@ const ListenerComponentTemplates = {
         // work if all are available
         if ( phet.paperLand.hasAllModelComponents( {{CONTROLLED_NAMES_ARRAY}} ) ) {
         
-          // references to each model component controlled by this listener
+          // references to the model components that are controlled by this listener AND the model compnoents
+          // that are selected as references
           {{COMPONENT_REFERENCES}}
       
           // the functions that are available to the client from their selected dependencies
@@ -63,16 +64,18 @@ const ListenerComponentTemplates = {
         // We can set up a mulilink that will write to the characteristic when the dependency properties change.
         scratchpad.{{NAME}}MultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
         
-          // references to each model components that will just be read from (not part of the multilink)
-          {{COMPONENT_REFERENCES}}
-          
-          const writeToCharacteristic = _newCharacteristicValue => {
-            phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
-          };
-          
-          // the code block that the user wrote to change controlled Properties
-          {{CONTROL_FUNCTION}}
-          
+          // references to each model components that will just be read from (not part of the multilink) - since
+          // they are not part of the multilink, they may not exist yet
+          if ( phet.paperLand.hasAllModelComponents( {{COMPONENT_REFERENCES_NAMES}} ) ) {
+            {{COMPONENT_REFERENCES}}
+            
+            const writeToCharacteristic = _newCharacteristicValue => {
+              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
+            };
+            
+            // the code block that the user wrote to change controlled Properties
+            {{CONTROL_FUNCTION}}
+          }
         } );
       }
       else {
@@ -83,14 +86,18 @@ const ListenerComponentTemplates = {
           '{{CHARACTERISTIC_ID}}',
           deviceValue => {
           
-            // references to each model component controlled by this listener
-            {{CONTROLLED_REFERENCES}}
-          
-            // the functions create in the local scope to manipulate the controlled components
-            {{CONTROL_FUNCTIONS}}
+            if ( phet.paperLand.hasAllModelComponents( {{COMPONENT_REFERENCES_NAMES}} ) ) {
             
-            // the function that that the user wrote
-            {{CONTROL_FUNCTION}} 
+              // references to each model component controlled by this listener
+              {{CONTROLLED_REFERENCES}}
+            
+              // the functions create in the local scope to manipulate the controlled components
+              {{CONTROL_FUNCTIONS}}
+              
+              // the function that that the user wrote
+              {{CONTROL_FUNCTION}} 
+            }
+         
           }
         )
         .then( addedListener => {

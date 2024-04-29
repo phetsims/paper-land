@@ -603,23 +603,69 @@ export default class ProgramCodeGenerator {
       };
     }
     else if ( componentType === 'MultilinkListenerComponent' ) {
+
+      // The components that should be used by the multilink but are not added as Multilink dependencies
+      const referenceComponentNames = listenerComponent.referenceComponentNames;
+
+      // The actual multilink dependencies are the component dependencies list without the referenceComponentNames
+      const dependencyNames = listenerComponent.dependencyNames.filter( name => !referenceComponentNames.includes( name ) );
+
+      // The controlled component names should be included in the reference components, so that their current values
+      // can be used in the callback.
+      const fullListOfReferenceNames = referenceComponentNames.concat( listenerComponent.controlledPropertyNames );
+
+
       data = {
 
-        // The dependencies will be made available by the multilink dependency names arguments. But it is important
-        // to have access to the current values of the controlled components as well.
-        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
-        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
-        CONTROLLED_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.controlledPropertyNames ),
-        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames )
+        // The block of code that will get references to all model components that are not actual dependencies
+        // of the multilink (reference components and controlled components)
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( fullListOfReferenceNames ),
+
+        // The combined list of names that must be present to use the callback, but aren't included in multilink
+        // dependencies, so the generated code needs to manually verify that all of these are present
+        CONTROLLED_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( fullListOfReferenceNames ),
+
+        // The dependencies will be made available by the multilink dependency names arguments.
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
+        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames )
       };
     }
     else if ( componentType === 'BluetoothListenerComponent' ) {
+
+      // The components that should be used by the multilink but are not added as Multilink dependencies
+      const referenceComponentNames = listenerComponent.referenceComponentNames;
+
+      // The actual multilink dependencies are the component dependencies list without the referenceComponentNames
+      const dependencyNames = listenerComponent.dependencyNames.filter( name => !referenceComponentNames.includes( name ) );
+
+      // The controlled component names should be included in the reference components, so that their current values
+      // can be used in the callback.
+      const fullListOfReferenceNames = referenceComponentNames.concat( listenerComponent.controlledPropertyNames );
+
+      // Make sure that the list is unique (there may be overlap between controlledPropertyNames and
+      // referenceComponentNames
+      const uniqueListOfReferenceNames = [ ...new Set( fullListOfReferenceNames ) ];
+
       data = {
-        CONTROLLED_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.controlledPropertyNames ),
-        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( listenerComponent.dependencyNames ),
-        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( listenerComponent.dependencyNames ),
-        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( listenerComponent.referenceComponentNames ),
+        DEPENDENCY_NAMES_ARRAY: ProgramCodeGenerator.dependencyNamesArrayToCodeString( dependencyNames ),
+        DEPENDENCY_ARGUMENTS: ProgramCodeGenerator.dependencyNamesToArgumentsListString( dependencyNames ),
+
+        // The block of code that actually gets the the controlled components from paper playground
+        CONTROLLED_REFERENCES: ListenerCodeGenerator.getComponentReferences( uniqueListOfReferenceNames ),
+
+        // A code block that gets the actual references to "reference" model components from the paper playground
+        // model - these are compnoents that are used in the control function but are not dependencies of the
+        // multilink.
+        COMPONENT_REFERENCES: ListenerCodeGenerator.getComponentReferences( uniqueListOfReferenceNames ),
+
+        // The list of references, so that the generated code can check that all of these are present before
+        // running the control function. We don't get that for free since they are not dependencies of the multilink.
+        COMPONENT_REFERENCES_NAMES: ProgramCodeGenerator.dependencyNamesArrayToCodeString( uniqueListOfReferenceNames ),
+
+        // Read or write to the BLE characteristics?
         WRITE_TO_CHARACTERISTIC: listenerComponent.writeToCharacteristic,
+
+        // Selected service and characteristic IDs for the device
         SERVICE_ID: listenerComponent.serviceId,
         CHARACTERISTIC_ID: listenerComponent.characteristicId
       };
