@@ -79,6 +79,7 @@ export default function MultilinkControllerForm( props ) {
       component.nameProperty.value = props.componentName;
       component.setDependencies( selectedModelComponents );
       component.setControlledProperties( selectedControlledComponents );
+      component.setReferenceComponentNames( formData.referenceComponentNames );
       component.controlFunctionString = formData.controlFunctionString;
     }
     else {
@@ -86,7 +87,10 @@ export default function MultilinkControllerForm( props ) {
         props.componentName,
         selectedModelComponents,
         selectedControlledComponents,
-        formData.controlFunctionString
+        formData.controlFunctionString,
+        {
+          referenceComponentNames: formData.referenceComponentNames
+        }
       );
       props.activeEdit.program.listenerContainer.addLinkListener( multilinkController );
     }
@@ -106,17 +110,20 @@ export default function MultilinkControllerForm( props ) {
         <ModelComponentSelector
           allModelComponents={usableModelComponents}
           selectedModelComponents={selectedModelComponents}
+          referenceComponentNames={formData.referenceComponentNames}
 
-          // All components in this section are dependencies for the multilink
-          hideDependencyControl={true}
-          handleChange={selectedComponents => {
+          handleChange={( selectedComponents, referenceComponentNames ) => {
 
-            handleChange( {
-              dependencyNames: selectedComponents.map( component => component.nameProperty.value ),
+            const changeObject = {
+              dependencyNames: selectedComponents.map( component => component.nameProperty.value )
+            };
 
-              // if the selectedComponents contanins a controlled component, that component is no longer controllable
-              controlledPropertyNames: selectedControlledComponents.filter( component => !selectedComponents.includes( component ) ).map( component => component.nameProperty.value )
-            } );
+            // If referenceComponentNames are provided, it means we are updating them.
+            if ( referenceComponentNames ) {
+              changeObject.referenceComponentNames = referenceComponentNames;
+            }
+
+            handleChange( changeObject );
           }}
         />
       </Container>
