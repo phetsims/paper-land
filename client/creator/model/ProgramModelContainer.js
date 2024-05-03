@@ -394,6 +394,17 @@ export default class ProgramModelContainer extends ComponentContainer {
   }
 
   /**
+   * Load model components that are dependent on others. They are all loaded eagerly first. Later, we will
+   * set the dependencies. This way if one "dependent" model component is a dependency for another "dependent"
+   * model component, the connections can be correctly set once all are available.
+   */
+  createDependentModelComponents( state ) {
+    state.namedDerivedProperties.forEach( namedDerivedPropertyData => {
+      this.addDerivedProperty( namedDerivedPropertyData.name, [], namedDerivedPropertyData.derivation );
+    } );
+  }
+
+  /**
    * Load model components that are dependent on other model components that are already created.
    * @param {Object} state - state object from the database
    * @param {NamedProperty[]} allComponents - all NamedProperty components (across all programs)
@@ -418,11 +429,12 @@ export default class ProgramModelContainer extends ComponentContainer {
         throw new Error( 'Error loading derived property, could not find all dependencies' );
       }
 
-      this.addDerivedProperty(
-        namedDerivedPropertyData.name,
-        dependencies,
-        namedDerivedPropertyData.derivation
-      );
+      const namedDerivedProperty = this.getComponent( namedDerivedPropertyData.name );
+      if ( !namedDerivedProperty ) {
+        throw new Error( 'Error loading DerivedProperty, it was not created before setting dependencies.' );
+      }
+
+      namedDerivedProperty.setDependencies( dependencies );
     } );
 
     const namedArrayItems = state.namedArrayItems || [];
