@@ -103,7 +103,14 @@ export default class CreatorView extends phet.scenery.Node {
     } ) );
     this.loadProjectJSONButton = new phet.sun.TextPushButton( 'Load Project', _.merge( {}, ViewConstants.TEXT_BUTTON_OPTIONS, {
       listener: () => {
-        model.sendLoadJSONRequest();
+
+        // Loading a new project will delete all existing programs in the space so we need to confirm that this is OK
+        model.confirmRequestEmitter.emit( {
+          message: 'Loading a new project will delete all existing programs in the space. Are you sure you want to continue?',
+          action: () => {
+            model.sendLoadJSONRequest();
+          }
+        } );
       }
     } ) );
 
