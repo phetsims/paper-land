@@ -461,7 +461,7 @@ export function getComponentDocumentation( namedProperty ) {
     usabilityDocumentation = `Your enumeration of values. One of ${valuesList}.`;
   }
   else if ( type === 'Bounds2Property' ) {
-    usabilityDocumentation = `This is a Bounds2 object. Access min and max values with \`${name}.minX\`, \`${name}.minY\`, \`${name}.maxX\`, and \`${name}.maxY\`. Easily determine if a position is inside these bounds with \`${name}.containsPoint( yourPositionComponent )\``;
+    usabilityDocumentation = `This is a Bounds2 object. Access min and max values with \`${name}.minX\`, \`${name}.minY\`, \`${name}.maxX\`, and \`${name}.maxY\`. Easily determine if a position is inside these bounds with \`${name}.containsPoint( yourPositionComponent )\`. Easily determine if another bounds is contained within these bounds with \`${name}.containsBounds( otherBoundsComponent ).\``;
   }
   else if ( type === 'ObservableArray' ) {
     usabilityDocumentation = 'This is an array of Array Item components.';
