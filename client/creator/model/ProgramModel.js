@@ -173,6 +173,16 @@ export default class ProgramModel {
   }
 
   /**
+   * Load model components that are dependent on others. They are all loaded eagerly first. Later, we will
+   * set the dependencies. This way if one "dependent" model component is a dependency for another "dependent"
+   * model component, the connections can be correctly set once all are available.
+   * @param stateObject
+   */
+  createDependentModelComponents( stateObject ) {
+    this.modelContainer.createDependentModelComponents( stateObject.modelContainer );
+  }
+
+  /**
    * Load controller components that will control model components.
    * @param stateObject
    * @param allComponents - All model components (from all programs) that have been created so far.

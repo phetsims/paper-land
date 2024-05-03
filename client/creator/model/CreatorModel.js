@@ -361,7 +361,14 @@ export default class CreatorModel {
         newProgram.loadCustomCode( programJSON );
       } );
 
-      // then load DerivedProperty components once dependencies are in place
+      // First create dependent components so that all are available in allComponents. It is possible
+      // that dependent components are dependent on OTHER dependent components.
+      json.programs.forEach( programJSON => {
+        const program = this.programs.find( program => program.numberProperty.value === programJSON.number );
+        program.createDependentModelComponents( programJSON );
+      } );
+
+      // Now set connections between dependent components and dependency components.
       json.programs.forEach( programJSON => {
         const program = this.programs.find( program => program.numberProperty.value === programJSON.number );
         program.loadDependentModelComponents( programJSON, this.allModelComponents );
