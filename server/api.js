@@ -1,22 +1,24 @@
 const express = require( 'express' );
-const crypto = require( 'crypto' );
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
 const fs = require( 'fs' );
 const path = require( 'path' );
 const multer = require( 'multer' );
 const OpenAI = require( 'openai' );
+const KnexDataService = require( './KnexDataService.js' );
+const Constants = require( './Constants.js' );
+const Utils = require( './Utils.js' );
 
 const router = express.Router();
 router.use( express.json() );
 router.use( require( 'nocache' )() );
 
-const knex = require( 'knex' )( require( '../knexfile' )[ process.env.NODE_ENV || 'development' ] );
-
 // Set a constant based on the .env file that will control whether access to restricted files will be allowed on the
 // client side.
 const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
 
-const editorHandleDuration = 1500;
+// An implementation of an IDataService that requests all data from a database using knex.
+// TODO: This would be replaced by a 'local file' implementation when running in local mode.
+const knexDataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
 
 // Response codes that may need to be handled
 const SUCCESS = 200;
@@ -26,14 +28,6 @@ const PROJECT_ALREADY_EXISTS = 402;
 // const BAD_PARAMETERS = 403;
 const PROJECT_DOES_NOT_EXIST = 404;
 const UNKNOWN_ERROR = 500;
-
-/**
- * Returns true if the user has access to the space. Always true for those with permissions, otherwise only true
- * for non-restricted spaces.
- */
-const canAccessSpace = spaceName => {
-  return ALLOW_ACCESS_TO_RESTRICTED_FILES || !restrictedSpacesList.includes( spaceName );
-};
 
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
@@ -60,14 +54,7 @@ const uploadSound = multer( { storage: soundStorage } );
  */
 router.get( '/program.:spaceName.:number.js', ( req, res ) => {
   const { spaceName, number } = req.params;
-  knex
-    .select( 'currentCode' )
-    .from( 'programs' )
-    .where( { spaceName, number } )
-    .then( selectResult => {
-      res.set( 'Content-Type', 'text/javascript;charset=UTF-8' );
-      res.send( selectResult[ 0 ].currentCode );
-    } );
+  knexDataService.getProgramCode( spaceName, number, res );
 } );
 
 /**
@@ -92,54 +79,19 @@ router.get( '/program.:spaceName.:number.js', ( req, res ) => {
  */
 router.get( '/api/program-summary-list/:spacesList', ( req, res ) => {
   const { spacesList } = req.params;
-  let summaryQuery = knex.select( [ 'currentCode', 'number', 'spaceName' ] ).from( 'programs' );
-
-  const spaces = spacesList.split( ',' );
-  if ( spacesList !== '*' ) {
-    spaces.forEach( ( space, index ) => {
-      if ( index === 0 ) {
-        summaryQuery = summaryQuery.where( { spaceName: space } );
-      }
-      else {
-        summaryQuery = summaryQuery.orWhere( { spaceName: space } );
-      }
-    } );
-  }
-
-  summaryQuery.then( selectResult => {
-    res.json( selectResult );
-  } );
+  knexDataService.getProgramSummaryList( spacesList, res );
 } );
 
-// Get a list of all the spaces available in the DB.
+/**
+ * Gets a list of all spaces available in the database.
+ */
 router.get( '/api/spaces-list', ( req, res ) => {
-  knex
-    .distinct()
-    .from( 'programs' )
-    .pluck( 'spaceName' )
-    .then( spaceNames => {
-      res.json( spaceNames );
-    } )
-    .catch( error => {
-      console.log( `Error getting spaces list: ${error}` );
-    } );
+  knexDataService.getSpacesList( res );
 } );
 
 // Get a list of all the spaces available in the DB that are NOT restricted to the current user.
 router.get( '/api/spaces-list-not-restricted', ( req, res ) => {
-  knex
-    .distinct()
-    .from( 'programs' )
-    .pluck( 'spaceName' )
-    .then( spaceNames => {
-
-      // filter out the restricted spaces
-      const filteredSpaceNames = spaceNames.filter( spaceName => canAccessSpace( spaceName ) );
-      res.json( filteredSpaceNames );
-    } )
-    .catch( error => {
-      console.log( `Error getting spaces list: ${error}` );
-    } );
+  knexDataService.getUnrestrictedSpacesList( res );
 } );
 
 // Add a new space to the DB.
@@ -150,34 +102,7 @@ router.get( '/api/add-space/:newSpaceName', ( req, res ) => {
 
 function getSpaceData( req, callback ) {
   const { spaceName } = req.params;
-  knex( 'programs' )
-    .select( 'number', 'originalCode', 'currentCode', 'printed', 'editorInfo' )
-    .where( { spaceName } )
-    .then( programData => {
-      callback( {
-        programs: programData.map( program => {
-          const editorInfo = JSON.parse( program.editorInfo || '{}' );
-
-          return {
-            ...program,
-            currentCodeUrl: `program.${spaceName}.${program.number}.js`,
-            currentCodeHash: crypto
-              .createHmac( 'sha256', '' )
-              .update( program.currentCode )
-              .digest( 'hex' ),
-            debugUrl: `/api/spaces/${spaceName}/programs/${program.number}/debugInfo`,
-            claimUrl: `/api/spaces/${spaceName}/programs/${program.number}/claim`,
-            editorInfo: {
-              ...editorInfo,
-              claimed: !!( editorInfo.time && editorInfo.time + editorHandleDuration > Date.now() ),
-              readOnly: !ALLOW_ACCESS_TO_RESTRICTED_FILES && restrictedSpacesList.includes( spaceName )
-            },
-            codeHasChanged: program.currentCode !== program.originalCode
-          };
-        } ),
-        spaceName
-      } );
-    } );
+  knexDataService.getSpaceData( spaceName, callback );
 }
 
 router.get( '/api/spaces/:spaceName', ( req, res ) => {
@@ -200,7 +125,6 @@ router.get( '/api/spaces/:spaceName/restricted', ( req, res ) => {
  *
  * @param spaceName - The space to save the program to.
  */
-const maxNumber = 8400 / 4;
 router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
   const { spaceName } = req.params;
 
@@ -210,33 +134,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
     res.status( 400 ).send( 'Missing "code"' );
   }
 
-  knex
-    .select( 'number' )
-    .from( 'programs' )
-    .where( { spaceName } )
-    .then( selectResult => {
-      const existingNumbers = selectResult.map( result => result.number );
-      const potentialNumbers = [];
-      for ( let i = 0; i < maxNumber; i++ ) {
-        if ( !existingNumbers.includes( i ) ) {
-          potentialNumbers.push( i );
-        }
-      }
-      if ( potentialNumbers.length === 0 ) {
-        res.status( 400 ).send( 'No more available numbers' );
-      }
-      const number = potentialNumbers[ Math.floor( Math.random() * potentialNumbers.length ) ];
-
-      knex( 'programs' )
-        .insert( {
-          spaceName, number, originalCode: code, currentCode: code
-        } )
-        .then( () => {
-          getSpaceData( req, spaceData => {
-            res.json( { number, spaceData } );
-          } );
-        } );
-    } );
+  knexDataService.addNewProgram( spaceName );
 } );
 
 /**
@@ -244,12 +142,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
  */
 router.post( '/api/spaces/:spaceName/programs/clear', ( req, res ) => {
   const { spaceName } = req.params;
-  knex( 'programs' )
-    .where( { spaceName } )
-    .del()
-    .then( numberOfProgramsDeleted => {
-      res.json( { numberOfProgramsDeleted } );
-    } );
+  knexDataService.clearPrograms( spaceName, res );
 } );
 
 /**
@@ -264,19 +157,7 @@ router.post( '/api/spaces/:spaceName/programs/add-premade-program', ( req, res )
     res.status( 400 ).send( 'Missing program, number or code' );
   }
 
-  knex( 'programs' )
-    .insert( {
-      spaceName: spaceName,
-      number: program.number,
-      originalCode: program.code,
-      currentCode: program.code
-    } )
-    .then( () => {
-      res.json( { message: 'Program added successfully' } );
-    } )
-    .catch( error => {
-      res.status( 500 ).send( error );
-    } );
+  knexDataService.addPremadeProgram( spaceName, program, res );
 } );
 
 /**
@@ -325,28 +206,14 @@ router.post( '/api/spaces/:spaceName/programs/set', ( req, res ) => {
 } );
 
 // Create a new snippet
-const maxSnippets = 500;
 router.post( '/api/snippets', ( req, res ) => {
   const { snippetCode } = req.body;
   if ( !snippetCode ) {
     res.status( 400 ).send( 'Missing "code"' );
   }
 
-  knex
-    .select( 'number' )
-    .from( 'snippets' )
-    .then( selectResult => {
-      const nextNumber = selectResult.length + 1;
-      if ( nextNumber > maxSnippets ) {
-        res.status( 400 ).send( `Cannot make any more snippets, max ${maxSnippets}` );
-      }
+  knexDataService.createSnippet( snippetCode, res );
 
-      knex( 'snippets' )
-        .insert( { number: nextNumber, code: snippetCode } )
-        .then( () => {
-          res.json( { number: nextNumber, snippetCode: snippetCode } );
-        } );
-    } );
 } );
 
 // Save the program with the provided number to the provided space.
@@ -356,40 +223,22 @@ router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
   if ( !code ) {
     res.status( 400 ).send( 'Missing "code"' );
   }
-
-  knex( 'programs' )
-    .update( { currentCode: code } )
-    .where( { spaceName, number } )
-    .then( () => {
-      res.json( {} );
-    } );
+  knexDataService.saveProgramToSpace( spaceName, number, code, res );
 } );
 
 // Get all code snippets in the database
 router.get( '/api/snippets', ( req, res ) => {
-  knex
-    .select( [ 'code', 'number' ] )
-    .from( 'snippets' )
-    .then( selectResult => {
-      res.json( { snippets: selectResult } );
-    } );
+  knexDataService.getAllSnippets( res );
 } );
 
 // Save the snippet of the provided number
 router.put( '/api/snippets/:number', ( req, res ) => {
-
   const { number } = req.params;
   const { snippetCode } = req.body;
   if ( !snippetCode ) {
     res.status( 400 ).send( 'Missing "snippetCode"' );
   }
-
-  knex( 'snippets' )
-    .update( { code: snippetCode } )
-    .where( { number } )
-    .then( () => {
-      res.json( {} );
-    } );
+  knexDataService.saveSnippet( number, snippetCode, res );
 } );
 
 router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res ) => {
@@ -435,36 +284,7 @@ router.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) =>
 
 router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
   const { spaceName, number } = req.params;
-
-  knex
-    .select( [ 'debugInfo', 'editorInfo' ] )
-    .from( 'programs' )
-    .where( { spaceName, number } )
-    .then( selectResult => {
-      if ( selectResult.length === 0 ) {
-        res.status( 404 );
-      }
-      const editorInfo = JSON.parse( selectResult[ 0 ].editorInfo || '{}' );
-      if (
-        editorInfo.time &&
-        editorInfo.time + editorHandleDuration > Date.now() &&
-        editorInfo.editorId !== req.body.editorId
-      ) {
-        res.status( 400 );
-        res.json( {} );
-      }
-      else {
-        knex( 'programs' )
-          .update( { editorInfo: JSON.stringify( { ...req.body, time: Date.now() } ) } )
-          .where( { spaceName, number } )
-          .then( () => {
-            res.json( {
-              debugInfo: JSON.parse( selectResult[ 0 ].debugInfo || '{}' ),
-              editorInfo
-            } );
-          } );
-      }
-    } );
+  knexDataService.claimProgram( spaceName, number, req, res );
 } );
 
 /**
@@ -472,13 +292,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
  */
 router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  knex
-    .select( 'projectName' )
-    .from( 'creator-data' )
-    .where( { spaceName } )
-    .then( selectResult => {
-      res.json( { projectNames: selectResult.map( resultObject => resultObject.projectName ) } );
-    } );
+  knexDataService.getProjectNames( spaceName, res );
 } );
 
 /**
@@ -486,28 +300,7 @@ router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
  */
 router.post( '/api/creator/projectNames/:spaceName/:projectName', ( req, res ) => {
   const { spaceName, projectName } = req.params;
-
-  knex
-    .select( 'projectName' )
-    .from( 'creator-data' )
-    .where( { spaceName } )
-    .then( selectResult => {
-      const existingNames = selectResult.map( result => result.projectName );
-
-      console.log( 'EXISTING NAMES', existingNames );
-      if ( existingNames.includes( projectName ) ) {
-        res.status( 400 ).send( 'Name already exists for this space.' );
-      }
-      else {
-        knex( 'creator-data' )
-          .insert( {
-            spaceName, projectName, projectData: {}, editing: false
-          } )
-          .then( () => {
-            res.json( { projectName: projectName } );
-          } );
-      }
-    } );
+  knexDataService.createProject( spaceName, )
 } );
 
 /**
@@ -540,7 +333,7 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
             if ( existingNames.includes( destinationProjectName ) ) {
               res.status( PROJECT_ALREADY_EXISTS ).send( 'Destination project already exists' );
             }
-            else if ( !canAccessSpace( destinationSpaceName ) ) {
+            else if ( !Utils.canAccessSpace( destinationSpaceName ) ) {
               res.status( SPACE_RESTRICTED ).send( 'Destination space is restricted' );
             }
             else {
@@ -785,7 +578,7 @@ router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
     .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
     .from( 'creator-templates' );
 
-  if ( canAccessSpace( spaceName ) ) {
+  if ( Utils.canAccessSpace( spaceName ) ) {
     query.where( { spaceName: spaceName } );
   }
 
@@ -826,7 +619,7 @@ router.get( '/api/creator/can-access-restricted-files', ( req, res ) => {
  */
 router.get( '/api/creator/can-access-space/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  res.json( { canAccess: canAccessSpace( spaceName ) } );
+  res.json( { canAccess: Utils.canAccessSpace( spaceName ) } );
 } );
 
 /**
@@ -978,12 +771,12 @@ router.post( '/api/creator/uploadSound', uploadSound.single( 'file' ), async ( r
  * this:
  *
  fetch(new URL( `api/creator/maintenance/updateSchema`, window.location.origin ).toString(), {
-     method: 'POST',
-     headers: {
-       'Content-Type': 'application/json',
-     },
-     body: JSON.stringify({ key1: 'value1', key2: 'value2'})
-  })
+ method: 'POST',
+ headers: {
+ 'Content-Type': 'application/json',
+ },
+ body: JSON.stringify({ key1: 'value1', key2: 'value2'})
+ })
  .then(response => response.json())
  .then(data => console.log(data))
  .catch(error => console.error('Error:', error));

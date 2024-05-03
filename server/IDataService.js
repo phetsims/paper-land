@@ -1,0 +1,156 @@
+class IDataService {
+  constructor() {
+    if ( this.constructor === IDataService ) {
+      throw new TypeError( 'Cannot instantiate an interface' );
+    }
+  }
+
+  /**
+   * Calls a callback on the program data for all programs in a space
+   *
+   * @param {string} spaceName - The name of the space.
+   * @param {Function} callback - The callback function to call when the data is ready.
+   */
+  getSpaceData( spaceName, callback ) {
+    throw new Error( 'Method getSpaceData must be implemented' );
+  }
+
+  /**
+   * Gets a list of all spaces in the saved state.
+   */
+  getSpacesList( response ) {
+    throw new Error( 'Method getSpacesList must be implemented' );
+  }
+
+  /**
+   * Gets the code of a program with the provided number in the provided space.
+   * @param spaceName - space that this program is in
+   * @param programNumber - number of the program to get the code for
+   * @param response - response object for the route
+   */
+  getProgramCode( spaceName, programNumber, response ) {
+    throw new Error( 'Method getProgramCode must be implemented' );
+  }
+
+  /**
+   * Queries the database for program information in the requested spaces.
+   *
+   * TODO: It needs to extract specific information about the programs for the provided spaces like this:
+   * Keywords, title, number
+   *
+   * {
+   *   space: [
+   *     {
+   *       number: 'string'
+   *       title: 'string'
+   *       keywords: []
+   *     },{
+   *       ...
+   *     }
+   *   ]
+   * }
+   *
+   * @param spacesList - A comma separated list of the space names to query, or '*' for all spaces.
+   * @param {*} response - The response from the router.
+   */
+  getProgramSummaryList( spacesList, response ) {
+    throw new Error( 'Method getProgramSummaryList must be implemented' );
+  }
+
+  /**
+   * Gets a list of all spaces available that are NOT restricted to the curent user.
+   */
+  getUnrestrictedSpacesList( response ) {
+    throw new Error( 'Method getUnrestrictedSpacesList must be implemented' );
+  }
+
+  /**
+   * Adds a new program to the saved state. A new unique number for the spacename is assigned.
+   * @param {string} spaceName - The name of the space to add the program to.
+   */
+  addNewProgram( spaceName ) {
+    throw new Error( 'Method addNewProgram must be implemented' );
+  }
+
+  /**
+   * Clears all programs from the provided space.
+   */
+  clearPrograms( spaceName ) {
+    throw new Error( 'Method clearPrograms must be implemented' );
+  }
+
+  /**
+   * Adds a single program to the space. This is usually a premade program with code and metadata
+   * already written from Creator.
+   */
+  addPremadeProgram( spaceName, program ) {
+    throw new Error( 'Method addPremadeProgram must be implemented' );
+  }
+
+  /**
+   * Saves program code to a program with the provided number in the provied space.
+   */
+  saveProgramToSpace( spaceName, number, code, response ) {
+    throw new Error( 'Method saveProgramToSpace must be implemented' );
+  }
+
+  /**
+   * Gets all snippets in the database.
+   * @param {*} response - response from the router.
+   */
+  getAllSnippets( response ) {
+    throw new Error( 'Method getAllSnippets must be implemented' );
+  }
+
+  /**
+   * Creates a new snippet and adds it to the database.
+   * @param {string} code - the code for the new snippet.
+   * @param {*} response
+   */
+  createSnippet( code, response ) {
+    throw new Error( 'Method createSnippet must be implemented' );
+  }
+
+  /**
+   * Save the snipet code at the snipet with the provided number.
+   * @param number - number of the snippet to save.
+   * @param code - the code to save to the snippet.
+   * @param response - response object from the route.
+   */
+  saveSnippet( number, code, response ) {
+    throw new Error( 'Method saveSnippet must be implemented' );
+  }
+
+  /**
+   * Claims a program for editing. This is used to prevent multiple users from editing the same program at the same
+   * time.
+   * @param spaceName - space for the program
+   * @param number - the number of the program
+   * @param request - request object from the route
+   * @param response - response object from the route
+   */
+  claimProgram( spaceName, number, request, response ) {
+    throw new Error( 'Method claimProgram must be implemented' );
+  }
+
+  /**
+   * Gets all project names in the provided space.
+   * @param spaceName - the name of the space to get the project names from.
+   * @param response - response object from the route.
+   */
+  getProjectNames( spaceName, response ) {
+    throw new Error( 'Method getProjectNames must be implemented' );
+  }
+
+  /**
+   * Creates a new project in the provided space, with the provided name.
+   * @param spaceName
+   * @param projectName
+   * @param response - response object from the route
+   */
+  createProject( spaceName, projectName, response ) {
+    throw new Error( 'Method createProject must be implemented' );
+  }
+}
+
+module.exports = IDataService;
