@@ -54,7 +54,7 @@ const PAPER_POINTS_DOCUMENTATION = (
 const MARKERS_ON_PROGRAM_DOCUMENTATION = (
   <>
     <p>
-      <code>{'{Object[]} markersOnProgram'}</code> - A list of all the markers on the program. See {' '}
+      <code>{'{Object[]} markers'}</code> - A list of all the markers on the program. See {' '}
       <a href='https://github.com/janpaul123/paperprograms/blob/master/docs/api.md#marker-points'>Markers API</a>{' '}
       for information on each marker.
     </p>
