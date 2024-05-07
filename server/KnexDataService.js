@@ -117,9 +117,6 @@ class KnexDataService extends IDataService {
 
   /**
    * See IDataService for documentation.
-   * @param {string} spaceName
-   * @param {string} code
-   * @param {*} response The response from the router.
    */
   addNewProgram( spaceName, code, response ) {
     knex
@@ -400,6 +397,9 @@ class KnexDataService extends IDataService {
       } );
   }
 
+  /**
+   * See IDataService.
+   */
   saveProjectData( spaceName, projectName, projectData, onComplete, response ) {
     knex( 'creator-data' )
       .update( { projectData: projectData } )
@@ -413,6 +413,9 @@ class KnexDataService extends IDataService {
       } );
   }
 
+  /**
+   * See IDataService.
+   */
   createTemplate( templateName, description, keyWords, projectData, spaceName, response ) {
 
     // Make sure that the name is unique for the space the template is in. We allow duplicate names for
@@ -507,6 +510,9 @@ class KnexDataService extends IDataService {
       } );
   }
 
+  /**
+   * See IDataService.
+   */
   getEditableTemplates( spaceName, allowAccessToRestrictedFiles, response ) {
     const query = knex
       .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
@@ -525,6 +531,9 @@ class KnexDataService extends IDataService {
     } );
   }
 
+  /**
+   * See IDataService.
+   */
   deleteTemplate( templateName, response ) {
     knex( 'creator-templates' )
       .where( { name: templateName } )
@@ -574,16 +583,11 @@ class KnexDataService extends IDataService {
       .then( () => {
         response.json( {} );
       } );
-
-    //
-    // knex( 'programs' )
-    //   .update( { debugInfo: JSON.stringify( req.body ) } )
-    //   .where( { spaceName, number } )
-    //   .then( () => {
-    //     res.json( {} );
-    //   } );
   }
 
+  /**
+   * See IDataService.
+   */
   markPrinted( spaceName, number, printed, response ) {
     knex( 'programs' )
       .update( { printed } )
