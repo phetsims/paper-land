@@ -12,9 +12,16 @@ const Constants = {
   // An arbitrary limit on the number of snippets that can be saved.
   MAX_SNIPPET_NUMBER: 500,
 
+  // success codes
+  SUCCESS: 200,
+
   // error codes
   UNKNOWN_ERROR: 500,
   MISSING_INFO: 400,
+  SPACE_RESTRICTED: 401,
+  PROJECT_ALREADY_EXISTS: 402,
+  BAD_PARAMETERS:403,
+  PROJECT_DOES_NOT_EXIST: 404
 }
 
 module.exports = Constants;

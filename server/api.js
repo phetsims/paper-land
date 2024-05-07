@@ -20,15 +20,6 @@ const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_
 // TODO: This would be replaced by a 'local file' implementation when running in local mode.
 const knexDataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
 
-// Response codes that may need to be handled
-const SUCCESS = 200;
-const SPACE_RESTRICTED = 401;
-const PROJECT_ALREADY_EXISTS = 402;
-
-// const BAD_PARAMETERS = 403;
-const PROJECT_DOES_NOT_EXIST = 404;
-const UNKNOWN_ERROR = 500;
-
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
   destination: ( req, file, cb ) => {
@@ -134,7 +125,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
     res.status( 400 ).send( 'Missing "code"' );
   }
 
-  knexDataService.addNewProgram( spaceName );
+  knexDataService.addNewProgram( spaceName, code, res );
 } );
 
 /**
@@ -205,17 +196,6 @@ router.post( '/api/spaces/:spaceName/programs/set', ( req, res ) => {
   //   } );
 } );
 
-// Create a new snippet
-router.post( '/api/snippets', ( req, res ) => {
-  const { snippetCode } = req.body;
-  if ( !snippetCode ) {
-    res.status( 400 ).send( 'Missing "code"' );
-  }
-
-  knexDataService.createSnippet( snippetCode, res );
-
-} );
-
 // Save the program with the provided number to the provided space.
 router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
   const { spaceName, number } = req.params;
@@ -226,20 +206,6 @@ router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
   knexDataService.saveProgramToSpace( spaceName, number, code, res );
 } );
 
-// Get all code snippets in the database
-router.get( '/api/snippets', ( req, res ) => {
-  knexDataService.getAllSnippets( res );
-} );
-
-// Save the snippet of the provided number
-router.put( '/api/snippets/:number', ( req, res ) => {
-  const { number } = req.params;
-  const { snippetCode } = req.body;
-  if ( !snippetCode ) {
-    res.status( 400 ).send( 'Missing "snippetCode"' );
-  }
-  knexDataService.saveSnippet( number, snippetCode, res );
-} );
 
 router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res ) => {
   const { spaceName, number } = req.params;
@@ -248,14 +214,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res )
     res.status( 400 ).send( 'Missing "printed"' );
   }
 
-  knex( 'programs' )
-    .update( { printed } )
-    .where( { spaceName, number } )
-    .then( () => {
-      getSpaceData( req, spaceData => {
-        res.json( spaceData );
-      } );
-    } );
+  knexDataService.markPrinted( spaceName, number, printed, res );
 } );
 
 /**
@@ -263,23 +222,15 @@ router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res )
  */
 router.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
   const { spaceName, programNumber } = req.params;
-  knex( 'programs' )
-    .where( { spaceName, number: programNumber } )
-    .del()
-    .then( numberOfProgramsDeleted => {
-      res.json( { numberOfProgramsDeleted } );
-    } );
+  knexDataService.deleteProgram( spaceName, programNumber, res );
 } );
 
+/**
+ * Set the debug info for the program.
+ */
 router.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) => {
   const { spaceName, number } = req.params;
-
-  knex( 'programs' )
-    .update( { debugInfo: JSON.stringify( req.body ) } )
-    .where( { spaceName, number } )
-    .then( () => {
-      res.json( {} );
-    } );
+  knexDataService.setDebugInfo( spaceName, number, req.body, res );
 } );
 
 router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
@@ -300,7 +251,7 @@ router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
  */
 router.post( '/api/creator/projectNames/:spaceName/:projectName', ( req, res ) => {
   const { spaceName, projectName } = req.params;
-  knexDataService.createProject( spaceName, )
+  knexDataService.createProject( spaceName, projectName, res );
 } );
 
 /**
@@ -315,42 +266,7 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
     destinationProjectName
   } = req.params;
 
-  knex
-    .select( 'projectData' )
-    .from( 'creator-data' )
-    .where( { spaceName: sourceSpaceName, projectName: sourceProjectName } )
-    .then( sourceProjectResult => {
-      if ( sourceProjectResult.length === 0 ) {
-        res.status( PROJECT_DOES_NOT_EXIST ).send( 'Source project does not exist' );
-      }
-      else {
-        knex
-          .select( 'projectName' )
-          .from( 'creator-data' )
-          .where( { spaceName: destinationSpaceName } )
-          .then( destinationSpaceResult => {
-            const existingNames = destinationSpaceResult.map( result => result.projectName );
-            if ( existingNames.includes( destinationProjectName ) ) {
-              res.status( PROJECT_ALREADY_EXISTS ).send( 'Destination project already exists' );
-            }
-            else if ( !Utils.canAccessSpace( destinationSpaceName ) ) {
-              res.status( SPACE_RESTRICTED ).send( 'Destination space is restricted' );
-            }
-            else {
-              knex( 'creator-data' )
-                .insert( {
-                  spaceName: destinationSpaceName,
-                  projectName: destinationProjectName,
-                  projectData: sourceProjectResult[ 0 ].projectData,
-                  editing: false
-                } )
-                .then( () => {
-                  res.status( SUCCESS ).json( {} );
-                } );
-            }
-          } );
-      }
-    } );
+  knexDataService.copyProject( sourceSpaceName, sourceProjectName, destinationSpaceName, destinationProjectName, res );
 } );
 
 /**
@@ -366,12 +282,7 @@ router.put( '/api/creator/clear/:spaceName/:projectName', ( req, res ) => {
     res.status( 400 ).send( 'Missing project data' );
   }
   else {
-    knex( 'creator-data' )
-      .update( { projectData: projectData } )
-      .where( { spaceName, projectName } )
-      .then( () => {
-        res.json( {} );
-      } );
+    knexDataService.createEmptyProject( spaceName, projectName, projectData, res );
   }
 } );
 
@@ -424,16 +335,11 @@ router.put( '/api/creator/chunk/:spaceName/:projectName', ( req, res ) => {
       programs: spaceChunkMap[ spaceName ]
     };
 
-    knex( 'creator-data' )
-      .update( { projectData: fullProjectData } )
-      .where( { spaceName, projectName } )
-      .then( () => {
+    knexDataService.saveProjectData( spaceName, projectName, fullProjectData, () => {
 
-        // clear the chunk data now that we have fully sent it
-        spaceChunkMap[ spaceName ] = [];
-
-        res.json( { status: 'CHUNKS_SENT' } );
-      } );
+      // clear the chunk data as we have saved the project data
+      spaceChunkMap[ spaceName ] = [];
+    }, res );
   }
   else {
     res.json( { status: 'CHUNK_ADDED', chunksReceived: spaceChunkMap[ spaceName ].length } );
@@ -459,37 +365,7 @@ router.put( '/api/creator/templates', ( req, res ) => {
     res.status( 403 ).send( 'Missing project data' );
   }
   else {
-
-    // Make sure that the name is unique for the space the template is in. We allow duplicate names for
-    // different spaces and for templates in the global space.
-    // NOTE: Templates are uniquely identified by ID in the database so overlapping names is fine.
-    // This limitation just helps avoid a confusing UX.
-    knex
-      .select( 'name', 'spaceName' )
-      .from( 'creator-templates' )
-      .where( { name: templateName, spaceName: spaceName } )
-      .then( selectResult => {
-        const existingNames = selectResult.map( result => result.name );
-        if ( existingNames.includes( templateName ) ) {
-          res.status( 402 ).send( 'Name already exists for this template.' );
-        }
-        else {
-          knex( 'creator-templates' )
-            .insert( {
-              name: templateName,
-              projectData: projectData,
-              description: description,
-              keyWords: keyWords,
-              spaceName: spaceName
-            } )
-            .then( () => {
-              res.status( 200 ).json( {} );
-            } )
-            .catch( error => {
-              res.status( UNKNOWN_ERROR ).send( 'An error occurred while saving the template' );
-            } );
-        }
-      } );
+    knexDataService.createTemplate( templateName, description, keyWords, projectData, spaceName, res );
   }
 } );
 
@@ -508,46 +384,15 @@ router.put( '/api/creator/templates/update/save', ( req, res ) => {
     templateId
   } = req.body;
 
-  knex( 'creator-templates' )
-    .select( '*' )
-    .where( { id: templateId } )
-    .first()
-    .then( template => {
-      if ( !template ) {
-        res.status( PROJECT_DOES_NOT_EXIST ).send( 'Template not found' );
-      }
-      else {
-        knex( 'creator-templates' )
-          .where( { id: templateId } )
-          .update( {
-            name: templateName,
-            projectData: projectData,
-            description: description,
-            keyWords: keyWords
-          } )
-          .then( () => {
-            res.status( SUCCESS ).send( 'Template updated successfully' );
-          } )
-          .catch( error => {
-            res.status( UNKNOWN_ERROR ).send( 'An error occurred while updating the template' );
-          } );
-      }
-    } )
-    .catch( error => {
-      res.status( UNKNOWN_ERROR ).send( 'An error occurred while checking for the template' );
-    } );
+  knexDataService.saveTemplate( templateName, description, keyWords, projectData, templateId, res );
 } );
 
 /**
  * Retrieve all templates from the templates table.
+ * TODO: I believe this is unused. Remove soon if true.
  */
 router.get( '/api/creator/all-templates', ( req, res ) => {
-  knex
-    .select( 'name', 'description', 'keyWords', 'projectData', 'id' )
-    .from( 'creator-templates' )
-    .then( selectResult => {
-      res.json( { templates: selectResult } );
-    } );
+  knexDataService.getAllTemplates( res );
 } );
 
 /**
@@ -556,14 +401,7 @@ router.get( '/api/creator/all-templates', ( req, res ) => {
  */
 router.get( '/api/creator/templates/use/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  knex
-    .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
-    .from( 'creator-templates' )
-    .where( { spaceName: spaceName } )
-    .orWhereNull( 'spaceName' )
-    .then( selectResult => {
-      res.json( { templates: selectResult } );
-    } );
+  knexDataService.getUsableTemplates( spaceName, res );
 } );
 
 /**
@@ -573,22 +411,7 @@ router.get( '/api/creator/templates/use/:spaceName', ( req, res ) => {
  */
 router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-
-  const query = knex
-    .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
-    .from( 'creator-templates' );
-
-  if ( Utils.canAccessSpace( spaceName ) ) {
-    query.where( { spaceName: spaceName } );
-  }
-
-  if ( ALLOW_ACCESS_TO_RESTRICTED_FILES ) {
-    query.orWhereNull( 'spaceName' );
-  }
-
-  query.then( selectResult => {
-    res.json( { templates: selectResult } );
-  } );
+  knexDataService.getEditableTemplates( spaceName, ALLOW_ACCESS_TO_RESTRICTED_FILES, res );
 } );
 
 /**
@@ -596,12 +419,7 @@ router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
  */
 router.get( '/api/creator/templates/delete/:templateName', ( req, res ) => {
   const { templateName } = req.params;
-  knex( 'creator-templates' )
-    .where( { name: templateName } )
-    .del()
-    .then( numberOfTemplatesDeleted => {
-      res.json( { numberOfTemplatesDeleted } );
-    } );
+  knexDataService.deleteTemplate( templateName, res );
 } );
 
 /**
@@ -632,19 +450,7 @@ router.get( '/api/creator/can-access-space/:spaceName', ( req, res ) => {
 router.get( '/api/creator/data', ( req, res ) => {
   const spaceName = req.query.spaceName;
   const projectName = req.query.projectName;
-
-  knex
-    .select( 'projectData' )
-    .from( 'creator-data' )
-    .where( { spaceName, projectName } )
-    .then( selectResult => {
-      if ( selectResult.length === 0 ) {
-        res.status( 404 );
-      }
-      else {
-        res.json( { projectData: selectResult[ 0 ].projectData } );
-      }
-    } );
+  knexDataService.getProjectData( spaceName, projectName, res );
 } );
 
 /**
@@ -654,13 +460,7 @@ router.get( '/api/creator/data', ( req, res ) => {
 router.get( '/api/creator/projects/delete', ( req, res ) => {
   const spaceName = req.query.spaceName;
   const projectName = req.query.projectName;
-
-  knex( 'creator-data' )
-    .where( { spaceName, projectName: projectName } )
-    .del()
-    .then( numberOfProgramsDeleted => {
-      res.json( { numberOfProgramsDeleted } );
-    } );
+  knexDataService.deleteProject( spaceName, projectName, res );
 } );
 
 /**
@@ -782,65 +582,65 @@ router.post( '/api/creator/uploadSound', uploadSound.single( 'file' ), async ( r
  .catch(error => console.error('Error:', error));
  */
 router.post( '/api/creator/maintenance/updateSchema', ( req, res ) => {
-
-  function modifyProjectData( oldData ) {
-
-    // create a copy of the data
-    const newData = { ...oldData };
-
-    if ( newData.programs ) {
-      newData.programs.forEach( programData => {
-        programData.modelContainer.namedBounds2Properties = [];
-      } );
-    }
-
-    return newData;
-  }
-
-  // For every project in creator-data, update the project data to a modified JSON object.
-  knex
-    .select( [ 'projectData', 'spaceName', 'projectName' ] )
-    .from( 'creator-data' )
-    .then( selectResult => {
-      if ( selectResult.length === 0 ) {
-        return res.status( 404 ).json( { error: 'No projects found' } );
-      }
-
-      // Process each project's data
-      const updatedProjects = selectResult.map( project => {
-        const oldData = project.projectData;
-        console.log( project.spaceName, project.projectName );
-
-        // Modify the oldData to create the newData
-        const newData = modifyProjectData( oldData );
-
-        // Return an object with the id and the modified data
-        return {
-          spaceName: project.spaceName,
-          projectName: project.projectName,
-          projectData: newData
-        };
-      } );
-
-      // Update the records in the 'creator-data' table
-      const updatePromises = updatedProjects.map( updatedProject => {
-        console.log( updatedProject.spaceName, updatedProject.projectName );
-
-        return knex( 'creator-data' )
-          .update( { projectData: updatedProject.projectData } )
-          .where( { spaceName: updatedProject.spaceName, projectName: updatedProject.projectName } );
-      } );
-
-      // Execute all update queries using Promise.all
-      return Promise.all( updatePromises );
-    } )
-    .then( () => {
-      res.json( { message: 'Schema update completed' } );
-    } )
-    .catch( error => {
-      console.error( 'Error:', error );
-      res.status( 500 ).json( { error: 'Internal server error' } );
-    } );
+  //
+  // function modifyProjectData( oldData ) {
+  //
+  //   // create a copy of the data
+  //   const newData = { ...oldData };
+  //
+  //   if ( newData.programs ) {
+  //     newData.programs.forEach( programData => {
+  //       programData.modelContainer.namedBounds2Properties = [];
+  //     } );
+  //   }
+  //
+  //   return newData;
+  // }
+  //
+  // // For every project in creator-data, update the project data to a modified JSON object.
+  // knex
+  //   .select( [ 'projectData', 'spaceName', 'projectName' ] )
+  //   .from( 'creator-data' )
+  //   .then( selectResult => {
+  //     if ( selectResult.length === 0 ) {
+  //       return res.status( 404 ).json( { error: 'No projects found' } );
+  //     }
+  //
+  //     // Process each project's data
+  //     const updatedProjects = selectResult.map( project => {
+  //       const oldData = project.projectData;
+  //       console.log( project.spaceName, project.projectName );
+  //
+  //       // Modify the oldData to create the newData
+  //       const newData = modifyProjectData( oldData );
+  //
+  //       // Return an object with the id and the modified data
+  //       return {
+  //         spaceName: project.spaceName,
+  //         projectName: project.projectName,
+  //         projectData: newData
+  //       };
+  //     } );
+  //
+  //     // Update the records in the 'creator-data' table
+  //     const updatePromises = updatedProjects.map( updatedProject => {
+  //       console.log( updatedProject.spaceName, updatedProject.projectName );
+  //
+  //       return knex( 'creator-data' )
+  //         .update( { projectData: updatedProject.projectData } )
+  //         .where( { spaceName: updatedProject.spaceName, projectName: updatedProject.projectName } );
+  //     } );
+  //
+  //     // Execute all update queries using Promise.all
+  //     return Promise.all( updatePromises );
+  //   } )
+  //   .then( () => {
+  //     res.json( { message: 'Schema update completed' } );
+  //   } )
+  //   .catch( error => {
+  //     console.error( 'Error:', error );
+  //     res.status( 500 ).json( { error: 'Internal server error' } );
+  //   } );
 } );
 
 //--------------------------------------------------------------------------------------------------
@@ -864,7 +664,6 @@ openAIRouter.post( '/', async ( req, res ) => {
     if ( !process.env.OPENAI_API_KEY ) {
       throw new Error( 'No OpenAI API key available.' );
     }
-    console.log( process.env.OPENAI_API_KEY );
 
     const completion = await openai.chat.completions.create( {
       messages: [ { role: 'user', content: promptString } ],

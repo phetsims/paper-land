@@ -7,7 +7,6 @@ import SaveAlert from '../common/SaveAlert.js';
 import CreateProgramsDialog from '../editor/CreateProgramsDialog.js';
 import { codeToName, getApiUrl, getSaveString, programMatchesFilterString } from '../utils';
 import ChangeSpaceDialog from './ChangeSpaceDialog.js';
-import CodeSnippetsDialog from './CodeSnippetsDialog.js';
 import styles from './EditorMain.css';
 
 // constants
@@ -23,7 +22,6 @@ export default class EditorMain extends React.Component {
       spaceData: { programs: [] },
       code: '',
       debugInfo: {},
-      showSnippetsDialog: false,
       saveSuccess: true, // Did the save command succeed?
       showSaveModal: false,
 
@@ -262,7 +260,6 @@ export default class EditorMain extends React.Component {
     const okayToEditSelectedProgram = !!selectedProgram;
     const errors = this.state.debugInfo.errors || [];
     const logs = this.state.debugInfo.logs || [];
-    const showSnippetsDialog = this.state.showSnippetsDialog;
     const showCreateProgramDialog = this.state.showCreateProgramDialog;
     const showSpaceDialog = this.state.showSpaceDialog;
 
@@ -303,11 +300,6 @@ export default class EditorMain extends React.Component {
           success={this.state.saveSuccess}
           show={this.state.showSaveModal}
         ></SaveAlert>
-        {showSnippetsDialog && (
-          <CodeSnippetsDialog
-            onClose={() => this.setState( { showSnippetsDialog: false } )}
-          ></CodeSnippetsDialog>
-        )}
         {showCreateProgramDialog && (
           <CreateProgramsDialog
             showCreateProgramDialog={showCreateProgramDialog}
@@ -481,11 +473,6 @@ export default class EditorMain extends React.Component {
             >
               PhET Library References
             </a>
-          </div>
-
-          <div className={styles.sidebarSection}>
-            <button onClick={() => {this.setState( { showSnippetsDialog: true } );}}>Code Snippets</button>
-            {' '}
           </div>
 
           <div className={styles.sidebarSection}>

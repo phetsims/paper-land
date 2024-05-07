@@ -40,20 +40,10 @@
   height: 800px;
 }
 
-:local(.snippetEditor) {
-  height: 400px;
-  right: sidebarWidth;
-}
-
 :local(.select) {
   margin-bottom: 10px;
   margin-top: 10px;
   width: 300px;
-}
-
-:local(.snippetSelect) {
-  margin-bottom: 10px;
-  width: 30%;
 }
 
 :local(.dialog) {
@@ -86,13 +76,6 @@
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1;
-}
-
-:local(.snippetControls) {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 10px;
 }
 
 :local(.sidebar) {

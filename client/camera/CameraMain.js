@@ -724,9 +724,6 @@ export default class CameraMain extends React.Component {
                         ) )}
                       </div>
                     </div>
-
-                    <Button onClick={() => { this.setState( { showCreateProgramDialog: true } ); }}>Create New Program(s)</Button>
-
                   </Accordion.Body>
                 </Accordion.Item>
 

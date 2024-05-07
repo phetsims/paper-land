@@ -7,7 +7,6 @@ const restrictedSpacesList = require( './restrictedSpacesList.js' );
 const Constants = require( './Constants.js' );
 const Utils = require( './Utils.js' );
 const IDataService = require( './IDataService.js' );
-const { response } = require( 'express' );
 
 // The knex instance - processes all database requests, using a local or remote database depending
 // on the environment.
@@ -119,9 +118,10 @@ class KnexDataService extends IDataService {
   /**
    * See IDataService for documentation.
    * @param {string} spaceName
+   * @param {string} code
    * @param {*} response The response from the router.
    */
-  addNewProgram( spaceName, response ) {
+  addNewProgram( spaceName, code, response ) {
     knex
       .select( 'number' )
       .from( 'programs' )
@@ -144,10 +144,22 @@ class KnexDataService extends IDataService {
             spaceName, number, originalCode: code, currentCode: code
           } )
           .then( () => {
-            getSpaceData( req, spaceData => {
+            this.getSpaceData( spaceName, spaceData => {
               response.json( { number, spaceData } );
             } );
           } );
+      } );
+  }
+
+  /**
+   * See IDataService for documentation.
+   */
+  deleteProgram( spaceName, number, response ) {
+    knex( 'programs' )
+      .where( { spaceName, number } )
+      .del()
+      .then( numberOfProgramsDeleted => {
+        response.json( { numberOfProgramsDeleted } );
       } );
   }
 
@@ -197,14 +209,14 @@ class KnexDataService extends IDataService {
   /**
    * See IDataService for documentation.
    * @param spaceName - space that this program is in
-   * @param programNumber - number of the program to get the code for
+   * @param number - number of the program to get the code for
    * @param response - response object for the route
    */
-  getProgramCode( spaceName, programNumber, response ) {
+  getProgramCode( spaceName, number, response ) {
     knex
       .select( 'currentCode' )
       .from( 'programs' )
-      .where( { spaceName, programNumber } )
+      .where( { spaceName, number } )
       .then( selectResult => {
         response.set( 'Content-Type', 'text/javascript;charset=UTF-8' );
         response.send( selectResult[ 0 ].currentCode );
@@ -331,6 +343,255 @@ class KnexDataService extends IDataService {
               response.json( { projectName: projectName } );
             } );
         }
+      } );
+  }
+
+  /**
+   * See IDataService for documentation.
+   */
+  copyProject( sourceSpaceName, sourceProjectName, destinationSpaceName, destinationProjectName, response ) {
+    knex
+      .select( 'projectData' )
+      .from( 'creator-data' )
+      .where( { spaceName: sourceSpaceName, projectName: sourceProjectName } )
+      .then( sourceProjectResult => {
+        if ( sourceProjectResult.length === 0 ) {
+          response.status( Constants.PROJECT_DOES_NOT_EXIST ).send( 'Source project does not exist' );
+        }
+        else {
+          knex
+            .select( 'projectName' )
+            .from( 'creator-data' )
+            .where( { spaceName: destinationSpaceName } )
+            .then( destinationSpaceResult => {
+              const existingNames = destinationSpaceResult.map( result => result.projectName );
+              if ( existingNames.includes( destinationProjectName ) ) {
+                response.status( Constants.PROJECT_ALREADY_EXISTS ).send( 'Destination project already exists' );
+              }
+              else if ( !Utils.canAccessSpace( destinationSpaceName ) ) {
+                response.status( Constants.SPACE_RESTRICTED ).send( 'Destination space is restricted' );
+              }
+              else {
+                knex( 'creator-data' )
+                  .insert( {
+                    spaceName: destinationSpaceName,
+                    projectName: destinationProjectName,
+                    projectData: sourceProjectResult[ 0 ].projectData,
+                    editing: false
+                  } )
+                  .then( () => {
+                    response.status( Constants.SUCCESS ).json( {} );
+                  } );
+              }
+            } );
+        }
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  createEmptyProject( spaceName, projectName, projectData, response ) {
+    knex( 'creator-data' )
+      .update( { projectData: projectData } )
+      .where( { spaceName, projectName } )
+      .then( () => {
+        response.json( {} );
+      } );
+  }
+
+  saveProjectData( spaceName, projectName, projectData, onComplete, response ) {
+    knex( 'creator-data' )
+      .update( { projectData: projectData } )
+      .where( { spaceName, projectName } )
+      .then( () => {
+
+        // Handle any work before submitting the response
+        onComplete();
+
+        response.json( { status: 'CHUNKS_SENT' } );
+      } );
+  }
+
+  createTemplate( templateName, description, keyWords, projectData, spaceName, response ) {
+
+    // Make sure that the name is unique for the space the template is in. We allow duplicate names for
+    // different spaces and for templates in the global space.
+    // NOTE: Templates are uniquely identified by ID in the database so overlapping names is fine.
+    // This limitation just helps avoid a confusing UX.
+    knex
+      .select( 'name', 'spaceName' )
+      .from( 'creator-templates' )
+      .where( { name: templateName, spaceName: spaceName } )
+      .then( selectResult => {
+        const existingNames = selectResult.map( result => result.name );
+        if ( existingNames.includes( templateName ) ) {
+          response.status( 402 ).send( 'Name already exists for this template.' );
+        }
+        else {
+          knex( 'creator-templates' )
+            .insert( {
+              name: templateName,
+              projectData: projectData,
+              description: description,
+              keyWords: keyWords,
+              spaceName: spaceName
+            } )
+            .then( () => {
+              response.status( 200 ).json( {} );
+            } )
+            .catch( error => {
+              response.status( Constants.UNKNOWN_ERROR ).send( 'An error occurred while saving the template' );
+            } );
+        }
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  saveTemplate( templateName, description, keyWords, projectData, templateId, response ) {
+    knex( 'creator-templates' )
+      .select( '*' )
+      .where( { id: templateId } )
+      .first()
+      .then( template => {
+        if ( !template ) {
+          response.status( Constants.PROJECT_DOES_NOT_EXIST ).send( 'Template not found' );
+        }
+        else {
+          knex( 'creator-templates' )
+            .where( { id: templateId } )
+            .update( {
+              name: templateName,
+              projectData: projectData,
+              description: description,
+              keyWords: keyWords
+            } )
+            .then( () => {
+              response.status( Constants.SUCCESS ).send( 'Template updated successfully' );
+            } )
+            .catch( error => {
+              response.status( Constants.UNKNOWN_ERROR ).send( 'An error occurred while updating the template' );
+            } );
+        }
+      } )
+      .catch( error => {
+        response.status( Constants.UNKNOWN_ERROR ).send( 'An error occurred while checking for the template' );
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  getAllTemplates( response ) {
+    knex
+      .select( 'name', 'description', 'keyWords', 'projectData', 'id' )
+      .from( 'creator-templates' )
+      .then( selectResult => {
+        response.json( { templates: selectResult } );
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  getUsableTemplates( spaceName, response ) {
+    knex
+      .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
+      .from( 'creator-templates' )
+      .where( { spaceName: spaceName } )
+      .orWhereNull( 'spaceName' )
+      .then( selectResult => {
+        response.json( { templates: selectResult } );
+      } );
+  }
+
+  getEditableTemplates( spaceName, allowAccessToRestrictedFiles, response ) {
+    const query = knex
+      .select( 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' )
+      .from( 'creator-templates' );
+
+    if ( Utils.canAccessSpace( spaceName ) ) {
+      query.where( { spaceName: spaceName } );
+    }
+
+    if ( allowAccessToRestrictedFiles ) {
+      query.orWhereNull( 'spaceName' );
+    }
+
+    query.then( selectResult => {
+      response.json( { templates: selectResult } );
+    } );
+  }
+
+  deleteTemplate( templateName, response ) {
+    knex( 'creator-templates' )
+      .where( { name: templateName } )
+      .del()
+      .then( numberOfTemplatesDeleted => {
+        response.json( { numberOfTemplatesDeleted } );
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  getProjectData( spaceName, projectName, response ) {
+    knex
+      .select( 'projectData' )
+      .from( 'creator-data' )
+      .where( { spaceName, projectName } )
+      .then( selectResult => {
+        if ( selectResult.length === 0 ) {
+          response.status( 404 );
+        }
+        else {
+          response.json( { projectData: selectResult[ 0 ].projectData } );
+        }
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  deleteProject( spaceName, projectName, response ) {
+    knex( 'creator-data' )
+      .where( { spaceName, projectName: projectName } )
+      .del()
+      .then( numberOfProgramsDeleted => {
+        response.json( { numberOfProgramsDeleted } );
+      } );
+  }
+
+  /**
+   * See IDataService.
+   */
+  setDebugInfo( spaceName, number, debugInfo, response ) {
+    knex( 'programs' )
+      .update( { debugInfo: JSON.stringify( debugInfo ) } )
+      .where( { spaceName, number } )
+      .then( () => {
+        response.json( {} );
+      } );
+
+    //
+    // knex( 'programs' )
+    //   .update( { debugInfo: JSON.stringify( req.body ) } )
+    //   .where( { spaceName, number } )
+    //   .then( () => {
+    //     res.json( {} );
+    //   } );
+  }
+
+  markPrinted( spaceName, number, printed, response ) {
+    knex( 'programs' )
+      .update( { printed } )
+      .where( { spaceName, number } )
+      .then( () => {
+        this.getSpaceData( spaceName, spaceData => {
+          response.json( spaceData );
+        } );
       } );
   }
 }

@@ -67,9 +67,29 @@ class IDataService {
   /**
    * Adds a new program to the saved state. A new unique number for the spacename is assigned.
    * @param {string} spaceName - The name of the space to add the program to.
+   * @param {string} code - The code for the new program.
+   * @param {*} response - The response from the router.
    */
-  addNewProgram( spaceName ) {
+  addNewProgram( spaceName, code, response ) {
     throw new Error( 'Method addNewProgram must be implemented' );
+  }
+
+  /**
+   * Delete the specified program from the provided space.
+   */
+  deleteProgram( spaceName, number, response ) {
+    throw new Error( 'Method deleteProgram must be implemented' );
+  }
+
+  /**
+   * Sets the debug info for the program with the provided number in the provided space.
+   * @param spaceName
+   * @param number
+   * @param debugInfo - string containing debug info for the program
+   * @param response - response for the route
+   */
+  setDebugInfo( spaceName, number, debugInfo, response ) {
+    throw new Error( 'Method setDebugInfo must be implemented' );
   }
 
   /**
@@ -134,6 +154,17 @@ class IDataService {
   }
 
   /**
+   * Marks a program as having been printed by the user.
+   * @param spaceName - space for the program
+   * @param number - the number of the program
+   * @param printed - boolean value to set for printed
+   * @param response - response object from the route
+   */
+  markPrinted( spaceName, number, printed, response ) {
+    throw new Error( 'Method markPrinted must be implemented' );
+  }
+
+  /**
    * Gets all project names in the provided space.
    * @param spaceName - the name of the space to get the project names from.
    * @param response - response object from the route.
@@ -150,6 +181,95 @@ class IDataService {
    */
   createProject( spaceName, projectName, response ) {
     throw new Error( 'Method createProject must be implemented' );
+  }
+
+  /**
+   * Creates a copy of the project and puts it in a new space with a new name.
+   */
+  copyProject( sourceSpaceName, sourceProjectName, destinationSpaceName, destinationProjectName, response ) {
+    throw new Error( 'Method copyProject must be implemented' );
+  }
+
+  /**
+   * Creates a new empty project with the provided name in the provided space.
+   * @param spaceName
+   * @param projectName
+   * @param projectData - data to save in the project (an empty list of programs)
+   * @param response - response object from the route
+   */
+  createEmptyProject( spaceName, projectName, projectData, response ) {
+    throw new Error( 'Method createEmptyProject must be implemented' );
+  }
+
+  /**
+   * Saves all project data to the databsae
+   * @param spaceName - space to save the project data to
+   * @param projectName - name of the project to save
+   * @param projectData - data to save in the project
+   * @param onComplete - called just before the response is sent
+   * @param response - response object from the route
+   */
+  saveProjectData( spaceName, projectName, projectData, onComplete, response ) {
+    throw new Error( 'Method saveProjectData must be implemented' );
+  }
+
+  /**
+   * Saves a new template to the database.
+   */
+  createTemplate( templateName, description, keyWords, projectData, spaceName, response ) {
+    throw new Error( 'Method saveTemplate must be implemented' );
+  }
+
+  /**
+   * Saves a template in the database. The template must already exist.
+   */
+  saveTemplate( templateName, description, keyWords, projectData, templateId, response ) {
+    throw new Error( 'Method saveTemplate must be implemented' );
+  }
+
+  /**
+   * Gets all templates in the database.
+   */
+  getAllTemplates( response ) {
+    throw new Error( 'Method getAllTemplates must be implemented' );
+  }
+
+  /**
+   * Get the templates that can be used in the provided space. Will include all global templates and the template
+   * that are assigned to the provided space.
+   */
+  getUsableTemplates( spaceName, response ) {
+    throw new Error( 'Method getUsableTemplates must be implemented' );
+  }
+
+  /**
+   * Get the templates that can be edited in the provided space. If the user has full access, it will include all
+   * global templates. Otherwise, it will include teh templates assigned to the provided spaceName, assuming that
+   * the user has access to the space.
+   */
+  getEditableTemplates( spaceName, allowAccessToRestrictedFiles, response ) {
+    throw new Error( 'Method getEditableTemplates must be implemented' );
+  }
+
+  /**
+   * Delete the template from the templates table with the provided name.
+   */
+  deleteTemplate( templateName, response ) {
+    throw new Error( 'Method deleteTemplate must be implemented' );
+  }
+
+  /**
+   * Gets a collection of project data for the project in the provided space.
+   */
+  getProjectData( spaceName, projectName, response ) {
+    throw new Error( 'Method getProjectData must be implemented' );
+  }
+
+  /**
+   * Gets the project data for the provided space and project name.
+   */
+  deleteProject( spaceName, projectName, response ) {
+    throw new Error( 'Method deleteProject must be implemented' );
   }
 }
 
