@@ -16,6 +16,7 @@ import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
 import FormInvalidReasons from '../FormInvalidReasons.js';
+import FunctionDocumentationList from '../FunctionDocumentationList.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
 import useEditableForm from '../useEditableForm.js';
 import VariableDocumentationList from '../VariableDocumentationList.js';
@@ -276,9 +277,17 @@ export default function BluetoothControllerForm( props ) {
           </Container>
           <hr></hr>
           <VariableDocumentationList
-            functionPrompt={'Use available variables to calculate a value. Set the value of the BLE characteristic with writeToCharacteristic( value ). Remember to convert the value to a the format expected by the device (likely Uint8Array).'}
+            functionPrompt={'Use available variables to calculate a value.'}
             components={dependencyModelComponents}
           ></VariableDocumentationList>
+          <FunctionDocumentationList
+            helperPrompt={'Use the following functions in your code to write to the device.'}
+            functionObjects={[
+              { name: 'writeToCharacteristic( value )', documentation: 'Write a value to the characteristic. Remember to encode the value to a format expected by the device.' },
+              { name: 'writeStringToCharacteristic( valueString )', documentation: 'Write a string to the characteristic. The string is wrapped with data delimeter "$" and string delimiter "|". The string is then encoded as a UTF-8 Uint8Array.' },
+              { name: 'writeStringToCharacteristic( valueString, startDelim, endDelim )', documentation: 'Write a string to the characteristic. The string is wrapped with the provided data and string delimeters. The string is then encoded as a UTF-8 Uint8Array.' }
+            ]}
+          ></FunctionDocumentationList>
           <CreatorMonacoEditor
             controlFunctionString={formData.controlFunctionString}
             handleChange={newValue => {

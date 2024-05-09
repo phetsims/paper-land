@@ -73,6 +73,17 @@ const ListenerComponentTemplates = {
               phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
             };
             
+            const writeStringToCharacteristic = ( _newCharacteristicValueString, _startDelim = '$', _endDelim = '|' ) => {
+            
+              // wrap the string in delimiters for the device
+              const _wrappedString = _startDelim + _newCharacteristicValueString + _endDelim;
+              
+              // encode as UTF-8 Uint8Array
+              const _encodedValue = new TextEncoder().encode( _wrappedString );
+            
+              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _encodedValue );
+            };
+            
             // the code block that the user wrote to change controlled Properties
             {{CONTROL_FUNCTION}}
           }
