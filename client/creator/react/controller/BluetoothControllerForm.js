@@ -151,7 +151,7 @@ export default function BluetoothControllerForm( props ) {
     <div>
 
       {/* UUID Text Inputs */}
-      <h3>UUID</h3>
+      <h3>Bluetooth Service</h3>
       <Form.Label>Select the Bluetooth Service you want to use from your microcontroller:</Form.Label>
       <ServiceSelector
         formData={formData}
