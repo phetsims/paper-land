@@ -95,6 +95,8 @@ export default function BluetoothControllerForm( props ) {
   );
 
   const [ selectedTab, setSelectedTab ] = useState( 'write' );
+  const [ writeTabEnabled, setWriteTabEnabled ] = useState( true );
+  const [ readTabEnabled, setReadTabEnabled ] = useState( true );
 
   useEffect( () => {
     setFormInvalidReasons( getIsFormValid( formData ) );
@@ -115,8 +117,20 @@ export default function BluetoothControllerForm( props ) {
         handleChange( { characteristicId: characteristicDescriptors[ 0 ].characteristicUUID } );
       }
     }
-
   }, [ formData.serviceId ] );
+
+  // When the characteristic changes, update the tabs to the appropriate read/write values depending
+  // what the characteristic supports.
+  useEffect( () => {
+    const characteristicDescriptor = bluetoothServiceData.getCharacteristicDescriptorForCharacteristicId( formData.characteristicId );
+    if ( characteristicDescriptor ) {
+      setSelectedTab( characteristicDescriptor.write ? 'write' : 'read' );
+      handleChange( { writeToCharacteristic: characteristicDescriptor.write } );
+
+      setWriteTabEnabled( characteristicDescriptor.write );
+      setReadTabEnabled( characteristicDescriptor.read );
+    }
+  }, [ formData.characteristicId ] );
 
   // Get the references to the actual model components from selected form data (name strings)
   const controlledModelComponents = Component.findComponentsByName( allModelComponents, formData.controlledPropertyNames );
@@ -207,7 +221,7 @@ export default function BluetoothControllerForm( props ) {
         }}
         justify={true}
       >
-        <Tab eventKey='read' title='Read' tabClassName={styles.tab}>
+        <Tab eventKey='read' title='Read' tabClassName={styles.tab} disabled={!readTabEnabled}>
           <h3>Controlled Components</h3>
           <p>A value is read from the bluetooth device. Select components you want to be controlled by the device.</p>
           <Container>
@@ -237,7 +251,7 @@ export default function BluetoothControllerForm( props ) {
             }}>
           </CreatorMonacoEditor>
         </Tab>
-        <Tab eventKey='write' title='Write' tabClassName={styles.tab}>
+        <Tab eventKey='write' title='Write' tabClassName={styles.tab} disabled={!writeTabEnabled}>
           <h3>Dependency Components</h3>
           <p>Select components that should control the device.</p>
           <Container>

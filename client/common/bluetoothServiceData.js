@@ -93,7 +93,7 @@ const SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP = new Map( [
   ],
   [
     new ServiceDescriptor( MICROBIT_IO_PIN_SERVICE, 'micro:bit IO pins' ),
-    [ new CharacteristicDescriptor( MICROBIT_IO_PIN_CHARACTERISTIC, 'micro:bit IO pin', true, false ) ]
+    [ new CharacteristicDescriptor( MICROBIT_IO_PIN_CHARACTERISTIC, 'micro:bit IO pin', true, true ) ]
   ],
   [
     new ServiceDescriptor( MICROBIT_UART_SERVICE, 'micro:bit UART' ),
@@ -158,8 +158,29 @@ const bluetoothServiceData = {
     return SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.get( serviceDescriptor );
   },
 
+  /**
+   * Gets the characteristic descriptors under the provided service UUID.
+   * @param serviceUUID
+   * @returns {CharacteristicDescriptor[]}
+   */
   getCharacteristicDescriptorsForService( serviceUUID ) {
     return bluetoothServiceData.getCharacteristicDescriptors( bluetoothServiceData.getServiceDescriptor( serviceUUID ) );
+  },
+
+  /**
+   * Returns the characteristic descriptor for the specified characteristic ID. Null if none is found.
+   * @param characteristicId
+   * @returns {CharacteristicDescriptor|null}
+   */
+  getCharacteristicDescriptorForCharacteristicId( characteristicId ) {
+    for ( let [ serviceDescriptor, characteristicDescriptors ] of SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP ) {
+      for ( let characteristicDescriptor of characteristicDescriptors ) {
+        if ( characteristicDescriptor.characteristicUUID === characteristicId ) {
+          return characteristicDescriptor;
+        }
+      }
+    }
+    return null;
   }
 };
 

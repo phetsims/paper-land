@@ -133,6 +133,19 @@
   color: rgb(189, 203, 218);
 }
 
+/*disabled tabs*/
+.nav.nav-tabs .nav-link:disabled {
+  background-color: transparent;
+  opacity: 0.5;
+  color: rgb(189, 203, 218);
+}
+
+.nav.nav-pill .nav-link:disabled {
+  background-color: transparent;
+  opacity: 0.5;
+  color: rgb(189, 203, 218);
+}
+
 .nav.nav-pill .nav-link:hover {
   background-color: rgb(122, 125, 126);
   color: rgb(189, 203, 218);
