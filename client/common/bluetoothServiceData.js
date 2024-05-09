@@ -38,32 +38,32 @@ const MICROBIT_UART_SERVICE = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 const MICROBIT_UART_TX_CHARACTERISTIC = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 const MICROBIT_UART_RX_CHARACTERISTIC = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 
-// A set of random service (not related to the microbit) UUIDs that the user can optionally connect to with a
+// A set of custom service (not related to the microbit) UUIDs that the user can optionally connect to with a
 // different device like an Arduino or another microcontroller.
-const RANDOM_SERVICE_1 = '0000aaaa-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_SERVICE_2 = '0000bbbb-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_SERVICE_3 = '0000cccc-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_SERVICE_4 = '0000dddd-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_SERVICE_5 = '0000eeee-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_SERVICE_1 = '0000aaaa-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_SERVICE_2 = '0000bbbb-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_SERVICE_3 = '0000cccc-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_SERVICE_4 = '0000dddd-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_SERVICE_5 = '0000eeee-251d-470a-a062-fa1922dfa9a8';
 
-// A set of random characteristics (not related to the microbit) that the user can optionally connect to with a
+// A set of custom characteristics (not related to the microbit) that the user can optionally connect to with a
 // different device like an Arduino or another microcontroller.
-const RANDOM_CHARACTERISTIC_1 = '0000aaaa-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_CHARACTERISTIC_2 = '0000bbbb-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_CHARACTERISTIC_3 = '0000cccc-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_CHARACTERISTIC_4 = '0000dddd-251d-470a-a062-fa1922dfa9a8';
-const RANDOM_CHARACTERISTIC_5 = '0000eeee-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_CHARACTERISTIC_1 = '0000aaaa-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_CHARACTERISTIC_2 = '0000bbbb-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_CHARACTERISTIC_3 = '0000cccc-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_CHARACTERISTIC_4 = '0000dddd-251d-470a-a062-fa1922dfa9a8';
+const CUSTOM_CHARACTERISTIC_5 = '0000eeee-251d-470a-a062-fa1922dfa9a8';
 
-const RANDOM_CHARACTERISTICS = [
-  RANDOM_CHARACTERISTIC_1,
-  RANDOM_CHARACTERISTIC_2,
-  RANDOM_CHARACTERISTIC_3,
-  RANDOM_CHARACTERISTIC_4,
-  RANDOM_CHARACTERISTIC_5
+const CUSTOM_CHARACTERISTICS = [
+  CUSTOM_CHARACTERISTIC_1,
+  CUSTOM_CHARACTERISTIC_2,
+  CUSTOM_CHARACTERISTIC_3,
+  CUSTOM_CHARACTERISTIC_4,
+  CUSTOM_CHARACTERISTIC_5
 ];
 
-// A collection of characteristic descriptors for the 'random' IDs.
-const RANDOM_CHARACTERISTIC_DESCRIPTORS = RANDOM_CHARACTERISTICS.map( characteristicUUID => new CharacteristicDescriptor( characteristicUUID, 'Random characteristic', true, true ) );
+// A collection of characteristic descriptors for the 'custom' IDs.
+const CUSTOM_CHARACTERISTIC_DESCRIPTORS = CUSTOM_CHARACTERISTICS.map( characteristicUUID => new CharacteristicDescriptor( characteristicUUID, 'Custom Arduino Characteristic', true, true ) );
 
 // Create descriptors for the services and their characteristics and assign them to a map to convey
 // their associations.
@@ -110,24 +110,24 @@ const SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP = new Map( [
     ]
   ],
   [
-    new ServiceDescriptor( RANDOM_SERVICE_1, 'Random service 1' ),
-    RANDOM_CHARACTERISTIC_DESCRIPTORS
+    new ServiceDescriptor( CUSTOM_SERVICE_1, 'Custom Arduino Service 1' ),
+    CUSTOM_CHARACTERISTIC_DESCRIPTORS
   ],
   [
-    new ServiceDescriptor( RANDOM_SERVICE_2, 'Random service 2' ),
-    RANDOM_CHARACTERISTIC_DESCRIPTORS
+    new ServiceDescriptor( CUSTOM_SERVICE_2, 'Custom Arduino Service 2' ),
+    CUSTOM_CHARACTERISTIC_DESCRIPTORS
   ],
   [
-    new ServiceDescriptor( RANDOM_SERVICE_3, 'Random service 3' ),
-    RANDOM_CHARACTERISTIC_DESCRIPTORS
+    new ServiceDescriptor( CUSTOM_SERVICE_3, 'Custom Arduino Service 3' ),
+    CUSTOM_CHARACTERISTIC_DESCRIPTORS
   ],
   [
-    new ServiceDescriptor( RANDOM_SERVICE_4, 'Random service 4' ),
-    RANDOM_CHARACTERISTIC_DESCRIPTORS
+    new ServiceDescriptor( CUSTOM_SERVICE_4, 'Custom Arduino Service 4' ),
+    CUSTOM_CHARACTERISTIC_DESCRIPTORS
   ],
   [
-    new ServiceDescriptor( RANDOM_SERVICE_5, 'Random service 5' ),
-    RANDOM_CHARACTERISTIC_DESCRIPTORS
+    new ServiceDescriptor( CUSTOM_SERVICE_5, 'Custom Arduino Service 5' ),
+    CUSTOM_CHARACTERISTIC_DESCRIPTORS
   ]
 ] );
 
