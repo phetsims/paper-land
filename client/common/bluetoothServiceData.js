@@ -145,7 +145,29 @@ const bluetoothServiceData = {
    * Map of service descriptors to their characteristic descriptors. This is used to show the user the
    * available characteristics for a service when they are creating a bluetooth component.
    */
-  serviceDescriptorToCharacteristicDescriptorMap: SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP
+  serviceDescriptorToCharacteristicDescriptorMap: SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP,
+
+  /**
+   * Gets the service descriptor for the specified service UUID.
+   * @param serviceUUID
+   * @returns {ServiceDescriptor}
+   */
+  getServiceDescriptor( serviceUUID ) {
+    return Array.from( SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.keys() ).find( serviceDescriptor => serviceDescriptor.serviceUUID === serviceUUID );
+  },
+
+  /**
+   * Gets the characteristic descriptors for the specified service descriptor.
+   * @param serviceDescriptor
+   * @returns {CharacteristicDescriptor[]}
+   */
+  getCharacteristicDescriptors( serviceDescriptor ) {
+    return SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.get( serviceDescriptor );
+  },
+
+  getCharacteristicDescriptorsForService( serviceUUID ) {
+    return bluetoothServiceData.getCharacteristicDescriptors( bluetoothServiceData.getServiceDescriptor( serviceUUID ) );
+  }
 };
 
 export default bluetoothServiceData;

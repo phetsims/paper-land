@@ -105,6 +105,19 @@ export default function BluetoothControllerForm( props ) {
     setSelectedTab( getTabForActiveEdit( activeEdit ) );
   }, [ activeEdit ] );
 
+  // When a new service is selected, if the characteristic ID is empty, set it to the first one in the list. This
+  // is convenient for services with only one characteristic.
+  useEffect( () => {
+
+    if ( formData.characteristicId === '' && formData.serviceId ) {
+      const characteristicDescriptors = bluetoothServiceData.getCharacteristicDescriptorsForService( formData.serviceId );
+      if ( characteristicDescriptors.length > 0 ) {
+        handleChange( { characteristicId: characteristicDescriptors[ 0 ].characteristicUUID } );
+      }
+    }
+
+  }, [ formData.serviceId ] );
+
   // Get the references to the actual model components from selected form data (name strings)
   const controlledModelComponents = Component.findComponentsByName( allModelComponents, formData.controlledPropertyNames );
   const dependencyModelComponents = Component.findComponentsByName( allModelComponents, formData.dependencyNames );
@@ -323,11 +336,9 @@ const CharacteristicSelector = ( props ) => {
   let characteristicDescriptors = [];
 
   if ( serviceId ) {
-    const serviceDescriptors = Array.from( bluetoothServiceData.serviceDescriptorToCharacteristicDescriptorMap.keys() );
-    const selectedServiceDescriptor = serviceDescriptors.find( serviceDescriptor => serviceDescriptor.serviceUUID === serviceId );
 
     // The characteristic descriptors for the selected service.
-    characteristicDescriptors = bluetoothServiceData.serviceDescriptorToCharacteristicDescriptorMap.get( selectedServiceDescriptor );
+    characteristicDescriptors = bluetoothServiceData.getCharacteristicDescriptorsForService( serviceId );
   }
   else {
 
