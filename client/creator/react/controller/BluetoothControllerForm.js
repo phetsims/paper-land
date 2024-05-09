@@ -173,6 +173,12 @@ export default function BluetoothControllerForm( props ) {
           handleChange( { characteristicId: event.target.value } );
         }}
       ></CharacteristicSelector>
+
+      {/* UUID Readout */}
+      <UUIDReadOut
+        serviceId={formData.serviceId}
+        characteristicId={formData.characteristicId}
+      ></UUIDReadOut>
       <hr></hr>
 
       {/* Component selection and control function, different contents depending on read/write. */}
@@ -347,5 +353,17 @@ const CharacteristicSelector = ( props ) => {
         } )
       }
     </Form.Select>
+  );
+}
+
+/**
+ * Displays the selected service and characteristic UUIDs for reference.
+ */
+const UUIDReadOut = ( props ) => {
+  return (
+    <div className={styles.verticalPadding}>
+      <p>Service UUID: {props.serviceId}</p>
+      <p>Characteristic UUID: {props.characteristicId}</p>
+    </div>
   );
 }
