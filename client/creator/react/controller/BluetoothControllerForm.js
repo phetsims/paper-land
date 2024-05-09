@@ -152,7 +152,7 @@ export default function BluetoothControllerForm( props ) {
 
       {/* UUID Text Inputs */}
       <h3>UUID</h3>
-      <Form.Label>Select the UUID of the bluetooth service you want to use:</Form.Label>
+      <Form.Label>Select the Bluetooth Service you want to use from your microcontroller:</Form.Label>
       <ServiceSelector
         formData={formData}
         onChange={event => {
@@ -166,7 +166,7 @@ export default function BluetoothControllerForm( props ) {
         }}
       ></ServiceSelector>
 
-      <Form.Label>Enter the UUID of the bluetooth characteristic you want to use:</Form.Label>
+      <Form.Label>Select the Bluetooth Characteristic you want to use from the selected BLE Service:</Form.Label>
       <CharacteristicSelector
         formData={formData}
         onChange={event => {
