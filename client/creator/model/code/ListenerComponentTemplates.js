@@ -84,6 +84,28 @@ const ListenerComponentTemplates = {
               phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _encodedValue );
             };
             
+            // _matrix is a 5x5 2D array of 1s and 0s, corresponding to the LED matrix
+            const writeMatrixToCharacteristic = ( _matrix ) => {
+              const _ledMatrix = new Int8Array(5);
+              const _buffer = [
+                ['0', '0', '0', '0', '0', '0', '0', '0'],
+                ['0', '0', '0', '0', '0', '0', '0', '0'],
+                ['0', '0', '0', '0', '0', '0', '0', '0'],
+                ['0', '0', '0', '0', '0', '0', '0', '0'],
+                ['0', '0', '0', '0', '0', '0', '0', '0']
+              ]
+              for (var i = 0; i < 5; i++) {
+                for (var j = 0; j < 5; j++) {
+                  _buffer[i][7-j] = _matrix[i][4 - j]
+                }
+              }
+              for (var i = 0; i < 5; i++) {
+                const _string = _buffer[i].join("");
+                _ledMatrix[i]=parseInt(_string,2)
+              }
+              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _ledMatrix );
+            };
+            
             // the code block that the user wrote to change controlled Properties
             {{CONTROL_FUNCTION}}
           }
@@ -98,6 +120,10 @@ const ListenerComponentTemplates = {
           deviceValue => {
           
             if ( phet.paperLand.hasAllModelComponents( {{COMPONENT_REFERENCES_NAMES}} ) ) {
+            
+              // Make available as a string for easy reading
+              const _textDecoder = new TextDecoder('utf-8'); // Default is utf-8, which is typical for UART text data
+              const deviceValueString = _textDecoder.decode(deviceValue);
             
               // references to each model component controlled by this listener
               {{CONTROLLED_REFERENCES}}

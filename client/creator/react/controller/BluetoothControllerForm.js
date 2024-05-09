@@ -15,8 +15,8 @@ import AIHelperChat from '../AIHelperChat.js';
 import ComponentSetterList from '../ComponentSetterList.js';
 import CreateComponentButton from '../CreateComponentButton.js';
 import CreatorMonacoEditor from '../CreatorMonacoEditor.js';
+import DocumentationList from '../DocumentationList.js';
 import FormInvalidReasons from '../FormInvalidReasons.js';
-import FunctionDocumentationList from '../FunctionDocumentationList.js';
 import ModelComponentSelector from '../ModelComponentSelector.js';
 import useEditableForm from '../useEditableForm.js';
 import VariableDocumentationList from '../VariableDocumentationList.js';
@@ -245,6 +245,13 @@ export default function BluetoothControllerForm( props ) {
             components={controlledModelComponents}
             helperPrompt={'Use the following functions in your code to update model components. The device value is in a variable called `deviceValue`. Remember to decode it from the format of you device.'}
           ></ComponentSetterList>
+          <DocumentationList
+            helperPrompt={'Use the following functions in your code to write to the device.'}
+            items={[
+              { name: 'deviceValue', documentation: 'The value provided by the device. Remember to decode it from the format of your device.' },
+              { name: 'deviceValueString', documentation: 'The value provided by the device decoded from UTF-8 as a string.' }
+            ]}
+          ></DocumentationList>
           <CreatorMonacoEditor
             controlFunctionString={formData.controlFunctionString}
             handleChange={newValue => {
@@ -280,14 +287,15 @@ export default function BluetoothControllerForm( props ) {
             functionPrompt={'Use available variables to calculate a value.'}
             components={dependencyModelComponents}
           ></VariableDocumentationList>
-          <FunctionDocumentationList
+          <DocumentationList
             helperPrompt={'Use the following functions in your code to write to the device.'}
-            functionObjects={[
+            items={[
               { name: 'writeToCharacteristic( value )', documentation: 'Write a value to the characteristic. Remember to encode the value to a format expected by the device.' },
               { name: 'writeStringToCharacteristic( valueString )', documentation: 'Write a string to the characteristic. The string is wrapped with data delimeter "$" and string delimiter "|". The string is then encoded as a UTF-8 Uint8Array.' },
               { name: 'writeStringToCharacteristic( valueString, startDelim, endDelim )', documentation: 'Write a string to the characteristic. The string is wrapped with the provided data and string delimeters. The string is then encoded as a UTF-8 Uint8Array.' }
+              { name: 'writeMatrixToCharacteristic( matrix )', documentation: 'Matrix is a 5x5 2D array of 1s and 0s, corresponding to the LEDs you want to light up. It is encoded for you.' }
             ]}
-          ></FunctionDocumentationList>
+          ></DocumentationList>
           <CreatorMonacoEditor
             controlFunctionString={formData.controlFunctionString}
             handleChange={newValue => {
