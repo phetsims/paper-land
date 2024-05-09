@@ -293,7 +293,7 @@ const ServiceSelector = ( props ) => {
           return <option
             value={serviceDescriptor.serviceUUID}
             key={serviceDescriptor.serviceUUID}>
-            {`${serviceDescriptor.name} - (${serviceDescriptor.serviceUUID})`}
+            {`${serviceDescriptor.name}`}
           </option>
         } )
       }
@@ -342,7 +342,7 @@ const CharacteristicSelector = ( props ) => {
           return <option
             value={characteristicDescriptor.characteristicUUID}
             key={characteristicDescriptor.characteristicUUID}>
-            {`${characteristicDescriptor.name} - (${characteristicDescriptor.characteristicUUID})`}
+            {`${characteristicDescriptor.name}`}
           </option>
         } )
       }
