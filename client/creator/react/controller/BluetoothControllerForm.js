@@ -292,7 +292,7 @@ export default function BluetoothControllerForm( props ) {
             items={[
               { name: 'writeToCharacteristic( value )', documentation: 'Write a value to the characteristic. Remember to encode the value to a format expected by the device.' },
               { name: 'writeStringToCharacteristic( valueString )', documentation: 'Write a string to the characteristic. The string is wrapped with data delimeter "$" and string delimiter "|". The string is then encoded as a UTF-8 Uint8Array.' },
-              { name: 'writeStringToCharacteristic( valueString, startDelim, endDelim )', documentation: 'Write a string to the characteristic. The string is wrapped with the provided data and string delimeters. The string is then encoded as a UTF-8 Uint8Array.' }
+              { name: 'writeStringToCharacteristic( valueString, startDelim, endDelim )', documentation: 'Write a string to the characteristic. The string is wrapped with the provided data and string delimeters. The string is then encoded as a UTF-8 Uint8Array.' },
               { name: 'writeMatrixToCharacteristic( matrix )', documentation: 'Matrix is a 5x5 2D array of 1s and 0s, corresponding to the LEDs you want to light up. It is encoded for you.' }
             ]}
           ></DocumentationList>
