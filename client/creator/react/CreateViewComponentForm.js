@@ -4,7 +4,7 @@ import Tabs from 'react-bootstrap/Tabs';
 import Component from '../model/Component.js';
 import BackgroundViewComponent from '../model/views/BackgroundViewComponent.js';
 import CreateShapeViewForm from '../model/views/CreateShapeViewForm.js';
-import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
+import SpeechViewComponent from '../model/views/SpeechViewComponent.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
 import ShapeViewComponent from '../model/views/ShapeViewComponent.js';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
@@ -13,7 +13,7 @@ import ViewComponent from '../model/views/ViewComponent.js';
 import styles from './../CreatorMain.css';
 import CreateBackgroundViewForm from './CreateBackgroundViewForm.js';
 import CreateComponentButton from './CreateComponentButton.js';
-import CreateDescriptionViewForm from './CreateDescriptionViewForm.js';
+import CreateSpeechViewForm from './CreateSpeechViewForm.js';
 import CreateImageViewForm from './CreateImageViewForm.js';
 import CreateSoundViewForm from './CreateSoundViewForm.js';
 import CreateTextViewForm from './CreateTextViewForm.js';
@@ -26,8 +26,8 @@ const getTabForActiveEdit = activeEdit => {
     if ( component instanceof BackgroundViewComponent ) {
       return 'background';
     }
-    else if ( component instanceof DescriptionViewComponent ) {
-      return 'description';
+    else if ( component instanceof SpeechViewComponent ) {
+      return 'speech';
     }
     else if ( component instanceof ImageViewComponent ) {
       return 'images';
@@ -78,7 +78,7 @@ export default function CreateViewComponentForm( props ) {
   const [ selectedTab, setSelectedTab ] = useState( 'sounds' );
 
   const [ soundsFormInvalidReasons, setSoundsFormInvalidReasons ] = useState( [] );
-  const [ descriptionFormInvalidReasons, setDescriptionFormInvalidReasons ] = useState( [] );
+  const [ speechFormInvalidReasons, setSpeechFormInvalidReasons ] = useState( [] );
   const [ textFormInvalidReasons, setTextFormInvalidReasons ] = useState( [] );
   const [ shapesFormInvalidReasons, setShapesFormInvalidReasons ] = useState( [] );
   const [ backgroundFormInvalidReasons, setBackgroundFormInvalidReasons ] = useState( [] );
@@ -100,7 +100,7 @@ export default function CreateViewComponentForm( props ) {
 
   // functions for subcomponents to set form validity
   const getSoundsFormInvalidReasons = formInvalidReasons => setSoundsFormInvalidReasons( formInvalidReasons );
-  const getDescriptionFormInvalidReasons = formInvalidReasons => setDescriptionFormInvalidReasons( formInvalidReasons );
+  const getSpeechFormInvalidReasons = formInvalidReasons => setSpeechFormInvalidReasons( formInvalidReasons );
   const getBackgroundFormInvalidReasons = formInvalidReasons => setBackgroundFormInvalidReasons( formInvalidReasons );
   const getImagesFormInvalidReasons = formInvalidReasons => setImagesFormInvalidReasons( formInvalidReasons );
   const getTextFormInvalidReasons = formInvalidReasons => setTextFormInvalidReasons( formInvalidReasons );
@@ -121,8 +121,8 @@ export default function CreateViewComponentForm( props ) {
     if ( selectedTab === 'sounds' ) {
       setSelectedTabFormValid( soundsFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
-    else if ( selectedTab === 'description' ) {
-      setSelectedTabFormValid( descriptionFormInvalidReasons.length === 0 && isComponentNameValid() );
+    else if ( selectedTab === 'speech' ) {
+      setSelectedTabFormValid( speechFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
     else if ( selectedTab === 'background' ) {
       setSelectedTabFormValid( backgroundFormInvalidReasons.length === 0 && isComponentNameValid() );
@@ -136,7 +136,7 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'shapes' ) {
       setSelectedTabFormValid( shapesFormInvalidReasons.length === 0 && isComponentNameValid() );
     }
-  }, [ props.componentName, selectedTab, soundsFormInvalidReasons, descriptionFormInvalidReasons, backgroundFormInvalidReasons, imagesFormInvalidReasons, shapesFormInvalidReasons, textFormInvalidReasons ] );
+  }, [ props.componentName, selectedTab, soundsFormInvalidReasons, speechFormInvalidReasons, backgroundFormInvalidReasons, imagesFormInvalidReasons, shapesFormInvalidReasons, textFormInvalidReasons ] );
 
   // Set the selected tab when the active edit changes
   useEffect( () => {
@@ -173,7 +173,7 @@ export default function CreateViewComponentForm( props ) {
         editingComponent.loop = soundsDataRef.current.loop;
         editingComponent.autoplay = soundsDataRef.current.autoplay;
       }
-      else if ( selectedTab === 'description' ) {
+      else if ( selectedTab === 'speech' ) {
         editingComponent.lazyLink = lazyLink;
       }
       else if ( selectedTab === 'images' ) {
@@ -206,11 +206,11 @@ export default function CreateViewComponentForm( props ) {
         newComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay );
         activeProgram.viewContainer.addSoundView( newComponent );
       }
-      else if ( selectedTab === 'description' ) {
-        newComponent = new DescriptionViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+      else if ( selectedTab === 'speech' ) {
+        newComponent = new SpeechViewComponent( componentName, selectedModelComponents, controlFunctionString, {
           lazyLink: lazyLink
         } );
-        activeProgram.viewContainer.addDescriptionView( newComponent );
+        activeProgram.viewContainer.addSpeechView( newComponent );
       }
       else if ( selectedTab === 'background' ) {
         newComponent = new BackgroundViewComponent( componentName, selectedModelComponents, controlFunctionString, {
@@ -257,8 +257,8 @@ export default function CreateViewComponentForm( props ) {
     else if ( selectedTab === 'sounds' ) {
       invalidReasons = soundsFormInvalidReasons;
     }
-    else if ( selectedTab === 'description' ) {
-      invalidReasons = descriptionFormInvalidReasons;
+    else if ( selectedTab === 'speech' ) {
+      invalidReasons = speechFormInvalidReasons;
     }
     else if ( selectedTab === 'background' ) {
       invalidReasons = backgroundFormInvalidReasons;
@@ -343,14 +343,14 @@ export default function CreateViewComponentForm( props ) {
             activeEdit={activeEdit}
           ></CreateSoundViewForm>
         </Tab>
-        <Tab disabled={tabDisabled} eventKey='description' title='Description' tabClassName={styles.tab}>
-          <CreateDescriptionViewForm
+        <Tab disabled={tabDisabled} eventKey='speech' title='Speech' tabClassName={styles.tab}>
+          <CreateSpeechViewForm
             allModelComponents={usableModelComponents}
-            isFormValid={getDescriptionFormInvalidReasons}
+            isFormValid={getSpeechFormInvalidReasons}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           >
-          </CreateDescriptionViewForm>
+          </CreateSpeechViewForm>
         </Tab>
         <Tab disabled={tabDisabled} eventKey='vibration' title='Vibration' tabClassName={styles.tab}>
           TODO: Select a model component and describe how its values change vibration patterns. Select if vibration should happen every change.

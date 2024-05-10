@@ -8,7 +8,7 @@ import BooleanPropertyController from '../../creator/model/controllers/BooleanPr
 import MultilinkListenerComponent from '../../creator/model/controllers/MultilinkListenerComponent.js';
 import CreatorModel from '../../creator/model/CreatorModel.js';
 import BackgroundViewComponent from '../../creator/model/views/BackgroundViewComponent.js';
-import DescriptionViewComponent from '../../creator/model/views/DescriptionViewComponent.js';
+import SpeechViewComponent from '../../creator/model/views/SpeechViewComponent.js';
 import ImageViewComponent from '../../creator/model/views/ImageViewComponent.js';
 
 QUnit.module( 'CreatorModel' );
@@ -220,10 +220,10 @@ QUnit.test( 'save and load', assert => {
 
   // Add some view components
   const testImageComponent = new ImageViewComponent( 'testImage', [ anyModelComponentReference ], '', 'on-bulb.png' );
-  const testDescriptionComponent = new DescriptionViewComponent( 'testDescription', [ anyModelComponentReference ], '', 'test' );
+  const testDescriptionComponent = new SpeechViewComponent( 'testDescription', [ anyModelComponentReference ], '', 'test' );
   const testBackgroundComponent = new BackgroundViewComponent( 'testBackground', [ anyModelComponentReference ], '' );
   testProgram.viewContainer.addImageView( testImageComponent );
-  testProgram.viewContainer.addDescriptionView( testDescriptionComponent );
+  testProgram.viewContainer.addSpeechView( testDescriptionComponent );
   testProgram.viewContainer.addBackgroundView( testBackgroundComponent );
 
   // Add some controller components
@@ -249,7 +249,7 @@ QUnit.test( 'save and load', assert => {
 
   const viewJSON = saveJSON.programs[ 0 ].viewContainer;
   assert.ok( viewJSON.imageViews.length === 1, 'Image view saved' );
-  assert.ok( viewJSON.descriptionViews.length === 1, 'Description view saved' );
+  assert.ok( viewJSON.speechViews.length === 1, 'Description view saved' );
   assert.ok( viewJSON.backgroundViews.length === 1, 'Background view saved' );
 
   const controllerJSON = saveJSON.programs[ 0 ].controllerContainer;

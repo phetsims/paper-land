@@ -1,7 +1,7 @@
 import Component from '../Component.js';
 import ViewComponent from './ViewComponent.js';
 
-export default class DescriptionViewComponent extends ViewComponent {
+export default class SpeechViewComponent extends ViewComponent {
   constructor( name, modelComponents, controlFunctionString, options ) {
     super( name, modelComponents, controlFunctionString, options );
   }
@@ -11,7 +11,7 @@ export default class DescriptionViewComponent extends ViewComponent {
    */
   static fromStateObject( stateObject, allComponents ) {
     const dependencies = Component.findComponentsByName( allComponents, stateObject.modelComponentNames );
-    return new DescriptionViewComponent(
+    return new SpeechViewComponent(
       stateObject.name,
       dependencies,
       stateObject.controlFunctionString,

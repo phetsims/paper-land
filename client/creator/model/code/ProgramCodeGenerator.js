@@ -537,7 +537,7 @@ export default class ProgramCodeGenerator {
         AUTOPLAY: viewComponent.autoplay
       };
     }
-    else if ( componentType === 'DescriptionViewComponent' ) {
+    else if ( componentType === 'SpeechViewComponent' ) {
 
       // If lazy, we wait to speak something until the paper is added.
       data = {

@@ -2,22 +2,22 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
 import { formatFunctionListForPrompt } from '../../utils.js';
-import DescriptionViewComponent from '../model/views/DescriptionViewComponent.js';
+import SpeechViewComponent from '../model/views/SpeechViewComponent.js';
 import styles from './../CreatorMain.css';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
-// Description-specific functions available to the user to control the output.
-const DESCRIPTION_FUNCTIONS = [
+// Speech-specific functions available to the user to control the output.
+const SPEECH_FUNCTIONS = [
   'interruptSpeech() - Stop all speech and clear the speech queue.',
-  'setMuted( boolean ) - Mute or unmute all speech (all description components)',
+  'setMuted( boolean ) - Mute or unmute all speech (all speech components)',
   'setPriority( number ) - Set the priority for this speech. Higher priority speech will interrupt lower priority speech.',
   'setAlertStableDelay( number ) - A delay, in miliseconds, before the speech is spoken. If the string changes before the delay, the delay starts over. Useful for reducing alert frequency.',
-  'setVoiceRate( number ) - Sets the voice rate for all description components. 1 is normal rate.',
-  'setVoicePitch( number ) - Sets the voice pitch for all description components. 1 is normal pitch.'
+  'setVoiceRate( number ) - Sets the voice rate for all speech components. 1 is normal rate.',
+  'setVoicePitch( number ) - Sets the voice pitch for all speech components. 1 is normal pitch.'
 ];
 
-export default function CreateDescriptionViewForm( props ) {
+export default function CreateSpeechViewForm( props ) {
 
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
@@ -33,10 +33,10 @@ export default function CreateDescriptionViewForm( props ) {
       return invalidReasons;
     },
     props.getGeneralFormData,
-    DescriptionViewComponent
+    SpeechViewComponent
   );
 
-  // Description components have a checkbox to lazily link to the model components - waiting to speak until
+  // Speech components have a checkbox to lazily link to the model components - waiting to speak until
   // there is a model change so that speech doesn't happen when you add the program
   const typeSpecificControls = (
     <div className={styles.controlElement}>
@@ -51,12 +51,12 @@ export default function CreateDescriptionViewForm( props ) {
     </div>
   );
 
-  const descriptionFunctions = (
+  const speechFunctions = (
     <div className={styles.controlElement}>
       <p>Available functions:</p>
       <ListGroup>
         {
-          DESCRIPTION_FUNCTIONS.map( ( functionString, index ) => {
+          SPEECH_FUNCTIONS.map( ( functionString, index ) => {
             return (
               <ListGroup.Item
                 key={`desc-function-${index}`}
@@ -74,11 +74,11 @@ export default function CreateDescriptionViewForm( props ) {
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificEndControls={typeSpecificControls}
-        typeSpecificFunctions={descriptionFunctions}
+        typeSpecificFunctions={speechFunctions}
         isFormValid={props.isFormValid}
         formData={formData}
         handleChange={handleChange}
-        additionalControlFunctions={`${formatFunctionListForPrompt( DESCRIPTION_FUNCTIONS )}`}
+        additionalControlFunctions={`${formatFunctionListForPrompt( SPEECH_FUNCTIONS )}`}
         functionPrompt={'Write a function using the variables to return a string.'}
         componentsPrompt={'Function is called and the string is spoken when selected components change.'}
       ></ViewComponentControls>
