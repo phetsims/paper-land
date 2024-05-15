@@ -11,3 +11,6 @@ package-lock.json
 
 # exception to the rule
 !**/uploads/.gitkeep
+
+# Ignore all files in the saved data directories
+**/server/data/*

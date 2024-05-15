@@ -1,8 +1,14 @@
 class IDataService {
-  constructor() {
+
+  /**
+   * @param allowAccessToRestrictedFiles - {boolean} - If true, restricted files can be accessed.
+   */
+  constructor( allowAccessToRestrictedFiles ) {
     if ( this.constructor === IDataService ) {
       throw new TypeError( 'Cannot instantiate an interface' );
     }
+
+    this.allowAccessToRestrictedFiles = allowAccessToRestrictedFiles;
   }
 
   /**
@@ -95,7 +101,7 @@ class IDataService {
   /**
    * Clears all programs from the provided space.
    */
-  clearPrograms( spaceName ) {
+  clearPrograms( spaceName, response ) {
     throw new Error( 'Method clearPrograms must be implemented' );
   }
 
@@ -103,7 +109,7 @@ class IDataService {
    * Adds a single program to the space. This is usually a premade program with code and metadata
    * already written from Creator.
    */
-  addPremadeProgram( spaceName, program ) {
+  addPremadeProgram( spaceName, program, response ) {
     throw new Error( 'Method addPremadeProgram must be implemented' );
   }
 

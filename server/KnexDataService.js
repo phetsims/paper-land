@@ -18,9 +18,7 @@ class KnexDataService extends IDataService {
    * @param allowAccessToRestrictedFiles - {boolean} - If true, restricted files can be accessed.
    */
   constructor( allowAccessToRestrictedFiles ) {
-    super();
-
-    this.allowAccessToRestrictedFiles = allowAccessToRestrictedFiles;
+    super( allowAccessToRestrictedFiles );
   }
 
   /**
@@ -327,7 +325,6 @@ class KnexDataService extends IDataService {
       .then( selectResult => {
         const existingNames = selectResult.map( result => result.projectName );
 
-        console.log( 'EXISTING NAMES', existingNames );
         if ( existingNames.includes( projectName ) ) {
           response.status( Constants.MISSING_INFO ).send( 'Name already exists for this space.' );
         }

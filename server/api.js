@@ -7,6 +7,7 @@ const OpenAI = require( 'openai' );
 const KnexDataService = require( './KnexDataService.js' );
 const Constants = require( './Constants.js' );
 const Utils = require( './Utils.js' );
+const LocalFileDataService = require( './LocalFileDataService.js' );
 
 const router = express.Router();
 router.use( express.json() );
@@ -18,7 +19,73 @@ const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_
 
 // An implementation of an IDataService that requests all data from a database using knex.
 // TODO: This would be replaced by a 'local file' implementation when running in local mode.
-const knexDataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
+
+const useLocal = process.env.STORAGE_TYPE === 'local';
+console.log( 'USING LOCAL STORAGE:', useLocal );
+
+let dataService = null;
+if ( useLocal ) {
+  dataService = new LocalFileDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
+  dataService.copyDefaultData();
+}
+else {
+  dataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
+}
+
+//--------------- DEBUGGING/Testing the LocalFileDataService
+console.log( '---------------------------------------------------' );
+
+const localFileDataService = new LocalFileDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
+
+// const dummyResponse = {
+//   json: data => {
+//     console.log( 'received data:', data );
+//   },
+//   set: () => {},
+//   status: () => {
+//     return dummyResponse;
+//   },
+//   send: ( data ) => {
+//     console.log( data );
+//   }
+// }
+
+localFileDataService.copyDefaultData();
+
+// localFileDataService.getSpaceData( 'testing', spaceData => {
+//   console.log( 'spaceData:', spaceData );
+// } );
+//
+// localFileDataService.getSpacesList( dummyResponse );
+// localFileDataService.getProgramCode( 'testing', '123', dummyResponse );
+
+// localFileDataService.getProgramSummaryList( 'jg-tests', dummyResponse );
+
+// localFileDataService.addNewProgram( 'jg-tests', 'console.log( "Hello world!" );', dummyResponse );
+
+// localFileDataService.setDebugInfo( 'jg-tests', 55, { output: 'This is a test' }, dummyResponse );
+
+// localFileDataService.clearPrograms( 'jg-tests-copy', dummyResponse );
+
+// localFileDataService.saveProgramToSpace( 'jg-tests', 55, 'console.log( "this is an update!" );', dummyResponse );
+
+// localFileDataService.claimProgram( 'jg-tests', 55, { body: { editorId: 'jg' } }, dummyResponse );
+
+// localFileDataService.markPrinted( 'jg-tests', 55, true, dummyResponse );
+
+// localFileDataService.getProjectNames( 'jg-tests', dummyResponse );
+
+// localFileDataService.createProject( 'jg-tests-copy', 'test-project', dummyResponse );
+
+// localFileDataService.createTemplate( 'test-template2', 'This is a test template', [ 'test', 'template' ], { programs: [] }, 'jg-tests', dummyResponse );
+// localFileDataService.saveTemplate( 'test-template', 'Changing this template description', [ 'test', 'template' ], { programs: [] }, '2740d750-09a1-4973-8bea-2e4bcf86f165', dummyResponse );
+
+// localFileDataService.getProjectData( 'jg-tests', 'test-project', dummyResponse );
+
+// localFileDataService.deleteProject( 'jg-tests', 'test-project', dummyResponse );
+
+console.log( '---------------------------------------------------' );
+//--------------- DEBUGGING/Testing the LocalFileDataService
 
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
@@ -45,7 +112,7 @@ const uploadSound = multer( { storage: soundStorage } );
  */
 router.get( '/program.:spaceName.:number.js', ( req, res ) => {
   const { spaceName, number } = req.params;
-  knexDataService.getProgramCode( spaceName, number, res );
+  dataService.getProgramCode( spaceName, number, res );
 } );
 
 /**
@@ -70,19 +137,19 @@ router.get( '/program.:spaceName.:number.js', ( req, res ) => {
  */
 router.get( '/api/program-summary-list/:spacesList', ( req, res ) => {
   const { spacesList } = req.params;
-  knexDataService.getProgramSummaryList( spacesList, res );
+  dataService.getProgramSummaryList( spacesList, res );
 } );
 
 /**
  * Gets a list of all spaces available in the database.
  */
 router.get( '/api/spaces-list', ( req, res ) => {
-  knexDataService.getSpacesList( res );
+  dataService.getSpacesList( res );
 } );
 
 // Get a list of all the spaces available in the DB that are NOT restricted to the current user.
 router.get( '/api/spaces-list-not-restricted', ( req, res ) => {
-  knexDataService.getUnrestrictedSpacesList( res );
+  dataService.getUnrestrictedSpacesList( res );
 } );
 
 // Add a new space to the DB.
@@ -93,7 +160,7 @@ router.get( '/api/add-space/:newSpaceName', ( req, res ) => {
 
 function getSpaceData( req, callback ) {
   const { spaceName } = req.params;
-  knexDataService.getSpaceData( spaceName, callback );
+  dataService.getSpaceData( spaceName, callback );
 }
 
 router.get( '/api/spaces/:spaceName', ( req, res ) => {
@@ -125,7 +192,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
     res.status( 400 ).send( 'Missing "code"' );
   }
 
-  knexDataService.addNewProgram( spaceName, code, res );
+  dataService.addNewProgram( spaceName, code, res );
 } );
 
 /**
@@ -133,7 +200,7 @@ router.post( '/api/spaces/:spaceName/programs', ( req, res ) => {
  */
 router.post( '/api/spaces/:spaceName/programs/clear', ( req, res ) => {
   const { spaceName } = req.params;
-  knexDataService.clearPrograms( spaceName, res );
+  dataService.clearPrograms( spaceName, res );
 } );
 
 /**
@@ -148,7 +215,7 @@ router.post( '/api/spaces/:spaceName/programs/add-premade-program', ( req, res )
     res.status( 400 ).send( 'Missing program, number or code' );
   }
 
-  knexDataService.addPremadeProgram( spaceName, program, res );
+  dataService.addPremadeProgram( spaceName, program, res );
 } );
 
 /**
@@ -203,7 +270,7 @@ router.put( '/api/spaces/:spaceName/programs/:number', ( req, res ) => {
   if ( !code ) {
     res.status( 400 ).send( 'Missing "code"' );
   }
-  knexDataService.saveProgramToSpace( spaceName, number, code, res );
+  dataService.saveProgramToSpace( spaceName, number, code, res );
 } );
 
 
@@ -214,7 +281,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res )
     res.status( 400 ).send( 'Missing "printed"' );
   }
 
-  knexDataService.markPrinted( spaceName, number, printed, res );
+  dataService.markPrinted( spaceName, number, printed, res );
 } );
 
 /**
@@ -222,7 +289,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/markPrinted', ( req, res )
  */
 router.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
   const { spaceName, programNumber } = req.params;
-  knexDataService.deleteProgram( spaceName, programNumber, res );
+  dataService.deleteProgram( spaceName, programNumber, res );
 } );
 
 /**
@@ -230,12 +297,12 @@ router.get( '/api/spaces/:spaceName/delete/:programNumber', ( req, res ) => {
  */
 router.put( '/api/spaces/:spaceName/programs/:number/debugInfo', ( req, res ) => {
   const { spaceName, number } = req.params;
-  knexDataService.setDebugInfo( spaceName, number, req.body, res );
+  dataService.setDebugInfo( spaceName, number, req.body, res );
 } );
 
 router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
   const { spaceName, number } = req.params;
-  knexDataService.claimProgram( spaceName, number, req, res );
+  dataService.claimProgram( spaceName, number, req, res );
 } );
 
 /**
@@ -243,7 +310,7 @@ router.post( '/api/spaces/:spaceName/programs/:number/claim', ( req, res ) => {
  */
 router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  knexDataService.getProjectNames( spaceName, res );
+  dataService.getProjectNames( spaceName, res );
 } );
 
 /**
@@ -251,7 +318,7 @@ router.get( '/api/creator/projectNames/:spaceName', ( req, res ) => {
  */
 router.post( '/api/creator/projectNames/:spaceName/:projectName', ( req, res ) => {
   const { spaceName, projectName } = req.params;
-  knexDataService.createProject( spaceName, projectName, res );
+  dataService.createProject( spaceName, projectName, res );
 } );
 
 /**
@@ -266,7 +333,7 @@ router.post( '/api/creator/copyProject/:sourceSpaceName/:sourceProjectName/:dest
     destinationProjectName
   } = req.params;
 
-  knexDataService.copyProject( sourceSpaceName, sourceProjectName, destinationSpaceName, destinationProjectName, res );
+  dataService.copyProject( sourceSpaceName, sourceProjectName, destinationSpaceName, destinationProjectName, res );
 } );
 
 /**
@@ -282,7 +349,7 @@ router.put( '/api/creator/clear/:spaceName/:projectName', ( req, res ) => {
     res.status( 400 ).send( 'Missing project data' );
   }
   else {
-    knexDataService.createEmptyProject( spaceName, projectName, projectData, res );
+    dataService.createEmptyProject( spaceName, projectName, projectData, res );
   }
 } );
 
@@ -335,7 +402,7 @@ router.put( '/api/creator/chunk/:spaceName/:projectName', ( req, res ) => {
       programs: spaceChunkMap[ spaceName ]
     };
 
-    knexDataService.saveProjectData( spaceName, projectName, fullProjectData, () => {
+    dataService.saveProjectData( spaceName, projectName, fullProjectData, () => {
 
       // clear the chunk data as we have saved the project data
       spaceChunkMap[ spaceName ] = [];
@@ -365,7 +432,7 @@ router.put( '/api/creator/templates', ( req, res ) => {
     res.status( 403 ).send( 'Missing project data' );
   }
   else {
-    knexDataService.createTemplate( templateName, description, keyWords, projectData, spaceName, res );
+    dataService.createTemplate( templateName, description, keyWords, projectData, spaceName, res );
   }
 } );
 
@@ -375,7 +442,7 @@ router.put( '/api/creator/templates', ( req, res ) => {
  * For some reason, I had to had a 'save' into the URL. I could not figure out why.
  * '/api/creator/templates/update' on its own did not work, the request would never get to this endpoint.
  */
-router.put( '/api/creator/templates/update/save', ( req, res ) => {
+router.put( 'api/creator/templates/use', ( req, res ) => {
   const {
     description,
     keyWords,
@@ -384,7 +451,7 @@ router.put( '/api/creator/templates/update/save', ( req, res ) => {
     templateId
   } = req.body;
 
-  knexDataService.saveTemplate( templateName, description, keyWords, projectData, templateId, res );
+  dataService.saveTemplate( templateName, description, keyWords, projectData, templateId, res );
 } );
 
 /**
@@ -392,7 +459,7 @@ router.put( '/api/creator/templates/update/save', ( req, res ) => {
  * TODO: I believe this is unused. Remove soon if true.
  */
 router.get( '/api/creator/all-templates', ( req, res ) => {
-  knexDataService.getAllTemplates( res );
+  dataService.getAllTemplates( res );
 } );
 
 /**
@@ -401,7 +468,7 @@ router.get( '/api/creator/all-templates', ( req, res ) => {
  */
 router.get( '/api/creator/templates/use/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  knexDataService.getUsableTemplates( spaceName, res );
+  dataService.getUsableTemplates( spaceName, res );
 } );
 
 /**
@@ -411,7 +478,7 @@ router.get( '/api/creator/templates/use/:spaceName', ( req, res ) => {
  */
 router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
   const { spaceName } = req.params;
-  knexDataService.getEditableTemplates( spaceName, ALLOW_ACCESS_TO_RESTRICTED_FILES, res );
+  dataService.getEditableTemplates( spaceName, ALLOW_ACCESS_TO_RESTRICTED_FILES, res );
 } );
 
 /**
@@ -419,7 +486,7 @@ router.get( '/api/creator/templates/edit/:spaceName', ( req, res ) => {
  */
 router.get( '/api/creator/templates/delete/:templateName', ( req, res ) => {
   const { templateName } = req.params;
-  knexDataService.deleteTemplate( templateName, res );
+  dataService.deleteTemplate( templateName, res );
 } );
 
 /**
@@ -450,7 +517,7 @@ router.get( '/api/creator/can-access-space/:spaceName', ( req, res ) => {
 router.get( '/api/creator/data', ( req, res ) => {
   const spaceName = req.query.spaceName;
   const projectName = req.query.projectName;
-  knexDataService.getProjectData( spaceName, projectName, res );
+  dataService.getProjectData( spaceName, projectName, res );
 } );
 
 /**
@@ -460,7 +527,7 @@ router.get( '/api/creator/data', ( req, res ) => {
 router.get( '/api/creator/projects/delete', ( req, res ) => {
   const spaceName = req.query.spaceName;
   const projectName = req.query.projectName;
-  knexDataService.deleteProject( spaceName, projectName, res );
+  dataService.deleteProject( spaceName, projectName, res );
 } );
 
 /**

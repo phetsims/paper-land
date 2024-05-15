@@ -20,8 +20,34 @@ const Constants = {
   MISSING_INFO: 400,
   SPACE_RESTRICTED: 401,
   PROJECT_ALREADY_EXISTS: 402,
-  BAD_PARAMETERS:403,
-  PROJECT_DOES_NOT_EXIST: 404
+  BAD_PARAMETERS: 403,
+  PROJECT_DOES_NOT_EXIST: 404,
+
+  /**
+   * Brute force method for generating a new program number that is within the maximum
+   * number of allowed programs but is unique from the existing numbers.
+   *
+   * @param existingNumbers
+   * @param maxNumber
+   * @returns {*}
+   */
+  generateProgramNumber: ( existingNumbers, maxNumber ) => {
+    const potentialNumbers = [];
+
+    for ( let i = 0; i < maxNumber; i++ ) {
+      if ( !existingNumbers.includes( i ) ) {
+        potentialNumbers.push( i );
+      }
+    }
+    if ( potentialNumbers.length === 0 ) {
+      throw new Error( 'No more available numbers' );
+    }
+    return potentialNumbers[ Math.floor( Math.random() * potentialNumbers.length ) ];
+  },
+
+  generateUniqueId: () => {
+    return Math.random().toString( 36 ).substr( 2, 9 );
+  }
 }
 
 module.exports = Constants;
