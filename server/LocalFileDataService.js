@@ -491,6 +491,12 @@ class LocalFileDataService extends IDataService {
   clearPrograms( spaceName, response ) {
     const spaceProgramsPath = path.join( spacesDirectoryPath, spaceName, 'programs' );
 
+    // if the space directory doesn't exist, just return early
+    if ( !fs.existsSync( spaceProgramsPath ) ) {
+      response.json( { numberOfProgramsDeleted: 0 } );
+      return;
+    }
+
     // Ensuring this operation is queued and managed
     this.addToQueue( this.readDirectory( spaceProgramsPath ) )
       .then( files => {

@@ -17,75 +17,24 @@ router.use( require( 'nocache' )() );
 // client side.
 const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
 
-// An implementation of an IDataService that requests all data from a database using knex.
-// TODO: This would be replaced by a 'local file' implementation when running in local mode.
+console.log( '---------------------------------------------------' );
 
-const useLocal = process.env.STORAGE_TYPE === 'local';
-console.log( 'USING LOCAL STORAGE:', useLocal );
+// Determine how spaces and projects are saved and loaded. Local filesystem is the default. Providing
+// STORAGE_TYPE=postgres in the .env file will use a PostgreSQL database instead. If using postgreSQL, also
+// include a DATABASE_URL in the .env file to point to the database.
+const usePostgres = process.env.STORAGE_TYPE === 'postgres';
 
 let dataService = null;
-if ( useLocal ) {
+if ( usePostgres ) {
+  console.log( 'USING PostgreSQL STORAGE' );
+  dataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
+}
+else {
+  console.log( 'USING LOCAL STORAGE' );
   dataService = new LocalFileDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
   dataService.copyDefaultData();
 }
-else {
-  dataService = new KnexDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
-}
-
-//--------------- DEBUGGING/Testing the LocalFileDataService
 console.log( '---------------------------------------------------' );
-
-const localFileDataService = new LocalFileDataService( ALLOW_ACCESS_TO_RESTRICTED_FILES );
-
-// const dummyResponse = {
-//   json: data => {
-//     console.log( 'received data:', data );
-//   },
-//   set: () => {},
-//   status: () => {
-//     return dummyResponse;
-//   },
-//   send: ( data ) => {
-//     console.log( data );
-//   }
-// }
-
-localFileDataService.copyDefaultData();
-
-// localFileDataService.getSpaceData( 'testing', spaceData => {
-//   console.log( 'spaceData:', spaceData );
-// } );
-//
-// localFileDataService.getSpacesList( dummyResponse );
-// localFileDataService.getProgramCode( 'testing', '123', dummyResponse );
-
-// localFileDataService.getProgramSummaryList( 'jg-tests', dummyResponse );
-
-// localFileDataService.addNewProgram( 'jg-tests', 'console.log( "Hello world!" );', dummyResponse );
-
-// localFileDataService.setDebugInfo( 'jg-tests', 55, { output: 'This is a test' }, dummyResponse );
-
-// localFileDataService.clearPrograms( 'jg-tests-copy', dummyResponse );
-
-// localFileDataService.saveProgramToSpace( 'jg-tests', 55, 'console.log( "this is an update!" );', dummyResponse );
-
-// localFileDataService.claimProgram( 'jg-tests', 55, { body: { editorId: 'jg' } }, dummyResponse );
-
-// localFileDataService.markPrinted( 'jg-tests', 55, true, dummyResponse );
-
-// localFileDataService.getProjectNames( 'jg-tests', dummyResponse );
-
-// localFileDataService.createProject( 'jg-tests-copy', 'test-project', dummyResponse );
-
-// localFileDataService.createTemplate( 'test-template2', 'This is a test template', [ 'test', 'template' ], { programs: [] }, 'jg-tests', dummyResponse );
-// localFileDataService.saveTemplate( 'test-template', 'Changing this template description', [ 'test', 'template' ], { programs: [] }, '2740d750-09a1-4973-8bea-2e4bcf86f165', dummyResponse );
-
-// localFileDataService.getProjectData( 'jg-tests', 'test-project', dummyResponse );
-
-// localFileDataService.deleteProject( 'jg-tests', 'test-project', dummyResponse );
-
-console.log( '---------------------------------------------------' );
-//--------------- DEBUGGING/Testing the LocalFileDataService
 
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
