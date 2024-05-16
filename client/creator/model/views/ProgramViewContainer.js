@@ -4,7 +4,7 @@
 import { renameVariableInCode } from '../../../utils.js';
 import ComponentContainer from '../ComponentContainer.js';
 import BackgroundViewComponent from './BackgroundViewComponent.js';
-import DescriptionViewComponent from './DescriptionViewComponent.js';
+import SpeechViewComponent from './SpeechViewComponent.js';
 import ImageViewComponent from './ImageViewComponent.js';
 import ShapeViewComponent from './ShapeViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
@@ -17,8 +17,8 @@ export default class ProgramViewContainer extends ComponentContainer {
     // The collection of all sound views in this container
     this.soundViews = phet.axon.createObservableArray();
 
-    // The collection of all description views in this container
-    this.descriptionViews = phet.axon.createObservableArray();
+    // The collection of all speech views in this container
+    this.speechViews = phet.axon.createObservableArray();
 
     // The collection of all text views in this container
     this.textViews = phet.axon.createObservableArray();
@@ -74,22 +74,22 @@ export default class ProgramViewContainer extends ComponentContainer {
   }
 
   /**
-   * Adds a new description view.
+   * Adds a new speech view.
    */
-  addDescriptionView( descriptionView ) {
-    this.descriptionViews.push( descriptionView );
-    this.addToAllComponents( descriptionView );
-    this.registerChangeListeners( descriptionView, this.removeDescriptionView.bind( this ) );
+  addSpeechView( speechView ) {
+    this.speechViews.push( speechView );
+    this.addToAllComponents( speechView );
+    this.registerChangeListeners( speechView, this.removeSpeechView.bind( this ) );
   }
 
   /**
-   * Removes a description view.
+   * Removes a speech view.
    */
-  removeDescriptionView( descriptionView ) {
-    const descriptionViewIndex = this.descriptionViews.indexOf( descriptionView );
-    assert && assert( descriptionViewIndex >= 0, 'DescriptionView not found' );
-    this.descriptionViews.splice( descriptionViewIndex, 1 );
-    this.removeFromAllComponents( descriptionView );
+  removeSpeechView( speechView ) {
+    const speechViewIndex = this.speechViews.indexOf( speechView );
+    assert && assert( speechViewIndex >= 0, 'SpeechView not found' );
+    this.speechViews.splice( speechViewIndex, 1 );
+    this.removeFromAllComponents( speechView );
   }
 
   addTextView( textView ) {
@@ -134,7 +134,7 @@ export default class ProgramViewContainer extends ComponentContainer {
   save() {
     return {
       soundViews: this.soundViews.map( soundView => soundView.save() ),
-      descriptionViews: this.descriptionViews.map( descriptionView => descriptionView.save() ),
+      speechViews: this.speechViews.map( speechView => speechView.save() ),
       textViews: this.textViews.map( textView => textView.save() ),
       shapeViews: this.shapeViews.map( shapeView => shapeView.save() ),
       backgroundViews: this.backgroundViews.map( backgroundView => backgroundView.save() ),
@@ -149,7 +149,7 @@ export default class ProgramViewContainer extends ComponentContainer {
 
     // Gracefully handle missing properties
     const soundViews = json.soundViews || [];
-    const descriptionViews = json.descriptionViews || [];
+    const speechViews = json.speechViews || [];
     const textViews = json.textViews || [];
     const shapeViews = json.shapeViews || [];
     const backgroundViews = json.backgroundViews || [];
@@ -159,9 +159,9 @@ export default class ProgramViewContainer extends ComponentContainer {
       const soundView = SoundViewComponent.fromStateObject( soundViewJSON, allComponents );
       this.addSoundView( soundView );
     } );
-    descriptionViews.forEach( descriptionViewJSON => {
-      const descriptionView = DescriptionViewComponent.fromStateObject( descriptionViewJSON, allComponents );
-      this.addDescriptionView( descriptionView );
+    speechViews.forEach( speechViewJSON => {
+      const speechView = SpeechViewComponent.fromStateObject( speechViewJSON, allComponents );
+      this.addSpeechView( speechView );
     } );
     textViews.forEach( textViewJSON => {
       const textView = TextViewComponent.fromStateObject( textViewJSON, allComponents );
@@ -183,7 +183,7 @@ export default class ProgramViewContainer extends ComponentContainer {
 
   dispose() {
     this.soundViews.dispose();
-    this.descriptionViews.dispose();
+    this.speechViews.dispose();
     this.allComponents.dispose();
     this.backgroundViews.dispose();
     this.shapeViews.dispose();

@@ -13,7 +13,7 @@ export default class ViewCodeGenerator {
            viewType === 'TextViewComponent' ? `${componentName}Text` :
            viewType === 'ImageViewComponent' ? `${componentName}Image` :
            viewType === 'SoundViewComponent' ? `${componentName}Sound` :
-           viewType === 'DescriptionViewComponent' ? `${componentName}Description` :
+           viewType === 'SpeechViewComponent' ? `${componentName}Speech` :
            `${componentName}Background`;
   }
 
@@ -248,11 +248,11 @@ export default class ViewCodeGenerator {
         };
       ` );
     }
-    else if ( viewType === 'DescriptionViewComponent' ) {
+    else if ( viewType === 'SpeechViewComponent' ) {
 
       // From the ViewComponentTemplates, we will have access to an Utterance
       // with this name.
-      const utteranceComponentName = `${componentName}DescriptionUtterance`;
+      const utteranceComponentName = `${componentName}SpeechUtterance`;
 
       codeStrings.push( `
       

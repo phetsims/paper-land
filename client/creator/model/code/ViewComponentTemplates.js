@@ -104,10 +104,10 @@ const ViewComponentTemplates = {
       delete scratchpad.{{NAME}}SoundMultilinkId;
     `
   },
-  DescriptionViewComponent: {
+  SpeechViewComponent: {
     onProgramAdded: `
-      // Speak the description whenever the dependencies change.
-      const {{NAME}}DescriptionFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      // Speak whenever the dependencies change.
+      const {{NAME}}SpeechFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         // get the additional reference constants so they are available in the control function
         {{REFERENCE_DECLARATIONS}}
@@ -118,19 +118,19 @@ const ViewComponentTemplates = {
         {{CONTROL_FUNCTION}}
       }
       
-      // a reusable utterance for this description component so that only the latest value is spoken - in general
+      // a reusable utterance for this speech component so that only the latest value is spoken - in general
       // it should not cancel other Utterances in this context but it should cancel itself
-      scratchpad.{{NAME}}DescriptionUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
+      scratchpad.{{NAME}}SpeechUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
       
-      scratchpad.{{NAME}}DescriptionMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      scratchpad.{{NAME}}SpeechMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
 
         // Make sure there is a string to speak, including converting falsy values and numbers to a string       
-        const descriptionResult = {{NAME}}DescriptionFunction( {{DEPENDENCY_ARGUMENTS}} );
-        if ( descriptionResult && descriptionResult.toString ) {
-          const descriptionString = descriptionResult.toString();
-          if ( descriptionString && descriptionString.length > 0 ) {
-            scratchpad.{{NAME}}DescriptionUtterance.alert = descriptionString;
-            phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}DescriptionUtterance ); 
+        const speechResult = {{NAME}}SpeechFunction( {{DEPENDENCY_ARGUMENTS}} );
+        if ( speechResult && speechResult.toString ) {
+          const speechString = speechResult.toString();
+          if ( speechString && speechString.length > 0 ) {
+            scratchpad.{{NAME}}SpeechUtterance.alert = speechString;
+            phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}SpeechUtterance ); 
           }
         }
       }, {
@@ -139,14 +139,14 @@ const ViewComponentTemplates = {
       } ); 
     `,
     onProgramRemoved: `
-      // Remove the description multilink
-      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}DescriptionMultilinkId, {
+      // Remove the Speech multilink
+      phet.paperLand.removeModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, scratchpad.{{NAME}}SpeechMultilinkId, {
         otherReferences: {{REFERENCE_NAMES_ARRAY}}
        } );
-      delete scratchpad.{{NAME}}DescriptionMultilinkId;
+      delete scratchpad.{{NAME}}SpeechMultilinkId;
       
       // Remove the utterance
-      delete scratchpad.{{NAME}}DescriptionUtterance;
+      delete scratchpad.{{NAME}}SpeechUtterance;
     `
   },
   TextViewComponent: {

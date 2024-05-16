@@ -130,11 +130,21 @@ const boardBluetoothServers = {
 
     this.characteristicIdToProgressMap.set( characteristicUUID, true );
 
-    const characteristic = await this.getServiceCharacteristic( serviceUUID, characteristicUUID );
-    characteristic.writeValue( value );
+    try {
+      const characteristic = await this.getServiceCharacteristic( serviceUUID, characteristicUUID );
+      characteristic.writeValue( value );
 
-    // After the await, the write is complete.
-    this.characteristicIdToProgressMap.delete( characteristicUUID );
+      // After the await, the write is complete.
+      this.characteristicIdToProgressMap.delete( characteristicUUID );
+    }
+    catch( error ) {
+
+      // if there is an error, delete the progress flag so that we can try again.
+      this.characteristicIdToProgressMap.delete( characteristicUUID );
+
+      // rethrow the error so that the caller can handle it
+      throw error;
+    }
   }
 };
 
