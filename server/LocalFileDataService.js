@@ -176,6 +176,15 @@ class LocalFileDataService extends IDataService {
       spaceName: spaceName
     };
 
+    // If the programs directory doesn't exist yet for any reason, notify and return empty space data.
+    // Do not eagerly create the directory on this query because this query may be received befor
+    // default data is loaded, and that would break the initial load.
+    if ( !fs.existsSync( spaceProgramsPath ) ) {
+      console.log( 'Programs directory doesnt exist for space. Providing empty data.' );
+      callback( { programs: [], spaceName: spaceName } );
+      return;
+    }
+
     // Add directory read operation to the queue
     this.addToQueue( () => fsPromises.readdir( spaceProgramsPath ) )
       .then( files => {
@@ -360,7 +369,7 @@ class LocalFileDataService extends IDataService {
   /**
    * Creates a new space in the local file system. If the space already exists, this method will do nothing.
    */
-  createSpace( spaceName, response ) {
+  createSpace( spaceName ) {
     const spacePath = path.join( spacesDirectoryPath, spaceName );
 
     const programsPath = path.join( spacePath, 'programs' );
@@ -374,6 +383,21 @@ class LocalFileDataService extends IDataService {
       fs.mkdirSync( spacePath, { recursive: true } );
       fs.mkdirSync( programsPath, { recursive: true } );
       fs.mkdirSync( projectsPath, { recursive: true } );
+    }
+    catch( error ) {
+      throw new Error( `Error creating space directory ${spacePath}: ${error}` );
+    }
+  }
+
+  /**
+   * Attempt to create a new space with programs and projects, but if it fails, send back
+   * a response with the response object from the route.
+   * @param spaceName
+   * @param response
+   */
+  createSpaceWithResponse( spaceName, response ) {
+    try {
+      this.createSpace( spaceName );
     }
     catch( error ) {
       console.error( `Error creating space directory ${spacePath}: ${error}` );
@@ -390,7 +414,7 @@ class LocalFileDataService extends IDataService {
     // The path to the programs directory for this space
     const spaceProgramsPath = path.join( spacesDirectoryPath, spaceName, 'programs' );
 
-    this.createSpace( spaceName, response );
+    this.createSpaceWithResponse( spaceName, response );
 
     // Enqueue the readdir and subsequent operations
     this.addToQueue( () => fsPromises.readdir( spaceProgramsPath ) )
@@ -533,7 +557,7 @@ class LocalFileDataService extends IDataService {
     const spaceProgramsPath = path.join( spacesDirectoryPath, spaceName, 'programs' );
 
     // Make sure the space is available if it hasn't been created yet.
-    this.createSpace( spaceName, response );
+    this.createSpaceWithResponse( spaceName, response );
 
     // Add a premade program with a number and code
     const number = program.number;
@@ -710,7 +734,7 @@ class LocalFileDataService extends IDataService {
     const spaceProjectsPath = path.join( spacesDirectoryPath, spaceName, 'projects' );
 
     // Make sure the space exists before creating the project
-    this.createSpace( spaceName, response );
+    this.createSpaceWithResponse( spaceName, response );
 
     // Check if the project already exists by seeing if any files in the projects directory
     // already has this name

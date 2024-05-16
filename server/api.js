@@ -13,16 +13,16 @@ const router = express.Router();
 router.use( express.json() );
 router.use( require( 'nocache' )() );
 
-// Set a constant based on the .env file that will control whether access to restricted files will be allowed on the
-// client side.
-const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
-
 console.log( '---------------------------------------------------' );
 
 // Determine how spaces and projects are saved and loaded. Local filesystem is the default. Providing
 // STORAGE_TYPE=postgres in the .env file will use a PostgreSQL database instead. If using postgreSQL, also
 // include a DATABASE_URL in the .env file to point to the database.
 const usePostgres = process.env.STORAGE_TYPE === 'postgres';
+
+// Set a constant based on the .env file that will control whether access to restricted files will be allowed on the
+// client side. If using local files, the user will have access to everything.
+const ALLOW_ACCESS_TO_RESTRICTED_FILES = !usePostgres || process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
 
 let dataService = null;
 if ( usePostgres ) {
