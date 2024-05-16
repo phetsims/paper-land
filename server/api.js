@@ -109,6 +109,8 @@ const uploadSound = multer( { storage: soundStorage } );
 
 /**
  * Get the current code for the specified space name and program number.
+ * I believe this is what gets the code to run for the webworker (which is why
+ * the format is different).
  */
 router.get( '/program.:spaceName.:number.js', ( req, res ) => {
   const { spaceName, number } = req.params;

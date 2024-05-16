@@ -154,6 +154,33 @@ export default function TemplateDataControls( props ) {
               }}
             ></StyledButton>
           </Col>
+          <Col>
+            <StyledButton
+              name='Download Template'
+              disabled={!props.selectedTemplate}
+              onClick={async () => {
+                try {
+                  const data = props.selectedTemplate;
+
+                  // Parse 'projectData' back into an object. Then, the entire object can be stringified.
+                  // Then the resultant file can easily be loaded directly into the templates directory or shared.
+                  data.projectData = JSON.parse( data.projectData );
+                  const dataString = JSON.stringify( data );
+
+                  const blob = new Blob( [ dataString ], { type: 'application/json' } );
+                  const url = URL.createObjectURL( blob );
+                  const a = document.createElement( 'a' );
+                  a.href = url;
+                  a.download = `${props.selectedTemplate.name}.json`;
+                  a.click();
+                  URL.revokeObjectURL( url );
+                }
+                catch( e ) {
+                  console.log( e );
+                }
+              }}
+            ></StyledButton>
+          </Col>
         </Row>
       </Container>
     </>

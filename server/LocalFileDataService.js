@@ -26,6 +26,7 @@ const path = require( 'path' );
 const IDataService = require( './IDataService.js' );
 const Constants = require( './Constants.js' );
 const { v4: uuidv4 } = require( 'uuid' );
+const crypto = require( 'crypto' );
 
 // Path to the /data directory - user data will be stored here.
 const dataDirectoryPath = path.join( __dirname, 'data' );
@@ -40,11 +41,6 @@ const templatesDirectoryPath = path.join( dataDirectoryPath, 'templates' );
 // Path to the /default-data directory - default data will be stored here.
 const defaultDataDirectoryPath = path.join( __dirname, 'default-data' );
 
-// Create data, spaces and templates directories if they are missing
-// fs.mkdirSync( dataDirectoryPath, { recursive: true } );
-// fs.mkdirSync( spacesDirectoryPath, { recursive: true } );
-// fs.mkdirSync( templatesDirectoryPath, { recursive: true } );
-
 /**
  * The data for a program in the local file system.
  * @typedef {Object} Program
@@ -55,16 +51,14 @@ const defaultDataDirectoryPath = path.join( __dirname, 'default-data' );
  * @property {Object} editorInfo - Used to 'claim' a program. Has a time field and an editorId field.
  * @property {string} currentCodeUrl - The URL for the current code. Something like 'program.spaceName.number.js'.
  * @property {string} currentCodeHash - A hash describing the program code.
- * @property {string} debugUrl - The URL for the debug info. Something like 'program.spaceName.number.debug'.
+ * @property {string} debugUrl - The URL for the debug info. Something like 'program/spaceName/number/debug'.
  * @property {string} claimUrl - A URL used to claim the program while it is being edited.
  * @property {boolean} codeHasChanged - Whether the code has changed since the last save.
  */
 
 /**
  * The data for a project in the local file system.
- * @typedef {Object} Project
- * @property {string} projectData - The full JSON data object for the project.
- * @property {boolean} editing - Whether the project is currently being edited.
+ * @typedef {Object} Project - The full JSON data object for the project.
  */
 
 /**
@@ -81,6 +75,86 @@ const defaultDataDirectoryPath = path.join( __dirname, 'default-data' );
 class LocalFileDataService extends IDataService {
   constructor( allowAccessToRestrictedFiles ) {
     super( allowAccessToRestrictedFiles );
+
+    // An implementation to queue up file read/write operations. This is used to ensure that file operations are
+    // done in a serial manner, so that we don't have multiple file operations happening at the same time.
+    this.lastOperation = Promise.resolve();
+  }
+
+  /**
+   * Adds a file operation to the queue to ensure sequential execution.
+   *
+   * This function accepts another function (`operation`) that performs a file operation
+   * and returns a Promise. The operation is added to the end of the queue,
+   * guaranteeing that file operations are executed in the order they were added.
+   * Any errors from an operation are caught and logged, allowing the queue to
+   * proceed with the next operation.
+   *
+   * @param {Function} operation - A function that returns a Promise when called.
+   * This function should encapsulate the file operation intended to be performed
+   * (e.g., reading, writing, or deleting a file).
+   *
+   * @returns {Promise} Returns a Promise that resolves or rejects based on the
+   * execution of the `operation`. This allows for chaining additional actions
+   * or handling errors once the operation has been completed.
+   *
+   * @example
+   * // Adding a writeFile operation to the queue
+   * addToQueue(() => fsPromises.writeFile('path/to/file.txt', 'Hello World'))
+   *   .then(() => console.log('File written successfully'))
+   *   .catch(error => console.error('Operation failed:', error));
+   *
+   * @example
+   * // Adding a readFile operation to the queue
+   * addToQueue(() => fsPromises.readFile('path/to/file.txt', 'utf8'))
+   *   .then(content => console.log('Read file content:', content))
+   *   .catch(error => console.error('Operation failed:', error));
+   */
+  addToQueue( operation ) {
+
+    // Chain the new operation onto the end of the lastOperation,
+    // ensuring they execute sequentially.
+    this.lastOperation = this.lastOperation.then( () => {
+
+      // Execute the operation and return the Promise it generates.
+      const operationPromise = operation();
+      return operationPromise;
+    } ).catch( error => {
+
+      // Handle or log operation errors but allow the queue to continue.
+      console.error( 'Operation failed:', error );
+
+      // It's important to return a resolved promise here to ensure the queue continues.
+      return Promise.resolve();
+    } );
+
+    // Return the operation's Promise to the caller for optional chaining or error handling.
+    return this.lastOperation;
+  }
+
+  /**
+   * Asynchronously reads the contents of a file. Wrapped so that it is easy to add to a queue.
+   */
+  readFile( filePath ) {
+    return () => fsPromises.readFile( filePath, 'utf8' );
+  }
+
+  /**
+   * Asynchronously writes content to a file. Wrapped so that it is easy to add to a queue.
+   */
+  writeFile( filePath, content ) {
+    return () => fsPromises.writeFile( filePath, content );
+  }
+
+  readDirectory( directoryPath ) {
+    return () => fsPromises.readdir( directoryPath );
+  }
+
+  /**
+   * Deletes a file from the fiile system, wrapped so that it is easily added to the queue.
+   */
+  deleteFile( filePath ) {
+    return () => fsPromises.unlink( filePath );
   }
 
   /**
@@ -91,7 +165,6 @@ class LocalFileDataService extends IDataService {
    * }
    */
   getSpaceData( spaceName, callback ) {
-
     const spaceNamePath = path.join( spacesDirectoryPath, spaceName );
 
     // The path to the programs directory in this space
@@ -103,19 +176,47 @@ class LocalFileDataService extends IDataService {
       spaceName: spaceName
     };
 
-    fsPromises.readdir( spaceProgramsPath )
+    // Add directory read operation to the queue
+    this.addToQueue( () => fsPromises.readdir( spaceProgramsPath ) )
       .then( files => {
-        const fileReadPromises = files.map( file => {
+
+        // Map each file to a read operation in the queue
+        const fileReadOperations = files.map( file => {
           const filePath = path.join( spaceProgramsPath, file );
-          return fsPromises.readFile( filePath, 'utf8' )
+
+          // Queueing the read operation for each file
+          return this.addToQueue( () => fsPromises.readFile( filePath, 'utf8' )
             .then( fileContents => {
               const program = JSON.parse( fileContents );
-              data.programs.push( program );
-            } );
+
+              const editorInfo = program.editorInfo || {};
+
+              // The program data, with modifications for this read operation. For example, adding the flag that
+              // indicates whether the code has changed - this is critical for the client to know whether to
+              // re-evaluate program code.
+              const programData = {
+                ...program,
+                currentCodeUrl: `program.${spaceName}.${program.number}.js`,
+                currentCodeHash: crypto
+                  .createHmac( 'sha256', '' )
+                  .update( program.currentCode )
+                  .digest( 'hex' ),
+                debugUrl: `/api/spaces/${spaceName}/programs/${program.number}/debugInfo`,
+                claimUrl: `/api/spaces/${spaceName}/programs/${program.number}/claim`,
+                editorInfo: {
+                  ...editorInfo,
+                  claimed: !!( editorInfo.time && editorInfo.time + Constants.EDITOR_HANDLE_DURATION > Date.now() ),
+                  readOnly: false
+                },
+                codeHasChanged: program.currentCode !== program.originalCode
+              };
+
+              data.programs.push( programData );
+            } ) );
         } );
 
-        // Wait for all file read operations to complete
-        return Promise.all( fileReadPromises );
+        // Wait for all read operations to be queued successfully
+        return Promise.all( fileReadOperations );
       } )
       .then( () => {
 
@@ -123,23 +224,21 @@ class LocalFileDataService extends IDataService {
         callback( data );
       } )
       .catch( err => {
-
         if ( err.code === 'ENOENT' ) {
 
-          // If the space directory doesn't exist, create it and call the callback with an empty space data object
-          fs.mkdir( spaceNamePath, { recursive: true }, err => {
-            if ( err ) {
-              console.error( `Error creating space directory ${spaceNamePath}: ${err}` );
+          // If the space directory doesn't exist, create it
+          this.addToQueue( () => fsPromises.mkdir( spaceNamePath, { recursive: true } ) )
+            .then( () => {
               callback( { programs: [], spaceName: spaceName } );
-            }
-            else {
+            } )
+            .catch( mkdirErr => {
+              console.error( `Error creating space directory ${spaceNamePath}: ${mkdirErr}` );
               callback( { programs: [], spaceName: spaceName } );
-            }
-          } );
+            } );
         }
         else {
 
-          // Handle errors by perhaps invoking the callback with `null` or an error
+          // Handle other errors
           console.error( `Error reading local save data for space ${spaceName}: ${err}` );
           callback( null, err );
         }
@@ -147,11 +246,12 @@ class LocalFileDataService extends IDataService {
   }
 
   /**
-   * Gets the list of all available spaces. FOr this service, this is the list of drectories
+   * Gets the list of all available spaces. For this service, this is the list of directories
    * under data/spaces.
    */
   getSpacesList( response ) {
-    fsPromises.readdir( spacesDirectoryPath, { withFileTypes: true } )
+    // Add the directory read operation to the queue
+    this.addToQueue( () => fsPromises.readdir( spacesDirectoryPath, { withFileTypes: true } ) )
       .then( entries => {
         const directories = entries
           .filter( dirent => dirent.isDirectory() )
@@ -167,25 +267,46 @@ class LocalFileDataService extends IDataService {
 
   getProgramCode( spaceName, programNumber, response ) {
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${programNumber}.json` );
-    fsPromises.readFile( programPath, 'utf8' )
-      .then( fileContents => {
-        const program = JSON.parse( fileContents );
-        response.set( 'Content-Type', 'text/javascript;charset=UTF-8' );
-        response.json( program.currentCode );
-      } )
-      .catch( err => {
-        console.error( `Error reading program ${programNumber} in space ${spaceName}: ${err}` );
-        response.status( 500 ).send( 'Error reading program' );
-      } );
+
+    this.addToQueue( () =>
+      fsPromises.readFile( programPath, 'utf8' )
+        .then( fileContents => {
+          const program = JSON.parse( fileContents );  // This might throw an error
+          response.set( 'Content-Type', 'text/javascript;charset=UTF-8' );
+          response.send( program.currentCode );          // Success path
+        } )
+        .catch( error => {
+          console.error( `Error with program ${programNumber} in space ${spaceName}: ${error}` );
+
+          // Decide whether it's a parsing error or reading error based on error type/content
+          if ( error instanceof SyntaxError ) {
+            console.error( 'Error parsing file contents:', fileContents );
+          }
+          else {
+            console.error( 'Error reading program file:', error );
+          }
+          response.status( 500 ).send( 'Error processing program' ); // Unified error response
+        } )
+    ).catch( queueError => {
+
+      // This would be a very unusual situation, since errors are supposed to be handled inside
+      console.error( `Error adding operation to queue for program ${programNumber} in space ${spaceName}: ${queueError}` );
+
+      // Since headers or a response might not have been sent yet, attempt to cover this case
+      if ( !response.headersSent ) {
+        response.status( 500 ).send( 'Server error' );
+      }
+    } );
   }
 
   getProgramSummaryList( spacesList, response ) {
     const spacesDirectoryPath = path.join( dataDirectoryPath, 'spaces' );
     const spaces = spacesList !== '*' ? spacesList.split( ',' ) : null;
 
-    fsPromises.readdir( spacesDirectoryPath )
+    this.addToQueue( this.readDirectory( spacesDirectoryPath ) )
       .then( spaceDirs => {
         if ( spaces ) {
+
           // Filter out directories not in spaces, if spaces is not '*'
           return spaceDirs.filter( spaceName => spaces.includes( spaceName ) );
         }
@@ -198,7 +319,7 @@ class LocalFileDataService extends IDataService {
             .then( programFiles => {
               return Promise.all( programFiles.map( programFile => {
                 const programPath = path.join( spacePath, programFile );
-                return fsPromises.readFile( programPath, 'utf8' )
+                return this.addToQueue( this.readFile( programPath ) )
                   .then( fileContents => {
                     const program = JSON.parse( fileContents );
                     return {
@@ -217,7 +338,6 @@ class LocalFileDataService extends IDataService {
 
         // Flatten the array of arrays and filter out any undefined resulting from catch blocks
         const flatSummaries = programSummaries.flat().filter( summary => !!summary );
-
         response.json( flatSummaries );
       } )
       .catch( err => {
@@ -262,8 +382,8 @@ class LocalFileDataService extends IDataService {
   }
 
   /**
-   * Write a new program to the local file system. Will create a file in the programs directory for the
-   * provided space.
+   * Write a new program to the local file system. Will create a file in the
+   * provided space's programs directory.
    */
   addNewProgram( spaceName, code, response ) {
 
@@ -272,7 +392,8 @@ class LocalFileDataService extends IDataService {
 
     this.createSpace( spaceName, response );
 
-    fsPromises.readdir( spaceProgramsPath )
+    // Enqueue the readdir and subsequent operations
+    this.addToQueue( () => fsPromises.readdir( spaceProgramsPath ) )
       .then( files => {
 
         // Get the existing program numbers in this space
@@ -296,15 +417,19 @@ class LocalFileDataService extends IDataService {
           codeHasChanged: false
         };
 
-        // Write the file
-        return fsPromises
-          .writeFile( programPath, JSON.stringify( programData, null, 2 ) )
-          .then( () => {
-            this.getSpaceData( spaceName, spaceData => {
-              response.json( { number, spaceData } );
-            } );
-          } );
+        // Further operations are also enqueued
+        return this.addToQueue( this.writeFile( programPath, JSON.stringify( programData, null, 2 ) ) )
+          .then( () => Promise.resolve( number ) ); // pass the program number ot the next step in the chain
       } )
+      .then( ( number ) => {
+        this.getSpaceData( spaceName, spaceData => {
+          response.json( { number, spaceData } );
+        } );
+      } )
+      .catch( err => {
+        console.error( `Error adding new program to space ${spaceName}: ${err}` );
+        response.status( 500 ).send( 'Error writing new program' );
+      } );
   }
 
   /**
@@ -313,14 +438,22 @@ class LocalFileDataService extends IDataService {
    */
   deleteProgram( spaceName, number, response ) {
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${number}.json` );
-    fsPromises
-      .unlink( programPath )
+
+    // Assume addToQueue is a method for adding tasks to a queue.
+    this.addToQueue( this.deleteFile( programPath ) )
       .then( () => {
         response.json( { numberOfProgramsDeleted: 1 } );
       } )
       .catch( err => {
         console.error( `Error deleting program ${number} in space ${spaceName}: ${err}` );
-        response.status( 500 ).send( 'Error deleting program' );
+
+        // Properly handle file not found vs other types of FS errors
+        if ( err.code === 'ENOENT' ) {
+          response.status( 404 ).send( 'Program not found' );
+        }
+        else {
+          response.status( 500 ).send( 'Error deleting program' );
+        }
       } );
   }
 
@@ -332,13 +465,13 @@ class LocalFileDataService extends IDataService {
     // The path to the program file
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${number}.json` );
 
-    fsPromises.readFile( programPath, 'utf8' )
+    this.addToQueue( this.readFile( programPath ) )
       .then( fileContents => {
         const program = JSON.parse( fileContents );
         program.debugInfo = JSON.stringify( debugInfo );
 
         // Write the object back to the file
-        fsPromises.writeFile( programPath, JSON.stringify( program, null, 2 ) )
+        this.addToQueue( this.writeFile( programPath, JSON.stringify( program, null, 2 ) ) )
           .then( () => {
             response.json( {} );
           } )
@@ -356,23 +489,33 @@ class LocalFileDataService extends IDataService {
    * provided space.
    */
   clearPrograms( spaceName, response ) {
-
-    // The path to the programs directory for this space
     const spaceProgramsPath = path.join( spacesDirectoryPath, spaceName, 'programs' );
 
-    fsPromises.readdir( spaceProgramsPath )
+    // Ensuring this operation is queued and managed
+    this.addToQueue( this.readDirectory( spaceProgramsPath ) )
       .then( files => {
-        const unlinkPromises = files.map( file => {
-          const filePath = path.join( spaceProgramsPath, file );
-          return fsPromises.unlink( filePath );
-        } );
+        const unlinkPromises = files.map( file =>
+          fsPromises.unlink( path.join( spaceProgramsPath, file ) )
+        );
 
-        Promise.all( unlinkPromises ).then( () => {
-          response.json( { numberOfProgramsDeleted: files.length } );
-        } );
+        // Wait for all Unlink operations to complete
+        return Promise.all( unlinkPromises )
+          // Returning the length to chain it for the response
+          .then( () => files.length );
+      } )
+      .then( numberOfProgramsDeleted => {
+        response.json( { numberOfProgramsDeleted } );
       } )
       .catch( err => {
         console.error( `Error clearing programs in space ${spaceName}: ${err}` );
+        if ( err.code === 'ENOENT' ) {
+          // The directory doesn't exist or a file in the operation doesn't exist
+          response.status( 404 ).send( 'No programs found to clear.' );
+        }
+        else {
+          // Handling other errors generically
+          response.status( 500 ).send( 'Error clearing programs' );
+        }
       } );
   }
 
@@ -399,7 +542,7 @@ class LocalFileDataService extends IDataService {
       originalCode: code,
       currentCode: code,
       printed: false,
-      editorInfo: [],
+      editorInfo: {},
       currentCodeUrl: `program.${spaceName}.${number}.js`,
       currentCodeHash: '',
       debugUrl: `/api/spaces/${spaceName}/programs/${program.number}/debugInfo`,
@@ -408,7 +551,7 @@ class LocalFileDataService extends IDataService {
     };
 
     // Write the file
-    fsPromises.writeFile( programPath, JSON.stringify( programData, null, 2 ) ).then( () => {
+    this.addToQueue( this.writeFile( programPath, JSON.stringify( programData, null, 2 ) ) ).then( () => {
       this.getSpaceData( spaceName, spaceData => {
         response.json( { message: 'Program added successfully' } );
       } );
@@ -423,12 +566,12 @@ class LocalFileDataService extends IDataService {
     // The path to the program file
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${number}.json` );
 
-    fsPromises.readFile( programPath, 'utf8' ).then( fileContents => {
+    this.addToQueue( this.readFile( programPath, 'utf8' ) ).then( fileContents => {
       const program = JSON.parse( fileContents );
       program.currentCode = code;
 
       // Write the object back to the file
-      fsPromises.writeFile( programPath, JSON.stringify( program, null, 2 ) ).then( () => {
+      this.addToQueue( this.writeFile( programPath, JSON.stringify( program, null, 2 ) ) ).then( () => {
         response.json( {} );
       } ).catch( err => {
         response.status( 500 ).send( 'Error writing program' );
@@ -474,7 +617,7 @@ class LocalFileDataService extends IDataService {
     // The path to the program file
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${number}.json` );
 
-    fsPromises.readFile( programPath, 'utf8' ).then( fileContents => {
+    this.addToQueue( this.readFile( programPath, 'utf8' ) ).then( fileContents => {
       const program = JSON.parse( fileContents );
 
       const editorInfo = program.editorInfo;
@@ -498,8 +641,10 @@ class LocalFileDataService extends IDataService {
         } );
       }
     } ).catch( err => {
-      console.error( `Error reading program ${number} in space ${spaceName}: ${err}` );
-      response.status( 500 ).send( 'Error reading program' );
+
+      // if the program doesn't exist, handle it gracefully by returning a status code that indicates
+      // the program doesn't exist
+      response.status( 400 ).send( 'Program not found' );
     } );
   }
 
@@ -511,12 +656,12 @@ class LocalFileDataService extends IDataService {
     // The path to the program file
     const programPath = path.join( spacesDirectoryPath, spaceName, 'programs', `${number}.json` );
 
-    fsPromises.readFile( programPath, 'utf8' ).then( fileContents => {
+    this.addToQueue( this.readFile( programPath, 'utf8' ) ).then( fileContents => {
       const program = JSON.parse( fileContents );
       program.printed = printed;
 
       // Write the object back to the file
-      fsPromises.writeFile( programPath, JSON.stringify( program, null, 2 ) ).then( () => {
+      this.addToQueue( this.writeFile( programPath, JSON.stringify( program, null, 2 ) ) ).then( () => {
         this.getSpaceData( spaceName, spaceData => {
           response.json( { spaceData } );
         } );
@@ -538,7 +683,7 @@ class LocalFileDataService extends IDataService {
   getProjectNames( spaceName, response ) {
     const spaceProjectsPath = path.join( spacesDirectoryPath, spaceName, 'projects' );
 
-    fsPromises.readdir( spaceProjectsPath )
+    this.addToQueue( this.readDirectory( spaceProjectsPath ) )
       .then( files => {
 
         const fileNames = files.map( file => path.basename( file, '.json' ) );
@@ -563,7 +708,7 @@ class LocalFileDataService extends IDataService {
 
     // Check if the project already exists by seeing if any files in the projects directory
     // already has this name
-    fsPromises.readdir( spaceProjectsPath )
+    this.addToQueue( this.readDirectory( spaceProjectsPath ) )
       .then( files => {
         if ( files.includes( `${projectName}.json` ) ) {
           response.status( Constants.MISSING_INFO ).send( 'Project already exists in this space.' );
@@ -575,17 +720,14 @@ class LocalFileDataService extends IDataService {
 
           // The data to write to the file
           const projectData = {
-            projectData: {
-              programs: []
-            },
-            editing: false
+            programs: []
           };
 
           // Write the file
-          fsPromises.writeFile( projectPath, JSON.stringify( projectData, null, 2 ) ).then( () => {
+          this.addToQueue( this.writeFile( projectPath, JSON.stringify( projectData, null, 2 ) ) ).then( () => {
             response.json( { projectName: projectName } );
           } ).catch( err => {
-            consfole.error( `Error creating project ${projectName} in space ${spaceName}: ${err}` );
+            console.error( `Error creating project ${projectName} in space ${spaceName}: ${err}` );
             response.status( 500 ).send( 'Error creating project' );
           } );
         }
@@ -606,19 +748,19 @@ class LocalFileDataService extends IDataService {
 
     // Make sure that the source project exists - note that while simple this may be susceptible
     // to race conditions, consider readFile if you run into problems.
-    fsPromises.access( sourceProjectPath, fs.constants.F_OK )
+    this.addToQueue( () => fsPromises.access( sourceProjectPath, fs.constants.F_OK ) )
       .then( () => {
 
         // The path to the destination project
         const destinationProjectPath = path.join( spacesDirectoryPath, destinationSpaceName, 'projects', `${destinationProjectName}.json` );
 
         // Read the source project data
-        return fsPromises.readFile( sourceProjectPath, 'utf8' )
+        return this.addToQueue( this.readFile( sourceProjectPath ) )
           .then( fileContents => {
             const projectData = JSON.parse( fileContents );
 
             // Write the project data to the destination project
-            return fsPromises.writeFile( destinationProjectPath, JSON.stringify( projectData, null, 2 ) )
+            return this.addToQueue( this.writeFile( destinationProjectPath, JSON.stringify( projectData, null, 2 ) ) )
               .then( () => {
                 response.status( Constants.SUCCESS ).json( {} );
               } );
@@ -652,7 +794,7 @@ class LocalFileDataService extends IDataService {
 
         // Write the file
         const templatePath = path.join( templatesDirectoryPath, `${templateName}.json` );
-        fsPromises.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ).then( () => {
+        this.addToQueue( this.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ) ).then( () => {
           response.status( 200 ).json( {} );
         } ).catch( err => {
           console.error( `Error creating template ${templateName}: ${err}` );
@@ -686,7 +828,7 @@ class LocalFileDataService extends IDataService {
         };
 
         // Write the file
-        fsPromises.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ).then( () => {
+        this.addToQueue( this.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ) ).then( () => {
           response.status( 200 ).json( {} );
         } ).catch( err => {
           console.error( `Error saving template ${templateName}: ${err}` );
@@ -707,18 +849,31 @@ class LocalFileDataService extends IDataService {
   getUsableTemplates( spaceName, response ) {
     this.getTemplateData( allTemplatesData => {
 
-      // Find templates where the spaceName matches the provided name or the spaceName is 'null'.
-      const usableTemplates = allTemplatesData.filter( template => template.spaceName === spaceName || template.spaceName === 'null' );
+      // Find templates where the spaceName matches the provided name or the spaceName is null.
+      const usableTemplates = allTemplatesData.filter( template => template.spaceName === spaceName || template.spaceName === null );
+
+      // Stringify the project data, the client will parse it
+      usableTemplates.forEach( template => {
+        template.projectData = JSON.stringify( template.projectData );
+      } );
 
       // Return the usable templates
       response.json( { templates: usableTemplates } );
     }, response );
   }
 
+  /**
+   * Provides the editable templates for the user. For the local data, the user can freely edit all templates.
+   * So this is the same as getUsableTemplates.
+   */
+  getEditableTemplates( spaceName, allowAccessToRestrictedFiles, response ) {
+    this.getUsableTemplates( spaceName, response );
+  }
+
   deleteTemplate( templateName, response ) {
 
     // Delete all templates with the provided name
-    fsPromises.readdir( templatesDirectoryPath )
+    this.addToQueue( this.readDirectory( templatesDirectoryPath ) )
       .then( files => {
         const templateFiles = files.filter( file => file.startsWith( templateName ) );
 
@@ -731,7 +886,7 @@ class LocalFileDataService extends IDataService {
       } )
       .then( () => {
         response.json( {
-          numberOfTemplatesDeleted: numberOfDeleted
+          numberOfTemplatesDeleted: 1
         } );
       } )
       .catch( err => {
@@ -747,19 +902,20 @@ class LocalFileDataService extends IDataService {
    * @param response - The response object to use if an error occurs.
    */
   getTemplateData( callback, response ) {
-    fsPromises.readdir( templatesDirectoryPath )
-      .then( files => {
 
-        // Read all data for existing templates
+    this.addToQueue( this.readDirectory( templatesDirectoryPath ) )
+      .then( files => {
+        // Creating promises for each file to read and then parse them
         const readAndParsePromises = files.map( file => {
           const filePath = path.join( templatesDirectoryPath, file );
-          return fsPromises.readFile( filePath, 'utf8' ).then( fileContents => JSON.parse( fileContents ) );
+          return this.addToQueue( this.readFile( filePath ) ).then( JSON.parse );
         } );
 
+        // Waiting for all files to be read and parsed
         return Promise.all( readAndParsePromises );
       } ).then( allTemplatesData => {
 
-      // All templates data packaged into an array of object literals
+      // Once all templated data is read and parsed, call the callback with this data
       callback( allTemplatesData );
     } ).catch( err => {
       console.error( `Error reading templates: ${err}` );
@@ -779,23 +935,23 @@ class LocalFileDataService extends IDataService {
    */
   saveProjectData( spaceName, projectName, projectData, onComplete, response ) {
 
-    // The path to the project file
-    const projectPath = path.join( spacesDirectoryPath, spaceName, 'projects', `${projectName}.json` );
+    this.addToQueue( this.readFile( path.join( spacesDirectoryPath, spaceName, 'projects', `${projectName}.json` ) ) )
+      .then( fileContents => {
 
-    // Get the existing project data
-    fsPromises.readFile( projectPath, 'utf8' ).then( fileContents => {
-      const project = JSON.parse( fileContents );
-      project.projectData = projectData;
-
-      // Write the object back to the file
-      fsPromises.writeFile( projectPath, JSON.stringify( project, null, 2 ) ).then( () => {
+        // Returning write operation as a promise
+        return fsPromises.writeFile( path.join( spacesDirectoryPath, spaceName, 'projects', `${projectName}.json` ), JSON.stringify( projectData, null, 2 ) );
+      } )
+      .then( () => {
+        // Operation complete, calling onComplete callback
         onComplete( response );
-      } ).catch( err => {
-        response.status( 500 ).send( 'Error writing project while saving project data' );
+
+        response.json( { status: 'CHUNKS_SENT' } );
+      } )
+      .catch( err => {
+        console.error( `Error in saveProjectData: ${err}` );
+        // Handling read or write error
+        response.status( 500 ).send( 'Error processing project data' );
       } );
-    } ).catch( err => {
-      response.status( 500 ).send( 'Error reading project while trying to save data' );
-    } );
   }
 
   /**
@@ -808,10 +964,12 @@ class LocalFileDataService extends IDataService {
     const projectPath = path.join( spacesDirectoryPath, spaceName, 'projects', `${projectName}.json` );
 
     // Read the project data from the file, convert it to a javascript object
-    fsPromises.readFile( projectPath, 'utf8' ).then( fileContents => {
-      const project = JSON.parse( fileContents );
-      response.json( { projectData: project.projectData } );
-    } ).catch( err => {
+    this.addToQueue( this.readFile( projectPath ) )
+      .then( fileContents => {
+        const project = JSON.parse( fileContents );
+        response.json( { projectData: project } );
+      } ).catch( err => {
+
       response.status( 404 );
     } );
   }
@@ -822,7 +980,7 @@ class LocalFileDataService extends IDataService {
     const projectPath = path.join( spacesDirectoryPath, spaceName, 'projects', `${projectName}.json` );
 
     // Delete the project file
-    fsPromises.unlink( projectPath ).then( () => {
+    this.addToQueue( this.deleteFile( projectPath ) ).then( () => {
       response.json( { numberOfProjectsDeleted: 1 } );
     } ).catch( err => {
       response.status( 500 ).send( 'Error deleting project - project may not exist.' );

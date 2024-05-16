@@ -16,7 +16,10 @@ export default function CreateProgramFromTemplateForm( props ) {
 
         const templatesJSON = JSON.parse( templates );
         setAvailableTemplates( templatesJSON.templates );
-        setSelectedTemplate( templatesJSON.templates[ 0 ] );
+
+        if ( templatesJSON.templates.length > 0 ) {
+          setSelectedTemplate( templatesJSON.templates[ 0 ] );
+        }
       }
       catch( e ) {
         console.log( e );

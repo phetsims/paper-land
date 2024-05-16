@@ -31,7 +31,7 @@ export default class CameraMain extends React.Component {
       pageWidth: 1,
       framerate: 0,
       selectedColorIndex: -1,
-      spaceData: { programs: [] },
+      spaceData: { programs: [], spaceName: '' },
       selectedSpaceName: props.config.selectedSpaceName,
       availableSpaces: [],
       isAddingNewSpace: false,
@@ -164,7 +164,11 @@ export default class CameraMain extends React.Component {
       else {
         if ( !_.isEqual( this.state.spaceData, response.body ) ) {
 
-          this.setState( { spaceData: response.body }, () => {
+          // In case there is a problem getting data for the space - for example, if the space does not exist. This
+          // can happen if an old space is selected and the server has been restarted.
+          const newSpaceData = response.body || { programs: [], spaceName: '' };
+
+          this.setState( { spaceData: newSpaceData }, () => {
             this._programsChange( this.props.paperProgramsProgramsToRender );
 
             // If the code for the selected program has changed, update the code in the editor.
