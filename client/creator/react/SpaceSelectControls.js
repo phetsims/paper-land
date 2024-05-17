@@ -349,6 +349,13 @@ const SpaceSelectControls = props => {
                                                    // Copy was successful, stop copying and display the new copied project
                                                    setCopyingProject( false );
 
+                                                   // If there is not a change in space name, update project names.
+                                                   // If there is a change, the update will happen when the space name
+                                                   // changes (deferred until the actual update with useEffect).
+                                                   if ( selectedSpaceName === destinationSpaceName ) {
+                                                     updateProjectNames();
+                                                   }
+
                                                    // use the new project right away
                                                    setSelectedSpaceName( destinationSpaceName );
                                                    setSelectedProjectName( destinationProjectName );
