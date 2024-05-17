@@ -139,25 +139,25 @@ export default class ViewCodeGenerator {
           ${componentNameString}.fill = color;
         };
         
-        // for a line
+        // for a line - Beware that the x/y variables are declared via the ShapeCodeFunctions!
         const setX1 = ( newX1 ) => {
-          x1 = phet.paperLand.utils.paperToBoardX( newX1, sharedData.displaySize.width );
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          ${componentName}_x1 = phet.paperLand.utils.paperToBoardX( newX1, sharedData.displaySize.width );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         
         const setY1 = ( newY1 ) => {
-          y1 = phet.paperLand.utils.paperToBoardY( newY1, sharedData.displaySize.height );
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          ${componentName}_y1 = phet.paperLand.utils.paperToBoardY( newY1, sharedData.displaySize.height );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
 
         const setX2 = ( newX2 ) => {
-          x2 = phet.paperLand.utils.paperToBoardX( newX2, sharedData.displaySize.width );
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          ${componentName}_x2 = phet.paperLand.utils.paperToBoardX( newX2, sharedData.displaySize.width );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         
         const setY2 = ( newY2 ) => {
-          y2 = phet.paperLand.utils.paperToBoardY( newY2, sharedData.displaySize.height );
-          ${componentNameString}.shape = phet.kite.Shape.lineSegment( x1, y1, x2, y2 );
+          ${componentName}_y2 = phet.paperLand.utils.paperToBoardY( newY2, sharedData.displaySize.height );
+          ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         
         // for a circle

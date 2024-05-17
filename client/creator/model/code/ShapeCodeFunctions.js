@@ -35,11 +35,11 @@ const ShapeCodeGenerator = {
     }
     else if ( shapeType === 'line' ) {
       shapeCode = `
-        let x1 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineStartX, inModelCoordinates, 'x' )};
-        let y1 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineStartY, inModelCoordinates, 'y' )};
-        let x2 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineEndX, inModelCoordinates, 'x' )};
-        let y2 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineEndY, inModelCoordinates, 'y' )};
-        ${declarationString} phet.kite.Shape.lineSegment( x1, y1, x2, y2 )
+        let ${nameString}_x1 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineStartX, inModelCoordinates, 'x' )};
+        let ${nameString}_y1 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineStartY, inModelCoordinates, 'y' )};
+        let ${nameString}_x2 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineEndX, inModelCoordinates, 'x' )};
+        let ${nameString}_y2 = ${ViewCodeGenerator.valueStringInViewUnits( shapeOptions.lineEndY, inModelCoordinates, 'y' )};
+        ${declarationString} phet.kite.Shape.lineSegment( ${nameString}_x1, ${nameString}_y1, ${nameString}_x2, ${nameString}_y2 )
       `;
     }
     else if ( shapeType === 'triangle' ) {
