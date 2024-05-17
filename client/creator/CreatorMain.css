@@ -85,6 +85,11 @@
   padding-bottom: 5px;
 }
 
+:local(.noVerticalPadding) {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
 :local(.horizontalPadding) {
   padding-right: 10px;
 }

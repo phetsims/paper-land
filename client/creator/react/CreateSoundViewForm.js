@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
 import xhr from 'xhr';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
 import FileUploader from './FileUploader.js';
+import StyledButton from './StyledButton.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
@@ -14,6 +18,10 @@ const SOUND_FUNCTIONS = [
   'setOutputLevel() - takes a value between 0 and 1',
   'play() - play the selected sound'
 ];
+
+// A reference to an Audio element that is currently playing the selected sound, outside of the component so that
+// it can be stopped if another sound is played, and is not cleared when the component is re-rendered.
+let playingAudio = null;
 
 export default function CreateSoundViewForm( props ) {
 
@@ -78,24 +86,55 @@ export default function CreateSoundViewForm( props ) {
   const soundFileSelector = (
     <div>
       <Form.Label>Select from available files:</Form.Label>
-      <Form.Select
-        value={formData.soundFileName}
-        onChange={event => {
-          handleChange( { soundFileName: event.target.value } );
-          props.getSoundFormData( { soundFileName: event.target.value } );
-        }}
-      >
-        {
-          soundFiles.map( ( soundFile, index ) => {
-            return (
-              <option
-                key={`sound-file-${index}`}
-                value={soundFile}
-              >{soundFile}</option>
-            );
-          } )
-        }
-      </Form.Select>
+      <Container>
+        <Row>
+          <Col xs={9}>
+            <Form.Select
+              value={formData.soundFileName}
+              onChange={event => {
+                handleChange( { soundFileName: event.target.value } );
+                props.getSoundFormData( { soundFileName: event.target.value } );
+              }}
+            >
+              {
+                soundFiles.map( ( soundFile, index ) => {
+                  return (
+                    <option
+                      key={`sound-file-${index}`}
+                      value={soundFile}
+                    >{soundFile}</option>
+                  );
+                } )
+              }
+            </Form.Select>
+          </Col>
+          <Col xs={3}>
+            <StyledButton
+              name={'Test Sound'}
+              onClick={() => {
+                if ( playingAudio ) {
+                  playingAudio.pause();
+                  playingAudio = null;
+                }
+                else {
+                  const fullPath = `media/sounds/${formData.soundFileName}`;
+                  playingAudio = new Audio( fullPath );
+                  playingAudio.play().catch( error => {
+                    console.error( error );
+                    playingAudio = null;
+                  } );
+
+                  playingAudio.onended = () => {
+                    playingAudio = null;
+                  };
+                }
+              }}
+              overrideClassName={styles.noVerticalPadding}
+            ></StyledButton>
+          </Col>
+        </Row>
+      </Container>
+
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='sound'
