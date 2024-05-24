@@ -16,6 +16,10 @@ export default class ListenerComponent extends Component {
 
     this.boundUpdateControlledPropertyNames = this.updateControlledPropertyNames.bind( this );
 
+    // A map of controlled components to their removal listeners. Used to remove a controlled component from the
+    // list when it is removed. Also used to remove the listeners that are associated with them to prevent memory leaks.
+    this.controlledComponentListenerMap = new Map();
+
     this.setControlledProperties( controlledProperties );
   }
 
@@ -29,6 +33,10 @@ export default class ListenerComponent extends Component {
       if ( controlledProperty.nameProperty.hasListener( this.boundUpdateControlledPropertyNames ) ) {
         controlledProperty.nameProperty.unlink( this.boundUpdateControlledPropertyNames );
       }
+      if ( this.controlledComponentListenerMap.has( controlledProperty ) ) {
+        controlledProperty.deleteEmitter.removeListener( this.controlledComponentListenerMap.get( controlledProperty ) );
+        this.controlledComponentListenerMap.delete( controlledProperty );
+      }
     } );
 
     // update references
@@ -38,7 +46,21 @@ export default class ListenerComponent extends Component {
     // add listener to the Property names so that custom code will automatically update if a name changes
     controlledProperties.forEach( controlledProperty => {
       controlledProperty.nameProperty.link( this.boundUpdateControlledPropertyNames );
+
+      const removalListener = () => {
+        this.removeControlledPropertyOnDelete( controlledProperty );
+      }
+      controlledProperty.deleteEmitter.addListener( removalListener );
+      this.controlledComponentListenerMap.set( controlledProperty, removalListener );
     } );
+  }
+
+  /**
+   * When a component is deleted,
+   */
+  removeControlledPropertyOnDelete( component ) {
+    const newDependencies = this._controlledProperties.filter( modelComponent => modelComponent !== component );
+    this.setControlledProperties( newDependencies );
   }
 
   /**

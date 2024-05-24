@@ -339,7 +339,7 @@ QUnit.test( 'Deleting a component should remove it from other component dependen
   numberComponentInstance.deleteEmitter.emit();
   assert.ok( testImageComponent._modelComponents.length === 0, 'Model components removed from view component' );
 
-  // Same test for the ListenerComponent
+  // Same test for the MultilinkListenerComponent/ListenerComponent
   testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
   testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
   const booleanComponentInstance2 = testProgram.modelContainer.namedBooleanProperties[ 0 ];
@@ -361,4 +361,20 @@ QUnit.test( 'Deleting a component should remove it from other component dependen
   numberComponentInstance2.deleteEmitter.emit();
   assert.ok( testListenerComponent._dependencies.length === 0, 'Model components removed from listener component' );
 
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  testProgram.modelContainer.addNumberProperty( 'controlledNumber', 0, 10, 5 );
+  const booleanComponentInstance3 = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+  const numberComponentInstance3 = testProgram.modelContainer.namedNumberProperties[ 0 ];
+  const controlledNumberComponentInstance3 = testProgram.modelContainer.namedNumberProperties[ 1 ];
+
+  const testListenerComponent2 = new MultilinkListenerComponent( 'testListener', [ booleanComponentInstance3, numberComponentInstance3 ], [ controlledNumberComponentInstance3 ], () => {} );
+  testProgram.listenerContainer.addLinkListener( testListenerComponent2 );
+
+  // Initial state check
+  assert.ok( testListenerComponent2._controlledProperties.length === 1, 'There are two controlled Properties' );
+
+  // delete the controlled component, it should be removed from the listener component
+  controlledNumberComponentInstance3.deleteEmitter.emit();
+  assert.ok( testListenerComponent2._controlledProperties.length === 0, 'Controlled component removed from listener component' );
 } );
