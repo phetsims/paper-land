@@ -132,7 +132,6 @@ export default class ViewComponent extends Component {
   removeComponentOnDelete( component ) {
     const newComponents = this._modelComponents.filter( modelComponent => modelComponent !== component );
     this.setModelComponents( newComponents );
-    console.log( 'removing on delete!', component );
   }
 
   /**

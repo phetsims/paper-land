@@ -28,6 +28,10 @@ export default class MultilinkListenerComponent extends ListenerComponent {
     // Updates the list of names for dependencies and the control function string if any name changes.
     this.boundUpdateDependencyPropertyNames = this.updateDependencyNames.bind( this );
 
+    // A map of components to their removal listeners. Used to remove components when they are deleted, and also
+    // remove the listeners that are associated with them to prevent memory leaks.
+    this.removeListenerMap = new Map();
+
     this.setDependencies( dependencies );
     this.setReferenceComponentNames( options.referenceComponentNames || [] );
   }
@@ -43,6 +47,10 @@ export default class MultilinkListenerComponent extends ListenerComponent {
       if ( dependency.nameProperty.hasListener( this.boundUpdateDependencyPropertyNames ) ) {
         dependency.nameProperty.unlink( this.boundUpdateDependencyPropertyNames );
       }
+      if ( this.removeListenerMap.has( dependency ) ) {
+        dependency.deleteEmitter.removeListener( this.removeListenerMap.get( dependency ) );
+        this.removeListenerMap.delete( dependency );
+      }
     } );
 
     // update references
@@ -57,7 +65,22 @@ export default class MultilinkListenerComponent extends ListenerComponent {
     // add listener to the dependency names so that custom code will automatically update if a name changes
     dependencies.forEach( dependency => {
       dependency.nameProperty.link( this.boundUpdateDependencyPropertyNames );
+
+      // to remove the listener if it is deleted
+      const removalListener = () => {
+        this.removeComponentOnDelete( dependency );
+      };
+      dependency.deleteEmitter.addListener( removalListener );
+      this.removeListenerMap.set( dependency, removalListener );
     } );
+  }
+
+  /**
+   * When a component is deleted,
+   */
+  removeComponentOnDelete( component ) {
+    const newDependencies = this._dependencies.filter( modelComponent => modelComponent !== component );
+    this.setDependencies( newDependencies );
   }
 
   /**

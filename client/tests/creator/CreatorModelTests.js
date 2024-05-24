@@ -338,4 +338,27 @@ QUnit.test( 'Deleting a component should remove it from other component dependen
   // remove the number component as well, and we should no longer have any model components
   numberComponentInstance.deleteEmitter.emit();
   assert.ok( testImageComponent._modelComponents.length === 0, 'Model components removed from view component' );
+
+  // Same test for the ListenerComponent
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  const booleanComponentInstance2 = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+  const numberComponentInstance2 = testProgram.modelContainer.namedNumberProperties[ 0 ];
+
+  const testListenerComponent = new MultilinkListenerComponent( 'testListener', [ booleanComponentInstance2, numberComponentInstance2 ], [], () => {} );
+  testProgram.listenerContainer.addLinkListener( testListenerComponent );
+
+  // Initial state check
+  assert.ok( testListenerComponent._dependencies.length === 2, 'There are two model components for the listener component' );
+
+  // delete the reference component
+  booleanComponentInstance2.deleteEmitter.emit();
+
+  // make sure the reference component is removed from the listener component
+  assert.ok( testListenerComponent._dependencies.length === 1, 'Reference component removed from listener component' );
+
+  // remove the number component as well, and we should no longer have any model components
+  numberComponentInstance2.deleteEmitter.emit();
+  assert.ok( testListenerComponent._dependencies.length === 0, 'Model components removed from listener component' );
+
 } );
