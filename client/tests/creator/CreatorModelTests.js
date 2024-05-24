@@ -8,8 +8,8 @@ import BooleanPropertyController from '../../creator/model/controllers/BooleanPr
 import MultilinkListenerComponent from '../../creator/model/controllers/MultilinkListenerComponent.js';
 import CreatorModel from '../../creator/model/CreatorModel.js';
 import BackgroundViewComponent from '../../creator/model/views/BackgroundViewComponent.js';
-import SpeechViewComponent from '../../creator/model/views/SpeechViewComponent.js';
 import ImageViewComponent from '../../creator/model/views/ImageViewComponent.js';
+import SpeechViewComponent from '../../creator/model/views/SpeechViewComponent.js';
 
 QUnit.module( 'CreatorModel' );
 
@@ -305,4 +305,37 @@ QUnit.test( 'Copy program with reference relationships', assert => {
 
   assert.ok( creatorModel.allModelComponents.length === 4, 'Model components copied' );
   assert.ok( creatorModel.allViewComponents.length === 2, 'View components copied' );
+} );
+
+QUnit.test( 'Deleting a component should remove it from other component dependency lists', assert => {
+  const creatorModel = new CreatorModel();
+  const testProgram = creatorModel.createProgram( new phet.dot.Vector2( 0, 0 ) );
+
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  const booleanComponentInstance = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+  const numberComponentInstance = testProgram.modelContainer.namedNumberProperties[ 0 ];
+
+  assert.ok( creatorModel.allModelComponents.length === 2, 'Model components added' );
+
+  const testImageComponent = new ImageViewComponent( 'testImage', [ booleanComponentInstance, numberComponentInstance ], '', 'on-bulb.png', {
+
+    // Make the boolean component a reference component for testing
+    referenceComponentNames: [ booleanComponentInstance.nameProperty.value ]
+  } );
+  testProgram.viewContainer.addImageView( testImageComponent );
+  assert.ok( creatorModel.allViewComponents.length === 1, 'View components added' );
+
+  // Initial state check
+  assert.ok( testImageComponent._modelComponents.length === 2, 'There are two model components for the view component' );
+
+  // delete the reference component
+  booleanComponentInstance.deleteEmitter.emit();
+
+  // make sure the reference component is removed from the view component
+  assert.ok( testImageComponent._modelComponents.length === 1, 'Reference component removed from view component' );
+
+  // remove the number component as well, and we should no longer have any model components
+  numberComponentInstance.deleteEmitter.emit();
+  assert.ok( testImageComponent._modelComponents.length === 0, 'Model components removed from view component' );
 } );
