@@ -339,7 +339,9 @@ QUnit.test( 'Deleting a component should remove it from other component dependen
   numberComponentInstance.deleteEmitter.emit();
   assert.ok( testImageComponent._modelComponents.length === 0, 'Model components removed from view component' );
 
+  //--------------------------------------------------------------------------------
   // Same test for the MultilinkListenerComponent/ListenerComponent
+  //--------------------------------------------------------------------------------
   testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
   testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
   const booleanComponentInstance2 = testProgram.modelContainer.namedBooleanProperties[ 0 ];
@@ -372,9 +374,38 @@ QUnit.test( 'Deleting a component should remove it from other component dependen
   testProgram.listenerContainer.addLinkListener( testListenerComponent2 );
 
   // Initial state check
-  assert.ok( testListenerComponent2._controlledProperties.length === 1, 'There are two controlled Properties' );
+  assert.ok( testListenerComponent2._controlledProperties.length === 1, 'There is one controlled Property' );
+  assert.ok( testListenerComponent2._dependencies.length === 2, 'There are two dependencies for the MultilinkListenerComponent' );
 
   // delete the controlled component, it should be removed from the listener component
   controlledNumberComponentInstance3.deleteEmitter.emit();
   assert.ok( testListenerComponent2._controlledProperties.length === 0, 'Controlled component removed from listener component' );
+
+  // delete one of the dependencies, it should be removed from the listener component
+  numberComponentInstance3.deleteEmitter.emit();
+  assert.ok( testListenerComponent2._dependencies.length === 1, 'Dependency removed from listener component' );
+  booleanComponentInstance3.deleteEmitter.emit();
+  assert.ok( testListenerComponent2._dependencies.length === 0, 'Dependency removed from listener component' );
+
+  //--------------------------------------------------------------------------------
+  // Same test for the NamedDerivedProperty
+  //--------------------------------------------------------------------------------
+  testProgram.modelContainer.addBooleanProperty( 'testBoolean', true );
+  testProgram.modelContainer.addNumberProperty( 'testNumber', 0, 10, 5 );
+  const booleanComponentInstance4 = testProgram.modelContainer.namedBooleanProperties[ 0 ];
+  const numberComponentInstance4 = testProgram.modelContainer.namedNumberProperties[ 0 ];
+
+  testProgram.modelContainer.addDerivedProperty( 'derivedComponent', [ booleanComponentInstance4, numberComponentInstance4 ], () => {} );
+  const derivedComponentInstance = testProgram.modelContainer.namedDerivedProperties[ 0 ];
+
+  // initial state check
+  assert.ok( derivedComponentInstance._dependencies.length === 2, 'There are two dependencies for the NamedDerivedProperty' );
+
+  // Delete a component and it should be removed from the derived component's list
+  numberComponentInstance4.deleteEmitter.emit();
+  assert.ok( derivedComponentInstance._dependencies.length === 1, 'Dependency removed from derived component' );
+
+  // Delete the second one
+  booleanComponentInstance4.deleteEmitter.emit();
+  assert.ok( derivedComponentInstance._dependencies.length === 0, 'Dependency removed from derived component' );
 } );

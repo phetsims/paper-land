@@ -20,6 +20,11 @@ export default class NamedDerivedProperty extends NamedProperty {
     // A Multilink that will update the collection of names whenever a dependency changes its name.
     this._nameChangeMultilink = null;
 
+    // A map of dependency components to their removal listeners. Used to remove dependencies from the
+    // list when it is deleted. Also used to remove the listeners that are associated with them to prevent
+    // memory leaks.
+    this.dependencyComponentListenerMap = new Map();
+
     // A single listener that updates the derivation to use new variable names whenever a dependency name changes.
     this.boundUpdateDependencyNames = this.updateDependencyNames.bind( this );
 
@@ -35,6 +40,10 @@ export default class NamedDerivedProperty extends NamedProperty {
       if ( dependency.nameProperty.hasListener( this.boundUpdateDependencyNames ) ) {
         dependency.nameProperty.unlink( this.boundUpdateDependencyNames );
       }
+      if ( this.dependencyComponentListenerMap.has( dependency ) ) {
+        dependency.deleteEmitter.removeListener( this.dependencyComponentListenerMap.get( dependency ) );
+        this.dependencyComponentListenerMap.delete( dependency );
+      }
     } );
 
     // update references
@@ -44,7 +53,23 @@ export default class NamedDerivedProperty extends NamedProperty {
     // link to new dependencies
     dependencies.forEach( dependency => {
       dependency.nameProperty.link( this.boundUpdateDependencyNames );
+
+      const removalListener = () => {
+        this.removeDependencyOnDelete( dependency );
+
+      };
+      dependency.deleteEmitter.addListener( removalListener );
+      this.dependencyComponentListenerMap.set( dependency, removalListener );
     } );
+  }
+
+  /**
+   * When a dependency is deleted, it should be removed from this component's list of dependencies. This is
+   * called on the dependency's deleteEmitter.
+   */
+  removeDependencyOnDelete( dependency ) {
+    const newDependencies = this._dependencies.filter( modelComponent => modelComponent !== dependency );
+    this.setDependencies( newDependencies );
   }
 
   updateDependencyNames( newName, oldName ) {
