@@ -53,9 +53,9 @@ mkdocs-minify-plugin==0.6.4
     # via -r docs/requirements.in
 packaging==23.1
     # via mkdocs
-pygments==2.15.1
+pygments
     # via mkdocs-material
-pymdown-extensions==10.0.1
+pymdown-extensions
     # via mkdocs-material
 python-dateutil==2.8.2
     # via ghp-import

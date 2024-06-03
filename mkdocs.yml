@@ -136,15 +136,19 @@ nav:
       - Device Setup: setup/device-setup.md
       - Interface Overview: setup/interface-overview.md
       - Creator Tutorial: setup/creator.md
+    - Projects:
+      - Multimodal Codesign: projects/codesign.md
+      - Paper Craft: projects/craft.md
+      - Microcontroller Integration: projects/microcontroller.md
+      - SceneryStack: projects/scenerystack.md
+      - Media Gallery: media-gallery.md
     - Resources: 
       - Walkthroughs: use/walkthroughs/walkthroughs.md
-      - MVC Framework: use/mvc.md
+      - About Model-View-Controller: use/mvc.md
       - paperLand API: use/paperland-api.md
-      - Extra Resources: use/resources.md
-      - Design Tips: use/designing-programs.md
-      - Example JS Papers: use/example-program.md
-    - Examples:
-      - Gallery: media-gallery.md
+      - Downloadables: use/resources.md
+      - Project Design Tips: use/designing-programs.md
+      - Example Custom JS Papers: use/example-program.md
     - Community:
       - Join Us: community.md 
       - Contribute: CONTRIBUTING.md
