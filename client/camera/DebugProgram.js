@@ -288,16 +288,16 @@ export default class CameraMain extends React.Component {
 
           {/*<div ref={el => ( this._rotateEl = el )} className={styles.rotateHandle}/>*/}
           <button ref={el => ( this._rotateEl = el )} className={styles.rotateButton}>
-            <img className={styles.buttonIcon} src={'media/images/arrows-spin.svg'} alt={'Rotate Program'}/>
+            <img className={styles.buttonIcon} src={'media/images/arrows-spin.svg'} alt={'Rotate Program'} draggable='false'/>
           </button>
           <button ref={el => ( this._handleEl = el )} className={styles.resizeButton}>
-            <img className={styles.buttonIcon} src={'media/images/resize-white.svg'} alt={'Resize Program'}/>
+            <img className={styles.buttonIcon} src={'media/images/resize-white.svg'} alt={'Resize Program'} draggable='false'/>
           </button>
           <button onClick={() => this.props.remove()} className={styles.closeButton}>
-            <img className={styles.buttonIcon} src={'media/images/trash3.svg'} alt={'Delete Program'}/>
+            <img className={styles.buttonIcon} src={'media/images/trash3.svg'} alt={'Delete Program'} draggable='false'/>
           </button>
           <button onClick={() => this._setCutState( true )} className={styles.cutButton}>
-            <img className={styles.buttonIcon} src={'media/images/scissors.svg'} alt={'Cut Program'}/>
+            <img className={styles.buttonIcon} src={'media/images/scissors.svg'} alt={'Cut Program'} draggable='false'/>
           </button>
         </div>
 
