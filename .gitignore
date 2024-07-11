@@ -6,6 +6,10 @@ site/
 notes.md
 package-lock.json
 
+# Ignore yarn related files that may be included by Electron
+yarn.lock
+yarn-error.log
+
 # Ignore all files in the uploads directories
 **/uploads/*
 
@@ -14,3 +18,19 @@ package-lock.json
 
 # Ignore all files in the saved data directories
 **/server/data/*
+
+# Ignore the electron build directory
+out/
+
+# Ignore the server build directory
+server-dist/
+
+# Ignore build files and directories that get placed in the www directory
+www/vs/
+www/board.js
+www/camera.js
+www/creator.js
+www/editor.js
+www/paper.js
+www/projector.js
+www/tests.js

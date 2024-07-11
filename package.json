@@ -4,6 +4,7 @@
   "description": "Co-design environment for accessible educational simulations.",
   "author": "PhET Interactive Simulations <phethelp@colorado.edu>, Jan Paul Posma <j@npaulpos.ma>",
   "license": "MIT",
+  "main": "main.js",
   "scripts": {
     "createdb": "psql -c \"SELECT 1\" paper_programs_development 2>/dev/null 1>/dev/null || createdb paper_programs_development",
     "dev": "npm run createdb && npm run migrate && npm start",
@@ -11,17 +12,51 @@
     "dropdb": "dropdb --if-exists paper_programs_development",
     "get-programs": "node scripts/db/get-programs-from-database.js",
     "heroku-postbuild": "webpack",
+    "build-react": "webpack --config webpack.config.js",
+    "build-server": "webpack --config webpack.server.config.js",
     "lint": "eslint . --rulesdir ../chipper/eslint/rules",
     "lint-fix": "eslint . --fix",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "start": "node server/entry-server.js",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "start-forge": "electron-forge start",
+    "package": "electron-forge package",
+    "afterpackage": "node scripts/create-env-file.js",
+    "build": "npm run build-react && npm run build-server && npm run package && npm run afterpackage",
+    "make": "echo '\"electron-forge make\" is not supported at this time. See https://github.com/phetsims/paper-land/issues/259'"
   },
-  "engines": {
-    "node": "9.3.x",
-    "npm": "5.6.x"
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "extraResource": [
+          "server-dist",
+          "www"
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   },
+  "engines": {},
   "cacheDirectories": [
     ".babel-cache"
   ],
@@ -38,7 +73,6 @@
     "bootstrap-switch-button-react": "^1.2.0",
     "brfs": "^2.0.2",
     "color-diff": "~1.1.0",
-    "copy-webpack-plugin": "^4.5.0",
     "css-loader": "^0.28.10",
     "d3": "^5.0.0",
     "dotenv": "^4.0.0",
@@ -67,14 +101,27 @@
     "transform-loader": "^0.2.4",
     "uuid": "^3.2.1",
     "webpack": "^5.75.0",
+    "webpack-node-externals": "^3.0.0",
     "xhr": "^2.4.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "~7.19.1",
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "copy-webpack-plugin": "^4.6.0",
+    "electron": "^31.0.2",
+    "electron-squirrel-startup": "^1.0.1",
     "eslint": "~8.28.0",
     "eslint-plugin-react": "^7.31.11",
     "nodemon": "^1.17.1",
     "qunit": "~2.19.4",
+    "webpack-cli": "^5.1.4",
     "webpack-dev-middleware": "^6.0.1",
     "webpack-dev-server": "^4.11.1"
   }

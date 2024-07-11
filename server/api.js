@@ -39,7 +39,7 @@ console.log( '---------------------------------------------------' );
 // Storage managers for the image and sound uploads
 const imageStorage = multer.diskStorage( {
   destination: ( req, file, cb ) => {
-    cb( null, path.join( 'www', 'media', 'images', 'uploads' ) );
+    cb( null, path.join( __dirname, '..', 'www', 'media', 'images', 'uploads' ) );
   },
   filename: ( req, file, cb ) => {
     cb( null, file.originalname );
@@ -47,7 +47,7 @@ const imageStorage = multer.diskStorage( {
 } );
 const soundStorage = multer.diskStorage( {
   destination: ( req, file, cb ) => {
-    cb( null, path.join( 'www', 'media', 'sounds', 'uploads' ) );
+    cb( null, path.join( __dirname, '..', 'www', 'media', 'sounds', 'uploads' ) );
   },
   filename: ( req, file, cb ) => {
     cb( null, file.originalname );
@@ -485,7 +485,13 @@ router.get( '/api/creator/projects/delete', ( req, res ) => {
  * Gets the list of sound files available to use.
  */
 router.get( '/api/creator/soundFiles', ( req, res ) => {
-  const soundDirectories = [ './www/media/sounds', './www/media/sounds/uploads' ];
+  const soundDirectory = path.join( __dirname, '..', 'www', 'media', 'sounds' );
+  const uploadDirectory = path.join( __dirname, '..', 'www', 'media', 'sounds', 'uploads' );
+
+  const soundDirectories = [
+    soundDirectory,
+    uploadDirectory
+  ];
 
   // use fs to get the list of files in the imageDirectories
   const soundFiles = soundDirectories.reduce( ( accumulator, soundDirectory ) => {
@@ -496,7 +502,7 @@ router.get( '/api/creator/soundFiles', ( req, res ) => {
     } );
 
     // if from the uplaods directory, prepend the directory name
-    if ( soundDirectory === './www/media/sounds/uploads' ) {
+    if ( soundDirectory === uploadDirectory ) {
       return accumulator.concat( filtered.map( file => `/uploads/${file}` ) );
     }
     else {
@@ -511,7 +517,14 @@ router.get( '/api/creator/soundFiles', ( req, res ) => {
  * Gets the list of image files available to use.
  */
 router.get( '/api/creator/imageFiles', ( req, res ) => {
-  const imageDirectories = [ './www/media/images', './www/media/images/uploads' ];
+  const imagesDirectory = path.join( __dirname, '..', 'www', 'media', 'images' );
+  const uploadDirectory = path.join( __dirname, '..', 'www', 'media', 'images', 'uploads' );
+
+  // Resolving paths relative to the current script's directory (__dirname)
+  const imageDirectories = [
+    imagesDirectory,
+    uploadDirectory
+  ];
 
   // use fs to get the list of files in the imageDirectories
   const imageFiles = imageDirectories.reduce( ( accumulator, imageDirectory ) => {
@@ -522,7 +535,7 @@ router.get( '/api/creator/imageFiles', ( req, res ) => {
     } );
 
     // if from the uplaods directory, prepend the directory name
-    if ( imageDirectory === './www/media/images/uploads' ) {
+    if ( imageDirectory === uploadDirectory ) {
       return accumulator.concat( filtered.map( file => `/uploads/${file}` ) );
     }
     else {

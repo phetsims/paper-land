@@ -1,6 +1,7 @@
 require( 'dotenv' ).config();
 
-if ( process.env.NODE_ENV === 'production' ) {
+console.log( 'Running in ' + ( process.env.MODE || 'development' ) + ' mode' + '\n' );
+if ( process.env.MODE === 'production' ) {
   require( './main' );
 }
 else {

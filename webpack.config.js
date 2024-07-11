@@ -1,3 +1,9 @@
+/**
+ * Webpack configuration for front end code related to paper land.
+ *
+ * @author Jesse Greenberg (PhET Interactive Simulations)
+ */
+
 const path = require( 'path' );
 
 module.exports = {
