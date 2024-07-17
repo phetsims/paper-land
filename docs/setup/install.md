@@ -75,3 +75,14 @@ If you do not have access to a remote database, you can host a local database on
 #### Initial Run
 - [FIRST TIME - INITIAL SETUP ONLY] Use following command to create the database the first time in terminal
     - `npm run dev`
+
+#### Packaging the project
+
+- To package the project for deployment, we use Electron and Webpack. The project is packaged into a directory with dependencies available so that you do not need to set up a development environment. The following scripts can be used to bundle the project.
+  - `npm run build` - The main build command that runs most of the following scripts in order, to create a distributable directory.
+  - `npm run build-react` - Uses webpack to build the front end React app.
+  - `npm run build-server` - Uses webpack to build the server code so it can be bundled with the Electron app.
+  - `npm run package` - Packages the Electron app into a distributable directory.
+  - `npm run afterpackage` - A script that puts a .env file with defaults into the build directory.
+
+- Additional scripts are available related to packaging this project, see package.json.
