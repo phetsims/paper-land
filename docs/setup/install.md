@@ -78,7 +78,10 @@ If you do not have access to a remote database, you can host a local database on
 
 #### Packaging the project
 
-- To package the project for deployment, we use Electron and Webpack. The project is packaged into a directory with dependencies available so that you do not need to set up a development environment. The following scripts can be used to bundle the project.
+- To package the project for deployment, we use Electron and Webpack. We do not provide a standalone executable, but a directory with dependencies and code packaged.
+This allows one to run the project on any system with the same architecture, without setting up a development environment. While a standalone executable may be
+possible in the future, it is not currently available. For additional details and history on the packaging process, see https://github.com/phetsims/paper-land/issues/259.
+The following scripts can be used to bundle the project.
   - `npm run build` - The main build command that runs most of the following scripts in order, to create a distributable directory.
   - `npm run build-react` - Uses webpack to build the front end React app.
   - `npm run build-server` - Uses webpack to build the server code so it can be bundled with the Electron app.
