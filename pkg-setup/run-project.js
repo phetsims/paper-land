@@ -5,6 +5,9 @@ const { execSync } = require( 'child_process' );
 // Install dependencies
 try {
   console.log( 'Installing dependencies...' );
+
+  // log the current directory
+  console.log( __dirname );
   execSync( 'npm install', { stdio: 'inherit' } );
 }
 catch( error ) {
@@ -21,14 +24,3 @@ catch( error ) {
   console.error( 'Failed to start the project:', error );
   process.exit( 1 );
 }
-
-// // Open in Chrome or print a warning if not available
-// ( async () => {
-//   try {
-//     console.log( 'Opening project in Chrome...' );
-//     await open( 'http://localhost:3000', { app: { name: open.apps.chrome } } );
-//   }
-//   catch( error ) {
-//     console.warn( 'Chrome is not available. Please open your browser and navigate to http://localhost:YOUR_PORT manually.' );
-//   }
-// } )();

@@ -26,6 +26,9 @@ if ( process.env.MODE !== 'production' ) {
   app.use( require( 'webpack-dev-middleware' )( compiler ) );
 }
 
-
 const port = process.env.PORT || 3000;
-app.listen( port, () => console.log( `Listening on port ${port}!` ) );
+app.listen( port, () => console.log( `
+Listening on port ${port}!
+
+Paper Playground is ready to use. Navigate to http://localhost:${port} in Chrome or Edge.
+` ) );
