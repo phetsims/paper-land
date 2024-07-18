@@ -78,6 +78,17 @@ If you do not have access to a remote database, you can host a local database on
 
 #### Packaging the project
 
+- To package the project so that it is sharable, we have custom build scripts that include necessary files and make it easy to install dependencies.
+- We require that you have Node.js installed on your system to run these scripts. Once you have Node.js you can run paper-playground by clicking on the setup executables.
+- If you are interested in packaging the project yourself, you can use the following steps:
+1) Install pkg globally: `npm install -g pkg`. pkg is used to package setup scripts into an executable.
+2) Run `npm run build` to build the project. This will create a `build` directory in the root of the project.
+3) Within the build directory are platform specific executables that a user can run to install node modules and run the project.
+4) It also includes a .env file where you can configure variables for the project.
+
+- Note that there are other build scripts to build individual parts of the project (front end, server, etc.). See package.json for more details.
+- Note that this process requires the user to have Node.js installed on their system. A fully standalone build is not supported at this time.
+
 - To package the project for deployment, we use Electron and Webpack. We do not provide a standalone executable, but a directory with dependencies and code packaged.
 This allows one to run the project on any system with the same architecture, without setting up a development environment. While a standalone executable may be
 possible in the future, it is not currently available. For additional details and history on the packaging process, see https://github.com/phetsims/paper-land/issues/259.
