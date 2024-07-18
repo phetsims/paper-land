@@ -67,7 +67,7 @@ catch( error ) {
   process.exit( 1 );
 }
 
-// Copy package.json into the build directory so we can use it to install node modules
+// Copy package.json into the build directory so that we can use it to install node modules
 try {
   console.log( 'Moving package.json into the build directory...' );
   execSync( 'cp package.json build', { stdio: 'inherit' } );

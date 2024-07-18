@@ -12,7 +12,7 @@ const app = express();
 app.use( require( 'morgan' )( 'short' ) );
 
 // From the original project, used to enforce https for heroku deployments. But it doesn't work well
-// with the Electron build. It isn't needed anymore, but I'm leaving it here for reference.
+// with production mode generally. It isn't needed anymore, but I'm leaving it here for reference.
 // app.use( require( 'heroku-ssl-redirect' )( [ 'production' ] ) );
 
 app.use( express.static( path.join( __dirname, '..', 'www' ) ) );

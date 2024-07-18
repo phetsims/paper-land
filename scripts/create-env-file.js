@@ -1,5 +1,5 @@
 /**
- * Creates a .env file in the output electron directory with the necessary content.
+ * Creates a .env file in the output build directory with the necessary content.
  */
 
 const fs = require( 'fs' );
@@ -22,7 +22,7 @@ PORT=3000
 # process.env.NODE_ENV has many platform quirks, so we use our own variable - uncomment to set to production
 # NOTE: production mode requires a build to serve files without webpack middleware. See package.json
 # build commands.
-# NOTE: the Electron build REQUIRES production mode to be set.
+# NOTE: The sharable build REQUIRES production mode to be set to run the application correctly.
 MODE=production
 
 # 'local' or 'postgresql'

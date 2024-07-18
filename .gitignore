@@ -6,10 +6,6 @@ site/
 notes.md
 package-lock.json
 
-# Ignore yarn related files that may be included by Electron
-yarn.lock
-yarn-error.log
-
 # Ignore all files in the uploads directories
 **/uploads/*
 
