@@ -14,7 +14,7 @@ module.exports = {
   externals: [ nodeExternals() ], // Exclude node_modules
   output: {
     path: path.resolve( __dirname, 'server-dist' ),
-    filename: 'server.js'
+    filename: 'entry-server.js'
   },
   module: {
     rules: [

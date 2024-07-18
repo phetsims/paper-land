@@ -27,6 +27,8 @@ server-dist/
 
 #Ignore the build directory
 dist/
+build/
+
 
 # Ignore build files and directories that get placed in the www directory
 www/vs/

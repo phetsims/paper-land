@@ -6,8 +6,7 @@ const fs = require( 'fs' );
 const path = require( 'path' );
 
 // Define the destination directory
-// TODO: This will need to change for macOS build.
-const destDir = path.join( __dirname, '..', 'out', 'paperprograms-win32-x64' );
+const destDir = path.join( __dirname, '..', 'build' );
 
 // Check if the destination directory exists, and exit if it doesn't
 if ( !fs.existsSync( destDir ) ) {

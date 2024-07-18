@@ -23,7 +23,7 @@
     "start-forge": "electron-forge start",
     "package": "electron-forge package",
     "afterpackage": "node scripts/create-env-file.js",
-    "build": "npm run build-react && npm run package && npm run afterpackage",
+    "build": "node scripts/build.js",
     "make": "echo '\"electron-forge make\" is not supported at this time. See https://github.com/phetsims/paper-land/issues/259'"
   },
   "config": {
