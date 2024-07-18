@@ -39,7 +39,6 @@
     "bootstrap-switch-button-react": "^1.2.0",
     "brfs": "^2.0.2",
     "color-diff": "~1.1.0",
-    "cross-spawn": "^7.0.3",
     "css-loader": "^0.28.10",
     "d3": "^5.0.0",
     "dotenv": "^4.0.0",
