@@ -97,18 +97,6 @@ catch( error ) {
   console.error( 'Failed to move the packaged scripts:', error );
   process.exit( 1 );
 }
-
-// Run npm install in the build directory to install node modules.
-try {
-  console.log( 'Installing node modules...' );
-  execSync( 'cd build && npm install', { stdio: 'inherit' } );
-  execSync( 'cd ..' );
-}
-catch( error ) {
-  console.error( 'Failed to install node modules:', error );
-  process.exit( 1 );
-}
-
 console.log( `
 
 Build complete!
