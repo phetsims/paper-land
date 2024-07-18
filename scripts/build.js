@@ -1,10 +1,18 @@
-// 1) Run build-react and build-server npm tasks
-// 2) Create a build directory
-// 3) Copy the contents of www directory into build. Copy the contents of server-dist directory into build/server
-// (the rename of server-dist to server is required because npm command expects it to be called that)
-// 4) Create a .env file in the build directory with the necessary contents.
-// 5) Create the
-// 5) Move in the packaged script that will install node modules in the build directory.
+/**
+ * A general build script that will package the front end and back end into a build directory. It will also package
+ * platform specific scripts that will install node_modules and start the server.
+ *
+ * Run this on a machine to share a build with someone else. They should be able to run the project on a machine
+ * with the same architecture.
+ *
+ * General steps for the build are:
+ * 1) Run build-react and build-server npm tasks
+ * 2) Create a build directory
+ * 3) Copy the contents of www directory into build. Copy the contents of server-dist directory into build/server.
+ * 4) Create a .env file in the build directory with the necessary contents.
+ * 5) Copy package.json into the build directory so we can use it to install node modules.
+ * 6) Package the scripts that will be able to install node modules and start the server.
+ */
 
 // User can then run the packaged script to install node modules and start the server.
 
