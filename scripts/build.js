@@ -97,3 +97,8 @@ catch( error ) {
   console.error( 'Failed to move the packaged scripts:', error );
   process.exit( 1 );
 }
+
+console.log( `
+
+Build complete!
+` );

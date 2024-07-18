@@ -4,7 +4,7 @@ const { execSync } = require( 'child_process' );
 
 // Install dependencies
 try {
-  console.log( 'Installing dependencies...' );
+  console.log( 'Installing dependencies. This may take a few minutes the first time...' );
 
   // log the current directory
   console.log( __dirname );
