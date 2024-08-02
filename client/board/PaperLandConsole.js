@@ -7,7 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import displayConsole, { MessageType } from './displayConsole.js';
-import styles from './BoardMain.css';
+import styles from './DisplayMain.css';
 
 // Maps the types of log functions to the variant of the react-bootstrap ListGroup.Item.
 const consoleTypeToItemVariant = new Map( [

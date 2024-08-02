@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import styles from './BoardMain.css';
+import styles from './DisplayMain.css';
 import PaperLandConsole from './PaperLandConsole.js';
 import PaperLandControls from './PaperLandControls.js';
 import SceneryDisplay from './SceneryDisplay.js';

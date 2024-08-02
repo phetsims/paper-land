@@ -3,7 +3,7 @@
  */
 
 import React, { useEffect } from 'react';
-import styles from './BoardMain.css';
+import styles from './DisplayMain.css';
 
 const SceneryDisplay = props => {
 

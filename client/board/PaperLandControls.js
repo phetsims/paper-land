@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import bluetoothServiceData from '../common/bluetoothServiceData.js';
-import styles from './BoardMain.css';
+import styles from './DisplayMain.css';
 
 // Program positions are normalized from 0-1 in both dimensions. So a value of 0.05 means that the program
 // must move 5% of the distance in X or Y to be considered a change and trigger events.
