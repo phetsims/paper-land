@@ -23,14 +23,14 @@ const argsToString = args => {
   return args.join( ', ' );
 };
 
-const boardConsole = {
+const displayConsole = {
 
   /**
    * Log a message to the console.
    * @param {...string} args - arguments are strings to print
    */
   log: function( ...args ) {
-    boardConsole.messageEmitter.emit( argsToString( args ), MessageType.LOG );
+    displayConsole.messageEmitter.emit( argsToString( args ), MessageType.LOG );
     console.log( ...args );
   },
 
@@ -39,7 +39,7 @@ const boardConsole = {
    * @param {...string} args - arguments are strings to print
    */
   warn: function( ...args ) {
-    boardConsole.messageEmitter.emit( argsToString( args ), MessageType.WARN );
+    displayConsole.messageEmitter.emit( argsToString( args ), MessageType.WARN );
     console.warn( ...args );
   },
 
@@ -48,7 +48,7 @@ const boardConsole = {
    * @param {...string} args - arguments are strings to print
    */
   error: function( ...args ) {
-    boardConsole.messageEmitter.emit( argsToString( args ), MessageType.ERROR );
+    displayConsole.messageEmitter.emit( argsToString( args ), MessageType.ERROR );
     console.error( ...args );
   },
 
@@ -57,6 +57,6 @@ const boardConsole = {
 };
 
 // add to the paperLand namespace
-paperLand.console = boardConsole;
+paperLand.console = displayConsole;
 
-export default boardConsole;
+export default displayConsole;

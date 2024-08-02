@@ -6,7 +6,7 @@
  */
 
 import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
-import boardConsole from './boardConsole.js';
+import displayConsole from './displayConsole.js';
 import displayModel from './displayModel.js';
 import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
@@ -756,12 +756,12 @@ export default class LocalStorageBoardController {
     const previousProgramNumbers = this.paperProgramsInfo.map( entry => Number( entry.number ) );
     currentProgramNumbers.forEach( currentProgramNumber => {
       if ( !previousProgramNumbers.includes( currentProgramNumber ) ) {
-        boardConsole.log( `New program detected: ${currentProgramNumber}` );
+        displayConsole.log( `New program detected: ${currentProgramNumber}` );
       }
     } );
     previousProgramNumbers.forEach( previousProgramNumber => {
       if ( !currentProgramNumbers.includes( previousProgramNumber ) ) {
-        boardConsole.log( `Program disappeared: ${previousProgramNumber}` );
+        displayConsole.log( `Program disappeared: ${previousProgramNumber}` );
       }
     } );
 
@@ -797,7 +797,7 @@ export default class LocalStorageBoardController {
       eval( functionString )( ...args );
     }
     catch( error ) {
-      boardConsole.error( `Error while running ${functionName}`, error );
+      displayConsole.error( `Error while running ${functionName}`, error );
     }
   }
 

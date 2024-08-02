@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
-import boardConsole, { MessageType } from './boardConsole.js';
+import displayConsole, { MessageType } from './displayConsole.js';
 import styles from './BoardMain.css';
 
 // Maps the types of log functions to the variant of the react-bootstrap ListGroup.Item.
@@ -32,11 +32,11 @@ export default function PaperLandConsole( props ) {
 
   // clear old listener after the previous render
   if ( messageListener ) {
-    boardConsole.messageEmitter.removeListener( messageListener );
+    displayConsole.messageEmitter.removeListener( messageListener );
     messageListener = null;
   }
 
-  // Update the log array when there is a new message for the boardConsole
+  // Update the log array when there is a new message for the displayConsole
   messageListener = ( message, type ) => {
 
     // negative value means to only slice that number of elements from the END of the array
@@ -47,7 +47,7 @@ export default function PaperLandConsole( props ) {
     } );
     setLogArray( newArray );
   };
-  boardConsole.messageEmitter.addListener( messageListener );
+  displayConsole.messageEmitter.addListener( messageListener );
 
   const items = logArray.map( ( logObject, i ) => {
     const itemVariant = consoleTypeToItemVariant.get( logObject.type );

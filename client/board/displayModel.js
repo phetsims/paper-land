@@ -6,7 +6,7 @@
  * they are available in paper program code.
  */
 
-import boardConsole from './boardConsole.js';
+import displayConsole from './displayConsole.js';
 import paperLand from './paperLand.js';
 
 // The model of our sim design board, with all model Properties and components from paper programs.
@@ -68,7 +68,7 @@ paperLand.addModelComponent = ( componentName, componentObject ) => {
     paperLand.modelComponentAddedEmitter.emit( componentName, componentObject );
   }
   else {
-    boardConsole.warn( `Model already has component with name ${componentName}! Ignoring this component.` );
+    displayConsole.warn( `Model already has component with name ${componentName}! Ignoring this component.` );
   }
 };
 
@@ -90,7 +90,7 @@ paperLand.removeModelComponent = componentName => {
   const componentObject = displayModel.get( componentName );
 
   if ( componentObject === undefined ) {
-    boardConsole.warn( `Model does not have component with name ${componentName}! Use addModelComponent first.` );
+    displayConsole.warn( `Model does not have component with name ${componentName}! Use addModelComponent first.` );
   }
   else {
 
@@ -200,7 +200,7 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
   emitter.removeListener( listener );
 
   if ( !listenerMap.has( observerId ) ) {
-    boardConsole.error( 'listenerMap does not have provided listener.' );
+    displayConsole.error( 'listenerMap does not have provided listener.' );
   }
   else {
     const listeners = listenerMap.get( observerId );
@@ -213,7 +213,7 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
       }
     }
     else {
-      boardConsole.error( 'listener was not in the array for component' );
+      displayConsole.error( 'listener was not in the array for component' );
     }
   }
 
@@ -325,7 +325,7 @@ const cleanupListenerMaps = observerId => {
 paperLand.removeModelObserver = ( componentName, observerId ) => {
   if ( idToComponentDetachMap.has( observerId ) ) {
     if ( !displayModel.has( componentName ) ) {
-      boardConsole.error( 'Failure in removeModelObserver. componentName could be incorrect or something else went wrong.' );
+      displayConsole.error( 'Failure in removeModelObserver. componentName could be incorrect or something else went wrong.' );
     }
     idToComponentDetachMap.get( observerId )( displayModel.get( componentName ) );
     idToComponentDetachMap.delete( observerId );
@@ -443,14 +443,14 @@ paperLand.addModelPropertyLink = ( componentName, listener ) => {
     componentName,
     component => {
       if ( !component.link ) {
-        boardConsole.error( 'component is not an axon.Property.' );
+        displayConsole.error( 'component is not an axon.Property.' );
         throw new Error( 'Model component is not a Property' );
       }
       component.link( listener );
     },
     component => {
       if ( !component.unlink ) {
-        boardConsole.error( 'component is not an axon.Property.' );
+        displayConsole.error( 'component is not an axon.Property.' );
         throw new Error( 'Model component is not a Property' );
       }
       component.unlink( listener );
