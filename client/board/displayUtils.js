@@ -4,7 +4,7 @@
 
 import paperLand from './paperLand.js';
 
-const boardUtils = {
+const displayUtils = {
 
   /**
    * Returns the rotation of the program between 0 and 2*PI. A value of 0 means that the paper is axis aligned
@@ -31,7 +31,7 @@ const boardUtils = {
    * the normalized rotation value will be easier to use when scaling a model value.
    */
   getNormalizedProgramRotation( points ) {
-    const rotationRadians = boardUtils.getProgramRotation( points );
+    const rotationRadians = displayUtils.getProgramRotation( points );
     return rotationRadians / ( 2 * Math.PI );
   },
 
@@ -40,7 +40,7 @@ const boardUtils = {
    * distributed between 0 and 1 (the range of normalized rotation).
    */
   getEnumerationValueFromProgramRotation( points, enumerationValues ) {
-    const normalizedRotation = boardUtils.getNormalizedProgramRotation( points );
+    const normalizedRotation = displayUtils.getNormalizedProgramRotation( points );
     const index = Math.floor( normalizedRotation * enumerationValues.length );
     if ( index < 0 || index >= enumerationValues.length ) {
       throw new Error( `Index ${index} is out of bounds for enumeration values ${enumerationValues}` );
@@ -122,7 +122,7 @@ const boardUtils = {
     const width = displaySize.width;
     const height = displaySize.height;
 
-    return boardUtils.paperToBoardCoordinates( boardUtils.getProgramCenter( points ), width, height );
+    return displayUtils.paperToBoardCoordinates( displayUtils.getProgramCenter( points ), width, height );
   },
 
   paperToBoardBounds( paperBounds, boardWidth, boardHeight ) {
@@ -165,6 +165,6 @@ const boardUtils = {
 };
 
 // add to namespace so it is available in programs
-paperLand.utils = boardUtils;
+paperLand.utils = displayUtils;
 
-export default boardUtils;
+export default displayUtils;

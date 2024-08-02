@@ -17,7 +17,7 @@ import LocalStorageBoardController from './LocalStorageBoardController.js';
 import './boardBluetoothServers.js';
 
 // Import components so they are available in the namespace
-import './boardUtils.js';
+import './displayUtils.js';
 import './connections/ConnectionElement.js';
 import './connections/SingleChildConnectionElement.js';
 
