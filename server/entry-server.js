@@ -3,8 +3,6 @@ require( './create-config-json.js' );
 const loadConfig = require( './loadConfig.js' );
 const config = loadConfig();
 
-console.log( config.MODE );
-console.log( config.PORT );
 console.log( 'Running in ' + ( config.MODE || 'development' ) + ' mode' + '\n' );
 if ( config.MODE === 'production' ) {
   require( './main' );
