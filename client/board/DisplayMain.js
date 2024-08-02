@@ -11,7 +11,7 @@ import SceneryDisplay from './SceneryDisplay.js';
 export default function DisplayMain( props ) {
 
   const scene = props.scene;
-  const boardConfigObject = props.boardConfigObject;
+  const displayConfigObject = props.displayConfigObject;
   const updatePositionInterval = props.updatePositionInterval;
   const updateRemovalDelay = props.updateRemovalDelay;
 
@@ -59,9 +59,9 @@ export default function DisplayMain( props ) {
         <div className={styles.controls}>
           <div className={styles.paperLandControlsPanel}>
             <PaperLandControls
-              initialPositionInterval={boardConfigObject.positionInterval}
+              initialPositionInterval={displayConfigObject.positionInterval}
               updatePositionInterval={updatePositionInterval}
-              initialRemovalDelay={boardConfigObject.removalDelay}
+              initialRemovalDelay={displayConfigObject.removalDelay}
               updateRemovalDelay={updateRemovalDelay}
               updateConsoleVisibility={setConsoleVisible}
               sceneryDisplay={sceneryDisplay}

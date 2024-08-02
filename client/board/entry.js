@@ -22,13 +22,13 @@ import './connections/ConnectionElement.js';
 import './connections/SingleChildConnectionElement.js';
 
 // Create the root element for React.
-const simDisplayDiv = document.getElementById( 'board-root-element' );
+const simDisplayDiv = document.getElementById( 'display-root-element' );
 document.body.appendChild( simDisplayDiv );
 
 // Create the root of the scene graph.
 const scene = new phet.scenery.Node();
 
-// Controls the state of the board when changes occur from paper events - which are communicated
+// Controls the state of the display when changes occur from paper events - which are communicated
 // across local storage.
 const localStorageBoardController = new LocalStorageBoardController( scene );
 
@@ -37,7 +37,7 @@ const localStorageBoardController = new LocalStorageBoardController( scene );
 ReactDOM.render(
   <DisplayMain
     scene={scene}
-    boardConfigObject={localStorageBoardController.boardConfigObject}
+    displayConfigObject={localStorageBoardController.displayConfigObject}
     updatePositionInterval={newValue => { localStorageBoardController.updatePositionInterval( newValue ); }}
     updateRemovalDelay={newValue => { localStorageBoardController.updateRemovalDelay( newValue ); }}
   ></DisplayMain>,

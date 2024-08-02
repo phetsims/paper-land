@@ -13,7 +13,7 @@ module.exports = {
     projector: [ './client/projector/entry.js' ],
     editor: [ './client/editor/entry.js' ],
     paper: [ './client/paper/entry.js' ],
-    board: [ './client/board/entry.js' ],
+    display: [ './client/display/entry.js' ],
     tests: [ './client/tests/entry.js' ],
     creator: [ './client/creator/entry.js' ]
   },

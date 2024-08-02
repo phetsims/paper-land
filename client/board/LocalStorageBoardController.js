@@ -14,10 +14,10 @@ import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitt
 const MAX_MARKER_ID = Number.MAX_SAFE_INTEGER;
 
 // The object in localStorage on page load
-const storedBoardConfig = JSON.parse( localStorage.boardConfig || '{}' );
+const storedDisplayConfig = JSON.parse( localStorage.displayConfig || '{}' );
 
 // Defaults for the board configuration, if values are not saved to local storage
-const defaultBoardConfig = {
+const defaultDisplayConfig = {
   positionInterval: 0,
   removalDelay: 0
 };
@@ -100,13 +100,13 @@ export default class LocalStorageBoardController {
 
     // Combined config with localStorage overriding defaults. This will change during runtime as new values
     // are set.
-    this.boardConfigObject = {
-      ...defaultBoardConfig,
-      ...storedBoardConfig
+    this.displayConfigObject = {
+      ...defaultDisplayConfig,
+      ...storedDisplayConfig
     };
 
     // Populate with defaults.
-    localStorage.boardConfig = JSON.stringify( this.boardConfigObject );
+    localStorage.displayConfig = JSON.stringify( this.displayConfigObject );
 
     // {Object} - This object contains the data that is passed into the handlers for the paper programs and can be used to
     // share information between them.  The data can be referenced and sometimes updated.
@@ -138,7 +138,7 @@ export default class LocalStorageBoardController {
    * 20% of the screen in either X or Y dimensions.
    */
   updatePositionInterval( newValue ) {
-    this.saveValueToBoardConfig( 'positionInterval', newValue );
+    this.saveValueToDisplayConfig( 'positionInterval', newValue );
   }
 
   /**
@@ -146,15 +146,15 @@ export default class LocalStorageBoardController {
    * removed. Value is in seconds.
    */
   updateRemovalDelay( newValue ) {
-    this.saveValueToBoardConfig( 'removalDelay', newValue );
+    this.saveValueToDisplayConfig( 'removalDelay', newValue );
   }
 
   /**
    * Sets the new value to the runtime config object and local storage for next page load.
    */
-  saveValueToBoardConfig( nameString, value ) {
-    this.boardConfigObject[ nameString ] = value;
-    localStorage.boardConfig = JSON.stringify( this.boardConfigObject );
+  saveValueToDisplayConfig( nameString, value ) {
+    this.displayConfigObject[ nameString ] = value;
+    localStorage.displayConfig = JSON.stringify( this.displayConfigObject );
   }
 
   /**
@@ -474,7 +474,7 @@ export default class LocalStorageBoardController {
       const previousPaperProgramPoints = this.mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber );
       const currentPaperProgramPoints = paperProgramInstanceInfo.points;
       let paperProgramHasMoved = previousPaperProgramPoints === undefined ||
-                                 !this.areAllPointsEqual( previousPaperProgramPoints, currentPaperProgramPoints, this.boardConfigObject.positionInterval );
+                                 !this.areAllPointsEqual( previousPaperProgramPoints, currentPaperProgramPoints, this.displayConfigObject.positionInterval );
       const programSpecificData = dataByProgramNumber[ paperProgramNumber ];
 
       // If this paper program contains data that is intended for use by the sim design board, and that data has changed
@@ -618,7 +618,7 @@ export default class LocalStorageBoardController {
         const zippedPointsDifferent = _.zipWith( sortedCurrent, sortedPrevious, ( a, b ) => {
 
           // graceful when arrays are different length
-          return ( a && b ) ? !this.arePointsEqual( a, b, this.boardConfigObject.positionInterval ) : true;
+          return ( a && b ) ? !this.arePointsEqual( a, b, this.displayConfigObject.positionInterval ) : true;
         } );
         markersMoved = _.some( zippedPointsDifferent );
       }
@@ -686,7 +686,7 @@ export default class LocalStorageBoardController {
 
             // clear the timeout from the map now that it has ocurred
             this.mapOfProgramNumbersToRemovalTimeouts.delete( paperProgramNumber );
-          }, this.boardConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
+          }, this.displayConfigObject.removalDelay * 1000 ) ); // Convert to milliseconds
         }
       }
     } );
@@ -709,7 +709,7 @@ export default class LocalStorageBoardController {
         const newPosition = currentMarkersInfo[ info.currentMarkerIndex ].position;
         const previousPosition = this.markerMap.get( info.previousMarkerId ).position;
 
-        if ( !this.arePointsEqual( newPosition, previousPosition, this.boardConfigObject.positionInterval ) ) {
+        if ( !this.arePointsEqual( newPosition, previousPosition, this.displayConfigObject.positionInterval ) ) {
 
           // update the position of that marker
           changedMarkers.push( currentMarkersInfo[ info.currentMarkerIndex ] );
