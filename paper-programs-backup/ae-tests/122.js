@@ -6,7 +6,7 @@ importScripts('paper.js');
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // Display code
   //----------------------------------------------------------------------
 
   // Get the paper number of this piece of paper (which should not change).
@@ -21,7 +21,7 @@ importScripts('paper.js');
     someFunctionWithATypo();
   };
 
-  // This is tear down code that removes the programs when phyical papers are removed 
+  // This is tear down code that removes the programs when phyical papers are removed
   const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
   };
 

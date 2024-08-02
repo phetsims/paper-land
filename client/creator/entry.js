@@ -1,5 +1,5 @@
 /**
- * Entry-point file for the Sim Design Board, which is a scene graph based on the PhET libraries that uses PhET
+ * Entry-point file for the Sim Design Display, which is a scene graph based on the PhET libraries that uses PhET
  * components that can be manipulated using the paper programs.
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)

@@ -305,8 +305,8 @@ const ViewComponentTemplates = {
         lineWidth: {{LINE_WIDTH}},
         
         // if initial position is zero, do not set that explicitly because it will break shape points 
-        centerX: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_X}}) ? phet.paperLand.utils.paperToBoardX( {{CENTER_X}}, sharedData.displaySize.width ) : {{CENTER_X}},
-        centerY: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_Y}}) ? phet.paperLand.utils.paperToBoardY( {{CENTER_Y}}, sharedData.displaySize.height) : {{CENTER_Y}},
+        centerX: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_X}}) ? phet.paperLand.utils.paperToDisplayX( {{CENTER_X}}, sharedData.displaySize.width ) : {{CENTER_X}},
+        centerY: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_Y}}) ? phet.paperLand.utils.paperToDisplayY( {{CENTER_Y}}, sharedData.displaySize.height) : {{CENTER_Y}},
         scale: {{SCALE}},
         rotation: {{ROTATION}},
         opacity: {{OPACITY}}
@@ -328,8 +328,8 @@ const ViewComponentTemplates = {
         // so do before the control function)
         scratchpad.{{NAME}}Path.mutate( {
           // if initial position is zero, do not set that explicitly because it will break shape points 
-          centerX: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_X}}) ? phet.paperLand.utils.paperToBoardX( {{CENTER_X}}, sharedData.displaySize.width ) : {{CENTER_X}},
-          centerY: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_Y}}) ? phet.paperLand.utils.paperToBoardY( {{CENTER_Y}}, sharedData.displaySize.height) : {{CENTER_Y}},
+          centerX: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_X}}) ? phet.paperLand.utils.paperToDisplayX( {{CENTER_X}}, sharedData.displaySize.width ) : {{CENTER_X}},
+          centerY: ('{{VIEW_UNITS}}' === 'model' && {{CENTER_Y}}) ? phet.paperLand.utils.paperToDisplayY( {{CENTER_Y}}, sharedData.displaySize.height) : {{CENTER_Y}},
           scale: {{SCALE}},
           rotation: {{ROTATION}}
         } );

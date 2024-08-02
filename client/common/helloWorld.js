@@ -3,14 +3,14 @@ const helloWorld = `// Hello World Template
 // =============================== //
 // Program Dependencies: N/A
 // Recommended Programs: General Template (templates)
-// Program Description: Example program with functioning Board and Projector code!
+// Program Description: Example program with functioning Display and Projector code!
 
 importScripts('paper.js');
 
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // Display code
   //----------------------------------------------------------------------
 
   // Get the paper number of this piece of paper (which should not change).
@@ -28,7 +28,7 @@ importScripts('paper.js');
   const onProgramChangedPosition = ( paperProgramNumber, positionPoints, scratchpad, sharedData ) => {
   
     // Move the text with the center of the paper.
-    scratchpad.helloWorldText.center = phet.paperLand.utils.getBoardPositionFromPoints( positionPoints, sharedData.displaySize );
+    scratchpad.helloWorldText.center = phet.paperLand.utils.getDisplayPositionFromPoints( positionPoints, sharedData.displaySize );
   };
 
   // Called when the program is changed or no longer detected.

@@ -35,10 +35,10 @@ export default class ViewCodeGenerator {
 
       // values were specified in model coordinates and need to be converted to pixels
       if ( dimension === 'x' ) {
-        return `phet.paperLand.utils.paperToBoardX( ${value}, sharedData.displaySize.width )`;
+        return `phet.paperLand.utils.paperToDisplayX( ${value}, sharedData.displaySize.width )`;
       }
       else {
-        return `phet.paperLand.utils.paperToBoardY( ${value}, sharedData.displaySize.height )`;
+        return `phet.paperLand.utils.paperToDisplayY( ${value}, sharedData.displaySize.height )`;
       }
     }
   }
@@ -51,11 +51,11 @@ export default class ViewCodeGenerator {
     // The setters that are available for all Node types.
     codeStrings.push( `
       const unitBoundsToDisplayBounds = ( bounds ) => {
-        return phet.paperLand.utils.paperToBoardBounds( bounds, sharedData.displaySize.width, sharedData.displaySize.height );
+        return phet.paperLand.utils.paperToDisplayBounds( bounds, sharedData.displaySize.width, sharedData.displaySize.height );
       };
       
       const unitPositionToDisplayPosition = ( position ) => {
-        return phet.paperLand.utils.paperToBoardCoordinates( position, sharedData.displaySize.width, sharedData.displaySize.height );
+        return phet.paperLand.utils.paperToDisplayCoordinates( position, sharedData.displaySize.width, sharedData.displaySize.height );
       };
     
       const setCenterX = ( x ) => {
@@ -102,7 +102,7 @@ export default class ViewCodeGenerator {
       const matchBounds = ( bounds, stretch ) => {
       
         // Find the scale to apply to the x and y dimensions so that the component bounds match the provided bounds
-        const ${componentNameString}ViewBounds = phet.paperLand.utils.paperToBoardBounds(bounds, sharedData.displaySize.width, sharedData.displaySize.height);
+        const ${componentNameString}ViewBounds = phet.paperLand.utils.paperToDisplayBounds(bounds, sharedData.displaySize.width, sharedData.displaySize.height);
 
         // local bounds may be zero as things load
         // const aspectRatio = ( ${componentNameString}.localBounds.width || 1 ) / ( ${componentNameString}.localBounds.height || 1 );
@@ -141,22 +141,22 @@ export default class ViewCodeGenerator {
         
         // for a line - Beware that the x/y variables are declared via the ShapeCodeFunctions!
         const setX1 = ( newX1 ) => {
-          ${componentName}_x1 = phet.paperLand.utils.paperToBoardX( newX1, sharedData.displaySize.width );
+          ${componentName}_x1 = phet.paperLand.utils.paperToDisplayX( newX1, sharedData.displaySize.width );
           ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         
         const setY1 = ( newY1 ) => {
-          ${componentName}_y1 = phet.paperLand.utils.paperToBoardY( newY1, sharedData.displaySize.height );
+          ${componentName}_y1 = phet.paperLand.utils.paperToDisplayY( newY1, sharedData.displaySize.height );
           ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
 
         const setX2 = ( newX2 ) => {
-          ${componentName}_x2 = phet.paperLand.utils.paperToBoardX( newX2, sharedData.displaySize.width );
+          ${componentName}_x2 = phet.paperLand.utils.paperToDisplayX( newX2, sharedData.displaySize.width );
           ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         
         const setY2 = ( newY2 ) => {
-          ${componentName}_y2 = phet.paperLand.utils.paperToBoardY( newY2, sharedData.displaySize.height );
+          ${componentName}_y2 = phet.paperLand.utils.paperToDisplayY( newY2, sharedData.displaySize.height );
           ${componentNameString}.shape = phet.kite.Shape.lineSegment( ${componentName}_x1, ${componentName}_y1, ${componentName}_x2, ${componentName}_y2 );
         };
         

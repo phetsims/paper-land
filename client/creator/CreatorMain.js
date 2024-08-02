@@ -1,5 +1,5 @@
 /**
- * Main react component for the Board page.
+ * Main react component for the Display page.
  */
 
 import React, { useRef } from 'react';

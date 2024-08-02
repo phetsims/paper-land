@@ -10,7 +10,7 @@ importScripts('paper.js');
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // Display code
   //----------------------------------------------------------------------
 
   // Called when the program is detected or changed.

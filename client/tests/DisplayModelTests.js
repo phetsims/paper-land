@@ -4,7 +4,7 @@
  * @author Jesse Greenberg (PhET Interactive Simulations)
  */
 
-import displayModel from '../board/displayModel.js';
+import displayModel from '../display/displayModel.js';
 
 QUnit.module( 'displayModel' );
 

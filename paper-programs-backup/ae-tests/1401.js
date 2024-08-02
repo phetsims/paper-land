@@ -3,7 +3,7 @@
 // ------------------------------- //
 // Required Programs (dependencies) [none]
 // Recommended Programs: Altitude prefix
-// Program Description: Contains the model properties for Altitude, including range 
+// Program Description: Contains the model properties for Altitude, including range
 // and initial values. You can change whether this paper controls the value directly.
 
 importScripts( 'paper.js' );
@@ -11,7 +11,7 @@ importScripts( 'paper.js' );
 ( async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // Display code
   //----------------------------------------------------------------------
 
   // Get the paper number of this piece of paper (which should not change).
@@ -25,7 +25,7 @@ importScripts( 'paper.js' );
     // -----------------------------------------------------
     // IMPORTANT! Change this to a unique name that identifies this Property.
     // The name you choose here is how you will refer to this Property in other
-    // programs. 
+    // programs.
     const propertyName = 'altitudeProperty';
 
     // Controls how paper motion changes the value.
@@ -35,7 +35,7 @@ importScripts( 'paper.js' );
     // 'none' - The value does NOT change with the program movement.
     const controlType = 'none';
 
-    // Does the value change when moving the program left/right or up/down? 
+    // Does the value change when moving the program left/right or up/down?
     // 'horizontal' - left is min, right is max
     // 'vertical' - bottom is min, top is max
     const controlDirection = 'vertical';
@@ -49,7 +49,7 @@ importScripts( 'paper.js' );
     // number of decimal places when representing the value
     const decimalPlaces = 0;
 
-    // font size for debugging text to see the value on the Board
+    // font size for debugging text to see the value on the Display
     const fontSize = 50;
 
     // positioning of the debugging text, relative to the top left of the board
@@ -104,7 +104,7 @@ importScripts( 'paper.js' );
       return;
     }
 
-    // global model for the board (all )    
+    // global model for the board (all )
     const model = sharedData.model;
 
     if ( model.has( propertyName ) ) {
@@ -167,7 +167,7 @@ importScripts( 'paper.js' );
     delete scratchpad.controlType;
     delete scratchpad.controlDirection;
     delete scratchpad.showText;
-    
+
   };
 
   // Add the state change handler defined above as data for this paper.
