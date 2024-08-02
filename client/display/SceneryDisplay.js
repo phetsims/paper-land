@@ -28,7 +28,7 @@ const SceneryDisplay = props => {
 
     // styling for the root DOM element
     sceneryDisplayDomElement.classList.add( styles.simDisplayPanel );
-    sceneryDisplayDomElement.classList.add( styles.boardPanel );
+    sceneryDisplayDomElement.classList.add( styles.displayPanel );
 
     // Make the scenery display interactive.
     sceneryDisplay.initializeEvents();

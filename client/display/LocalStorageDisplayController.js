@@ -1,5 +1,5 @@
 /**
- * Controls the state of the board, adding a listener to local storage to update it when programs, markers,
+ * Controls the state of the display, adding a listener to local storage to update it when programs, markers,
  * or other Paper Playground data is changed.
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)
@@ -16,7 +16,7 @@ const MAX_MARKER_ID = Number.MAX_SAFE_INTEGER;
 // The object in localStorage on page load
 const storedDisplayConfig = JSON.parse( localStorage.displayConfig || '{}' );
 
-// Defaults for the board configuration, if values are not saved to local storage
+// Defaults for the display configuration, if values are not saved to local storage
 const defaultDisplayConfig = {
   positionInterval: 0,
   removalDelay: 0
@@ -95,7 +95,7 @@ export default class LocalStorageDisplayController {
     // The next available ID that will be used to uniquely identify a marker.
     this.nextMarkerId = 0;
 
-    // The root level Node of the scene graph for the board page.
+    // The root level Node of the scene graph for the display page.
     this.scene = scene;
 
     // Combined config with localStorage overriding defaults. This will change during runtime as new values
@@ -126,7 +126,7 @@ export default class LocalStorageDisplayController {
   }
 
   /**
-   * Detach window listeners that will update the board model from events.
+   * Detach window listeners that will update the display model from events.
    */
   dispose() {
     window.removeEventListener( 'storage', this.boundHandleStorageEvent );
@@ -453,12 +453,12 @@ export default class LocalStorageDisplayController {
   }
 
   /**
-   * Updates the board with the latest paper program and marker information.
+   * Updates the display with the latest paper program and marker information.
    *
    * @param presentPaperProgramInfo - Information about the current programs that are detected (in local storage)
    * @param currentMarkersInfo - Information about the current markers that are detected (in local storage)
    */
-  updateBoard( presentPaperProgramInfo, currentMarkersInfo ) {
+  updateDisplay( presentPaperProgramInfo, currentMarkersInfo ) {
 
     const dataByProgramNumber = JSON.parse( localStorage.paperProgramsDataByProgramNumber || '{}' );
 
@@ -477,7 +477,7 @@ export default class LocalStorageDisplayController {
                                  !this.areAllPointsEqual( previousPaperProgramPoints, currentPaperProgramPoints, this.displayConfigObject.positionInterval );
       const programSpecificData = dataByProgramNumber[ paperProgramNumber ];
 
-      // If this paper program contains data that is intended for use by the sim design board, and that data has changed
+      // If this paper program contains data that is intended for use by the sim design display, and that data has changed
       // since the last time through this function, process the changes.
       if ( programSpecificData &&
            programSpecificData.paperPlaygroundData &&
@@ -649,7 +649,7 @@ export default class LocalStorageDisplayController {
         // we run the removal handler and remove it from the state. Marker removal is also done first.
         //
         // NOTE: The program is removed from mapOfProgramNumbersToEventHandlers when the timeout occurs. It is
-        // possible that we call updateBoard before the timeout completes. In that case, the program number will STILL
+        // possible that we call updateDisplay before the timeout completes. In that case, the program number will STILL
         // be in mapOfProgramNumbersToEventHandlers even though we already have a removal queued up. So we simply
         // let the original timeout complete without adding another removal timeout.
         const alreadyHasRemovalTimeout = this.mapOfProgramNumbersToRemovalTimeouts.has( paperProgramNumber );
@@ -781,16 +781,16 @@ export default class LocalStorageDisplayController {
       this.localWhiskerMap.set( parseInt( paperNumber, 10 ), whiskerState );
     } );
 
-    // Update the sim design board.
-    this.updateBoard( currentPaperProgramsInfo, this.currentMarkersInfo );
+    // Update the sim design display.
+    this.updateDisplay( currentPaperProgramsInfo, this.currentMarkersInfo );
   }
 
   /**
    * Attempts to use eval on a program function with the provided arguments. If there is some error in the function,
-   * that will be reported to the board console.
+   * that will be reported to the display console.
    * @param functionString - the function to run as a string for eval
    * @param {[*]} args - Array of args to pass to the function.
-   * @param {string} functionName - name of the function, just for printing to the board console.
+   * @param {string} functionName - name of the function, just for printing to the display console.
    */
   static evalProgramFunction( functionString, args, functionName ) {
     try {

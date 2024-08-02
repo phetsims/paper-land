@@ -15,7 +15,7 @@
   text-align: center;
 }
 
-/* The flex parent for all contents of the board page, putting items in a row */
+/* The flex parent for all contents of the display page, putting items in a row */
 :local(.rowContainer) {
   display: flex;
   flex-direction: row;
@@ -50,8 +50,8 @@
   row-gap: 20px;
 }
 
-/*applied to many panels in the board page*/
-:local(.boardPanel) {
+/*applied to many panels in the display page*/
+:local(.displayPanel) {
   border-color: #330033;
   border-style: solid;
   border-width: 4px;
@@ -60,7 +60,7 @@
   color: black;
 }
 
-/* specific to the console panel, this overrides boardPanel because it is defined AFTER .boardPanel */
+/* specific to the console panel, this overrides displayPanel because it is defined AFTER .displayPanel */
 :local(.consolePanel) {
   padding: 0;
 }

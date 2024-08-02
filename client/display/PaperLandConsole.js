@@ -94,7 +94,7 @@ export default function PaperLandConsole( props ) {
   }, [ logArray ] );
 
   return (
-    <div className={`${styles.boardPanel} ${styles.consolePanel}`} hidden={!props.consoleVisible}>
+    <div className={`${styles.displayPanel} ${styles.consolePanel}`} hidden={!props.consoleVisible}>
       <div>
         <h5 style={{ float: 'left', margin: '5px' }}>Console</h5>
         <Button

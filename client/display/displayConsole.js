@@ -1,5 +1,5 @@
 /**
- * Implements logging functionality for the Board page. Emits an event when logging is requested so
+ * Implements logging functionality for the Display page. Emits an event when logging is requested so
  * view components can render the message. Also prints the messages to the dev tools console.
  */
 

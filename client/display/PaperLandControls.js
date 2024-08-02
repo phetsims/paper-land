@@ -1,5 +1,5 @@
 /**
- * Controls that impact the behavior of the board in paper-land.
+ * Controls that impact the behavior of the display in paper-land.
  */
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -34,9 +34,9 @@ export default function PaperLandControls( props ) {
       if ( props.sceneryDisplay ) {
         if ( fullScreen ) {
 
-          // remove the styling that positions the board for development
+          // remove the styling that positions the display for development
           props.sceneryDisplay.domElement.classList.remove( styles.simDisplayPanel );
-          props.sceneryDisplay.domElement.classList.remove( styles.boardPanel );
+          props.sceneryDisplay.domElement.classList.remove( styles.displayPanel );
 
           // If we still have a resize observer, make sure it is disconnected
           if ( resizeObserverRef.current ) {
@@ -70,7 +70,7 @@ export default function PaperLandControls( props ) {
 
           // re-apply styling for development
           props.sceneryDisplay.domElement.classList.add( styles.simDisplayPanel );
-          props.sceneryDisplay.domElement.classList.add( styles.boardPanel );
+          props.sceneryDisplay.domElement.classList.add( styles.displayPanel );
           props.sceneryDisplay.setWidthHeight( smallWidth, smallHeight );
           phet.paperLand.displaySizeProperty.value = new phet.dot.Dimension2( smallWidth, smallHeight );
         }
@@ -100,7 +100,7 @@ export default function PaperLandControls( props ) {
   }, [ printSpeechSynthesis ] );
 
   return (
-    <div className={`${styles.boardPanel}`}>
+    <div className={`${styles.displayPanel}`}>
       <>
         <>
           <div>

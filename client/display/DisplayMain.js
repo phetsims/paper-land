@@ -1,5 +1,5 @@
 /**
- * Main react component for the Board page.
+ * Main react component for the Display page.
  */
 
 import React, { useEffect, useState } from 'react';
@@ -46,7 +46,7 @@ export default function DisplayMain( props ) {
   return (
     <div>
       <div className={styles.titleContainer}>
-        <h1>Interactive Board</h1>
+        <h1>Interactive Display</h1>
         <p>Add paper programs to Camera to add elements.</p>
       </div>
       <div className={styles.rowContainer}>

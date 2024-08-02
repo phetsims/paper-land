@@ -87,50 +87,50 @@ const displayUtils = {
   },
 
   /**
-   * Converts a normalized point in paper coordinates to the same position in board coordinates.
+   * Converts a normalized point in paper coordinates to the same position in display coordinates.
    * @param {dot.Vector2} paperPoint
-   * @param {number} boardWidth
-   * @param {number} boardHeight
+   * @param {number} displayWidth
+   * @param {number} displayHeight
    * @return {*|Vector2}
    */
-  paperToBoardCoordinates( paperPoint, boardWidth, boardHeight ) {
-    return new phet.dot.Vector2( paperPoint.x * boardWidth, paperPoint.y * boardHeight );
+  paperToDisplayCoordinates( paperPoint, displayWidth, displayHeight ) {
+    return new phet.dot.Vector2( paperPoint.x * displayWidth, paperPoint.y * displayHeight );
   },
 
   /**
-   * Converts the X coordinate of a point in paper coordinates (normalized) to the same position in board coordinates.
+   * Converts the X coordinate of a point in paper coordinates (normalized) to the same position in display coordinates.
    */
-  paperToBoardX( paperX, boardWidth ) {
-    return paperX * boardWidth;
+  paperToDisplayX( paperX, displayWidth ) {
+    return paperX * displayWidth;
   },
 
   /**
-   * Converts the Y coordinate of a point in paper coordinates (normalized) to the same position in board coordinates.
+   * Converts the Y coordinate of a point in paper coordinates (normalized) to the same position in display coordinates.
    */
-  paperToBoardY( paperY, boardHeight ) {
-    return paperY * boardHeight;
+  paperToDisplayY( paperY, displayHeight ) {
+    return paperY * displayHeight;
   },
 
   /**
-   * Returns the center of a paper in board coordinates. Useful for controlling the position of a
+   * Returns the center of a paper in display coordinates. Useful for controlling the position of a
    * component from paper center.
    * @param {{x: number, y: number}[]}points
    * @param {dot.Dimension2} displaySize
    * @return {dot.Vector2}
    */
-  getBoardPositionFromPoints( points, displaySize ) {
+  getDisplayPositionFromPoints( points, displaySize ) {
     const width = displaySize.width;
     const height = displaySize.height;
 
-    return displayUtils.paperToBoardCoordinates( displayUtils.getProgramCenter( points ), width, height );
+    return displayUtils.paperToDisplayCoordinates( displayUtils.getProgramCenter( points ), width, height );
   },
 
-  paperToBoardBounds( paperBounds, boardWidth, boardHeight ) {
+  paperToDisplayBounds( paperBounds, displayWidth, displayHeight ) {
     return new phet.dot.Bounds2(
-      paperBounds.minX * boardWidth,
-      paperBounds.minY * boardHeight,
-      paperBounds.maxX * boardWidth,
-      paperBounds.maxY * boardHeight
+      paperBounds.minX * displayWidth,
+      paperBounds.minY * displayHeight,
+      paperBounds.maxX * displayWidth,
+      paperBounds.maxY * displayHeight
     );
   },
 

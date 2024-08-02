@@ -1,6 +1,6 @@
 /**
- * The main model component for the board. This is a map with keys that are the name of the model component
- * and values of the model subcomponents components for board that are created by paper programs.
+ * The main model component for the display. This is a map with keys that are the name of the model component
+ * and values of the model subcomponents components for display that are created by paper programs.
  *
  * This file has functions for the working with the model that are added to the paperLand namespace so that
  * they are available in paper program code.
@@ -9,7 +9,7 @@
 import displayConsole from './displayConsole.js';
 import paperLand from './paperLand.js';
 
-// The model of our sim design board, with all model Properties and components from paper programs.
+// The model of our sim design display, with all model Properties and components from paper programs.
 // Map<string, Object> - keys are the name of the model component, values are any kind of model component
 const displayModel = new Map();
 
@@ -226,7 +226,7 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
  * Add an observer for a model component that is expected to be in the displayModel.
  *
  * When the model exists, handleComponentAttach is called with it and listeners are added to the displayModel to detach
- * when the model component is removed. When the model does not exist (or is removed), listeners are added to the board
+ * when the model component is removed. When the model does not exist (or is removed), listeners are added to the display
  * model to handle when the component is added back again.
  *
  * This supports paper programs that have dependencies on each-other while also allowing them to be added to the
@@ -488,7 +488,7 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
     // If true, the link is added lazily (callbacks are not called until first Property changes)
     lazy: false,
 
-    // Additional Properties to include in the Multilink that may not be associated with the board model.
+    // Additional Properties to include in the Multilink that may not be associated with the display model.
     otherProperties: [],
 
     // Additional Properties to include in the addMultiModelObserver but not in the Multilink. This is useful
@@ -519,14 +519,14 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
 
       // Get the list of components to assign to the multilink - this is the list of provided components
       // without the otherReferences
-      const boardMultilinkComponents = componentNames.map( name => {
+      const displayMultilinkComponents = componentNames.map( name => {
         if ( !displayModel.has( name ) ) {
           throw new Error( 'We are inside the multimodel observer, so all components should exist.' );
         }
         return displayModel.get( name );
       } );
 
-      multilink = new phet.axon.Multilink( [ ...boardMultilinkComponents, ...options.otherProperties ], listener, options.lazy );
+      multilink = new phet.axon.Multilink( [ ...displayMultilinkComponents, ...options.otherProperties ], listener, options.lazy );
     },
 
     // detach - detach the multilink
@@ -596,7 +596,7 @@ paperLand.removeModelController = ( componentName, controllerId ) => {
   paperLand.removeModelObserver( componentName, controllerId );
 };
 
-// The amount of time that has elapsed since the board was created, useful in animation.
+// The amount of time that has elapsed since the display was created, useful in animation.
 paperLand.elapsedTimeProperty = new phet.axon.Property( 0 );
 phet.axon.stepTimer.addListener( dt => {
   paperLand.elapsedTimeProperty.value = paperLand.elapsedTimeProperty.value + dt;
