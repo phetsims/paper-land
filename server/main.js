@@ -31,4 +31,7 @@ app.listen( port, () => console.log( `
 Listening on port ${port}!
 
 Paper Playground is ready to use. Navigate to http://localhost:${port} in Chrome or Edge.
+
+Close this window to terminate Paper Playground.
+
 ` ) );
