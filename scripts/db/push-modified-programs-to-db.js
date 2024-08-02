@@ -13,6 +13,9 @@ const pushProgramToDatabase = require( './common/pushProgramToDatabase' );
 const { execSync } = require( 'child_process' );
 const fs = require( 'fs' );
 
+// A config is required for development. Please run `npm run create-config` to create one.
+const config = require( '../../config.json' );
+
 const USAGE_STRING = 'Usage: node push-modified-programs-to-db.js <path-to-local-programs-dir>';
 
 // Make sure the correct number of arguments were supplied.
@@ -74,7 +77,7 @@ else {
 ( async () => {
 
   // Set up the DB connection.
-  const knex = require( 'knex' )( require( '../../knexfile' )[ process.env.NODE_ENV || 'development' ] );
+  const knex = require( 'knex' )( require( '../../knexfile' )[ config.MODE || 'development' ] );
 
   // Push each modified paper program to the DB.
   for ( const modifiedPaperProgram of modifiedPaperPrograms ) {

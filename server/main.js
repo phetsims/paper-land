@@ -2,6 +2,10 @@ const express = require( 'express' );
 const path = require( 'path' );
 const { router, openAIRouter } = require( './api.js' );
 
+// A config should have been created by now, so we can require it.
+const loadConfig = require( './loadConfig.js' );
+const config = loadConfig();
+
 express.static.mime.types.wasm = 'application/wasm';
 
 process.on( 'unhandledRejection', error => {
@@ -21,12 +25,12 @@ app.use( '/openai', openAIRouter );
 
 // In development, start the webpack middleware which will compile the React app and serve it from the client
 // directory instead of the build (www) directory.
-if ( process.env.MODE !== 'production' ) {
+if ( config.MODE !== 'production' ) {
   const compiler = require( 'webpack' )( require( '../webpack.config.js' ) );
   app.use( require( 'webpack-dev-middleware' )( compiler ) );
 }
 
-const port = process.env.PORT || 3000;
+const port = config.PORT || 3000;
 app.listen( port, () => console.log( `
 Listening on port ${port}!
 

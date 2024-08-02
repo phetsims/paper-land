@@ -7,6 +7,7 @@
 const path = require( 'path' );
 const nodeExternals = require( 'webpack-node-externals' );
 const CopyWebpackPlugin = require( 'copy-webpack-plugin' );
+const webpack = require( 'webpack' );
 
 module.exports = {
   entry: './server/entry-server.js', // Assuming this is your server's entry point
@@ -28,6 +29,11 @@ module.exports = {
     ]
   },
   plugins: [
+
+    // Do not bundle the local config into the build!
+    new webpack.IgnorePlugin( {
+      resourceRegExp: /config\.json$/
+    } ),
 
     // Copies the default data to the server-dist so it is available in the package.
     new CopyWebpackPlugin(

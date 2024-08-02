@@ -13,6 +13,9 @@
 const pushProgramToDatabase = require( './common/pushProgramToDatabase' );
 const fs = require( 'fs' );
 
+// A config is required for development. Please run `npm run create-config` to create one.
+const config = require( '../../config.json' );
+
 const USAGE_STRING = 'Usage: node push-program-to-database.js <space-name> <program-number> <path-to-backup-dir>';
 
 // Make sure the correct number of arguments were supplied.
@@ -34,7 +37,7 @@ if ( pathToBackupDirectory.charAt( pathToBackupDirectory.length - 1 ) === '/' ) 
 console.log( `\nAttempting to push program number ${programNumber} to space ${spaceName}` );
 
 // Set up the DB connection.
-const knex = require( 'knex' )( require( '../../knexfile' )[ process.env.NODE_ENV || 'development' ] );
+const knex = require( 'knex' )( require( '../../knexfile' )[ config.MODE || 'development' ] );
 
 // Compose the path to the source file from the provided information.
 const sourceFilePath = `${pathToBackupDirectory}/${spaceName}/${programNumber}.js`;

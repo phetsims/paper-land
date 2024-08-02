@@ -13,6 +13,9 @@
 const fs = require( 'fs' );
 const os = require( 'os' );
 
+// A config.json is required for development. Run `npm run create-config` to create one.
+const config = require( '../../config.json' );
+
 const USAGE_STRING = 'Usage: node get-programs-from-db.js <path-to-backup-dir>';
 
 // Make sure the correct number of arguments were supplied.
@@ -27,7 +30,7 @@ const fixEOL = string => string.split( '\r' ).join( '' ).split( '\n' ).join( os.
 const pathToBackupDirectory = process.argv[ 2 ];
 
 // Set up the DB connection.
-const knex = require( 'knex' )( require( '../../knexfile' )[ process.env.NODE_ENV || 'development' ] );
+const knex = require( 'knex' )( require( '../../knexfile' )[ config.MODE || 'development' ] );
 
 // Verify that the location where the programs will be stored exists.
 if ( !fs.existsSync( pathToBackupDirectory ) ) {
@@ -40,7 +43,7 @@ if ( !fs.existsSync( pathToBackupDirectory ) ) {
 ( async () => {
 
   console.log( 'Reading paper programs from DB...' );
-  console.log( `  DB URL =  ${process.env.DATABASE_URL}` );
+  console.log( `  DB URL =  ${config.DATABASE_URL}` );
 
   try {
 

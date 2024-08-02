@@ -1,7 +1,12 @@
-require( 'dotenv' ).config();
+require( './create-config-json.js' );
 
-console.log( 'Running in ' + ( process.env.MODE || 'development' ) + ' mode' + '\n' );
-if ( process.env.MODE === 'production' ) {
+const loadConfig = require( './loadConfig.js' );
+const config = loadConfig();
+
+console.log( config.MODE );
+console.log( config.PORT );
+console.log( 'Running in ' + ( config.MODE || 'development' ) + ' mode' + '\n' );
+if ( config.MODE === 'production' ) {
   require( './main' );
 }
 else {

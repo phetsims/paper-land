@@ -9,7 +9,7 @@
  * 1) Run build-react and build-server npm tasks
  * 2) Create a build directory
  * 3) Copy the contents of www directory into build. Copy the contents of server-dist directory into build/server.
- * 4) Create a .env file in the build directory with the necessary contents.
+ * 4) Create a config.json file in the build directory with the necessary contents.
  * 5) Copy package.json into the build directory so we can use it to install node modules.
  * 6) Package the scripts that will be able to install node modules and start the server.
  */
@@ -17,6 +17,9 @@
 // User can then run the packaged script to install node modules and start the server.
 
 const { execSync } = require( 'child_process' );
+
+// The build for the server requires a config.json to be available.
+require( '../server/create-config-json.js' );
 
 // Run build-react and build-server npm tasks
 try {
@@ -57,13 +60,13 @@ catch( error ) {
   process.exit( 1 );
 }
 
-// Create a .env file in the build directory with the necessary contents. Use create-env-file.js to create the file.
+// Create a config.json file in the build directory with the necessary contents.
 try {
-  console.log( 'Creating .env file...' );
-  execSync( 'node scripts/create-env-file.js', { stdio: 'inherit' } );
+  console.log( 'Creating config.json file...' );
+  execSync( 'node server/create-config-json.js production', { stdio: 'inherit' } );
 }
 catch( error ) {
-  console.error( 'Failed to create .env file:', error );
+  console.error( 'Failed to create config.json file:', error );
   process.exit( 1 );
 }
 

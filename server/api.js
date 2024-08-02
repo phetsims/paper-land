@@ -9,6 +9,10 @@ const Constants = require( './Constants.js' );
 const Utils = require( './Utils.js' );
 const LocalFileDataService = require( './LocalFileDataService.js' );
 
+// Cannot use require because the config file cannot be bundled. Need to use a fs reader.
+const loadConfig = require( './loadConfig.js' );
+const config = loadConfig();
+
 const router = express.Router();
 router.use( express.json() );
 router.use( require( 'nocache' )() );
@@ -18,11 +22,11 @@ console.log( '---------------------------------------------------' );
 // Determine how spaces and projects are saved and loaded. Local filesystem is the default. Providing
 // STORAGE_TYPE=postgres in the .env file will use a PostgreSQL database instead. If using postgreSQL, also
 // include a DATABASE_URL in the .env file to point to the database.
-const usePostgres = process.env.STORAGE_TYPE === 'postgresql';
+const usePostgres = config.STORAGE_TYPE === 'postgresql';
 
 // Set a constant based on the .env file that will control whether access to restricted files will be allowed on the
 // client side. If using local files, the user will have access to everything.
-const ALLOW_ACCESS_TO_RESTRICTED_FILES = !usePostgres || process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
+const ALLOW_ACCESS_TO_RESTRICTED_FILES = !usePostgres || config.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
 
 let dataService = null;
 if ( usePostgres ) {
@@ -681,9 +685,9 @@ const openAIRouter = express.Router();
 openAIRouter.use( express.json() );
 openAIRouter.use( require( 'nocache' )() );
 
-// The default value for apiKey is process.env["OPENAI_API_KEY"], which is what we use.
+// The default value for apiKey is config["OPENAI_API_KEY"], which is what we use.
 const openai = new OpenAI( {
-  apiKey: process.env.OPENAI_API_KEY || 'no-available-key'
+  apiKey: config.OPENAI_API_KEY || 'no-available-key'
 } );
 
 // Make a post to the OpenAI router. Recall that the path through this router is /openai.
@@ -692,7 +696,7 @@ openAIRouter.post( '/', async ( req, res ) => {
   const promptString = req.body.promptString;
 
   try {
-    if ( !process.env.OPENAI_API_KEY ) {
+    if ( !config.OPENAI_API_KEY ) {
       throw new Error( 'No OpenAI API key available.' );
     }
 

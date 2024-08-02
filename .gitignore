@@ -2,6 +2,7 @@
 node_modules/
 .idea/
 .env
+config.json
 site/
 notes.md
 package-lock.json

@@ -8,9 +8,13 @@ const Constants = require( './Constants.js' );
 const Utils = require( './Utils.js' );
 const IDataService = require( './IDataService.js' );
 
+// A config file should have been created by now.
+const loadConfig = require( './loadConfig.js' );
+const config = loadConfig();
+
 // The knex instance - processes all database requests, using a local or remote database depending
 // on the environment.
-const knex = require( 'knex' )( require( '../knexfile' )[ process.env.NODE_ENV || 'development' ] );
+const knex = require( 'knex' )( require( '../knexfile' )[ config.MODE || 'development' ] );
 
 class KnexDataService extends IDataService {
 

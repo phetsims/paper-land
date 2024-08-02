@@ -4,7 +4,11 @@
 
 const restrictedSpacesList = require( './restrictedSpacesList.js' );
 
-const ALLOW_ACCESS_TO_RESTRICTED_FILES = process.env.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
+// A config should have been created by now, so we can require it.
+const loadConfig = require( './loadConfig.js' );
+const config = loadConfig();
+
+const ALLOW_ACCESS_TO_RESTRICTED_FILES = config.ALLOW_ACCESS_TO_RESTRICTED_FILES;
 
 const Utils = {
 
