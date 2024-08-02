@@ -8,7 +8,7 @@ import PaperLandConsole from './PaperLandConsole.js';
 import PaperLandControls from './PaperLandControls.js';
 import SceneryDisplay from './SceneryDisplay.js';
 
-export default function BoardMain( props ) {
+export default function DisplayMain( props ) {
 
   const scene = props.scene;
   const boardConfigObject = props.boardConfigObject;

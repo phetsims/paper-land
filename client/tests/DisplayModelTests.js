@@ -1,23 +1,23 @@
 /**
- * Unit tests for the boardModel and its operations.
+ * Unit tests for the displayModel and its operations.
  *
  * @author Jesse Greenberg (PhET Interactive Simulations)
  */
 
-import boardModel from '../board/boardModel.js';
+import displayModel from '../board/displayModel.js';
 
-QUnit.module( 'boardModel' );
+QUnit.module( 'displayModel' );
 
 QUnit.test( 'add/remove model components', assert => {
-  assert.ok( boardModel.size === 0, 'first test, empty model' );
+  assert.ok( displayModel.size === 0, 'first test, empty model' );
 
   const componentA = { x: 5 };
   phet.paperLand.addModelComponent( 'componentA', componentA );
-  assert.ok( boardModel.size === 1, 'componentA added' );
-  assert.ok( boardModel.get( 'componentA' ) === componentA, 'componentA in map' );
+  assert.ok( displayModel.size === 1, 'componentA added' );
+  assert.ok( displayModel.get( 'componentA' ) === componentA, 'componentA in map' );
 
   phet.paperLand.removeModelComponent( 'componentA' );
-  assert.ok( boardModel.size === 0, 'componentA removed' );
+  assert.ok( displayModel.size === 0, 'componentA removed' );
 } );
 
 QUnit.test( 'addModelObserver/removeModelObserver', assert => {
@@ -50,7 +50,7 @@ QUnit.test( 'addModelObserver/removeModelObserver', assert => {
   assert.ok( modelComponent.getListenerCount() === 0, 'observer was removed, componentListener should be detached' );
   assert.ok( phet.paperLand.modelComponentRemovedEmitter.getListenerCount() === 0, 'observer was removed, model should not be waiting for component removal' );
   assert.ok( phet.paperLand.modelComponentAddedEmitter.getListenerCount() === 0, 'observer was removed, model should not be waiting for component addition' );
-  assert.ok( boardModel.has( 'modelComponent' ), 'observer removed but model component remains in model' );
+  assert.ok( displayModel.has( 'modelComponent' ), 'observer removed but model component remains in model' );
 
   // clear for next test
   phet.paperLand.removeModelComponent( 'modelComponent' );

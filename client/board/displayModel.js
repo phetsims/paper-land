@@ -11,7 +11,7 @@ import paperLand from './paperLand.js';
 
 // The model of our sim design board, with all model Properties and components from paper programs.
 // Map<string, Object> - keys are the name of the model component, values are any kind of model component
-const boardModel = new Map();
+const displayModel = new Map();
 
 // Each call to add addListenerToModelChangeEmitter increments this value. It is returned by the function
 // so we have a unique id to the observer that is added to the observable (component name is not sufficient
@@ -32,7 +32,7 @@ window.idToComponentAddedListenerMap = idToComponentAddedListenerMap;
 // model component.
 const idToComponentDetachMap = new Map();
 
-// A property that notifies if the boardModel is waiting for a model component to be added by some program. Components
+// A property that notifies if the displayModel is waiting for a model component to be added by some program. Components
 // with connections to other programs may be waiting for another model component before they can be created. This
 // can be confusing for the user. This property is used to show a message to the user when this is happening.
 //
@@ -63,8 +63,8 @@ paperLand.displaySizeProperty = new phet.axon.Property( DEFAULT_DISPLAY_SIZE );
  * @param {*} componentObject - any model component (Property, or object with multiple Properties and values)
  */
 paperLand.addModelComponent = ( componentName, componentObject ) => {
-  if ( boardModel.get( componentName ) === undefined ) {
-    boardModel.set( componentName, componentObject );
+  if ( displayModel.get( componentName ) === undefined ) {
+    displayModel.set( componentName, componentObject );
     paperLand.modelComponentAddedEmitter.emit( componentName, componentObject );
   }
   else {
@@ -73,12 +73,12 @@ paperLand.addModelComponent = ( componentName, componentObject ) => {
 };
 
 /**
- * Returns the component in the boardModel with the provided name. Undefined if it doesn't exist.
+ * Returns the component in the displayModel with the provided name. Undefined if it doesn't exist.
  * @param {string} componentName
  * @returns {Object | undefined}
  */
 paperLand.getModelComponent = componentName => {
-  return boardModel.get( componentName );
+  return displayModel.get( componentName );
 };
 
 /**
@@ -87,7 +87,7 @@ paperLand.getModelComponent = componentName => {
  * @param {string} componentName
  */
 paperLand.removeModelComponent = componentName => {
-  const componentObject = boardModel.get( componentName );
+  const componentObject = displayModel.get( componentName );
 
   if ( componentObject === undefined ) {
     boardConsole.warn( `Model does not have component with name ${componentName}! Use addModelComponent first.` );
@@ -95,7 +95,7 @@ paperLand.removeModelComponent = componentName => {
   else {
 
     // delete the object from the global model and then reassign to trigger a Property change
-    boardModel.delete( componentName );
+    displayModel.delete( componentName );
 
     // emit events, passing the componentObject through so that client can dispose of various objects
     paperLand.modelComponentRemovedEmitter.emit( componentName, componentObject );
@@ -172,7 +172,7 @@ const addListenerToModelChangeEmitter = ( observerId, listener, addOrRemove ) =>
   }
   listenerMap.get( observerId ).push( listener );
 
-  // If there are any listeners in the 'component added listener map', then the boardModel is in a state where
+  // If there are any listeners in the 'component added listener map', then the displayModel is in a state where
   // it is waiting for a model component to be added.
   phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
@@ -217,15 +217,15 @@ const removeListenerFromModelChangeEmitter = ( observerId, listener, addOrRemove
     }
   }
 
-  // If there are still any listeners in the 'component added listener map', then the boardModel is in a state where
+  // If there are still any listeners in the 'component added listener map', then the displayModel is in a state where
   // it is waiting for a model component to be added.
   phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
 
 /**
- * Add an observer for a model component that is expected to be in the boardModel.
+ * Add an observer for a model component that is expected to be in the displayModel.
  *
- * When the model exists, handleComponentAttach is called with it and listeners are added to the boardModel to detach
+ * When the model exists, handleComponentAttach is called with it and listeners are added to the displayModel to detach
  * when the model component is removed. When the model does not exist (or is removed), listeners are added to the board
  * model to handle when the component is added back again.
  *
@@ -277,10 +277,10 @@ paperLand.addModelObserver = ( componentName, handleComponentAttach, handleCompo
     addListenerToModelChangeEmitter( uniqueId, componentAddedListener, 'add' );
   };
 
-  if ( boardModel.has( componentName ) ) {
+  if ( displayModel.has( componentName ) ) {
 
     // component already exists in the model, handle it and wait for removal
-    handleComponentExists( boardModel.get( componentName ) );
+    handleComponentExists( displayModel.get( componentName ) );
   }
   else {
 
@@ -310,7 +310,7 @@ const cleanupListenerMaps = observerId => {
     idToComponentRemovedListenerMap.delete( observerId );
   }
 
-  // If there are still any listeners in the 'component added listener map', then the boardModel is in a state where
+  // If there are still any listeners in the 'component added listener map', then the displayModel is in a state where
   // it is waiting for a model component to be added.
   phet.paperLand.isWaitingForModelComponentProperty.value = idToComponentAddedListenerMap.size > 0;
 };
@@ -324,10 +324,10 @@ const cleanupListenerMaps = observerId => {
  */
 paperLand.removeModelObserver = ( componentName, observerId ) => {
   if ( idToComponentDetachMap.has( observerId ) ) {
-    if ( !boardModel.has( componentName ) ) {
+    if ( !displayModel.has( componentName ) ) {
       boardConsole.error( 'Failure in removeModelObserver. componentName could be incorrect or something else went wrong.' );
     }
-    idToComponentDetachMap.get( observerId )( boardModel.get( componentName ) );
+    idToComponentDetachMap.get( observerId )( displayModel.get( componentName ) );
     idToComponentDetachMap.delete( observerId );
   }
 
@@ -335,7 +335,7 @@ paperLand.removeModelObserver = ( componentName, observerId ) => {
 };
 
 /**
- * Add an observer for multiple model components that are expected to exist in the boardModel.
+ * Add an observer for multiple model components that are expected to exist in the displayModel.
  *
  * When all components exist in the model, handleComponentsAttach is called. When any of the components are removed,
  * handleComponentsDetach is called. Listeners are added to attach and detach when the dependencies are detected and'
@@ -359,7 +359,7 @@ paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, hand
     if ( assert ) {
 
       // verify that every component is in the model
-      const allComponentsExist = componentNames.every( componentName => boardModel.has( componentName ) );
+      const allComponentsExist = componentNames.every( componentName => displayModel.has( componentName ) );
       assert( allComponentsExist, 'All components must exist in the model to add a multi-model observer.' );
     }
 
@@ -390,18 +390,18 @@ paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, hand
     const componentAddedListener = ( addedComponentName, addedComponent ) => {
 
       // if every dependency is in the model, the observer can be added
-      if ( componentNames.every( name => boardModel.has( name ) ) ) {
-        handleComponentsExist( componentNames.map( name => boardModel.get( name ) ) );
+      if ( componentNames.every( name => displayModel.has( name ) ) ) {
+        handleComponentsExist( componentNames.map( name => displayModel.get( name ) ) );
         removeListenerFromModelChangeEmitter( uniqueId, componentAddedListener, 'add' );
       }
     };
     addListenerToModelChangeEmitter( uniqueId, componentAddedListener, 'add' );
   };
 
-  if ( componentNames.every( name => boardModel.has( name ) ) ) {
+  if ( componentNames.every( name => displayModel.has( name ) ) ) {
 
     // component already exists in the model, handle it and wait for removal
-    const components = componentNames.map( name => boardModel.get( name ) );
+    const components = componentNames.map( name => displayModel.get( name ) );
     handleComponentsExist( components );
   }
   else {
@@ -422,7 +422,7 @@ paperLand.addMultiModelObserver = ( componentNames, handleComponentsAttach, hand
  */
 phet.paperLand.removeMultiModelObserver = ( componentNames, observerId ) => {
   if ( idToComponentDetachMap.has( observerId ) ) {
-    const components = componentNames.map( name => boardModel.get( name ) );
+    const components = componentNames.map( name => displayModel.get( name ) );
     idToComponentDetachMap.get( observerId )( components );
     idToComponentDetachMap.delete( observerId );
   }
@@ -431,7 +431,7 @@ phet.paperLand.removeMultiModelObserver = ( componentNames, observerId ) => {
 };
 
 /**
- * Adds a listener to a Property in the boardModel. If the Property does not exist, the listener will be linked
+ * Adds a listener to a Property in the displayModel. If the Property does not exist, the listener will be linked
  * as soon as it does. If the Property is removed from the model, the listener will be unlinked, but linked again
  * as soon as the Property is added back to the model.
  * @param componentName {string} - name of the component to observe
@@ -459,8 +459,8 @@ paperLand.addModelPropertyLink = ( componentName, listener ) => {
 };
 
 /**
- * Removes a listener form a Property in the boardModel and stops watching for changes to the boardModel to add/remove
- * the Property listener again when the model Property is added/removed from the boardModel.
+ * Removes a listener form a Property in the displayModel and stops watching for changes to the displayModel to add/remove
+ * the Property listener again when the model Property is added/removed from the displayModel.
  * @param componentName {string} - name of Property to unlink from
  * @param linkId {number} - Unique ID returned by preceding addModelPropertyLink, needed to find listeners to remove
  */
@@ -472,7 +472,7 @@ paperLand.removeModelPropertyLink = ( componentName, linkId ) => {
 };
 
 /**
- * Adds a listener to multiple Properties in the boardModel. If any of the Properties do not exist, the listener will
+ * Adds a listener to multiple Properties in the displayModel. If any of the Properties do not exist, the listener will
  * be linked as soon as they do. If any of the Properties are removed from the model, the listener will be unlinked,
  * but linked again as soon as the Property is added back to the model.
  *
@@ -520,10 +520,10 @@ paperLand.addModelPropertyMultilink = ( componentNames, listener, providedOption
       // Get the list of components to assign to the multilink - this is the list of provided components
       // without the otherReferences
       const boardMultilinkComponents = componentNames.map( name => {
-        if ( !boardModel.has( name ) ) {
+        if ( !displayModel.has( name ) ) {
           throw new Error( 'We are inside the multimodel observer, so all components should exist.' );
         }
-        return boardModel.get( name );
+        return displayModel.get( name );
       } );
 
       multilink = new phet.axon.Multilink( [ ...boardMultilinkComponents, ...options.otherProperties ], listener, options.lazy );
@@ -573,7 +573,7 @@ paperLand.removeModelPropertyMultilink = ( componentNames, linkId, providedOptio
  * @param {string[]} componentNames
  */
 paperLand.hasAllModelComponents = componentNames => {
-  return componentNames.every( name => boardModel.has( name ) );
+  return componentNames.every( name => displayModel.has( name ) );
 };
 
 /**
@@ -602,4 +602,4 @@ phet.axon.stepTimer.addListener( dt => {
   paperLand.elapsedTimeProperty.value = paperLand.elapsedTimeProperty.value + dt;
 } );
 
-export default boardModel;
+export default displayModel;

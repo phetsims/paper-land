@@ -5,7 +5,7 @@
  */
 
 // Load other testing files here
-require( './BoardModelTests.js' );
+require( './DisplayModelTests.js' );
 require( './creator/ProgramCodeValidatorTests.js' );
 require( './creator/CreatorModelTests.js' );
 require( './creator/ProgramCodeGeneratorTests.js' );

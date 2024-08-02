@@ -7,7 +7,7 @@
 
 import PaperWhiskerManager from '../common/PaperWhiskerManager.js';
 import boardConsole from './boardConsole.js';
-import boardModel from './boardModel.js';
+import displayModel from './displayModel.js';
 import { markersAddedEmitter, markersChangedPositionEmitter, markersRemovedEmitter } from './markerEmitters.js';
 
 // constants
@@ -111,7 +111,7 @@ export default class LocalStorageBoardController {
     // {Object} - This object contains the data that is passed into the handlers for the paper programs and can be used to
     // share information between them.  The data can be referenced and sometimes updated.
     this.sharedData = {
-      model: boardModel,
+      model: displayModel,
       scene: scene,
       get displaySize() {
         return phet.paperLand.displaySizeProperty.value;

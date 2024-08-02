@@ -120,7 +120,7 @@ QUnit.test( 'Model Components', async assert => {
   };
 
   /**
-   * Creates a visitor for the AST, checking for code that creates and adds the model component to the boardModel.
+   * Creates a visitor for the AST, checking for code that creates and adds the model component to the displayModel.
    * This visitor looks for a 'NewExpression' in a variable declaration, so it will work for statements like
    *
    *  const variableName = new phet.dot.ClassName();
@@ -178,7 +178,7 @@ QUnit.test( 'Model Components', async assert => {
   };
 
   /**
-   * Creates a visitor for the AST, checking for code that removes the model component from the boardModel.
+   * Creates a visitor for the AST, checking for code that removes the model component from the displayModel.
    * @param {string} variableName - name of the component that should be removed with `paperLand.removeModelComponent`
    * @param {string} removedStateKey - key of the stateObject to set if removal code is found
    * @param {Object} [providedOptions]

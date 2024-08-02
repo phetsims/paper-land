@@ -9,7 +9,7 @@
 - [Introduction](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#introduction)
 - [Paper Event Functions](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#paper-event-functions)
 - [Shared Data (`sharedData`)](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#shared-data-shareddata)
-- [Board Model (`boardModel`)](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-model-boardmodel)
+- [Board Model (`displayModel`)](https://github.com/phetsims/paper-land/blob/main/docs/use/display-api.md#display-model-displaymodel)
 - [Program Data](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#program-data)
 - [Board View](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-view)
 - [Whiskers](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#whiskers)
@@ -344,8 +344,8 @@ that is shared between all programs.
 ```js
 sharedData = {
 
-  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-model-boardmodel
-  model: boardModel,
+  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-model-displaymodel
+  model: displayModel,
   
   // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md#board-view
   scene: scene,
@@ -590,11 +590,11 @@ const onProgramRemoved = ( paperProgramNumber, scratchpad, sharedData ) => {
 ``` 
 ```
 
-## Board Model (`boardModel`)
+## Board Model (`displayModel`)
 
-The `boardModel` is
+The `displayModel` is
 a [JavaScript Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map). You can
-create and add components to the `boardModel` in your program code. Map keys are strings - the name of the component.
+create and add components to the `displayModel` in your program code. Map keys are strings - the name of the component.
 The values
 are any JavaScript object you want to add to the model.
 
@@ -602,7 +602,7 @@ are any JavaScript object you want to add to the model.
 
 ### `phet.paperLand.addModelComponent( componentName, componentObject )`
 
-Adds a component to the `boardModel`. For programs that create model components, this should almost always
+Adds a component to the `displayModel`. For programs that create model components, this should almost always
 be used in the `onProgramAdded` function.
 
 > :warning: You almost always want to remove the model component in the `onProgramRemoved` function.
@@ -612,7 +612,7 @@ See [onProgramRemoved](https://github.com/phetsims/paper-land/blob/main/docs/use
 #### Arguments
 
 - `{string}` `componentName` - The name of the component to add.
-- `{Object}` `componentObject` - The JavaScript Object to add to the `boardModel` map.
+- `{Object}` `componentObject` - The JavaScript Object to add to the `displayModel` map.
 
 #### Example
 
@@ -757,7 +757,7 @@ await paper.set( 'data', {
 
 ### `phet.paperLand.removeModelPropertyLink( componentName, linkId )`
 
-Removes a listener from a PhET Axon Property in the `boardModel`. You almost always want to use this in
+Removes a listener from a PhET Axon Property in the `displayModel`. You almost always want to use this in
 the `onProgramRemoved` function.
 
 #### Arguments
@@ -799,7 +799,7 @@ in `onProgramRemoved`.
 
 #### Arguments
 
-- `{string}` `componentName` - Name of the observable component in the `boardModel`.
+- `{string}` `componentName` - Name of the observable component in the `displayModel`.
 - `{function}` `handleAttach` - Function that attaches the observer to the observable as soon as the component is added
   with `addModelComponent`.
 - `{function}` `handleDetach` - Function that removes the observer from the observable as soon as the observable
@@ -852,7 +852,7 @@ This should almost always be used in `onProgramRemoved`, after an observer was a
 
 #### Arguments
 
-- `{string}` `componentName` - Name of the observable component in the `boardModel``.
+- `{string}` `componentName` - Name of the observable component in the `displayModel``.
 - `{number}` `observerId` - Unique ID for the observer that was created by `addModelObserver`.
 
 #### Example

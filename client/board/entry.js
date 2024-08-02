@@ -10,7 +10,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import BoardMain from './BoardMain.js';
+import DisplayMain from './DisplayMain.js';
 import LocalStorageBoardController from './LocalStorageBoardController.js';
 
 // So that the servers list is assigned to the namespace and available in program code.
@@ -35,12 +35,12 @@ const localStorageBoardController = new LocalStorageBoardController( scene );
 // Render the scene graph.  Once this is done it updates itself, so there is no other React-based rendering of this
 // component.
 ReactDOM.render(
-  <BoardMain
+  <DisplayMain
     scene={scene}
     boardConfigObject={localStorageBoardController.boardConfigObject}
     updatePositionInterval={newValue => { localStorageBoardController.updatePositionInterval( newValue ); }}
     updateRemovalDelay={newValue => { localStorageBoardController.updateRemovalDelay( newValue ); }}
-  ></BoardMain>,
+  ></DisplayMain>,
   simDisplayDiv
 );
 
