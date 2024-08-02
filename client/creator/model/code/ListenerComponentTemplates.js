@@ -84,6 +84,10 @@ const ListenerComponentTemplates = {
               phet.paperLand.displayBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _encodedValue );
             };
             
+            // save the write function to the scratchpad so that we can send messages to the device from the
+            // onProgramRemoved function
+            scratchpad.{{NAME}}WriteStringToCharacteristic = writeStringToCharacteristic;
+            
             // _matrix is a 5x5 2D array of 1s and 0s, corresponding to the LED matrix
             const writeMatrixToCharacteristic = ( _matrix ) => {
               const _ledMatrix = new Int8Array(5);
@@ -147,6 +151,15 @@ const ListenerComponentTemplates = {
     `,
     onProgramRemoved: `
      phet.paperLand.console.log( 'Removing a BLE component' );
+     
+     if ( scratchpad.{{NAME}}WriteStringToCharacteristic ) {
+      
+       // Send a message to the device that a program has been removed. Message looks like
+       // '$#{programNumber}|' with delimeters.
+       scratchpad.{{NAME}}WriteStringToCharacteristic( '#{{NUMBER}}' );
+       delete scratchpad.{{NAME}}WriteStringToCharacteristic;
+     }
+     
      phet.paperLand.displayBluetoothServers.removeCharacteristicListener(
        '{{SERVICE_ID}}',
        '{{CHARACTERISTIC_ID}}',

@@ -300,6 +300,7 @@ export default class ProgramCodeGenerator {
 
         return ProgramCodeGenerator.fillInTemplate( template, {
           NAME: listenerComponent.nameProperty.value,
+          NUMBER: program.numberProperty.value,
 
           // the available functions to control existing model components
           CONTROL_FUNCTIONS: controlFunctions,
