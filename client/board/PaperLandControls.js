@@ -187,13 +187,13 @@ export default function PaperLandControls( props ) {
                 device.gatt.connect().then( server => {
 
                   // if there is alreadyd a server for this device, it is an error - print it and do no further work
-                  if ( phet.paperLand.boardBluetoothServers.getServerForDevice( device ) ) {
+                  if ( phet.paperLand.displayBluetoothServers.getServerForDevice( device ) ) {
                     phet.paperLand.console.error( 'ERROR: Server already exists for this device', device.name );
                     return;
                   }
 
                   // When the connection is successful, store the device-server pair.
-                  phet.paperLand.boardBluetoothServers.addServer( device, server );
+                  phet.paperLand.displayBluetoothServers.addServer( device, server );
 
                   // Handle the disconnection if it happens.
                   device.addEventListener( 'gattserverdisconnected', event => {
@@ -202,9 +202,9 @@ export default function PaperLandControls( props ) {
                     phet.paperLand.console.log( 'WARNING: Device has disconnected', disconnectedDevice.name );
 
                     // Remove the server associated with this device.
-                    const server = phet.paperLand.boardBluetoothServers.getServerForDevice( disconnectedDevice );
+                    const server = phet.paperLand.displayBluetoothServers.getServerForDevice( disconnectedDevice );
                     if ( server ) {
-                      phet.paperLand.boardBluetoothServers.clearServerForDevice( disconnectedDevice );
+                      phet.paperLand.displayBluetoothServers.clearServerForDevice( disconnectedDevice );
                     }
                   } );
 

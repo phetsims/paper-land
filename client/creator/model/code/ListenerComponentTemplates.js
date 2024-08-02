@@ -70,7 +70,7 @@ const ListenerComponentTemplates = {
             {{COMPONENT_REFERENCES}}
             
             const writeToCharacteristic = _newCharacteristicValue => {
-              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
+              phet.paperLand.displayBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _newCharacteristicValue );
             };
             
             const writeStringToCharacteristic = ( _newCharacteristicValueString, _startDelim = '$', _endDelim = '|' ) => {
@@ -81,7 +81,7 @@ const ListenerComponentTemplates = {
               // encode as UTF-8 Uint8Array
               const _encodedValue = new TextEncoder().encode( _wrappedString );
             
-              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _encodedValue );
+              phet.paperLand.displayBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _encodedValue );
             };
             
             // _matrix is a 5x5 2D array of 1s and 0s, corresponding to the LED matrix
@@ -103,7 +103,7 @@ const ListenerComponentTemplates = {
                 const _string = _buffer[i].join("");
                 _ledMatrix[i]=parseInt(_string,2)
               }
-              phet.paperLand.boardBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _ledMatrix );
+              phet.paperLand.displayBluetoothServers.writeToCharacteristic( '{{SERVICE_ID}}', '{{CHARACTERISTIC_ID}}', _ledMatrix );
             };
             
             // the code block that the user wrote to change controlled Properties
@@ -114,7 +114,7 @@ const ListenerComponentTemplates = {
       else {
       
         // Reading from the characteristic, in this case we are controlling other model components
-        phet.paperLand.boardBluetoothServers.addCharacteristicListener(
+        phet.paperLand.displayBluetoothServers.addCharacteristicListener(
           '{{SERVICE_ID}}',
           '{{CHARACTERISTIC_ID}}',
           deviceValue => {
@@ -147,7 +147,7 @@ const ListenerComponentTemplates = {
     `,
     onProgramRemoved: `
      phet.paperLand.console.log( 'Removing a BLE component' );
-     phet.paperLand.boardBluetoothServers.removeCharacteristicListener(
+     phet.paperLand.displayBluetoothServers.removeCharacteristicListener(
        '{{SERVICE_ID}}',
        '{{CHARACTERISTIC_ID}}',
        scratchpad.characteristicListener

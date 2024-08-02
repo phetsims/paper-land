@@ -5,7 +5,7 @@
  */
 import paperLand from './paperLand.js';
 
-const boardBluetoothServers = {
+const displayBluetoothServers = {
 
   /**
    * The list of servers that are available to the user. Maps a bluetooth device to a GATT server.
@@ -49,7 +49,7 @@ const boardBluetoothServers = {
    * retry connecting to a characteristic if the first attempt fails (but that hasn't seemed necessary yet).
    */
   async makeAttemptToGetCharacteristic( serviceUUID, characteristicUUID ) {
-    for ( let [ device, server ] of phet.paperLand.boardBluetoothServers.deviceServerMap ) {
+    for ( let [ device, server ] of phet.paperLand.displayBluetoothServers.deviceServerMap ) {
       try {
         const service = await server.getPrimaryService( serviceUUID );
         return await service.getCharacteristic( characteristicUUID );
@@ -149,7 +149,7 @@ const boardBluetoothServers = {
 };
 
 // Assign to the namespace so that the available servers can be accessed from the paper program code.
-paperLand.boardBluetoothServers = boardBluetoothServers;
+paperLand.displayBluetoothServers = displayBluetoothServers;
 
 // This will be used from paper program code, but be sure to import in an entry file so that it is available.
-export default boardBluetoothServers;
+export default displayBluetoothServers;

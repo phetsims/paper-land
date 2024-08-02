@@ -14,7 +14,7 @@ import BoardMain from './BoardMain.js';
 import LocalStorageBoardController from './LocalStorageBoardController.js';
 
 // So that the servers list is assigned to the namespace and available in program code.
-import './boardBluetoothServers.js';
+import './displayBluetoothServers.js';
 
 // Import components so they are available in the namespace
 import './displayUtils.js';
