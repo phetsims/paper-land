@@ -49,7 +49,7 @@ if ( !createAndLoadWrappedAudioBuffer ) {
   console.warn( 'createAndLoadWrappedAudioBuffer not defined' );
 }
 
-export default class LocalStorageBoardController {
+export default class LocalStorageDisplayController {
   constructor( scene ) {
 
     // The current paper programs and markers in local storage, with information needed to interact with them.
@@ -217,14 +217,14 @@ export default class LocalStorageBoardController {
 
       // Sort the list of same-color previous markers by proximity to the current marker.
       prevMarkersOfSameColor = prevMarkersOfSameColor.sort(
-        ( marker1, marker2 ) => LocalStorageBoardController.getInterPointDistance( currentMarker.position, marker1.position ) -
-                                LocalStorageBoardController.getInterPointDistance( currentMarker.position, marker2.position )
+        ( marker1, marker2 ) => LocalStorageDisplayController.getInterPointDistance( currentMarker.position, marker1.position ) -
+                                LocalStorageDisplayController.getInterPointDistance( currentMarker.position, marker2.position )
       );
 
       // Match the current marker to the closest previous marker to which NO OTHER CURRENT MARKER IS CLOSER.
       for ( let i = 0; i < prevMarkersOfSameColor.length; i++ ) {
         const prevMarkerOfSameColor = prevMarkersOfSameColor[ i ];
-        const distance = LocalStorageBoardController.getInterPointDistance( currentMarker.position, prevMarkerOfSameColor.position );
+        const distance = LocalStorageDisplayController.getInterPointDistance( currentMarker.position, prevMarkerOfSameColor.position );
         const smallestDistanceToOtherCurrentMarkers = currentMarkers.reduce(
           ( smallestDistanceSoFar, marker ) => {
             if ( marker === currentMarker || marker.colorName !== currentMarker.colorName ) {
@@ -233,7 +233,7 @@ export default class LocalStorageBoardController {
               return smallestDistanceSoFar;
             }
             else {
-              const distanceToPreviousMarker = LocalStorageBoardController.getInterPointDistance(
+              const distanceToPreviousMarker = LocalStorageDisplayController.getInterPointDistance(
                 prevMarkerOfSameColor.position,
                 marker.position
               );
@@ -300,7 +300,7 @@ export default class LocalStorageBoardController {
           intersectingNumbersAtDirection.push( otherPaperNumber );
           const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperNumber );
           if ( eventHandlers && eventHandlers.onProgramAdjacent ) {
-            LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramAdjacent, [
+            LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramAdjacent, [
               paperNumber,
               otherPaperNumber,
               directedLine.direction,
@@ -319,7 +319,7 @@ export default class LocalStorageBoardController {
           intersectingNumbersAtDirection.splice( index, 1 );
           const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperNumber );
           if ( eventHandlers && eventHandlers.onProgramSeparated ) {
-            LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramSeparated, [
+            LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramSeparated, [
               paperNumber,
               otherPaperNumber,
               directedLine.direction,
@@ -405,7 +405,7 @@ export default class LocalStorageBoardController {
         attachedPapers.forEach( attachedPaperNumber => {
           const listenersForThisPaper = this.mapOfProgramNumbersToEventHandlers.get( paperNumber );
           if ( listenersForThisPaper && listenersForThisPaper.onProgramSeparated ) {
-            LocalStorageBoardController.evalProgramFunction( listenersForThisPaper.onProgramSeparated, [
+            LocalStorageDisplayController.evalProgramFunction( listenersForThisPaper.onProgramSeparated, [
               paperNumber,
               attachedPaperNumber,
               whiskerDirection,
@@ -435,7 +435,7 @@ export default class LocalStorageBoardController {
             // Get the listeners on the paper number watching detachment for the removed program
             const listenersForAttachedProgram = this.mapOfProgramNumbersToEventHandlers.get( paperNumber );
             if ( listenersForAttachedProgram && listenersForAttachedProgram.onProgramSeparated ) {
-              LocalStorageBoardController.evalProgramFunction( listenersForAttachedProgram.onProgramSeparated, [
+              LocalStorageDisplayController.evalProgramFunction( listenersForAttachedProgram.onProgramSeparated, [
                 otherPaperNumber,
                 attachedProgramNumber,
                 whiskerDirection,
@@ -506,7 +506,7 @@ export default class LocalStorageBoardController {
 
             // then trigger events for program removal
             if ( eventHandlers.onProgramRemoved ) {
-              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramRemoved, [
+              LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramRemoved, [
                 paperProgramNumber,
                 this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
                 this.sharedData
@@ -523,7 +523,7 @@ export default class LocalStorageBoardController {
           // Run this program's "added" handler, if present (and generally it should be).
           const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
           if ( eventHandlers.onProgramAdded ) {
-            LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramAdded, [
+            LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramAdded, [
               paperProgramNumber,
               this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
               this.sharedData
@@ -548,7 +548,7 @@ export default class LocalStorageBoardController {
       // If the paper has moved and there is a move handler, call it.
       const eventHandlers = this.mapOfProgramNumbersToEventHandlers.get( paperProgramNumber );
       if ( paperProgramHasMoved && eventHandlers && eventHandlers.onProgramChangedPosition ) {
-        LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramChangedPosition, [
+        LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramChangedPosition, [
           paperProgramNumber,
           currentPaperProgramPoints,
           this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
@@ -572,7 +572,7 @@ export default class LocalStorageBoardController {
 
       if ( currentMarkersForProgram.length > previousMarkersForProgram.length ) {
         if ( eventHandlers && eventHandlers.onProgramMarkersAdded ) {
-          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
+          LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramMarkersAdded, [
             paperProgramNumber,
             currentPaperProgramPoints,
             this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
@@ -586,7 +586,7 @@ export default class LocalStorageBoardController {
       }
       else if ( currentMarkersForProgram.length < previousMarkersForProgram.length ) {
         if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+          LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
             paperProgramNumber,
             currentPaperProgramPoints,
             this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
@@ -627,7 +627,7 @@ export default class LocalStorageBoardController {
 
         // At least one marker moved! Use program callback and save markers for next comparison.
         if ( eventHandlers && eventHandlers.onProgramMarkersChangedPosition ) {
-          LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersChangedPosition, [
+          LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramMarkersChangedPosition, [
             paperProgramNumber,
             currentPaperProgramPoints,
             this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
@@ -658,7 +658,7 @@ export default class LocalStorageBoardController {
 
             // First call any marker removal handlers before removing this program
             if ( eventHandlers && eventHandlers.onProgramMarkersRemoved ) {
-              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
+              LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramMarkersRemoved, [
                 paperProgramNumber,
                 this.mapOfPaperProgramNumbersToPreviousPoints.get( paperProgramNumber ),
                 this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
@@ -673,7 +673,7 @@ export default class LocalStorageBoardController {
 
             // Finally call the program removal handler
             if ( eventHandlers.onProgramRemoved ) {
-              LocalStorageBoardController.evalProgramFunction( eventHandlers.onProgramRemoved, [
+              LocalStorageDisplayController.evalProgramFunction( eventHandlers.onProgramRemoved, [
                 paperProgramNumber,
                 this.mapOfProgramNumbersToScratchpadObjects.get( paperProgramNumber ),
                 this.sharedData

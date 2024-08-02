@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import DisplayMain from './DisplayMain.js';
-import LocalStorageBoardController from './LocalStorageBoardController.js';
+import LocalStorageDisplayController from './LocalStorageDisplayController.js';
 
 // So that the servers list is assigned to the namespace and available in program code.
 import './displayBluetoothServers.js';
@@ -30,16 +30,16 @@ const scene = new phet.scenery.Node();
 
 // Controls the state of the display when changes occur from paper events - which are communicated
 // across local storage.
-const localStorageBoardController = new LocalStorageBoardController( scene );
+const localStorageDisplayController = new LocalStorageDisplayController( scene );
 
 // Render the scene graph.  Once this is done it updates itself, so there is no other React-based rendering of this
 // component.
 ReactDOM.render(
   <DisplayMain
     scene={scene}
-    displayConfigObject={localStorageBoardController.displayConfigObject}
-    updatePositionInterval={newValue => { localStorageBoardController.updatePositionInterval( newValue ); }}
-    updateRemovalDelay={newValue => { localStorageBoardController.updateRemovalDelay( newValue ); }}
+    displayConfigObject={localStorageDisplayController.displayConfigObject}
+    updatePositionInterval={newValue => { localStorageDisplayController.updatePositionInterval( newValue ); }}
+    updateRemovalDelay={newValue => { localStorageDisplayController.updateRemovalDelay( newValue ); }}
   ></DisplayMain>,
   simDisplayDiv
 );
