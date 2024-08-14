@@ -26,7 +26,7 @@ const usePostgres = config.STORAGE_TYPE === 'postgresql';
 
 // Set a constant based on the .env file that will control whether access to restricted files will be allowed on the
 // client side. If using local files, the user will have access to everything.
-const ALLOW_ACCESS_TO_RESTRICTED_FILES = !usePostgres || config.ALLOW_ACCESS_TO_RESTRICTED_FILES === 'true';
+const ALLOW_ACCESS_TO_RESTRICTED_FILES = !usePostgres || config.ALLOW_ACCESS_TO_RESTRICTED_FILES;
 
 let dataService = null;
 if ( usePostgres ) {
