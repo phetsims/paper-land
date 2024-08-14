@@ -216,6 +216,12 @@
   color: textColor;
 }
 
+:local(.dialogHeaderContent) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 :local(.dialog) {
   background-color: backgroundColor;
   color: textColor;
@@ -301,6 +307,15 @@ code {
   display: flex;
   justify-content: center; /* Horizontally center content */
   align-items: center; /* Vertically center content */
+}
+
+/* A general set of styling you can apply to center something within its container */
+:local(.centeredInContainer) {
+  display: flex;
+  justify-content: center; /* Horizontally center content */
+  align-items: center; /* Vertically center content */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 :local(.createComponentButton) {

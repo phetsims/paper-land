@@ -8,6 +8,7 @@ import xhr from 'xhr';
 import SoundViewComponent from '../model/views/SoundViewComponent.js';
 import styles from './../CreatorMain.css';
 import FileUploader from './FileUploader.js';
+import RecordSoundDialog from './RecordSoundDialog.js';
 import StyledButton from './StyledButton.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
@@ -27,6 +28,9 @@ export default function CreateSoundViewForm( props ) {
 
   // State for the available sounds files from the server.
   const [ soundFiles, setSoundFiles ] = useState( [] );
+
+  // State controlling whether the record sound dialog is showing.
+  const [ recordDialogShowing, setRecordDialogShowing ] = useState( false );
 
   // Get form data from the child and forward it back to the parent form so we have data in one place to
   // create a component.
@@ -85,8 +89,8 @@ export default function CreateSoundViewForm( props ) {
   // A select UI component to use a particular sound.
   const soundFileSelector = (
     <div>
-      <Form.Label>Select from available files:</Form.Label>
       <Container>
+        <Form.Label>Select from available files:</Form.Label>
         <Row>
           <Col xs={9}>
             <Form.Select
@@ -135,6 +139,8 @@ export default function CreateSoundViewForm( props ) {
         </Row>
       </Container>
 
+      <div className={styles.centeredInContainer}>OR</div>
+
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='sound'
@@ -144,6 +150,19 @@ export default function CreateSoundViewForm( props ) {
           }}
         ></FileUploader>
       </div>
+
+      <div className={styles.centeredInContainer}>OR</div>
+
+      <Container>
+        <div className={styles.centeredInContainer}>
+          <StyledButton
+            name={'Record Sound'}
+            onClick={() => {
+              setRecordDialogShowing( true );
+            }}
+          ></StyledButton>
+        </div>
+      </Container>
     </div>
   );
 
@@ -193,6 +212,7 @@ export default function CreateSoundViewForm( props ) {
 
   return (
     <div>
+      <RecordSoundDialog showing={recordDialogShowing} setShowing={setRecordDialogShowing}></RecordSoundDialog>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificControls={soundFileSelector}
