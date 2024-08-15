@@ -6,7 +6,7 @@ You can now communicate with microcontrollers over bluetooth! This expands the a
 
 You can create a hybrid tangible interface using paper-based events (paper movement, paper size, markers, paper overlap, etc) from Paper Playground, while triggering actuators connected to your microcontroller. Or, vice versa... take in sensor signals from your microcontroller, pipe a message to Paper Plaground, and trigger animations, sounds, speech, and anything else you can do on the web using Paper Playground!
 
-We currently have the most support for the [BBC micro:bit](), but there are bluetooth service UUIDs available for more generic microcontrollers with bluetooth capabilities.
+We currently have the most support for the [BBC micro:bit](https://makecode.microbit.org/), but there are bluetooth service UUIDs available for more generic microcontrollers with bluetooth capabilities.
 
 ## Getting Started
 
@@ -14,6 +14,13 @@ To get started, create a `controller` component in *Creator* and select the "Blu
 
 You will find demo projects using the micro:bit installed by default in Paper Playground in the *Creator* interface (or look in the directory `root/server/data/default-data`).
 
+!!! warning
+    You will need a good understanding of the code editor, specifications, and constraints of the microcontroller you are using! For example, when using micro:bit and MakeCode, you will find that you cannot sent rapid messages over UART if you are asking the micro:bit to change its LED Matrix every time new data is received.
+
 ## Walkthrough
 
 For a complete walkthrough using the micro:bit microcontroller, see the published [Instructables] (<https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/>) or [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685).
+
+## Implementation Notes and Tips
+
+- If you're using a BBC micro:bit, then make sure to look at its [Bluetooth Specifications](https://lancaster-university.github.io/microbit-docs/resources/bluetooth/bluetooth_profile.html) to understand the structure of the data you are trying to send from or to Paper Playground.

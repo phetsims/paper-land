@@ -2,9 +2,13 @@
 node_modules/
 .idea/
 .env
+config.json
 site/
 notes.md
 package-lock.json
+
+# ONLY FOR DOCS BRANCH, ignore the server directory
+**/server/*
 
 # Ignore all files in the uploads directories
 **/uploads/*
