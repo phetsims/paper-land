@@ -17,9 +17,11 @@ You will find demo projects using the micro:bit installed by default in Paper Pl
 !!! warning
     You will need a good understanding of the code editor, specifications, and constraints of the microcontroller you are using! For example, when using micro:bit and MakeCode, you will find that you cannot sent rapid messages over UART if you are asking the micro:bit to change its LED Matrix every time new data is received.
 
-## Walkthrough
+## Walkthroughs
 
-For a complete walkthrough using the micro:bit microcontroller, see the published [Instructables] (<https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/>) or [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685).
+1. For a complete walkthrough using the micro:bit microcontroller, see the published [Instructable] (<https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/>) or [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685).
+
+2. This [Instructable](https://www.instructables.com/Random-Servo-Position-With-Microbit-and-Paper-Play/) will show you how to create a random spinner dial using a 180-servo, micro:bit, and a Paper Playground program. Paper Playground is an open-source system that enables you to design tangible, multimodal experiences using your computer's web browser, a webcam, and printed pieces of paper. [This particular example does not require a webcam and printer].
 
 ## Implementation Notes and Tips
 
