@@ -1,8 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import Row from 'react-bootstrap/Row';
+import xhr from 'xhr';
 import ViewConstants from '../view/ViewConstants.js';
 import styles from './../CreatorMain.css';
 import StyledButton from './StyledButton.js';
@@ -10,7 +12,7 @@ import StyledButton from './StyledButton.js';
 const centeredColumn = 'd-flex justify-content-center';
 
 // in seconds, the limit for the recording duration
-const MAX_RECORDING_TIME = 5;
+const MAX_RECORDING_TIME = 10;
 
 export default function RecordSoundDialog( props ) {
   const showing = props.showing;
@@ -20,18 +22,96 @@ export default function RecordSoundDialog( props ) {
   const [ recordingComplete, setRecordingComplete ] = useState( false );
   const [ elapsedRecordingTime, setElapsedRecordingTime ] = useState( 0 );
 
+  // Position from 0 to 1 representing the trimmer position. Will be mapped to the canvas width to draw the trimmer.
+  const [ trimmerPos, setTrimmerPos ] = useState( { start: 0, end: 1 } );
+
+  const audioChunksRef = useRef( [] );
+  const [ audioURL, setAudioURL ] = useState( '' );
+
+  // When the audio URL changes, we will update this audio buffer, which is used to display the waveform
+  const [ audioBuffer, setAudioBuffer ] = useState( null );
+
+  // References to audio context information that persists across multiple renders.
+  const audioContextRef = useRef( null );
+  const analyserRef = useRef( null );
+  const dataArrayRef = useRef( null );
+
+  // A reference to the media recorder which will be used to save the recording.
+  const mediaRecorderRef = useRef( null );
+
   // A reference to an audio element, that persists across multiple renders.
   const audioRef = useRef( null );
+
+  // When the audio URL changes, update the audio buffer
+  useEffect( () => {
+    if ( audioURL && audioContextRef.current ) {
+      getAudioBuffer( audioURL, audioContextRef.current ).then( buffer => {
+        setAudioBuffer( buffer );
+      } );
+    }
+  }, [ audioURL ] );
+
+  const stopRecording = () => {
+
+    // Stop the audio context and analyser - do not clear the audio context because we need it to parse the audio
+    // data
+    if ( audioContextRef.current ) {
+      audioContextRef.current.close().then( () => {
+        analyserRef.current = null;
+        dataArrayRef.current = null;
+      } );
+    }
+
+    // Stop the media recorder
+    if ( mediaRecorderRef.current ) {
+
+      // stopping all tracks manually seems to be required to stop the recording
+      if ( mediaRecorderRef.current.stream ) {
+        mediaRecorderRef.current.stream.getTracks().forEach( track => track.stop() );
+      }
+
+      // Also use a general stop method
+      mediaRecorderRef.current.stop();
+    }
+  }
 
   const handleClose = () => {
 
     // Other work you want to do here before closing...
+    setPermissionGranted( false );
     setRecordingComplete( false );
     setElapsedRecordingTime( 0 );
+
+    stopRecording();
 
     // Close the dialog by updating state forwarded by the client.
     setShowing( false );
   };
+
+  // Start recording again by setting the MediaRecorder. This is used when we grant permissions to start recording
+  // and when the user wants to re-record.
+  const startRecorder = async () => {
+
+    // Clear previous recording state
+    setRecordingComplete( false );
+    setElapsedRecordingTime( 0 );
+
+    // Clear any previous recording
+    audioChunksRef.current = [];
+    setAudioURL( '' );
+
+    mediaRecorderRef.current = await initRecorder(
+      audioContextRef,
+      analyserRef,
+      dataArrayRef
+    );
+  }
+
+  useEffect( () => {
+    if ( recordingComplete ) {
+      stopRecording();
+    }
+  }, [ recordingComplete ] );
 
   return (
     <>
@@ -43,21 +123,36 @@ export default function RecordSoundDialog( props ) {
         <Modal.Body className={styles.dialog}>
           {( () => {
             if ( !permissionGranted ) {
-              return <RequestPermissionContent setPermissionGranted={setPermissionGranted}/>;
+              return <RequestPermissionContent
+                const startRecorder={startRecorder}
+                mediaRecorderRef={mediaRecorderRef}
+                setPermissionGranted={setPermissionGranted}/>;
             }
             else if ( !recordingComplete ) {
               return <RecordContent
                 setRecordingComplete={setRecordingComplete}
                 elapsedRecordingTime={elapsedRecordingTime}
                 setElapsedRecordingTime={setElapsedRecordingTime}
+                analyserRef={analyserRef}
+                dataArrayRef={dataArrayRef}
+                mediaRecorderRef={mediaRecorderRef}
+                audioChunksRef={audioChunksRef}
+                setAudioURL={setAudioURL}
               />;
             }
             else {
               return <EditRecordingContent
                 setRecordingComplete={setRecordingComplete}
                 handleClose={handleClose}
+                elapsedRecordingTime={elapsedRecordingTime}
                 setElapsedRecordingTime={setElapsedRecordingTime}
                 audioRef={audioRef}
+                audioURL={audioURL}
+                audioContextRef={audioContextRef}
+                audioBuffer={audioBuffer}
+                startRecorder={startRecorder}
+                trimmerPos={trimmerPos}
+                setTrimmerPos={setTrimmerPos}
               />;
             }
           } )()}
@@ -68,13 +163,18 @@ export default function RecordSoundDialog( props ) {
 }
 
 function RequestPermissionContent( props ) {
+  const mediaRecorderRef = props.mediaRecorderRef;
+  const startRecorder = props.startRecorder;
+
   return (
     <>
       <p className={styles.allowMultiline}>To record sound, you must grant permission to access your microphone.</p>
-      <StyledButton variant='primary' onClick={() => {
+      <StyledButton variant='primary' onClick={async () => {
+
+        await startRecorder();
 
         // For now, just allow permission
-        props.setPermissionGranted( true );
+        props.setPermissionGranted( !!mediaRecorderRef.current );
 
         // It will look something like this:
         // navigator.mediaDevices.getUserMedia( { audio: true } )
@@ -92,15 +192,31 @@ function RequestPermissionContent( props ) {
 function RecordContent( props ) {
   const elapsedTime = props.elapsedRecordingTime;
   const setElapsedTime = props.setElapsedRecordingTime;
+  const analyserRef = props.analyserRef;
+  const dataArrayRef = props.dataArrayRef;
+  const mediaRecorderRef = props.mediaRecorderRef;
+  const audioChunksRef = props.audioChunksRef;
+  const setAudioURL = props.setAudioURL;
+  const setRecordingComplete = props.setRecordingComplete;
 
   const stopRecording = () => {
+
+    if ( mediaRecorderRef.current ) {
+      const mediaRecorder = mediaRecorderRef.current;
+      mediaRecorder.onstop = () => {
+        const blob = new Blob( audioChunksRef.current, { type: 'audio/mp3' } );
+        const url = URL.createObjectURL( blob );
+        setAudioURL( url );
+      };
+
+      mediaRecorder.stop();
+    }
+
     setCurrentlyRecording( false );
-    props.setRecordingComplete( true );
+    setRecordingComplete( true );
   };
 
   const [ currentlyRecording, setCurrentlyRecording ] = useState( false );
-
-  const [ soundLevel, setSoundLevel ] = useState( 0 );
 
   // This is a simple way to update the elapsed time every second.
   // For a more accurate timer, you can use the Web Audio API.
@@ -109,9 +225,6 @@ function RecordContent( props ) {
       if ( currentlyRecording ) {
         setElapsedTime( ( prevTime ) => prevTime + 0.1 );
       }
-
-      // FOr testing, update the sound level every 100ms
-      setSoundLevel( Math.random() );
     }, 100 );
 
     // Clear the interval when the component unmounts
@@ -126,29 +239,44 @@ function RecordContent( props ) {
     }
   }, [ elapsedTime ] );
 
-  return (
-    <Row className='justify-content-center'>
-      <Col xs='auto' className='text-center'>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <p>{elapsedTime.toFixed( 2 )} / {MAX_RECORDING_TIME.toFixed( 2 )}</p>
-          <p style={{ visibility: currentlyRecording ? 'visible' : 'hidden' }}>Recording...</p>
-          <IncomingSoundLevelView soundLevel={soundLevel}></IncomingSoundLevelView>
+  const startRecording = () => {
+    setCurrentlyRecording( true );
 
-          {currentlyRecording ? (
-            <StyledButton
-              variant='primary'
-              onClick={stopRecording}
-              name='Stop Recording'>
-              Stop Recording
-            </StyledButton>
-          ) : (
-             <StyledButton
-               variant='primary'
-               onClick={() => setCurrentlyRecording( true )}
-               name='Start Recording'>
-               Start Recording
-             </StyledButton>
-           )}
+    if ( mediaRecorderRef.current ) {
+      mediaRecorderRef.current.start();
+
+      mediaRecorderRef.current.ondataavailable = ( e ) => {
+        audioChunksRef.current.push( e.data );
+      }
+    }
+  };
+
+  return (
+    <Row className='justify-content-center align-items-center'>
+      <Col className='text-end'>
+        {currentlyRecording ? (
+          <StyledButton
+            variant='primary'
+            onClick={stopRecording}
+            name={<div className={styles.pauseButton}>❚❚</div>}>
+          </StyledButton>
+        ) : (
+           <StyledButton
+             variant='primary'
+             otherClassNames=''
+             onClick={startRecording}
+             name={<div className={styles.recordButton}>●</div>}
+           />
+         )}
+        <p>{elapsedTime.toFixed( 2 )} / {MAX_RECORDING_TIME.toFixed( 2 )}</p>
+        <p style={{ visibility: currentlyRecording ? 'visible' : 'hidden' }}>Recording...</p>
+      </Col>
+      <Col>
+        <div>
+          <IncomingSoundLevelView
+            analyserRef={analyserRef}
+            dataArrayRef={dataArrayRef}
+          />
         </div>
       </Col>
     </Row>
@@ -159,9 +287,9 @@ function RecordContent( props ) {
 // and their fill will update based on the incoming sound level.
 function IncomingSoundLevelView( props ) {
   const canvasRef = useRef( null );
-
-  // The incoming level of sound, from 0 to 1.
-  const soundLevel = props.soundLevel;
+  const animationRef = useRef( null );
+  const analyserRef = props.analyserRef;
+  const dataArrayRef = props.dataArrayRef;
 
   // constants for the sound level bars
   const barWidth = 30;
@@ -172,12 +300,23 @@ function IncomingSoundLevelView( props ) {
   const canvasWidth = 100;
   const canvasHeight = ( barHeight + barSpacing ) * numBars;
 
-  useEffect( () => {
+  const draw = () => {
+    if ( !analyserRef.current || !dataArrayRef.current ) {
+      animationRef.current = requestAnimationFrame( draw );
+      return;
+    }
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext( '2d' );
 
     // Clear the canvas
     ctx.clearRect( 0, 0, canvasWidth, canvasHeight );
+
+    // calculate the sound level from the analyser node
+    analyserRef.current.getByteTimeDomainData( dataArrayRef.current );
+
+    // Multiply the displayed sound level so that it appears more dramatic
+    const soundLevel = calculateSoundLevel( analyserRef.current, dataArrayRef.current ) * 2;
 
     // draw 16 bars stacked on top of eachother - the fill will update based on the incoming sound level
     for ( let i = 0; i < numBars; i++ ) {
@@ -189,7 +328,20 @@ function IncomingSoundLevelView( props ) {
       ctx.fillRect( barX, barY, barWidth, barHeight );
       ctx.strokeRect( barX, barY, barWidth, barHeight );
     }
-  }, [ soundLevel ] );
+
+    animationRef.current = requestAnimationFrame( draw );
+  }
+
+  useEffect( () => {
+
+    // Start the animation
+    draw();
+
+    // Cleanup by cancelling any in progress animations
+    return () => {
+      cancelAnimationFrame( animationRef.current );
+    };
+  }, [] );
 
   return (
     <>
@@ -201,10 +353,26 @@ function IncomingSoundLevelView( props ) {
 // Includes a button to re-record (clearing the previous recording), a button to play the recording, and a button
 // to save the recording.
 function EditRecordingContent( props ) {
-  const setRecordingComplete = props.setRecordingComplete;
   const handleClose = props.handleClose;
-  const setElapsedRecordingTime = props.setElapsedRecordingTime;
+  const elapsedRecordingTime = props.elapsedRecordingTime;
   const audioRef = props.audioRef;
+  const audioURL = props.audioURL;
+  const audioContextRef = props.audioContextRef;
+  const startRecorder = props.startRecorder;
+  const audioBuffer = props.audioBuffer;
+  const trimmerPos = props.trimmerPos;
+  const setTrimmerPos = props.setTrimmerPos;
+
+  // The name for the audio file
+  const [ fileName, setFileName ] = useState( '' );
+  const [ fileNameInvalid, setFileNameInvalid ] = useState( false );
+
+  // Validate the file name
+  useEffect( () => {
+
+    // The file name cannot be empty and cannot include punctuation or special characters
+    setFileNameInvalid( !fileName || !/^[a-zA-Z0-9_ ]*$/.test( fileName ) );
+  }, [ fileName ] );
 
   return (
     <>
@@ -212,46 +380,106 @@ function EditRecordingContent( props ) {
         <Row>
           <Col></Col>
           <Col className={centeredColumn}>
-            <WaveformDisplay></WaveformDisplay>
+            <WaveformDisplay
+              audioBuffer={audioBuffer}
+              trimmerPos={trimmerPos}
+              setTrimmerPos={setTrimmerPos}
+              elapsedRecordingTime={elapsedRecordingTime}
+            ></WaveformDisplay>
           </Col>
           <Col></Col>
         </Row>
         <Row>
+          <Form.Group className={styles.controlElement}>
+            <Form.Label>Sound Name:</Form.Label>
+            <Form.Control
+              type='text'
+              value={fileName}
+              required
+              isInvalid={fileNameInvalid}
+              onChange={event => {
+                setFileName( event.target.value );
+              }}
+            />
+            <Form.Control.Feedback type='invalid' className={styles.validation}>
+              {'Please enter a file name. Must not contain special characters or punctuation.'}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Row>
+        <Row>
           <Col className={centeredColumn}>
-            <StyledButton variant='primary' onClick={() => {
-
-              // Clear the recording
-              setRecordingComplete( false );
-              setElapsedRecordingTime( 0 );
+            <StyledButton variant='primary' onClick={async () => {
+              await startRecorder();
             }} name={'Re-record'}></StyledButton>
           </Col>
           <Col className={centeredColumn}>
             <StyledButton variant='primary' onClick={() => {
-              // Play the recording
 
               if ( audioRef.current ) {
                 audioRef.current.pause();
                 audioRef.current = null;
               }
               else {
-                const fullPath = 'media/sounds/selectionArpeggio005.mp3';
-                audioRef.current = new Audio( fullPath );
-                audioRef.current.play().catch( error => {
-                  console.error( error );
-                  audioRef.current = null;
+                audioRef.current = new Audio( audioURL );
+
+                const startTime = trimmerPos.start * elapsedRecordingTime;
+                const endTime = trimmerPos.end * elapsedRecordingTime;
+
+                // Monitor timeupdate event to stop audio at endTime
+                audioRef.current.addEventListener( 'timeupdate', () => {
+
+                  // I believe we may run into when the audioRef is removed because we get a timeupdate event after
+                  // the audio has ended. This is a quick fix to prevent that from happening.
+                  if ( audioRef.current && audioRef.current.currentTime >= endTime ) {
+                    audioRef.current.pause();
+                    audioRef.current = null;
+                  }
                 } );
 
+                // This is how we play within the trimmed section - when data is loaded, set the current time
+                // to the start time and then request the play.
+                audioRef.current.addEventListener( 'loadedmetadata', () => {
+                  audioRef.current.currentTime = startTime;
+
+                  audioRef.current.play().catch( error => {
+                    console.error( error );
+                    audioRef.current = null;
+                  } );
+                } );
+
+                // When over, clear the reference to the audio element
                 audioRef.current.onended = () => {
                   audioRef.current = null;
                 };
               }
-            }} name={'Play Recording'}></StyledButton>
+            }} name='▶'></StyledButton>
           </Col>
           <Col className={centeredColumn}>
-            <StyledButton variant='primary' onClick={() => {
+            <StyledButton variant='primary' onClick={async () => {
               // Save the recording
 
-              // For now, just close the dialog
+              // Trim the audio buffer to the selected range
+              const startTime = trimmerPos.start * elapsedRecordingTime;
+              const endTime = trimmerPos.end * elapsedRecordingTime;
+
+              const trimmedBuffer = trimAudioBuffer( audioBuffer, audioContextRef.current, startTime, endTime );
+              const encodedWav = encodeWAV( trimmedBuffer );
+
+              const formData = new FormData();
+              const file = new File( [ encodedWav ], `${fileName}.wav`, { type: 'audio/wav' } );
+              formData.append( 'file', file );
+
+              xhr.post( '/api/creator/uploadSound', { body: formData }, ( error, response ) => {
+                if ( error ) {
+                  console.error( error );
+                }
+                else {
+                  if ( response.body ) {
+                    console.log( 'Sound uploaded:', response.body );
+                  }
+                }
+              } );
+
               handleClose( false );
 
             }} name={'Save Recording'}></StyledButton>
@@ -262,8 +490,12 @@ function EditRecordingContent( props ) {
   );
 }
 
-function WaveformDisplay( { waveform } ) {
+function WaveformDisplay( props ) {
   const canvasRef = useRef( null );
+  const audioBuffer = props.audioBuffer;
+  const trimmerPos = props.trimmerPos;
+  const setTrimmerPos = props.setTrimmerPos;
+  const elapsedRecordingTime = props.elapsedRecordingTime;
 
   const canvasWidth = 600;
   const canvasHeight = 300;
@@ -274,8 +506,6 @@ function WaveformDisplay( { waveform } ) {
   const plotHeight = canvasHeight / 2;
   const plotStartX = horizontalPadding / 2;
 
-  // Position from 0 to 100 representing the trimmer position. Will be mapped to the canvas width.
-  const [ trimmerPos, setTrimmerPos ] = useState( { start: 0, end: 1 } );
   const [ isDraggingStart, setIsDraggingStart ] = useState( false );
   const [ isDraggingEnd, setIsDraggingEnd ] = useState( false );
 
@@ -370,14 +600,32 @@ function WaveformDisplay( { waveform } ) {
     ctx.lineWidth = 5;
     ctx.strokeRect( plotStartX, 0, plotWidth, plotHeight );
 
-    // Dummy display of a waveform
-    ctx.beginPath();
-    ctx.moveTo( plotStartX, plotHeight / 2 );
-    ctx.strokeStyle = ViewConstants.textFillColor.toCSS();
-    ctx.lineWidth = 2;
-    for ( let i = 0; i < plotWidth; i++ ) {
-      ctx.lineTo( plotStartX + i, plotHeight / 2 + 20 * Math.sin( i * 0.05 ) );
+    // In case there is no audio data yet
+    if ( !audioBuffer ) {
+      return;
     }
+
+    // Draw the actual audio data as a wave
+    const data = audioBuffer.getChannelData( 0 );
+
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+
+    const step = Math.ceil( data.length / canvasWidth );
+    const amp = plotHeight / 2;
+    for ( let i = plotStartX; i < plotStartX + plotWidth; i++ ) {
+      const min = Math.max( ...data.subarray( i * step, ( i + 1 ) * step ) ) * amp + plotHeight / 2;
+      const max = Math.min( ...data.subarray( i * step, ( i + 1 ) * step ) ) * amp + plotHeight / 2;
+
+      if ( i === 0 ) {
+        ctx.moveTo( i, min );
+      }
+      else {
+        ctx.lineTo( i, min );
+      }
+      ctx.lineTo( i, max );
+    }
+
     ctx.stroke();
 
     // 0 seconds on the left side of the plot
@@ -386,13 +634,14 @@ function WaveformDisplay( { waveform } ) {
     ctx.fillText( '0', plotStartX, plotHeight + 36 );
 
     // will be replaced with the actual duration of the recording on the right
-    ctx.fillText( '5.0', plotStartX + plotWidth - 36, plotHeight + 36 );
+    const formattedRecordingTime = elapsedRecordingTime.toFixed( 2 );
+    ctx.fillText( formattedRecordingTime, plotStartX + plotWidth - 36, plotHeight + 36 );
 
     // Draw trimmers
     drawTrimmer( ctx, trimmerToPlotPosition( trimmerPos.start ), plotHeight );
     drawTrimmer( ctx, trimmerToPlotPosition( trimmerPos.end ), plotHeight );
 
-  }, [ trimmerPos ] );
+  }, [ trimmerPos, audioBuffer ] );
 
   useEffect( () => {
     const handleMouseMove = ( e ) => {
@@ -452,4 +701,156 @@ function WaveformDisplay( { waveform } ) {
       ></canvas>
     </>
   );
+}
+
+//------------------------------------------------------------------------------
+// Functions supporting audio recording
+//------------------------------------------------------------------------------
+async function requestAudioPermissions() {
+  try {
+    return await navigator.mediaDevices.getUserMedia( { audio: true } );
+  }
+  catch( error ) {
+    console.error( 'Error accessing audio devices:', error );
+    return null;
+  }
+}
+
+async function getAudioDevices() {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  return devices.filter( device => device.kind === 'audioinput' );
+}
+
+async function initRecorder( audioContextRef, analyserRef, dataArrayRef ) {
+  const stream = await requestAudioPermissions();
+  if ( !stream ) {
+    return false;
+  }
+
+  // Set up AudioContext and AnalyserNode to process realtime data
+  const audioContext = new ( window.AudioContext || window.webkitAudioContext )();
+  const analyser = audioContext.createAnalyser();
+  const source = audioContext.createMediaStreamSource( stream );
+  source.connect( analyser );
+  analyser.fftSize = 256;
+  const bufferLength = analyser.frequencyBinCount;
+  const dataArray = new Uint8Array( bufferLength );
+
+  audioContextRef.current = audioContext;
+  analyserRef.current = analyser;
+  dataArrayRef.current = dataArray;
+
+  // Create a media recorder to record and save the audio
+  return new MediaRecorder( stream );
+}
+
+// Apparently, the root-mean-square of the data is a good approximation of the sound level.
+function calculateSoundLevel( analyser, dataArray ) {
+  analyser.getByteTimeDomainData( dataArray );
+
+  let sumSquares = 0;
+  for ( let i = 0; i < dataArray.length; i++ ) {
+    const normalized = dataArray[ i ] / 128.0 - 1.0;
+    sumSquares += normalized * normalized;
+  }
+
+  return Math.sqrt( sumSquares / dataArray.length );
+}
+
+// Returns an audio buffer decoded so that we can use it to draw the sound wave of the recorded audio
+const getAudioBuffer = async ( audioURL, audioContext ) => {
+  const response = await fetch( audioURL );
+  const arrayBuffer = await response.arrayBuffer();
+  return await audioContext.decodeAudioData( arrayBuffer );
+}
+
+// Creates a trimmed AudioBuffer from the original audio, between the start time and end time. Should be used before
+// saving the audio to a local file.
+function trimAudioBuffer( audioBuffer, audioContext, startTime, endTime ) {
+  const duration = endTime - startTime;
+  const sampleRate = audioBuffer.sampleRate;
+  const newLength = duration * sampleRate;
+  const trimmedBuffer = audioContext.createBuffer(
+    audioBuffer.numberOfChannels,
+    newLength,
+    sampleRate
+  );
+
+  for ( let i = 0; i < audioBuffer.numberOfChannels; i++ ) {
+    const channelData = audioBuffer.getChannelData( i );
+    trimmedBuffer.copyToChannel( channelData.subarray( startTime * sampleRate, endTime * sampleRate ), i );
+  }
+
+  return trimmedBuffer;
+}
+
+// Encodes the audio buffer as a WAV file and returns a Blob that can be saved to the local file system.
+function encodeWAV( audioBuffer ) {
+  const numberOfChannels = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+  const format = 1; // PCM
+  const bitDepth = 16;
+
+  let result;
+
+  if ( numberOfChannels === 2 ) {
+    result = interleaveChannels( audioBuffer.getChannelData( 0 ), audioBuffer.getChannelData( 1 ) );
+  }
+  else {
+    result = audioBuffer.getChannelData( 0 );
+  }
+
+  const wavBuffer = new ArrayBuffer( 44 + result.length * 2 );
+  const view = new DataView( wavBuffer );
+
+  /* Write WAV header */
+  writeString( view, 0, 'RIFF' );
+  view.setUint32( 4, 32 + result.length * 2, true );  // file length - 8
+  writeString( view, 8, 'WAVE' );
+  writeString( view, 12, 'fmt ' );
+  view.setUint32( 16, 16, true );  // PCM format chunk length
+  view.setUint16( 20, format, true );
+  view.setUint16( 22, numberOfChannels, true );
+  view.setUint32( 24, sampleRate, true );
+  view.setUint32( 28, sampleRate * numberOfChannels * ( bitDepth / 8 ), true );  // byte rate
+  view.setUint16( 32, numberOfChannels * ( bitDepth / 8 ), true );  // block align
+  view.setUint16( 34, bitDepth, true );  // bits per sample
+  writeString( view, 36, 'data' );
+  view.setUint32( 40, result.length * 2, true );
+
+  /* Write PCM samples */
+  floatTo16BitPCM( view, 44, result );
+
+  return new Blob( [ view ], { type: 'audio/wav' } );
+}
+
+// Utility function for encoding the audio buffer as a WAV file
+function interleaveChannels( inputL, inputR ) {
+  const length = inputL.length + inputR.length;
+  const result = new Float32Array( length );
+
+  let index = 0;
+  let inputIndex = 0;
+
+  while ( index < length ) {
+    result[ index++ ] = inputL[ inputIndex ];
+    result[ index++ ] = inputR[ inputIndex ];
+    inputIndex++;
+  }
+  return result;
+}
+
+// Utility function for encoding the audio buffer as a WAV file
+function writeString( view, offset, string ) {
+  for ( let i = 0; i < string.length; i++ ) {
+    view.setUint8( offset + i, string.charCodeAt( i ) );
+  }
+}
+
+// Utility function for encoding the audio buffer as a WAV file
+function floatTo16BitPCM( output, offset, input ) {
+  for ( let i = 0; i < input.length; i++, offset += 2 ) {
+    const s = Math.max( -1, Math.min( 1, input[ i ] ) );
+    output.setInt16( offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true );
+  }
 }

@@ -377,3 +377,16 @@ code {
   justify-content: flex-end;
   align-items: flex-end;
 }
+
+:local(.recordButton) {
+  color: red; /* Change the text color to red */
+  padding-left: 14px; /* creates a more square button */
+  padding-right: 14px; /* creates a more square button */
+  font-size: 48px; /* Make the font size much larger */
+}
+
+:local(.pauseButton) {
+  padding-left: 14px; /* creates a more square button */
+  padding-right: 14px; /* creates a more square button */
+  font-size: 48px; /* Make the font size much larger */
+}
