@@ -100,6 +100,8 @@ function RecordContent( props ) {
 
   const [ currentlyRecording, setCurrentlyRecording ] = useState( false );
 
+  const [ soundLevel, setSoundLevel ] = useState( 0 );
+
   // This is a simple way to update the elapsed time every second.
   // For a more accurate timer, you can use the Web Audio API.
   useEffect( () => {
@@ -107,6 +109,9 @@ function RecordContent( props ) {
       if ( currentlyRecording ) {
         setElapsedTime( ( prevTime ) => prevTime + 0.1 );
       }
+
+      // FOr testing, update the sound level every 100ms
+      setSoundLevel( Math.random() );
     }, 100 );
 
     // Clear the interval when the component unmounts
@@ -124,22 +129,72 @@ function RecordContent( props ) {
   return (
     <Row className='justify-content-center'>
       <Col xs='auto' className='text-center'>
-        <p>{elapsedTime.toFixed( 2 )} / {MAX_RECORDING_TIME.toFixed( 2 )}</p>
-        <p style={{ visibility: currentlyRecording ? 'visible' : 'hidden' }}>Recording...</p>
-        {currentlyRecording ? (
-          <>
-            <StyledButton variant='primary' onClick={() => {
-              stopRecording();
-            }} name={'Stop Recording'}></StyledButton>
-          </>
-        ) : (
-           <StyledButton variant='primary' onClick={() => {
-             setCurrentlyRecording( true );
-             // Implement web audio part here...
-           }} name={'Start Recording'}></StyledButton>
-         )}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <p>{elapsedTime.toFixed( 2 )} / {MAX_RECORDING_TIME.toFixed( 2 )}</p>
+          <p style={{ visibility: currentlyRecording ? 'visible' : 'hidden' }}>Recording...</p>
+          <IncomingSoundLevelView soundLevel={soundLevel}></IncomingSoundLevelView>
+
+          {currentlyRecording ? (
+            <StyledButton
+              variant='primary'
+              onClick={stopRecording}
+              name='Stop Recording'>
+              Stop Recording
+            </StyledButton>
+          ) : (
+             <StyledButton
+               variant='primary'
+               onClick={() => setCurrentlyRecording( true )}
+               name='Start Recording'>
+               Start Recording
+             </StyledButton>
+           )}
+        </div>
       </Col>
     </Row>
+  );
+}
+
+// A view that displays the incoming sound level. This is a canvas element will draw 16 rectangles on top of eachother
+// and their fill will update based on the incoming sound level.
+function IncomingSoundLevelView( props ) {
+  const canvasRef = useRef( null );
+
+  // The incoming level of sound, from 0 to 1.
+  const soundLevel = props.soundLevel;
+
+  // constants for the sound level bars
+  const barWidth = 30;
+  const barHeight = 14;
+  const barSpacing = 5;
+  const numBars = 16;
+
+  const canvasWidth = 100;
+  const canvasHeight = ( barHeight + barSpacing ) * numBars;
+
+  useEffect( () => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext( '2d' );
+
+    // Clear the canvas
+    ctx.clearRect( 0, 0, canvasWidth, canvasHeight );
+
+    // draw 16 bars stacked on top of eachother - the fill will update based on the incoming sound level
+    for ( let i = 0; i < numBars; i++ ) {
+      const barX = canvasWidth / 2 - barWidth / 2;
+      const barY = i * ( barHeight + barSpacing );
+
+      ctx.fillStyle = ( 1 - i / numBars ) < soundLevel ? ViewConstants.textFillColor.toCSS() : ViewConstants.backgroundColor.toCSS();
+      ctx.strokeStyle = ViewConstants.buttonStrokeColor.toCSS();
+      ctx.fillRect( barX, barY, barWidth, barHeight );
+      ctx.strokeRect( barX, barY, barWidth, barHeight );
+    }
+  }, [ soundLevel ] );
+
+  return (
+    <>
+      <canvas ref={canvasRef} width={canvasWidth} height={canvasHeight}></canvas>
+    </>
   );
 }
 
