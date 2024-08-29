@@ -17,6 +17,8 @@ const router = express.Router();
 router.use( express.json() );
 router.use( require( 'nocache' )() );
 
+const SOUND_UPLOAD_DIRECTORY = path.join( __dirname, '..', 'www', 'media', 'sounds', 'uploads' );
+
 console.log( '---------------------------------------------------' );
 
 // Determine how spaces and projects are saved and loaded. Local filesystem is the default. Providing
@@ -598,6 +600,31 @@ router.post( '/api/creator/uploadSound', uploadSound.single( 'file' ), async ( r
     console.error( 'Error processing the uploaded file:', error );
     res.status( 500 ).json( { message: 'Failed to process the uploaded file' } );
   }
+} );
+
+/**
+ * Delete a sound file from uploads. Only files in the uploads directory can be deleted.
+ */
+router.delete( '/api/creator/deleteSound/:fileName', async ( req, res ) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join( SOUND_UPLOAD_DIRECTORY, fileName );
+
+  // Make sure the file exists before deleting
+  fs.access( filePath, fs.constants.F_OK, err => {
+    if ( err ) {
+      console.error( 'Sound file does not exist to delete.' );
+      return res.status( 404 ).json( { message: 'File not found' } );
+    }
+
+    // Delete the file if it exists.
+    fs.unlink( filePath, err => {
+      if ( err ) {
+        console.error( 'Error deleting the file:', err );
+        return res.status( 500 ).json( { message: 'Failed to delete the file.' } );
+      }
+      res.status( 200 ).json( { message: 'File deleted successfully.' } );
+    } );
+  } );
 } );
 
 /**

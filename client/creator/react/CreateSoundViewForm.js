@@ -32,6 +32,10 @@ export default function CreateSoundViewForm( props ) {
   // State controlling whether the record sound dialog is showing.
   const [ recordDialogShowing, setRecordDialogShowing ] = useState( false );
 
+  // State controlling whether the button to delete an uploaded sound is disabled. Only enabled when a sound
+  // in the uploads directory is selected.
+  const [ deleteButtonDisabled, setDeleteButtonDisabled ] = useState( true );
+
   // Get form data from the child and forward it back to the parent form so we have data in one place to
   // create a component.
   const getFormData = providedData => {
@@ -85,6 +89,38 @@ export default function CreateSoundViewForm( props ) {
   useEffect( () => {
     refreshSoundFiles( formData.soundFileName );
   }, [] );
+
+  // When the sound file name is in the uploads directory, the delete button is enabled
+  useEffect( () => {
+    const enabled = formData.soundFileName && formData.soundFileName.includes( '/uploads/' );
+    setDeleteButtonDisabled( !enabled );
+  }, [ formData.soundFileName ] );
+
+  // Make a request to the server to delete a sound in the uploads directory. Only uploaded sounds can be deleted.
+  // @param fileName - A file name like '/uploads/custom-sound.mp3'
+  const deleteSound = fileName => {
+
+    // Make sure that the fileName includes /uploads/
+    if ( !fileName.includes( '/uploads/' ) ) {
+      return;
+    }
+
+    // Now remove the /uploads/ string from the filename as the API does not expect it to be there.
+    const modifiedFileName = fileName.replace( '/uploads/', '' );
+    const deleteUrl = new URL( `api/creator/deleteSound/${modifiedFileName}`, window.location.origin ).toString();
+
+    xhr.del( deleteUrl, { json: true }, ( error, response ) => {
+      if ( error ) {
+        console.log( error );
+      }
+      else {
+
+        // Refresh available sound files and clear the previous selection upon success
+        handleChange( { soundFileName: '' } );
+        refreshSoundFiles( '' );
+      }
+    } );
+  }
 
   // A select UI component to use a particular sound.
   const soundFileSelector = (
@@ -140,6 +176,10 @@ export default function CreateSoundViewForm( props ) {
             <Row>
               <StyledButton
                 name={'Delete Sound'}
+                disabled={deleteButtonDisabled}
+                onClick={() => {
+                  deleteSound( formData.soundFileName );
+                }}
               ></StyledButton>
             </Row>
           </Col>
