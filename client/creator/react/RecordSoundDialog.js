@@ -21,6 +21,10 @@ export default function RecordSoundDialog( props ) {
   const showing = props.showing;
   const setShowing = props.setShowing;
 
+  // A function that is called to refresh the list of available files once the user has completed a recording.
+  // The function takes the new file name.
+  const handleRecordingFinished = props.handleRecordingFinished;
+
   // True when the user has granted permission to start recording.
   const [ permissionGranted, setPermissionGranted ] = useState( false );
 
@@ -179,6 +183,7 @@ export default function RecordSoundDialog( props ) {
                 startRecorder={startRecorder}
                 trimmerPos={trimmerPos}
                 setTrimmerPos={setTrimmerPos}
+                handleRecordingFinished={handleRecordingFinished}
               />;
             }
           } )()}
@@ -410,6 +415,7 @@ function EditRecordingContent( props ) {
   const audioBuffer = props.audioBuffer;
   const trimmerPos = props.trimmerPos;
   const setTrimmerPos = props.setTrimmerPos;
+  const handleRecordingFinished = props.handleRecordingFinished;
 
   // The name for the audio file
   const [ fileName, setFileName ] = useState( '' );
@@ -523,7 +529,14 @@ function EditRecordingContent( props ) {
                 }
                 else {
                   if ( response.body ) {
-                    console.log( 'Sound uploaded:', response.body );
+                    try {
+                      const responseJSON = JSON.parse( response.body );
+                      const fileName = responseJSON.soundFileName;
+                      handleRecordingFinished( fileName );
+                    }
+                    catch( error ) {
+                      console.log( 'Problem parsing server response after file upload.' );
+                    }
                   }
                 }
               } );

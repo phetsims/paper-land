@@ -212,7 +212,15 @@ export default function CreateSoundViewForm( props ) {
 
   return (
     <div>
-      <RecordSoundDialog showing={recordDialogShowing} setShowing={setRecordDialogShowing}></RecordSoundDialog>
+      <RecordSoundDialog
+        showing={recordDialogShowing}
+        setShowing={setRecordDialogShowing}
+
+        handleRecordingFinished={fileName => {
+          refreshSoundFiles( fileName );
+          handleChange( { soundFileName: fileName } );
+        }}
+      ></RecordSoundDialog>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
         typeSpecificControls={soundFileSelector}
