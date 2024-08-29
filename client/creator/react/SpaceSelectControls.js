@@ -66,10 +66,10 @@ const SpaceSelectControls = props => {
           // FOR DEBUGGING - initialize to jg-tests with project lab
           if ( window.dev ) {
             setTimeout( () => {
-              setSelectedSpaceName( 'jg-tests' );
+              setSelectedSpaceName( 'new-default-space' );
 
               setTimeout( () => {
-                setSelectedProjectName( 'test-project' );
+                setSelectedProjectName( 'testing' );
               }, 500 );
             }, 500 );
           }

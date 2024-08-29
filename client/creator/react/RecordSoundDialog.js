@@ -14,13 +14,27 @@ const centeredColumn = 'd-flex justify-content-center';
 // in seconds, the limit for the recording duration
 const MAX_RECORDING_TIME = 10;
 
+// in seconds, a countdown time  before recording begins
+const MAX_COUNTDOWN_TIME = 3;
+
 export default function RecordSoundDialog( props ) {
   const showing = props.showing;
   const setShowing = props.setShowing;
 
+  // True when the user has granted permission to start recording.
   const [ permissionGranted, setPermissionGranted ] = useState( false );
+
+  // True when the recording is complete and ready for editing.
   const [ recordingComplete, setRecordingComplete ] = useState( false );
+
+  // True while "counting down" before starting to record. When the user starts recording there is a 3 second countdown.
+  const [ currentlyCountingDown, setCurrentlyCountingDown ] = useState( false );
+
+  // How long the user has been recording sound.
   const [ elapsedRecordingTime, setElapsedRecordingTime ] = useState( 0 );
+
+  // Elapsed cowntdown time between pressing record and actually recording.
+  const [ elapsedCountdownTime, setElapsedCountdownTime ] = useState( MAX_COUNTDOWN_TIME );
 
   // Position from 0 to 1 representing the trimmer position. Will be mapped to the canvas width to draw the trimmer.
   const [ trimmerPos, setTrimmerPos ] = useState( { start: 0, end: 1 } );
@@ -59,6 +73,9 @@ export default function RecordSoundDialog( props ) {
       audioContextRef.current.close().then( () => {
         analyserRef.current = null;
         dataArrayRef.current = null;
+      } ).catch( error => {
+
+        // It is OK if this doesn't succeed if we try to close more than once.
       } );
     }
 
@@ -72,6 +89,9 @@ export default function RecordSoundDialog( props ) {
 
       // Also use a general stop method
       mediaRecorderRef.current.stop();
+
+      // Clear the mediaRecorderRef so we don't try to stop again.
+      mediaRecorderRef.current = null;
     }
   }
 
@@ -81,6 +101,7 @@ export default function RecordSoundDialog( props ) {
     setPermissionGranted( false );
     setRecordingComplete( false );
     setElapsedRecordingTime( 0 );
+    setElapsedCountdownTime( MAX_COUNTDOWN_TIME );
 
     stopRecording();
 
@@ -95,6 +116,7 @@ export default function RecordSoundDialog( props ) {
     // Clear previous recording state
     setRecordingComplete( false );
     setElapsedRecordingTime( 0 );
+    setElapsedCountdownTime( MAX_COUNTDOWN_TIME );
 
     // Clear any previous recording
     audioChunksRef.current = [];
@@ -133,6 +155,10 @@ export default function RecordSoundDialog( props ) {
                 setRecordingComplete={setRecordingComplete}
                 elapsedRecordingTime={elapsedRecordingTime}
                 setElapsedRecordingTime={setElapsedRecordingTime}
+                currentlyCountingDown={currentlyCountingDown}
+                setCurrentlyCountingDown={setCurrentlyCountingDown}
+                elapsedCountdownTime={elapsedCountdownTime}
+                setElapsedCountdownTime={setElapsedCountdownTime}
                 analyserRef={analyserRef}
                 dataArrayRef={dataArrayRef}
                 mediaRecorderRef={mediaRecorderRef}
@@ -198,6 +224,10 @@ function RecordContent( props ) {
   const audioChunksRef = props.audioChunksRef;
   const setAudioURL = props.setAudioURL;
   const setRecordingComplete = props.setRecordingComplete;
+  const currentlyCountingDown = props.currentlyCountingDown;
+  const setCurrentlyCountingDown = props.setCurrentlyCountingDown;
+  const elapsedCountdownTime = props.elapsedCountdownTime;
+  const setElapsedCountdownTime = props.setElapsedCountdownTime;
 
   const stopRecording = () => {
 
@@ -210,6 +240,8 @@ function RecordContent( props ) {
       };
 
       mediaRecorder.stop();
+
+      mediaRecorderRef.current = null;
     }
 
     setCurrentlyRecording( false );
@@ -218,28 +250,42 @@ function RecordContent( props ) {
 
   const [ currentlyRecording, setCurrentlyRecording ] = useState( false );
 
-  // This is a simple way to update the elapsed time every second.
-  // For a more accurate timer, you can use the Web Audio API.
+  // This is a simple way to update the elapsed time counters every time interval.
   useEffect( () => {
     const interval = setInterval( () => {
       if ( currentlyRecording ) {
         setElapsedTime( ( prevTime ) => prevTime + 0.1 );
       }
+      else if ( currentlyCountingDown ) {
+        setElapsedCountdownTime( ( prevTime ) => prevTime - 0.1 );
+      }
     }, 100 );
 
     // Clear the interval when the component unmounts
     return () => clearInterval( interval );
-  }, [ currentlyRecording ] );
+  }, [ currentlyRecording, currentlyCountingDown ] );
 
   // In its own useEffect so that this update happens after the elapsed time state is fully updated.
   // Putting this check in the above useEffect can cause a memory leak.
   useEffect( () => {
-    if ( elapsedTime >= MAX_RECORDING_TIME ) {
+    if ( currentlyCountingDown && elapsedCountdownTime < 0 ) {
+
+      // We reached the end of the countdown, start recording
+      startRecording();
+    }
+    else if ( currentlyRecording && elapsedTime >= MAX_RECORDING_TIME ) {
+
+      // We reached the end of the maximum recording time, stop recording
       stopRecording();
     }
-  }, [ elapsedTime ] );
+  }, [ elapsedTime, elapsedCountdownTime ] );
+
+  const startCountdown = () => {
+    setCurrentlyCountingDown( true );
+  }
 
   const startRecording = () => {
+    setCurrentlyCountingDown( false );
     setCurrentlyRecording( true );
 
     if ( mediaRecorderRef.current ) {
@@ -253,21 +299,23 @@ function RecordContent( props ) {
 
   return (
     <Row className='justify-content-center align-items-center'>
-      <Col className='text-end'>
+      <Col className='text-center'>
         {currentlyRecording ? (
           <StyledButton
             variant='primary'
             onClick={stopRecording}
             name={<div className={styles.pauseButton}>❚❚</div>}>
           </StyledButton>
+        ) : currentlyCountingDown ? (
+          <p className={styles.evenLargerText}>{Math.ceil( elapsedCountdownTime )}</p>
         ) : (
-           <StyledButton
-             variant='primary'
-             otherClassNames=''
-             onClick={startRecording}
-             name={<div className={styles.recordButton}>●</div>}
-           />
-         )}
+              <StyledButton
+                variant='primary'
+                otherClassNames=''
+                onClick={startCountdown}
+                name={<div className={styles.recordButton}>●</div>}
+              />
+            )}
         <p>{elapsedTime.toFixed( 2 )} / {MAX_RECORDING_TIME.toFixed( 2 )}</p>
         <p style={{ visibility: currentlyRecording ? 'visible' : 'hidden' }}>Recording...</p>
       </Col>
