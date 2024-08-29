@@ -113,28 +113,35 @@ export default function CreateSoundViewForm( props ) {
             </Form.Select>
           </Col>
           <Col xs={3}>
-            <StyledButton
-              name={'Test Sound'}
-              onClick={() => {
-                if ( playingAudio ) {
-                  playingAudio.pause();
-                  playingAudio = null;
-                }
-                else {
-                  const fullPath = `media/sounds/${formData.soundFileName}`;
-                  playingAudio = new Audio( fullPath );
-                  playingAudio.play().catch( error => {
-                    console.error( error );
+            <Row>
+              <StyledButton
+                name={'Test Sound'}
+                overrideClassName={styles.noVerticalPadding}
+                onClick={() => {
+                  if ( playingAudio ) {
+                    playingAudio.pause();
                     playingAudio = null;
-                  } );
+                  }
+                  else {
+                    const fullPath = `media/sounds/${formData.soundFileName}`;
+                    playingAudio = new Audio( fullPath );
+                    playingAudio.play().catch( error => {
+                      console.error( error );
+                      playingAudio = null;
+                    } );
 
-                  playingAudio.onended = () => {
-                    playingAudio = null;
-                  };
-                }
-              }}
-              overrideClassName={styles.noVerticalPadding}
-            ></StyledButton>
+                    playingAudio.onended = () => {
+                      playingAudio = null;
+                    };
+                  }
+                }}
+              ></StyledButton>
+            </Row>
+            <Row>
+              <StyledButton
+                name={'Delete Sound'}
+              ></StyledButton>
+            </Row>
           </Col>
         </Row>
       </Container>
