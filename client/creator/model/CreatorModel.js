@@ -320,6 +320,7 @@ export default class CreatorModel {
   /**
    * Save this model as JSON for serialization.
    * @return {Object} json
+   * @throws error if problem is found with state object
    *
    * @public
    */
@@ -488,7 +489,15 @@ export default class CreatorModel {
    * @return {Promise<unknown>}
    */
   async sendSaveRequest() {
-    const json = this.save();
+    let json;
+    try {
+      json = this.save();
+    }
+    catch( error ) {
+      this.errorOccurredEmitter.emit( error.message );
+      return;
+    }
+
     let allChunksSent = false; // the server will let us know when it receives all the chunks
 
     // A timeout for the save request so that if it fails or gets interrupted, we can notify the

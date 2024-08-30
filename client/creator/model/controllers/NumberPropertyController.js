@@ -91,8 +91,15 @@ export default class NumberPropertyController extends PropertyController {
    * @return {{controlType, name: string}}
    */
   save() {
+
+    // Make sure that the control type is a valid value for the NumberPropertyController.
+    const superSave = super.save();
+    if ( !NumberPropertyControlType.enumeration.getValue( superSave.controlType ) ) {
+      throw new Error( `There is an incorrect value in the control type for ${this.nameProperty.value}. Please contact the developer. You can try re-creating the controller.` );
+    }
+
     return {
-      ...super.save(),
+      ...superSave,
       markerColor: this.markerColor,
 
       // will only be defined for 'PAPER_MOVEMENT'
