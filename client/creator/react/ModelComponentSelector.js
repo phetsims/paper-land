@@ -505,6 +505,7 @@ function ComponentsCheckboxList( props ) {
                              <Form.Check
                                type={'checkbox'}
                                id={`dependency-checkbox-${index}-${innerIndex}`}
+                               checked={newSelectedComponents.includes( innerComponent )}
                                label={innerComponent.nameProperty.value}
                                onChange={event => {
                                  handleCheckboxChange( event, innerComponent );
