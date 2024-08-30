@@ -41,7 +41,8 @@ export default function RecordSoundDialog( props ) {
   const [ elapsedCountdownTime, setElapsedCountdownTime ] = useState( MAX_COUNTDOWN_TIME );
 
   // Position from 0 to 1 representing the trimmer position. Will be mapped to the canvas width to draw the trimmer.
-  const [ trimmerPos, setTrimmerPos ] = useState( { start: 0, end: 1 } );
+  const [ startTrimmerPos, setStartTrimmerPos ] = useState( 0 );
+  const [ endTrimmerPos, setEndTrimmerPos ] = useState( 1 );
 
   const audioChunksRef = useRef( [] );
   const [ audioURL, setAudioURL ] = useState( '' );
@@ -181,8 +182,10 @@ export default function RecordSoundDialog( props ) {
                 audioContextRef={audioContextRef}
                 audioBuffer={audioBuffer}
                 startRecorder={startRecorder}
-                trimmerPos={trimmerPos}
-                setTrimmerPos={setTrimmerPos}
+                startTrimmerPos={startTrimmerPos}
+                setStartTrimmerPos={setStartTrimmerPos}
+                endTrimmerPos={endTrimmerPos}
+                setEndTrimmerPos={setEndTrimmerPos}
                 handleRecordingFinished={handleRecordingFinished}
               />;
             }
@@ -413,8 +416,10 @@ function EditRecordingContent( props ) {
   const audioContextRef = props.audioContextRef;
   const startRecorder = props.startRecorder;
   const audioBuffer = props.audioBuffer;
-  const trimmerPos = props.trimmerPos;
-  const setTrimmerPos = props.setTrimmerPos;
+  const startTrimmerPos = props.startTrimmerPos;
+  const setStartTrimmerPos = props.setStartTrimmerPos;
+  const endTrimmerPos = props.endTrimmerPos;
+  const setEndTrimmerPos = props.setEndTrimmerPos;
   const handleRecordingFinished = props.handleRecordingFinished;
 
   // The name for the audio file
@@ -436,8 +441,10 @@ function EditRecordingContent( props ) {
           <Col className={centeredColumn}>
             <WaveformDisplay
               audioBuffer={audioBuffer}
-              trimmerPos={trimmerPos}
-              setTrimmerPos={setTrimmerPos}
+              startTrimmerPos={startTrimmerPos}
+              setStartTrimmerPos={setStartTrimmerPos}
+              endTrimmerPos={endTrimmerPos}
+              setEndTrimmerPos={setEndTrimmerPos}
               elapsedRecordingTime={elapsedRecordingTime}
             ></WaveformDisplay>
           </Col>
@@ -476,8 +483,8 @@ function EditRecordingContent( props ) {
               else {
                 audioRef.current = new Audio( audioURL );
 
-                const startTime = trimmerPos.start * elapsedRecordingTime;
-                const endTime = trimmerPos.end * elapsedRecordingTime;
+                const startTime = startTrimmerPos * elapsedRecordingTime;
+                const endTime = endTrimmerPos * elapsedRecordingTime;
 
                 // Monitor timeupdate event to stop audio at endTime
                 audioRef.current.addEventListener( 'timeupdate', () => {
@@ -513,8 +520,8 @@ function EditRecordingContent( props ) {
               // Save the recording
 
               // Trim the audio buffer to the selected range
-              const startTime = trimmerPos.start * elapsedRecordingTime;
-              const endTime = trimmerPos.end * elapsedRecordingTime;
+              const startTime = startTrimmerPos * elapsedRecordingTime;
+              const endTime = endTrimmerPos * elapsedRecordingTime;
 
               const trimmedBuffer = trimAudioBuffer( audioBuffer, audioContextRef.current, startTime, endTime );
               const encodedWav = encodeWAV( trimmedBuffer );
@@ -554,8 +561,10 @@ function EditRecordingContent( props ) {
 function WaveformDisplay( props ) {
   const canvasRef = useRef( null );
   const audioBuffer = props.audioBuffer;
-  const trimmerPos = props.trimmerPos;
-  const setTrimmerPos = props.setTrimmerPos;
+  const startTrimmerPos = props.startTrimmerPos;
+  const setStartTrimmerPos = props.setStartTrimmerPos;
+  const endTrimmerPos = props.endTrimmerPos;
+  const setEndTrimmerPos = props.setEndTrimmerPos;
   const elapsedRecordingTime = props.elapsedRecordingTime;
 
   const canvasWidth = 600;
@@ -699,10 +708,10 @@ function WaveformDisplay( props ) {
     ctx.fillText( formattedRecordingTime, plotStartX + plotWidth - 36, plotHeight + 36 );
 
     // Draw trimmers
-    drawTrimmer( ctx, trimmerToPlotPosition( trimmerPos.start ), plotHeight );
-    drawTrimmer( ctx, trimmerToPlotPosition( trimmerPos.end ), plotHeight );
+    drawTrimmer( ctx, trimmerToPlotPosition( startTrimmerPos ), plotHeight );
+    drawTrimmer( ctx, trimmerToPlotPosition( endTrimmerPos ), plotHeight );
 
-  }, [ trimmerPos, audioBuffer ] );
+  }, [ startTrimmerPos, endTrimmerPos, audioBuffer ] );
 
   useEffect( () => {
     const handleMouseMove = ( e ) => {
@@ -711,14 +720,13 @@ function WaveformDisplay( props ) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
 
-        const constrainedX = Math.min( Math.max( x, plotStartX ), plotWidth + plotStartX );
-        const trimmerPosition = plotToTrimmerPosition( constrainedX );
-
         if ( isDraggingStart ) {
-          setTrimmerPos( ( prev ) => ( { ...prev, start: trimmerPosition } ) );
+          const constrainedX = Math.min( Math.max( x, plotStartX ), trimmerToPlotPosition( endTrimmerPos ) - 10 );
+          setStartTrimmerPos( plotToTrimmerPosition( constrainedX ) );
         }
         else if ( isDraggingEnd ) {
-          setTrimmerPos( ( prev ) => ( { ...prev, end: trimmerPosition } ) );
+          const constrainedX = Math.min( Math.max( x, trimmerToPlotPosition( startTrimmerPos ) + 10 ), plotWidth + plotStartX );
+          setEndTrimmerPos( plotToTrimmerPosition( constrainedX ) );
         }
       }
     };
@@ -741,8 +749,8 @@ function WaveformDisplay( props ) {
 
   const handleMouseDown = ( e ) => {
     const x = e.nativeEvent.offsetX;
-    const startTrimmerCanvasX = trimmerToPlotPosition( trimmerPos.start );
-    const endTrimmerCanvasX = trimmerToPlotPosition( trimmerPos.end );
+    const startTrimmerCanvasX = trimmerToPlotPosition( startTrimmerPos );
+    const endTrimmerCanvasX = trimmerToPlotPosition( endTrimmerPos );
 
     if ( Math.abs( x - startTrimmerCanvasX ) < 10 ) {
       setIsDraggingStart( true );
