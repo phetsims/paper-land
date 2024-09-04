@@ -41,7 +41,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.beginPath();
       context.strokeStyle = ViewConstants.CONTROLLER_WIRE_COLOR;
       this.controllerConnections.forEach( connection => {
-        this.drawCurve( context, connection.start, connection.end );
+        this.drawConnection( context, connection.start, connection.end );
       } );
       context.setLineDash( ViewConstants.CONTROLLER_WIRE_LINE_DASH );
       context.stroke();
@@ -54,7 +54,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.beginPath();
       context.strokeStyle = ViewConstants.DERIVED_WIRE_COLOR;
       this.derivedPropertyConnections.forEach( connection => {
-        this.drawCurve( context, connection.start, connection.end );
+        this.drawConnection( context, connection.start, connection.end );
       } );
       context.setLineDash( ViewConstants.DERIVED_WIRE_LINE_DASH );
       context.stroke();
@@ -66,7 +66,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.beginPath();
       context.strokeStyle = ViewConstants.VIEW_WIRE_COLOR;
       this.viewConnections.forEach( connection => {
-        this.drawCurve( context, connection.start, connection.end );
+        this.drawConnection( context, connection.start, connection.end );
       } );
       context.setLineDash( ViewConstants.VIEW_WIRE_LINE_DASH );
       context.stroke();
@@ -78,7 +78,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.beginPath();
       context.strokeStyle = ViewConstants.LINK_WIRE_COLOR;
       this.linkConnections.forEach( connection => {
-        this.drawCurve( context, connection.start, connection.end );
+        this.drawConnection( context, connection.start, connection.end );
       } );
       context.setLineDash( ViewConstants.LINK_WIRE_LINE_DASH );
       context.stroke();
@@ -90,7 +90,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       context.beginPath();
       context.strokeStyle = ViewConstants.ARRAY_WIRE_COLOR;
       this.arrayConnections.forEach( connection => {
-        this.drawCurve( context, connection.start, connection.end );
+        this.drawConnection( context, connection.start, connection.end );
       } );
       context.setLineDash( ViewConstants.ARRAY_WIRE_LINE_DASH );
       context.stroke();
@@ -363,31 +363,53 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
   }
 
   /**
-   * Draws a wire-like curve between two points, using bezier curves.
+   * Draws a wire-like connection between two points.
    * @param {CanvasRenderingContext2D} context
-   * @param {Vector2} start
-   * @param {Vector2} end
+   * @param {Vector2} start - the output for one connection
+   * @param {Vector2} end - the input for another connection
    */
-  drawCurve( context, start, end ) {
+  drawConnection( context, start, end ) {
 
-    // draw the curve
-    const dy = Math.abs( end.y - start.y );
+    const startX = start.x;
+    const endX = end.x;
 
-    // so that when points are vertically aligned, the curve bows out wider for a more natural look
-    const horizontalOffset = Math.max( dy * 0.5, 25 );
+    // so that when points are vertically aligned, lines don't overlap and become impossible to read
+    const horizontalOffset = Math.max( start.y / 7 - 20, 10 );
 
-    const cp1x = start.x - horizontalOffset;
-    const cp1y = start.y;
-    const cp2x = end.x - horizontalOffset;
-    const cp2y = end.y;
+    const leftOfEndX = end.x - horizontalOffset;
+    const leftOfEndY = end.y;
 
-    context.moveTo( start.x, start.y );
-    context.bezierCurveTo( cp1x, cp1y, cp2x, cp2y, end.x, end.y );
+    // If the startX is to the left of the endX, just draw a line from start to end
+    if ( startX < endX ) {
+      context.moveTo( start.x, start.y );
+      context.lineTo( end.x, end.y );
+    }
+    else {
+
+      // create a zig-zag that moves around view components and is easy to see
+      context.moveTo( start.x, start.y );
+
+      // point just below the start point
+      const cp1x = start.x;
+      const cp1y = start.y + 10;
+      context.lineTo( cp1x, cp1y );
+
+      // point just below the start point and to the left of the program
+      const cp2x = end.x - horizontalOffset;
+      const cp2y = cp1y;
+      context.lineTo( cp2x, cp2y );
+
+      // point to the left of the end point (input)
+      context.lineTo( leftOfEndX, leftOfEndY );
+
+      // finish at the end point
+      context.lineTo( end.x, end.y );
+    }
 
     // draw the arrow head
     // Draw arrowhead
     const arrowSize = 12;
-    const angle = Math.atan2( end.y - cp2y, end.x - cp2x );
+    const angle = Math.atan2( end.y - leftOfEndY, end.x - leftOfEndX );
     const angle1 = angle - Math.PI / 6;
     const angle2 = angle + Math.PI / 6;
 
