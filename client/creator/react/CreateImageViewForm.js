@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import ListGroup from 'react-bootstrap/ListGroup';
+import Row from 'react-bootstrap/Row';
 import xhr from 'xhr';
 import { formatFunctionListForPrompt } from '../../utils.js';
 import ImageViewComponent from '../model/views/ImageViewComponent.js';
@@ -8,6 +10,7 @@ import ViewUnitsSelector from '../model/views/ViewUnitsSelector.js';
 import styles from './../CreatorMain.css';
 import FileUploader from './FileUploader.js';
 import NodeComponentFunctionsList, { NODE_COMPONENT_FUNCTIONS } from './NodeComponentFunctionsList.js';
+import StyledButton from './StyledButton.js';
 import useEditableForm from './useEditableForm.js';
 import ViewComponentControls from './ViewComponentControls.js';
 
@@ -40,6 +43,10 @@ export default function CreateImageViewForm( props ) {
 
   const [ imageFiles, setImageFiles ] = useState( [] );
 
+  // State controlling whether the button to delete an uploaded image is disabled. Only enabled when a image
+  // in the uploads directory is selected.
+  const [ deleteButtonDisabled, setDeleteButtonDisabled ] = useState( true );
+
   /**
    * Updates the list of available files that the user can select from. Done on mount or if
    * the user uploads a new file.
@@ -70,28 +77,46 @@ export default function CreateImageViewForm( props ) {
     refreshImageFiles( formData.imageFileName );
   }, [] );
 
+  // When the image file name is in the uploads directory, the delete button is enabled
+  useEffect( () => {
+    const enabled = formData.imageFileName && formData.imageFileName.includes( '/uploads/' );
+    setDeleteButtonDisabled( !enabled );
+  }, [ formData.imageFileName ] );
+
   // Specific form components for the Image components - A select for the built-in images and a place to upload custom
   // files
   const imageFileSelector = (
     <div>
       <Form.Label>Select from available files:</Form.Label>
-      <Form.Select
-        onChange={event => {
-          handleChange( { imageFileName: event.target.value } );
-        }}
-        value={formData.imageFileName}
-      >
-        {
-          imageFiles.map( ( imageFile, index ) => {
-            return (
-              <option
-                key={`image-file-${index}`}
-                value={imageFile}
-              >{imageFile}</option>
-            );
-          } )
-        }
-      </Form.Select>
+      <Row className='align-items-center'>
+        <Col xs={9}>
+          <Form.Select
+            onChange={event => {
+              handleChange( { imageFileName: event.target.value } );
+            }}
+            value={formData.imageFileName}
+          >
+            {
+              imageFiles.map( ( imageFile, index ) => {
+                return (
+                  <option
+                    key={`image-file-${index}`}
+                    value={imageFile}
+                  >{imageFile}</option>
+                );
+              } )
+            }
+          </Form.Select>
+        </Col>
+        <Col xs={3}>
+          <StyledButton
+            name={'Delete Image'}
+            disabled={deleteButtonDisabled}
+            onClick={() => {
+            }}
+          ></StyledButton>
+        </Col>
+      </Row>
       <div className={`${styles.controlElement}`}>
         <FileUploader
           fileType='image'
