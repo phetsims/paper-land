@@ -24,18 +24,21 @@ export default class ComponentListItemNode extends phet.scenery.Node {
     } );
     this.addChild( highlightRectangle );
 
-    const content = new phet.scenery.HBox( { spacing: 5 } );
+    const content = new phet.scenery.Node();
     this.addChild( content );
 
-    this.connectionCircle = new phet.scenery.Circle( 2, {
+    this.inputConnectionCircle = new phet.scenery.Circle( 2, {
+      stroke: 'black'
+    } );
+
+    this.outputConnectionCircle = new phet.scenery.Circle( 2, {
       stroke: 'black'
     } );
 
     const nameText = new phet.scenery.Text( this.componentName, {
       font: new phet.scenery.Font( { size: 7 } ),
-      maxWidth: programWidth * 0.65
+      maxWidth: programWidth * 0.55
     } );
-    const circleWithText = new phet.scenery.HBox( { spacing: 2, children: [ this.connectionCircle, nameText ] } );
 
     const itemButtons = new phet.scenery.HBox( {
       spacing: 5
@@ -50,7 +53,12 @@ export default class ComponentListItemNode extends phet.scenery.Node {
     const layout = () => {
 
       // May not be finite while images are loading
-      if ( content.bounds.isFinite() ) {
+      if ( itemButtons.bounds.isFinite() && content.bounds.isFinite() ) {
+
+        nameText.leftCenter = this.inputConnectionCircle.rightCenter.plusXY( 2, 0 );
+        itemButtons.leftCenter = nameText.rightCenter.plusXY( 5, 0 );
+        this.outputConnectionCircle.leftCenter = itemButtons.rightCenter.plusXY( 5, 0 );
+
         highlightRectangle.setRect( 0, 0, content.width, content.height );
       }
     };
@@ -96,11 +104,12 @@ export default class ComponentListItemNode extends phet.scenery.Node {
       layout();
     } );
 
-    content.children = [ circleWithText, itemButtons ];
+    content.children = [ this.inputConnectionCircle, nameText, itemButtons, this.outputConnectionCircle ];
     layout();
 
     activeEditProperty.link( activeEdit => {
       highlightRectangle.visible = activeEdit && activeEdit.component === component;
+      layout();
     } );
   }
 
@@ -108,8 +117,8 @@ export default class ComponentListItemNode extends phet.scenery.Node {
    * The center of the connection point circle in the global coordinate frame.
    * @returns {phet.dot.Vector2}
    */
-  getGlobalConnectionPoint() {
-    const globalCenter = this.connectionCircle.getGlobalBounds().center;
+  getGlobalInputConnectionPoint() {
+    const globalCenter = this.inputConnectionCircle.getGlobalBounds().center;
     const matrix = phet.scenery.animatedPanZoomSingleton.listener.matrixProperty.value.inverted();
     return matrix.timesVector2( globalCenter );
   }

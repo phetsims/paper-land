@@ -363,7 +363,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
         // the component is on this program, so return the global connection point - if the program is expanded then
         // we return the connection point in the global coordinate frame.
-        connectionPoint = componentListItemNode.getGlobalConnectionPoint();
+        connectionPoint = componentListItemNode.getGlobalInputConnectionPoint();
       }
       else {
 
