@@ -114,11 +114,11 @@ export default class ComponentListItemNode extends phet.scenery.Node {
   }
 
   /**
-   * The center of the connection point circle in the global coordinate frame.
-   * @returns {phet.dot.Vector2}
+   * Computes the connection point for either the input or output circle in the global coordinate frame.
    */
-  getGlobalInputConnectionPoint() {
-    const globalCenter = this.inputConnectionCircle.getGlobalBounds().center;
+  getGlobalConnectionPoint( isInput ) {
+    const targetNode = isInput ? this.inputConnectionCircle : this.outputConnectionCircle;
+    const globalCenter = targetNode.getGlobalBounds().center;
     const matrix = phet.scenery.animatedPanZoomSingleton.listener.matrixProperty.value.inverted();
     return matrix.timesVector2( globalCenter );
   }

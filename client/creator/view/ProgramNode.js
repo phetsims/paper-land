@@ -351,8 +351,11 @@ export default class ProgramNode extends phet.scenery.Node {
   /**
    * Returns the point in global coordinates where the 'connection point' is. This is where a displayed connection
    * wire should be placed. If the component name is not on this ProgramNode, null is returned.
+   *
+   * @param componentName - name of the component, used to find the list item to connect to
+   * @param isInput - true if the connection point is for an input, false if it is for an output
    */
-  getComponentListItemConnectionPoint( componentName ) {
+  getComponentListItemConnectionPoint( componentName, isInput ) {
     const componentListItemNode = _.find( this.allListItemNodes, componentListItemNode => {
       return componentListItemNode.componentName === componentName;
     } );
@@ -363,7 +366,7 @@ export default class ProgramNode extends phet.scenery.Node {
 
         // the component is on this program, so return the global connection point - if the program is expanded then
         // we return the connection point in the global coordinate frame.
-        connectionPoint = componentListItemNode.getGlobalInputConnectionPoint();
+        connectionPoint = componentListItemNode.getGlobalConnectionPoint( isInput );
       }
       else {
 

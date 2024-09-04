@@ -118,7 +118,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.programNodes.forEach( programNode => {
         programNode.model.controllerContainer.allComponents.forEach( controllerComponent => {
           if ( controllerComponent.nameProperty.value === controllerName ) {
-            startPoint = programNode.getComponentListItemConnectionPoint( controllerName );
+            startPoint = programNode.getComponentListItemConnectionPoint( controllerName, false );
           }
         } );
       } );
@@ -127,7 +127,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.programNodes.forEach( programNode => {
         programNode.model.modelContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === controlledName ) {
-            endPoint = programNode.getComponentListItemConnectionPoint( controlledName );
+            endPoint = programNode.getComponentListItemConnectionPoint( controlledName, true );
           }
         } );
       } );
@@ -157,7 +157,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         this.programNodes.forEach( programNode => {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
             if ( modelComponent.nameProperty.value === componentName ) {
-              endPoint = programNode.getComponentListItemConnectionPoint( componentName );
+              endPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
             }
           } );
         } );
@@ -168,7 +168,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           this.programNodes.forEach( programNode => {
             programNode.model.modelContainer.allComponents.forEach( modelComponent => {
               if ( modelComponent.nameProperty.value === dependencyName ) {
-                startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
+                startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName, false ) );
               }
             } );
           } );
@@ -196,14 +196,14 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         if ( component.propertyType === 'ObservableArray' ) {
 
           const componentName = component.nameProperty.value;
-          const arrayPoint = programNode.getComponentListItemConnectionPoint( componentName );
+          const arrayPoint = programNode.getComponentListItemConnectionPoint( componentName, false );
 
           // The added/removed components may not be defined.
           const addedItemName = component.arrayAddedItemReference?.nameProperty.value;
           const removedItemName = component.arrayRemovedItemReference?.nameProperty.value;
 
-          const addedItemPoint = programNode.getComponentListItemConnectionPoint( addedItemName );
-          const removedItemPoint = programNode.getComponentListItemConnectionPoint( removedItemName );
+          const addedItemPoint = programNode.getComponentListItemConnectionPoint( addedItemName, true );
+          const removedItemPoint = programNode.getComponentListItemConnectionPoint( removedItemName, true );
 
           if ( addedItemPoint ) {
             this.arrayConnections.push( { start: arrayPoint, end: addedItemPoint } );
@@ -219,13 +219,13 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           // start by drawing connections between the components and this array item,
           // showing the components as used BY the item
           const componentName = component.nameProperty.value;
-          const arrayItemPoint = programNode.getComponentListItemConnectionPoint( componentName );
+          const arrayItemPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
 
           // We know that the array item will only include components from its own program,
           // so we don't have to loop through all OTHER ProgramNodes to find connection
           // points.
           component.itemSchema.forEach( entry => {
-            const startPoint = programNode.getComponentListItemConnectionPoint( entry.component.nameProperty.value );
+            const startPoint = programNode.getComponentListItemConnectionPoint( entry.component.nameProperty.value, false );
             if ( startPoint && arrayItemPoint ) {
               this.arrayConnections.push( { start: startPoint, end: arrayItemPoint } );
             }
@@ -240,7 +240,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
                 // The arrayComponent may not be defined.
                 const componentArrayName = component.arrayComponent?.nameProperty.value;
                 if ( otherComponent.nameProperty.value === componentArrayName ) {
-                  const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName );
+                  const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName, true );
                   if ( arrayPoint && arrayItemPoint ) {
                     this.arrayConnections.push( { start: arrayItemPoint, end: arrayPoint } );
                   }
@@ -269,7 +269,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.programNodes.forEach( programNode => {
         programNode.model.viewContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === componentName ) {
-            endPoint = programNode.getComponentListItemConnectionPoint( componentName );
+            endPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
           }
         } );
       } );
@@ -280,7 +280,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         this.programNodes.forEach( programNode => {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
             if ( modelComponent.nameProperty.value === dependencyName ) {
-              startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName ) );
+              startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName, false ) );
             }
           } );
         } );
@@ -313,7 +313,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       this.programNodes.forEach( programNode => {
         programNode.model.listenerContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === componentName ) {
-            listenerComponentPoint = programNode.getComponentListItemConnectionPoint( componentName );
+            listenerComponentPoint = programNode.getComponentListItemConnectionPoint( componentName, false );
           }
         } );
       } );
@@ -325,7 +325,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
             if ( modelComponent.nameProperty.value === controlledPropertyName ) {
 
               // view point of the controlled property
-              const endPoint = programNode.getComponentListItemConnectionPoint( controlledPropertyName );
+              const endPoint = programNode.getComponentListItemConnectionPoint( controlledPropertyName, true );
 
               if ( listenerComponentPoint && endPoint ) {
                 this.linkConnections.push( {
@@ -346,11 +346,11 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
               if ( modelComponent.nameProperty.value === dependencyName ) {
 
                 // view point of the dependency
-                const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName );
+                const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName, false );
 
                 if ( startPoint && listenerComponentPoint ) {
                   this.linkConnections.push( {
-                    start: programNode.getComponentListItemConnectionPoint( dependencyName ),
+                    start: startPoint,
                     end: listenerComponentPoint
                   } );
                 }
