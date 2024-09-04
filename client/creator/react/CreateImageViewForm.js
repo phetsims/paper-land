@@ -83,6 +83,32 @@ export default function CreateImageViewForm( props ) {
     setDeleteButtonDisabled( !enabled );
   }, [ formData.imageFileName ] );
 
+  // Make a request to the server to delete an image in the uploads directory. Only uploaded sounds can be deleted.
+  // @param fileName - A file name like '/uploads/my-image.png'
+  const deleteImage = fileName => {
+
+    // Make sure that the fileName includes /uploads/
+    if ( !fileName.includes( '/uploads/' ) ) {
+      return;
+    }
+
+    // Now remove the /uploads/ string from the filename as the API does not expect it to be there.
+    const modifiedFileName = fileName.replace( '/uploads/', '' );
+    const deleteUrl = new URL( `api/creator/deleteImage/${modifiedFileName}`, window.location.origin ).toString();
+
+    xhr.del( deleteUrl, { json: true }, ( error, response ) => {
+      if ( error ) {
+        console.log( error );
+      }
+      else {
+
+        // Refresh available sound files and clear the previous selection upon success
+        handleChange( { imageFileName: '' } );
+        refreshImageFiles( '' );
+      }
+    } );
+  }
+
   // Specific form components for the Image components - A select for the built-in images and a place to upload custom
   // files
   const imageFileSelector = (
@@ -113,6 +139,7 @@ export default function CreateImageViewForm( props ) {
             name={'Delete Image'}
             disabled={deleteButtonDisabled}
             onClick={() => {
+              deleteImage( formData.imageFileName );
             }}
           ></StyledButton>
         </Col>

@@ -18,6 +18,7 @@ router.use( express.json() );
 router.use( require( 'nocache' )() );
 
 const SOUND_UPLOAD_DIRECTORY = path.join( __dirname, '..', 'www', 'media', 'sounds', 'uploads' );
+const IMAGE_UPLOAD_DIRECTORY = path.join( __dirname, '..', 'www', 'media', 'images', 'uploads' );
 
 console.log( '---------------------------------------------------' );
 
@@ -613,6 +614,31 @@ router.delete( '/api/creator/deleteSound/:fileName', async ( req, res ) => {
   fs.access( filePath, fs.constants.F_OK, err => {
     if ( err ) {
       console.error( 'Sound file does not exist to delete.' );
+      return res.status( 404 ).json( { message: 'File not found' } );
+    }
+
+    // Delete the file if it exists.
+    fs.unlink( filePath, err => {
+      if ( err ) {
+        console.error( 'Error deleting the file:', err );
+        return res.status( 500 ).json( { message: 'Failed to delete the file.' } );
+      }
+      res.status( 200 ).json( { message: 'File deleted successfully.' } );
+    } );
+  } );
+} );
+
+/**
+ * Delete an image file from uploads. Only files in the uploads directory can be deleted.
+ */
+router.delete( '/api/creator/deleteImage/:fileName', async ( req, res ) => {
+  const fileName = req.params.fileName;
+  const filePath = path.join( IMAGE_UPLOAD_DIRECTORY, fileName );
+
+  // make sure the file exists before deleting
+  fs.access( filePath, fs.constants.F_OK, err => {
+    if ( err ) {
+      console.error( 'Image file does not exist to delete.' );
       return res.status( 404 ).json( { message: 'File not found' } );
     }
 
