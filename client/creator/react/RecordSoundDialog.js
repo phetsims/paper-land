@@ -76,8 +76,8 @@ export default function RecordSoundDialog( props ) {
     // data
     if ( audioContextRef.current ) {
       audioContextRef.current.close().then( () => {
-        analyserRef.current = null;
-        dataArrayRef.current = null;
+        // analyserRef.current = null;
+        // dataArrayRef.current = null;
       } ).catch( error => {
 
         // It is OK if this doesn't succeed if we try to close more than once.
@@ -96,14 +96,14 @@ export default function RecordSoundDialog( props ) {
       mediaRecorderRef.current.stop();
 
       // Clear the mediaRecorderRef so we don't try to stop again.
-      mediaRecorderRef.current = null;
+      // mediaRecorderRef.current = null;
     }
   }
 
   const handleClose = () => {
 
     // Other work you want to do here before closing...
-    setPermissionGranted( false );
+    // setPermissionGranted( false );
     setRecordingComplete( false );
     setElapsedRecordingTime( 0 );
     setElapsedCountdownTime( MAX_COUNTDOWN_TIME );
@@ -134,11 +134,26 @@ export default function RecordSoundDialog( props ) {
     );
   }
 
+  // When recording stops, trigger the work to be done with the various web audio APIs.
   useEffect( () => {
     if ( recordingComplete ) {
       stopRecording();
     }
   }, [ recordingComplete ] );
+
+  // When the dialog opens, start the recorder if permissions have been granted.
+  useEffect( () => {
+    if ( showing && permissionGranted ) {
+
+      // useEffect cannot return a Promise. Instead, wrap the with an async function and call it immediately without
+      // waiting. Note the returned promise is ignored.
+      async function callImmediately() {
+        await startRecorder();
+      }
+
+      callImmediately();
+    }
+  }, [ showing ] );
 
   return (
     <>
@@ -151,7 +166,7 @@ export default function RecordSoundDialog( props ) {
           {( () => {
             if ( !permissionGranted ) {
               return <RequestPermissionContent
-                const startRecorder={startRecorder}
+                startRecorder={startRecorder}
                 mediaRecorderRef={mediaRecorderRef}
                 setPermissionGranted={setPermissionGranted}/>;
             }
@@ -206,18 +221,8 @@ function RequestPermissionContent( props ) {
       <StyledButton variant='primary' onClick={async () => {
 
         await startRecorder();
-
-        // For now, just allow permission
         props.setPermissionGranted( !!mediaRecorderRef.current );
 
-        // It will look something like this:
-        // navigator.mediaDevices.getUserMedia( { audio: true } )
-        //   .then( stream => {
-        //     setPermissionGranted( true );
-        //   } )
-        //   .catch( error => {
-        //     console.error( 'Error getting microphone access:', error );
-        //   } );
       }} name={'Grant Permission'}></StyledButton>
     </>
   );
@@ -249,7 +254,7 @@ function RecordContent( props ) {
 
       mediaRecorder.stop();
 
-      mediaRecorderRef.current = null;
+      // mediaRecorderRef.current = null;
     }
 
     setCurrentlyRecording( false );
@@ -296,10 +301,11 @@ function RecordContent( props ) {
     setCurrentlyCountingDown( false );
     setCurrentlyRecording( true );
 
-    if ( mediaRecorderRef.current ) {
-      mediaRecorderRef.current.start();
+    const mediaRecorder = mediaRecorderRef.current;
+    if ( mediaRecorder ) {
+      mediaRecorder.start();
 
-      mediaRecorderRef.current.ondataavailable = ( e ) => {
+      mediaRecorder.ondataavailable = ( e ) => {
         audioChunksRef.current.push( e.data );
       }
     }
