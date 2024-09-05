@@ -60,6 +60,7 @@ export default class ComponentListItemNode extends phet.scenery.Node {
         this.outputConnectionCircle.leftCenter = itemButtons.rightCenter.plusXY( 5, 0 );
 
         highlightRectangle.setRect( 0, 0, content.width, content.height );
+        highlightRectangle.center = content.center;
       }
     };
 
