@@ -391,7 +391,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
       // point just below the start point
       const cp1x = start.x;
-      const cp1y = start.y + 10;
+      const cp1y = start.y + 8;
       context.lineTo( cp1x, cp1y );
 
       // point just below the start point and to the left of the program
