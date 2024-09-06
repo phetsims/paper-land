@@ -4,7 +4,7 @@
 
 @value cameraMainSidebarWidth: 330px;
 
-@value backgroundColor: #2E4152;
+@value backgroundColor: #3a3a3a;
 
 :local(.root) {
   display: flex;
@@ -37,7 +37,7 @@
 }
 
 :local(.containerWithBackground) {
-  background: #6C8EAC;
+  background: forestgreen;
   border-radius: 6px;
 }
 
@@ -63,7 +63,7 @@
 }
 
 :local(.dialog) {
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 :local(.createProgramContent) {
@@ -85,7 +85,7 @@
 
 :local(.sidebar) {
   flex: 1 1 cameraMainSidebarWidth;
-  color: white;
+  color: rgb(255, 255, 255);
   font: 16px sans-serif;
   font-weight: 300;
   height: 95vh;
@@ -107,7 +107,7 @@
 }
 
 :local(.sidebar) a {
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 :local(.sidebar) button {
@@ -122,7 +122,7 @@
 
 :local(.sidebarSection:not(:last-child)) {
   margin-bottom: commonMargin;
-  border-bottom: 1px #999 solid;
+  border-bottom: 1px rgb(153, 153, 153) solid;
   padding-bottom: commonMargin;
 }
 
@@ -133,11 +133,11 @@
 
 :local(.sidebar) a,
 :local(.sidebar) a:visited {
-  color: skyblue;
+  color: rgb(135, 206, 235);
 }
 
 :local(.sidebar) a:hover {
-  color: white;
+  color: rgb(255, 255, 255);
 }
 
 :local(.sidebar) label {
@@ -173,34 +173,36 @@
   align-items: flex-start;
 }
 
-:local(.create) > {
+:local(.create)> {
   height: 100%;
 }
 
 :local(.programList) {
-  border: 1px whitesmoke solid;
+  border: 1px rgb(245, 245, 245) solid;
   padding: 5px;
 }
 
 :local(.programListItem) {
   width: 100%;
-  margin-bottom: calc(cameraMainPadding / 4);
+  margin-bottom: calc(cameraMainPadding / 8);
   cursor: pointer;
-}
-
-:local(.programListItem):nth-child(even) {
-  background: #555;
+  border-bottom: 1px solid rgb(204, 204, 204);
+  background: rgb(255, 255, 255);
+  color: #000000;
 }
 
 :local(.programListItem):hover {
-  background: #99e;
+  background: rgb(89, 228, 112);
+  color: #000000;
 }
 
 :local(.selectedProgramListItem) {
   width: 100%;
   margin-bottom: calc(cameraMainPadding / 4);
   cursor: pointer;
-  background: #7171E5;
+  background: rgb(59, 130, 246);
+  color: rgb(255, 255, 255);
+  font-weight: bold;
 }
 
 :local(.programListItemContent) {
@@ -218,19 +220,19 @@
 }
 
 :local(.programListItemToggle):hover {
-  background: #999;
+  background: rgb(153, 153, 153);
 }
 
 :local(.programListIcon) {
   display: inline-block;
-  padding: 0 3px;
+  padding: 0 2px;
   margin-left: 10px;
   margin-right: 3px;
-  text-align: center;
+  text-align: left;
 }
 
 :local(.programListIcon):hover {
-  background: #444;
+  background: rgb(68, 68, 68);
 }
 
 :local(.colorListItem) {
@@ -239,7 +241,7 @@
   height: 20px;
   border-radius: 25px;
   margin-right: 10px;
-  color: white;
+  color: rgb(255, 255, 255);
   font-size: 14px;
   text-align: center;
   line-height: 22px;
@@ -251,11 +253,11 @@
 }
 
 :local(.colorListItemSelected) {
-  box-shadow: 0 0 0 3px white;
+  box-shadow: 0 0 0 3px rgb(255, 255, 255);
 }
 
 :local(.colorListItemSelected):hover {
-  box-shadow: 0 0 0 3px white, 0 0 0 25px rgba(255, 255, 255, 0.3) inset;
+  box-shadow: 0 0 0 3px rgb(255, 255, 255), 0 0 0 25px rgba(255, 255, 255, 0.3) inset;
 }
 
 :local(.calibrationColorList) {
@@ -285,7 +287,7 @@
 }
 
 :local(.markerPreviewIcon):hover {
-  background: #444;
+  background: rgb(68, 68, 68);
 }
 
 :local(.spaceUrl) {
@@ -310,7 +312,7 @@
   flex-direction: row;
 }
 
-:local(.saveAlert ) {
+:local(.saveAlert) {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -331,17 +333,17 @@
 
 .accordion {
   --bs-accordion-border-width: 0;
-  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(100, 200, 255, 0.75);
+  --bs-accordion-btn-focus-box-shadow: 0 0 0 0.2rem rgba(13, 248, 5, 0.75);
 }
 
 .accordion-button {
   border-radius: 5px;
   color: white;
-  background-color: #6C8EAC;
+  background-color: #454647;
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: #6C8EAC;
+  background-color: forestgreen;
   color: white
 }
 
@@ -351,7 +353,7 @@
 
 .accordion-item {
   color: white;
-  background-color: #405B72;
+  background-color: #20642b;
 }
 
 :local(.detectionControlInput) {

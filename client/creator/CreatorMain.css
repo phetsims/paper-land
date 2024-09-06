@@ -51,9 +51,9 @@
   /*height: displayHeight;*/
 }
 
-/*applied to many panels in the board page*/
+/*applied to many panels in the Creator page*/
 :local(.panelClass) {
-  border-color: #6C8EAC;
+  border-color: #7db7e9;
   border-style: solid;
   color: textColor;
   padding: 10px;
@@ -109,15 +109,15 @@
 
 /*Override the default focus highlight styling for bootstrap to match our color scheme*/
 :local(.for-control:focus) {
-  border-color: #6C8EAC;
+  border-color: #2383f1;
   box-shadow: 0 0 0 0.1rem #6C8EAC;
 }
 
 /*Override default for bootstrap tabs*/
 /*active tab*/
 .nav.nav-tabs .nav-link.active {
-  background-color: rgb(89, 93, 94);
-  color: rgb(189, 203, 218);
+  background-color: #2383f1;
+  color: white;
 }
 
 /*inactive tabs*/
@@ -167,14 +167,14 @@
 
 /*Custom button styling for this app */
 :local(.customButton) {
-  background-color: rgb(89, 93, 94);
-  color: rgb(189, 203, 218);
+  background-color: white;
+  background-color: #2383f1;
   border-color: transparent;
 }
 
 :local(.customButton:hover) {
-  background-color: rgb(122, 125, 126);
-  color: rgb(189, 203, 218);
+  background-color: white;
+  color: #2383f1;
   border-color: transparent;
 }
 
@@ -203,7 +203,7 @@
 
 /*Styling for focus of form controls*/
 .form-control:focus {
-  border-color: #6C8EAC;
+  border-color: #021bff;
   box-shadow: 0 0 0 0.1rem #6C8EAC;
 }
 
@@ -301,10 +301,10 @@ code {
   padding: 5px;
   border-width: 2px;
   border-radius: 4px;
-  border-color: #eeeeee;
+  border-color: #0026ff;
   border-style: dashed;
-  background-color: backgroundColor;
-  color: textColor;
+  background-color: white;
+  color: black;
   transition: border .24s ease-in-out;
 }
 
