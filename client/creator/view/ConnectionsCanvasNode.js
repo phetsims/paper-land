@@ -383,10 +383,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
               const endPoint = programNode.getComponentListItemConnectionPoint( controlledPropertyName, true );
 
               if ( listenerComponentPoint && endPoint ) {
-                this.linkConnections.push( {
-                  start: listenerComponentPoint,
-                  end: endPoint
-                } );
+                this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, endPoint, listenerComponentPoint, programNode );
               }
             }
           } );
@@ -404,10 +401,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
                 const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName, false );
 
                 if ( startPoint && listenerComponentPoint ) {
-                  this.linkConnections.push( {
-                    start: startPoint,
-                    end: listenerComponentPoint
-                  } );
+                  this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, startPoint, listenerComponentPoint, programNode );
                 }
               }
             } );
