@@ -1,5 +1,6 @@
 import ActiveEdit from '../model/ActiveEdit.js';
 import EditType from '../model/EditType.js';
+import Utils from '../Utils.js';
 import ComponentListItemNode from './ComponentListItemNode.js';
 import CustomExpandCollapseButton from './CustomExpandCollapseButton.js';
 import ImageLoader from './ImageLoader.js';
@@ -384,8 +385,7 @@ export default class ProgramNode extends phet.scenery.Node {
    */
   getGlobalTitleConnectionPoint() {
     const globalTitleConnectionPoint = this.titleText.globalBounds.leftCenter;
-    const panZoomMatrix = phet.scenery.animatedPanZoomSingleton.listener.matrixProperty.value.inverted();
-    return panZoomMatrix.timesVector2( globalTitleConnectionPoint );
+    return Utils.getPanZoomCorrectedPoint( globalTitleConnectionPoint );
   }
 
   /**

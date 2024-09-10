@@ -1,6 +1,7 @@
 /**
  * A CanvasNode that draws connections between components.
  */
+import Utils from '../Utils.js';
 import ViewConstants from './ViewConstants.js';
 
 // A value to wrap the lineDashOffset so it doesn't grow forever.
@@ -123,6 +124,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       let endPoint;
       let startComponent;
       let endComponent;
+      let startProgramNode;
 
       // loop through all programNodes and find the one that has the controller
       this.programNodes.forEach( programNode => {
@@ -130,6 +132,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           if ( controllerComponent.nameProperty.value === controllerName ) {
             startPoint = programNode.getComponentListItemConnectionPoint( controllerName, false );
             startComponent = controllerComponent;
+            startProgramNode = programNode;
           }
         } );
       } );
@@ -145,7 +148,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
       } );
 
       if ( startPoint && endPoint ) {
-        this.addConnectionToList( this.controllerConnections, this.activeControllerConnections, startComponent, endComponent, startPoint, endPoint );
+        this.addConnectionToList( this.controllerConnections, this.activeControllerConnections, startComponent, endComponent, startPoint, endPoint, startProgramNode );
       }
     } );
   }
@@ -153,20 +156,24 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
   /**
    * Adds a connection to a list. If there is an activeEdit with a component, and either start or end components are that component,
    * the connection will be added to a special list that will be drawn with different styling.
-   * @param connections
-   * @param activeConnections
-   * @param startComponent
-   * @param endComponent
-   * @param startPoint
-   * @param endPoint
+   *
+   * @param connections - list of connections that connection will be added to
+   * @param activeConnections - list of activeConnections the component will be added to if a component is active
+   * @param startComponent - the start component of the connection
+   * @param endComponent - the end component of the connection
+   * @param startPoint - the start point of the connection
+   * @param endPoint - the end point of the connection
+   * @param startProgramNode - the program node that contains the start component
    */
-  addConnectionToList( connections, activeConnections, startComponent, endComponent, startPoint, endPoint ) {
+  addConnectionToList( connections, activeConnections, startComponent, endComponent, startPoint, endPoint, startProgramNode ) {
     const activeEditComponent = this.activeEditProperty.value?.component;
+    const globalStartProgramNodeOrigin = Utils.getPanZoomCorrectedPoint( startProgramNode.globalBounds.leftTop );
+
     if ( activeEditComponent === startComponent || activeEditComponent === endComponent ) {
-      activeConnections.push( { start: startPoint, end: endPoint } );
+      activeConnections.push( new Connection( startPoint, endPoint, globalStartProgramNodeOrigin ) );
     }
     else {
-      connections.push( { start: startPoint, end: endPoint } );
+      connections.push( new Connection( startPoint, endPoint, globalStartProgramNodeOrigin ) );
     }
   }
 
@@ -205,7 +212,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
               if ( modelComponent.nameProperty.value === dependencyName ) {
                 startObjects.push( {
                   startPoint: programNode.getComponentListItemConnectionPoint( dependencyName, false ),
-                  startComponent: modelComponent
+                  startComponent: modelComponent,
+                  startProgramNode: programNode
                 } );
               }
             } );
@@ -214,7 +222,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
         startObjects.forEach( object => {
           if ( object.startPoint && endPoint ) {
-            this.addConnectionToList( this.derivedPropertyConnections, this.activeDerivedPropertyConnections, object.startComponent, endComponent, object.startPoint, endPoint );
+            this.addConnectionToList( this.derivedPropertyConnections, this.activeDerivedPropertyConnections, object.startComponent, endComponent, object.startPoint, endPoint, object.startProgramNode );
           }
         } );
       }
@@ -245,10 +253,10 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           const removedItemPoint = programNode.getComponentListItemConnectionPoint( removedItemName, true );
 
           if ( addedItemPoint ) {
-            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayAddedItemReference, arrayPoint, addedItemPoint );
+            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayAddedItemReference, arrayPoint, addedItemPoint, programNode );
           }
           if ( removedItemPoint ) {
-            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayRemovedItemReference, arrayPoint, removedItemPoint );
+            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayRemovedItemReference, arrayPoint, removedItemPoint, programNode );
           }
         }
 
@@ -266,7 +274,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           component.itemSchema.forEach( entry => {
             const startPoint = programNode.getComponentListItemConnectionPoint( entry.component.nameProperty.value, false );
             if ( startPoint && arrayItemPoint ) {
-              this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, entry.component, component, startPoint, arrayItemPoint );
+              this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, entry.component, component, startPoint, arrayItemPoint, programNode );
             }
           } );
 
@@ -281,7 +289,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
                 if ( otherComponent.nameProperty.value === componentArrayName ) {
                   const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName, true );
                   if ( arrayPoint && arrayItemPoint ) {
-                    this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, otherComponent, component, arrayItemPoint, arrayPoint );
+                    this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, otherComponent, component, arrayItemPoint, arrayPoint, programNode );
                   }
                 }
               }
@@ -324,7 +332,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
             if ( modelComponent.nameProperty.value === dependencyName ) {
               startObjects.push( {
                 startPoint: programNode.getComponentListItemConnectionPoint( dependencyName, false ),
-                startComponent: modelComponent
+                startComponent: modelComponent,
+                startProgramNode: programNode
               } );
             }
           } );
@@ -333,7 +342,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
       startObjects.forEach( startObject => {
         if ( startObject && endPoint ) {
-          this.addConnectionToList( this.viewConnections, this.activeViewConnections, startObject.startComponent, endComponent, startObject.startPoint, endPoint );
+          this.addConnectionToList( this.viewConnections, this.activeViewConnections, startObject.startComponent, endComponent, startObject.startPoint, endPoint, startObject.startProgramNode );
         }
       } );
     } );
@@ -420,8 +429,11 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     const startX = start.x;
     const endX = end.x;
 
-    // so that when points are vertically aligned, lines don't overlap and become impossible to read
-    const horizontalOffset = Math.max( start.y / 7 - 20, 10 );
+    // So that when points are vertically aligned, lines don't overlap and become impossible to read. The offset is relative to the origin (top left) of the
+    // program Node in its global coordinate frame so that the offset doesn't change as the program moves vertically. Components further down the program
+    // will have a larger offset.
+    const startProgramOriginY = connection.startProgramOrigin.y;
+    const horizontalOffset = Math.max( ( start.y - startProgramOriginY ) / 3, 5 );
 
     const leftOfEndX = end.x - horizontalOffset;
     const leftOfEndY = end.y;
@@ -495,6 +507,22 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     this.lineDashOffset -= dt * 5;
 
     this.invalidatePaint();
+  }
+}
+
+/**
+ * Inner class representing a connection between two components that should be drawn, just containing the start point, end point, and an origin point for the
+ * program containing the start point for the connection (component output).
+ *
+ * @param start - the start point of the connection (global coordinates)
+ * @param end - the end point of the connection (global coordinates)
+ * @param startProgramOrigin - the origin point of the program containing the start point (global coordinates)
+ */
+class Connection {
+  constructor( start, end, startProgramOrigin ) {
+    this.start = start;
+    this.end = end;
+    this.startProgramOrigin = startProgramOrigin;
   }
 }
 

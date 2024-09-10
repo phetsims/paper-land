@@ -18,6 +18,15 @@ const Utils = {
       throw new Error( 'Something went wrong with the regex/index?' );
     }
     return parseInt( results[ 0 ], 10 );
+  },
+
+  /**
+   * Returns a point in the global coordinate frame, corrected for the pan and zoom of the view.
+   * @param globalPoint
+   */
+  getPanZoomCorrectedPoint( globalPoint ) {
+    const matrix = phet.scenery.animatedPanZoomSingleton.listener.matrixProperty.value.inverted();
+    return matrix.timesVector2( globalPoint );
   }
 };
 
