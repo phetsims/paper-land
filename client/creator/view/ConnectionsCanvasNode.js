@@ -365,10 +365,12 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
       // Look for the view point of the listener component
       let listenerComponentPoint;
+      let linkComponentPoint;
       this.programNodes.forEach( programNode => {
         programNode.model.listenerContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === componentName ) {
             listenerComponentPoint = programNode.getComponentListItemConnectionPoint( componentName, false );
+            linkComponentPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
           }
         } );
       } );
@@ -383,7 +385,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
               const endPoint = programNode.getComponentListItemConnectionPoint( controlledPropertyName, true );
 
               if ( listenerComponentPoint && endPoint ) {
-                this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, endPoint, listenerComponentPoint, programNode );
+                this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, listenerComponentPoint, endPoint, programNode );
               }
             }
           } );
@@ -400,8 +402,8 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
                 // view point of the dependency
                 const startPoint = programNode.getComponentListItemConnectionPoint( dependencyName, false );
 
-                if ( startPoint && listenerComponentPoint ) {
-                  this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, startPoint, listenerComponentPoint, programNode );
+                if ( startPoint && linkComponentPoint ) {
+                  this.addConnectionToList( this.linkConnections, this.activeLinkConnections, modelComponent, component, startPoint, linkComponentPoint, programNode );
                 }
               }
             } );
