@@ -226,6 +226,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    */
   updateArrayConnections() {
     this.arrayConnections = [];
+    this.activeArrayConnections = [];
 
     this.programNodes.forEach( programNode => {
       programNode.model.modelContainer.allComponents.forEach( component => {
@@ -244,10 +245,10 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           const removedItemPoint = programNode.getComponentListItemConnectionPoint( removedItemName, true );
 
           if ( addedItemPoint ) {
-            this.arrayConnections.push( { start: arrayPoint, end: addedItemPoint } );
+            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayAddedItemReference, arrayPoint, addedItemPoint );
           }
           if ( removedItemPoint ) {
-            this.arrayConnections.push( { start: arrayPoint, end: removedItemPoint } );
+            this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, component, component.arrayRemovedItemReference, arrayPoint, removedItemPoint );
           }
         }
 
@@ -265,7 +266,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           component.itemSchema.forEach( entry => {
             const startPoint = programNode.getComponentListItemConnectionPoint( entry.component.nameProperty.value, false );
             if ( startPoint && arrayItemPoint ) {
-              this.arrayConnections.push( { start: startPoint, end: arrayItemPoint } );
+              this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, entry.component, component, startPoint, arrayItemPoint );
             }
           } );
 
@@ -280,7 +281,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
                 if ( otherComponent.nameProperty.value === componentArrayName ) {
                   const arrayPoint = otherProgramNode.getComponentListItemConnectionPoint( componentArrayName, true );
                   if ( arrayPoint && arrayItemPoint ) {
-                    this.arrayConnections.push( { start: arrayItemPoint, end: arrayPoint } );
+                    this.addConnectionToList( this.arrayConnections, this.activeArrayConnections, otherComponent, component, arrayItemPoint, arrayPoint );
                   }
                 }
               }
