@@ -13,12 +13,41 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     this.model = model;
     this.programNodes = programNodes;
     this.visibilityModel = model.visibilityModel;
+    this.activeEditProperty = model.activeEditProperty;
 
+    // Each list of connections has two arrays - one for default connections, and another for connections that are
+    // attached to the active edit (currently being edited). When there is an active edit, those connections are more
+    // prominently displayed. Wehave to keep track of both lists so we can draw them separately (one stroke() for each).
     this.controllerConnections = [];
+    this.activeControllerConnections = [];
+
     this.derivedPropertyConnections = [];
+    this.activeDerivedPropertyConnections = [];
+
     this.viewConnections = [];
+    this.activeViewConnections = [];
+
+    this.linkConnections = [];
+    this.activeLinkConnections = [];
+
+    this.arrayConnections = [];
+    this.activeArrayConnections = [];
 
     this.lineDashOffset = 0;
+  }
+
+  /**
+   * Draw the list of connections to the canvas context.
+   */
+  drawConnectionList( context, connections, color, lineDash, lineWidth ) {
+    context.beginPath();
+    context.strokeStyle = color;
+    context.lineWidth = lineWidth;
+    connections.forEach( connection => {
+      this.drawConnection( context, connection );
+    } );
+    context.setLineDash( lineDash );
+    context.stroke();
   }
 
   /**
@@ -34,66 +63,44 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     context.lineCap = 'round';
     context.lineDashOffset = this.lineDashOffset;
 
+    const activeEditComponent = this.activeEditProperty.value?.component;
+    const innactiveLineWidth = activeEditComponent ? ViewConstants.INNACTIVE_EDIT_WIRE_LINE_WIDTH : ViewConstants.DEFAULT_WIRE_LINE_WIDTH;
+
     if ( this.visibilityModel.controllerConnectionsVisibleProperty.value ) {
       this.updateControllerConnections();
 
       // Draw controller connections
-      context.beginPath();
-      context.strokeStyle = ViewConstants.CONTROLLER_WIRE_COLOR;
-      this.controllerConnections.forEach( connection => {
-        this.drawConnection( context, connection.start, connection.end );
-      } );
-      context.setLineDash( ViewConstants.CONTROLLER_WIRE_LINE_DASH );
-      context.stroke();
+      this.drawConnectionList( context, this.controllerConnections, ViewConstants.CONTROLLER_WIRE_COLOR, ViewConstants.CONTROLLER_WIRE_LINE_DASH, innactiveLineWidth );
+      this.drawConnectionList( context, this.activeControllerConnections, ViewConstants.CONTROLLER_WIRE_COLOR, ViewConstants.CONTROLLER_WIRE_LINE_DASH, 3 );
     }
 
     if ( this.visibilityModel.derivedConnectionsVisibleProperty.value ) {
       this.updateDerivedPropertyConnections();
 
       // Draw DerivedProperty connections
-      context.beginPath();
-      context.strokeStyle = ViewConstants.DERIVED_WIRE_COLOR;
-      this.derivedPropertyConnections.forEach( connection => {
-        this.drawConnection( context, connection.start, connection.end );
-      } );
-      context.setLineDash( ViewConstants.DERIVED_WIRE_LINE_DASH );
-      context.stroke();
+      this.drawConnectionList( context, this.derivedPropertyConnections, ViewConstants.DERIVED_WIRE_COLOR, ViewConstants.DERIVED_WIRE_LINE_DASH, innactiveLineWidth );
+      this.drawConnectionList( context, this.activeDerivedPropertyConnections, ViewConstants.DERIVED_WIRE_COLOR, ViewConstants.DERIVED_WIRE_LINE_DASH, 3 );
     }
 
     if ( this.visibilityModel.viewConnectionsVisibleProperty.value ) {
       this.updateViewConnections();
 
-      context.beginPath();
-      context.strokeStyle = ViewConstants.VIEW_WIRE_COLOR;
-      this.viewConnections.forEach( connection => {
-        this.drawConnection( context, connection.start, connection.end );
-      } );
-      context.setLineDash( ViewConstants.VIEW_WIRE_LINE_DASH );
-      context.stroke();
+      this.drawConnectionList( context, this.viewConnections, ViewConstants.VIEW_WIRE_COLOR, ViewConstants.VIEW_WIRE_LINE_DASH, innactiveLineWidth );
+      this.drawConnectionList( context, this.activeViewConnections, ViewConstants.VIEW_WIRE_COLOR, ViewConstants.VIEW_WIRE_LINE_DASH, 3 );
     }
 
     if ( this.visibilityModel.listenerConnectionsVisibleProperty.value ) {
       this.updateListenerConnections();
 
-      context.beginPath();
-      context.strokeStyle = ViewConstants.LINK_WIRE_COLOR;
-      this.linkConnections.forEach( connection => {
-        this.drawConnection( context, connection.start, connection.end );
-      } );
-      context.setLineDash( ViewConstants.LINK_WIRE_LINE_DASH );
-      context.stroke();
+      this.drawConnectionList( context, this.linkConnections, ViewConstants.LINK_WIRE_COLOR, ViewConstants.LINK_WIRE_LINE_DASH, innactiveLineWidth );
+      this.drawConnectionList( context, this.activeLinkConnections, ViewConstants.LINK_WIRE_COLOR, ViewConstants.LINK_WIRE_LINE_DASH, 3 );
     }
 
     if ( this.visibilityModel.arrayConnectionsVisibleProperty.value ) {
       this.updateArrayConnections();
 
-      context.beginPath();
-      context.strokeStyle = ViewConstants.ARRAY_WIRE_COLOR;
-      this.arrayConnections.forEach( connection => {
-        this.drawConnection( context, connection.start, connection.end );
-      } );
-      context.setLineDash( ViewConstants.ARRAY_WIRE_LINE_DASH );
-      context.stroke();
+      this.drawConnectionList( context, this.arrayConnections, ViewConstants.ARRAY_WIRE_COLOR, ViewConstants.ARRAY_WIRE_LINE_DASH, innactiveLineWidth );
+      this.drawConnectionList( context, this.activeArrayConnections, ViewConstants.ARRAY_WIRE_COLOR, ViewConstants.ARRAY_WIRE_LINE_DASH, 3 );
     }
 
     context.restore();
@@ -105,6 +112,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    */
   updateControllerConnections() {
     this.controllerConnections = [];
+    this.activeControllerConnections = [];
 
     // draw controller connections
     this.model.allControllerComponents.forEach( component => {
@@ -113,12 +121,15 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
 
       let startPoint;
       let endPoint;
+      let startComponent;
+      let endComponent;
 
       // loop through all programNodes and find the one that has the controller
       this.programNodes.forEach( programNode => {
         programNode.model.controllerContainer.allComponents.forEach( controllerComponent => {
           if ( controllerComponent.nameProperty.value === controllerName ) {
             startPoint = programNode.getComponentListItemConnectionPoint( controllerName, false );
+            startComponent = controllerComponent;
           }
         } );
       } );
@@ -128,14 +139,35 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         programNode.model.modelContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === controlledName ) {
             endPoint = programNode.getComponentListItemConnectionPoint( controlledName, true );
+            endComponent = modelComponent;
           }
         } );
       } );
 
       if ( startPoint && endPoint ) {
-        this.controllerConnections.push( { start: startPoint, end: endPoint } );
+        this.addConnectionToList( this.controllerConnections, this.activeControllerConnections, startComponent, endComponent, startPoint, endPoint );
       }
     } );
+  }
+
+  /**
+   * Adds a connection to a list. If there is an activeEdit with a component, and either start or end components are that component,
+   * the connection will be added to a special list that will be drawn with different styling.
+   * @param connections
+   * @param activeConnections
+   * @param startComponent
+   * @param endComponent
+   * @param startPoint
+   * @param endPoint
+   */
+  addConnectionToList( connections, activeConnections, startComponent, endComponent, startPoint, endPoint ) {
+    const activeEditComponent = this.activeEditProperty.value?.component;
+    if ( activeEditComponent === startComponent || activeEditComponent === endComponent ) {
+      activeConnections.push( { start: startPoint, end: endPoint } );
+    }
+    else {
+      connections.push( { start: startPoint, end: endPoint } );
+    }
   }
 
   /**
@@ -144,6 +176,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    */
   updateDerivedPropertyConnections() {
     this.derivedPropertyConnections = [];
+    this.activeDerivedPropertyConnections = [];
 
     this.model.allModelComponents.forEach( component => {
       if ( component.propertyType === 'DerivedProperty' ) {
@@ -151,6 +184,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
         const dependencyNames = component.dependencyNames;
 
         let endPoint;
+        let endComponent;
 
         // loop through all model components and find the dependency derived property start point
         // loop through all programNodes and find the one that has the controlled
@@ -158,25 +192,29 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
             if ( modelComponent.nameProperty.value === componentName ) {
               endPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
+              endComponent = modelComponent;
             }
           } );
         } );
 
         // loop through programNodes and find the position for the corresponding Node
-        const startPoints = [];
+        const startObjects = [];
         dependencyNames.forEach( dependencyName => {
           this.programNodes.forEach( programNode => {
             programNode.model.modelContainer.allComponents.forEach( modelComponent => {
               if ( modelComponent.nameProperty.value === dependencyName ) {
-                startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName, false ) );
+                startObjects.push( {
+                  startPoint: programNode.getComponentListItemConnectionPoint( dependencyName, false ),
+                  startComponent: modelComponent
+                } );
               }
             } );
           } );
         } );
 
-        startPoints.forEach( startPoint => {
-          if ( startPoint && endPoint ) {
-            this.derivedPropertyConnections.push( { start: startPoint, end: endPoint } );
+        startObjects.forEach( object => {
+          if ( object.startPoint && endPoint ) {
+            this.addConnectionToList( this.derivedPropertyConnections, this.activeDerivedPropertyConnections, object.startComponent, endComponent, object.startPoint, endPoint );
           }
         } );
       }
@@ -258,37 +296,43 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
    */
   updateViewConnections() {
     this.viewConnections = [];
+    this.activeViewConnections = [];
 
     this.model.allViewComponents.forEach( component => {
       const componentName = component.nameProperty.value;
       const dependencyNames = component.modelComponentNames;
 
       let endPoint;
+      let endComponent;
 
       // get the location of the view component that we care about
       this.programNodes.forEach( programNode => {
         programNode.model.viewContainer.allComponents.forEach( modelComponent => {
           if ( modelComponent.nameProperty.value === componentName ) {
             endPoint = programNode.getComponentListItemConnectionPoint( componentName, true );
+            endComponent = modelComponent;
           }
         } );
       } );
 
       // get the location of the model components that the view component is dependent on
-      const startPoints = [];
+      const startObjects = [];
       dependencyNames.forEach( dependencyName => {
         this.programNodes.forEach( programNode => {
           programNode.model.modelContainer.allComponents.forEach( modelComponent => {
             if ( modelComponent.nameProperty.value === dependencyName ) {
-              startPoints.push( programNode.getComponentListItemConnectionPoint( dependencyName, false ) );
+              startObjects.push( {
+                startPoint: programNode.getComponentListItemConnectionPoint( dependencyName, false ),
+                startComponent: modelComponent
+              } );
             }
           } );
         } );
       } );
 
-      startPoints.forEach( startPoint => {
-        if ( startPoint && endPoint ) {
-          this.viewConnections.push( { start: startPoint, end: endPoint } );
+      startObjects.forEach( startObject => {
+        if ( startObject && endPoint ) {
+          this.addConnectionToList( this.viewConnections, this.activeViewConnections, startObject.startComponent, endComponent, startObject.startPoint, endPoint );
         }
       } );
     } );
@@ -302,6 +346,7 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
     // Link connetions will be drawn from the dependency Properties to the listener component, and from the listener
     // to the controlled components
     this.linkConnections = [];
+    this.activeLinkConnections = [];
 
     this.model.allListenerComponents.forEach( component => {
       const componentName = component.nameProperty.value;
@@ -365,10 +410,11 @@ class ConnectionsCanvasNode extends phet.scenery.CanvasNode {
   /**
    * Draws a wire-like connection between two points.
    * @param {CanvasRenderingContext2D} context
-   * @param {Vector2} start - the output for one connection
-   * @param {Vector2} end - the input for another connection
+   * @param {Object} connection - the connection to draw
    */
-  drawConnection( context, start, end ) {
+  drawConnection( context, connection ) {
+    const start = connection.start;
+    const end = connection.end;
 
     const startX = start.x;
     const endX = end.x;
