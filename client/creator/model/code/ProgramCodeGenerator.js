@@ -534,7 +534,8 @@ export default class ProgramCodeGenerator {
       data = {
         FILE_NAME: soundFileName,
         LOOP: viewComponent.loop,
-        AUTOPLAY: viewComponent.autoplay
+        AUTOPLAY: viewComponent.autoplay,
+        LAZY: viewComponent.lazyLink
       };
     }
     else if ( componentType === 'SpeechViewComponent' ) {

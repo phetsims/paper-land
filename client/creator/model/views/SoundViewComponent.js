@@ -48,7 +48,8 @@ export default class SoundViewComponent extends ViewComponent {
       stateObject.loop,
       stateObject.autoplay,
       {
-        referenceComponentNames: stateObject.referenceComponentNames
+        referenceComponentNames: stateObject.referenceComponentNames,
+        lazyLink: stateObject.lazyLink
       }
     );
   }

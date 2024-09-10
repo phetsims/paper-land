@@ -82,6 +82,7 @@ const ViewComponentTemplates = {
           
             {{CONTROL_FUNCTION}}
           }, {
+            lazy: {{LAZY}},
             otherReferences: {{REFERENCE_NAMES_ARRAY}},
           } );  
         }

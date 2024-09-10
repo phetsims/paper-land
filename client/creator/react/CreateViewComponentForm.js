@@ -172,6 +172,7 @@ export default function CreateViewComponentForm( props ) {
         editingComponent.soundFileName = soundsDataRef.current.soundFileName;
         editingComponent.loop = soundsDataRef.current.loop;
         editingComponent.autoplay = soundsDataRef.current.autoplay;
+        editingComponent.lazyLink = lazyLink;
       }
       else if ( selectedTab === 'speech' ) {
         editingComponent.lazyLink = lazyLink;
@@ -203,7 +204,9 @@ export default function CreateViewComponentForm( props ) {
         const soundFileName = soundsDataRef.current.soundFileName;
         const loop = soundsDataRef.current.loop;
         const autoplay = soundsDataRef.current.autoplay;
-        newComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay );
+        newComponent = new SoundViewComponent( componentName, selectedModelComponents, controlFunctionString, soundFileName, loop, autoplay, {
+          lazyLink: lazyLink
+        } );
         activeProgram.viewContainer.addSoundView( newComponent );
       }
       else if ( selectedTab === 'speech' ) {

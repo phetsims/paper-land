@@ -235,6 +235,16 @@ export default function CreateSoundViewForm( props ) {
           }}
         />
       </div>
+      <div className={styles.controlElement}>
+        <Form.Check
+          type={'checkbox'}
+          id={'lazy-link-checkbox'}
+          label={'Wait For Change - If checked, you will not hear sound when you add the program. Sound will wait until the model changes.'}
+          checked={formData.lazyLink}
+          onChange={event => {
+            handleChange( { lazyLink: event.target.checked } );
+          }}/>
+      </div>
     </>
   );
 
