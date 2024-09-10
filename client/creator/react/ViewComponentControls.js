@@ -29,6 +29,7 @@ export default function ViewComponentControls( props ) {
 
   return (
     <>
+      {/*Type specific controls you want at the top of the form.*/}
       {props.typeSpecificControls && (
         <>
           <hr/>

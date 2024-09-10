@@ -257,6 +257,14 @@ export default function CreateSoundViewForm( props ) {
     </div>
   );
 
+  // Controls that are specific to the sound component and should appear before the function editor.
+  const typeSpecificControls = (
+    <>
+      {soundFileSelector}
+      {additionalControls}
+    </>
+  );
+
   return (
     <div>
       <RecordSoundDialog
@@ -270,8 +278,7 @@ export default function CreateSoundViewForm( props ) {
       ></RecordSoundDialog>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
-        typeSpecificControls={soundFileSelector}
-        typeSpecificEndControls={additionalControls}
+        typeSpecificControls={typeSpecificControls}
         typeSpecificFunctions={soundFunctions}
         formData={formData}
         handleChange={handleChange}

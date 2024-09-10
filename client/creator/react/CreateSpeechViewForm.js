@@ -73,7 +73,7 @@ export default function CreateSpeechViewForm( props ) {
     <div>
       <ViewComponentControls
         allModelComponents={props.allModelComponents}
-        typeSpecificEndControls={typeSpecificControls}
+        typeSpecificControls={typeSpecificControls}
         typeSpecificFunctions={speechFunctions}
         isFormValid={props.isFormValid}
         formData={formData}
