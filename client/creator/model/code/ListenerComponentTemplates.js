@@ -147,6 +147,27 @@ const ListenerComponentTemplates = {
     `,
     onProgramRemoved: `
      phet.paperLand.console.log( 'Removing a BLE component' );
+     
+     // attempt to send a message to the microbit service specifically to indicate that this component (on a program) is being removed
+     // NOTE: This can be expanded to send to other services in the future if you want.
+     try {
+     
+       // wrap the string in delimiters for the device
+       const _wrappedString = '$' + '#{{NUMBER}}' + '|';
+              
+       // encode as UTF-8 Uint8Array
+       const _encodedValue = new TextEncoder().encode( _wrappedString );
+       phet.paperLand.displayBluetoothServers.writeToCharacteristic(
+         phet.paperLand.bluetoothServiceData.MICROBIT_UART_SERVICE,
+         phet.paperLand.bluetoothServiceData.MICROBIT_UART_RX_CHARACTERISTIC,
+         _encodedValue
+       );
+     }
+     catch( error ) {
+     
+       // It is OK if this does not succeed, it will only work when using microbit services.
+       phet.paperLand.console.log( 'error sending removal message' );
+     }
      phet.paperLand.displayBluetoothServers.removeCharacteristicListener(
        '{{SERVICE_ID}}',
        '{{CHARACTERISTIC_ID}}',

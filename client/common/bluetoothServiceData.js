@@ -2,6 +2,7 @@
  * A utility file that contains all of the bluetooth services and characteristics that are available
  * to the user.
  */
+import paperLand from '../display/paperLand.js';
 import CharacteristicDescriptor from './CharacteristicDescriptor.js';
 import ServiceDescriptor from './ServiceDescriptor.js';
 
@@ -128,6 +129,12 @@ const SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP = new Map( [
 const bluetoothServiceData = {
 
   /**
+   * Specific UUIDs that should be exposed.
+   */
+  MICROBIT_UART_SERVICE: MICROBIT_UART_SERVICE,
+  MICROBIT_UART_RX_CHARACTERISTIC: MICROBIT_UART_RX_CHARACTERISTIC,
+
+  /**
    * The list of all unique service IDs that are available to the user.
    */
   services: Array.from( SERVICE_DESCRIPTOR_TO_CHARACTERISTIC_DESCRIPTOR_MAP.keys() ).map(
@@ -183,5 +190,8 @@ const bluetoothServiceData = {
     return null;
   }
 };
+
+// Add it to the namespace so it can be used in generated code
+paperLand.bluetoothServiceData = bluetoothServiceData;
 
 export default bluetoothServiceData;
