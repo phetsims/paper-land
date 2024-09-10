@@ -79,7 +79,7 @@ export default function CreateSpeechViewForm( props ) {
         formData={formData}
         handleChange={handleChange}
         additionalControlFunctions={`${formatFunctionListForPrompt( SPEECH_FUNCTIONS )}`}
-        functionPrompt={'Write a function using the variables to return a string.'}
+        functionPrompt={'Your custom function must return a string in order to play speech. For example: `return "Hello World!"`'}
         componentsPrompt={'Function is called and the string is spoken when selected components change.'}
       ></ViewComponentControls>
     </div>
