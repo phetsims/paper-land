@@ -12,7 +12,7 @@
 @value focusHighlightColor: #6C8EAC;
 
 /*background color for the page*/
-@value backgroundColor: #2E4152;
+@value backgroundColor: #3a3a3a;
 
 @value textColor: #bdcbda;
 
@@ -167,14 +167,14 @@
 
 /*Custom button styling for this app */
 :local(.customButton) {
-  background-color: white;
+  color: white;
   background-color: #2383f1;
   border-color: transparent;
 }
 
 :local(.customButton:hover) {
   background-color: white;
-  color: #2383f1;
+  color: #127af0;
   border-color: transparent;
 }
 
@@ -301,7 +301,7 @@ code {
   padding: 5px;
   border-width: 2px;
   border-radius: 4px;
-  border-color: #0026ff;
+  border-color: #ffa600;
   border-style: dashed;
   background-color: white;
   color: black;

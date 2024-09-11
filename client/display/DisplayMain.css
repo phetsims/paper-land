@@ -52,11 +52,11 @@
 
 /*applied to many panels in the display page*/
 :local(.displayPanel) {
-  border-color: #c50606;
+  border-color: #58E2EE;
   border-style: solid;
   border-width: 2px;
   padding: 4px;
-  background-color: #f1caca;
+  background-color: #8ac8f1;
   color: black;
 }
 

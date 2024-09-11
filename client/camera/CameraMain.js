@@ -1,6 +1,7 @@
 import React from 'react';
 import Accordion from 'react-bootstrap/Accordion';
 import Button from 'react-bootstrap/Button';
+import Tooltip from 'react-bootstrap/Tooltip';
 import Form from 'react-bootstrap/Form';
 import MonacoEditor from 'react-monaco-editor';
 import xhr from 'xhr';
@@ -13,11 +14,12 @@ import CameraVideo from './CameraVideo.js';
 import ColorListItem from './ColorListItem.js';
 import DetectorControls from './DetectorControls.js';
 import { printCalibrationPage, printPage } from './printPdf';
+import { OverlayTrigger } from 'react-bootstrap';
 
 // constants
 const SPACE_DATA_POLLING_PERIOD = 1; // in seconds
 const CAMERA_DATA_POLLING_PERIOD = 2; // in seconds
-const OPEN_SIDEBAR_WIDTH = parseInt( styles.cameraMainSidebarWidth, 10 );
+const OPEN_SIDEBAR_WIDTH = parseInt(styles.cameraMainSidebarWidth, 10);
 
 // Produces a unique ID for each debug marker component, important for React to
 // render a list of components.
@@ -25,8 +27,8 @@ let markerCount = 0;
 
 export default class CameraMain extends React.Component {
 
-  constructor( props ) {
-    super( props );
+  constructor(props) {
+    super(props);
     this.state = {
       pageWidth: 1,
       framerate: 0,
@@ -81,13 +83,13 @@ export default class CameraMain extends React.Component {
     this._timeOfLastCameraDataUpdate = Number.NEGATIVE_INFINITY;
 
     // Process query parameters.
-    const urlSearchParams = new URLSearchParams( window.location.search );
-    const params = Object.fromEntries( urlSearchParams.entries() );
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
     this.showTestButton = params.showTestButton !== undefined;
   }
 
   componentDidMount() {
-    window.addEventListener( 'resize', this._updatePageWidth.bind( this ) );
+    window.addEventListener('resize', this._updatePageWidth.bind(this));
     this._updatePageWidth();
     this._updateSpacesList();
 
@@ -95,20 +97,20 @@ export default class CameraMain extends React.Component {
     const animationFrameHandler = () => {
 
       // Update space data if it is time to do so.
-      if ( !this._spaceDataUpdateInProgress &&
-           Date.now() > this._timeOfLastSpaceDataUpdate + SPACE_DATA_POLLING_PERIOD * 1000 ) {
+      if (!this._spaceDataUpdateInProgress &&
+        Date.now() > this._timeOfLastSpaceDataUpdate + SPACE_DATA_POLLING_PERIOD * 1000) {
         this._updateSpaceData();
       }
 
       // Update the list of available cameras if it is time to do so.
-      if ( Date.now() > this._timeOfLastCameraDataUpdate + CAMERA_DATA_POLLING_PERIOD * 1000 ) {
+      if (Date.now() > this._timeOfLastCameraDataUpdate + CAMERA_DATA_POLLING_PERIOD * 1000) {
         this._updateAvailableCameraData();
       }
 
       // Request the next update.
-      requestAnimationFrame( animationFrameHandler );
+      requestAnimationFrame(animationFrameHandler);
     };
-    requestAnimationFrame( animationFrameHandler );
+    requestAnimationFrame(animationFrameHandler);
   }
 
   /**
@@ -116,26 +118,26 @@ export default class CameraMain extends React.Component {
    * @private
    */
   _updateSpacesList() {
-    const spacesListUrl = new URL( 'api/spaces-list', window.location.origin ).toString();
-    xhr.get( spacesListUrl, { json: true }, ( error, response ) => {
-      if ( error ) {
-        console.error( error );
+    const spacesListUrl = new URL('api/spaces-list', window.location.origin).toString();
+    xhr.get(spacesListUrl, { json: true }, (error, response) => {
+      if (error) {
+        console.error(error);
       }
       else {
-        if ( Array.isArray( response.body ) ) {
-          this.setState( { availableSpaces: response.body } );
+        if (Array.isArray(response.body)) {
+          this.setState({ availableSpaces: response.body });
 
           // If the currently selected space name is not on the list of available spaces, use the first available space.
-          if ( this.state.availableSpaces.length > 0 &&
-               !this.state.availableSpaces.includes( this.state.selectedSpaceName ) ) {
-            this.setState( { selectedSpaceName: this.state.availableSpaces[ 0 ] } );
+          if (this.state.availableSpaces.length > 0 &&
+            !this.state.availableSpaces.includes(this.state.selectedSpaceName)) {
+            this.setState({ selectedSpaceName: this.state.availableSpaces[0] });
 
             // Since the space was changed, we need to update the information associated with it.
             this._updateSpaceData();
           }
         }
       }
-    } );
+    });
   }
 
   /**
@@ -148,31 +150,31 @@ export default class CameraMain extends React.Component {
     // If there is already an update in progress, log a warning and bail.  This isn't necessarily incorrect program
     // behavior because this can occur if a user happens to switch spaces while an update is in progress.  But, if
     // this warning is occurring frequently, there may be a problem with the code that should be investigated.
-    if ( this._spaceDataUpdateInProgress ) {
-      console.warn( 'Skipping space data update because one is already in progress.' );
+    if (this._spaceDataUpdateInProgress) {
+      console.warn('Skipping space data update because one is already in progress.');
       return;
     }
 
     this._spaceDataUpdateInProgress = true;
 
     // Request the space data from the server.
-    const spaceUrl = getApiUrl( this.state.selectedSpaceName );
-    xhr.get( spaceUrl, { json: true }, ( error, response ) => {
-      if ( error ) {
-        console.error( `Error retrieving space data: ${error.message}` );
+    const spaceUrl = getApiUrl(this.state.selectedSpaceName);
+    xhr.get(spaceUrl, { json: true }, (error, response) => {
+      if (error) {
+        console.error(`Error retrieving space data: ${error.message}`);
       }
       else {
-        if ( !_.isEqual( this.state.spaceData, response.body ) ) {
+        if (!_.isEqual(this.state.spaceData, response.body)) {
 
           // In case there is a problem getting data for the space - for example, if the space does not exist. This
           // can happen if an old space is selected and the server has been restarted.
           const newSpaceData = response.body || { programs: [], spaceName: '' };
 
-          this.setState( { spaceData: newSpaceData }, () => {
-            this._programsChange( this.props.paperProgramsProgramsToRender );
+          this.setState({ spaceData: newSpaceData }, () => {
+            this._programsChange(this.props.paperProgramsProgramsToRender);
 
             // If the code for the selected program has changed, update the code in the editor.
-            if ( this.state.programInEditor ) {
+            if (this.state.programInEditor) {
               this._updateEditorCode();
             }
 
@@ -181,24 +183,24 @@ export default class CameraMain extends React.Component {
               program => program.number === this.state.programInEditor.number
             ) !== undefined;
 
-            if ( !selectedProgramInSpace ) {
+            if (!selectedProgramInSpace) {
 
               // The selected space does not contain the currently selected program, probably because the user changed
               // which space was selected.  Load a default program from the currently selected space into the editor.
               this._loadEditorWithDefault();
             }
-          } );
+          });
         }
 
         // Mark the time of the last successful update.
         this._timeOfLastSpaceDataUpdate = Date.now();
       }
       this._spaceDataUpdateInProgress = false;
-    } );
+    });
   }
 
   _updatePageWidth() {
-    this.setState( { pageWidth: window.innerWidth } );
+    this.setState({ pageWidth: window.innerWidth });
   }
 
   /**
@@ -213,10 +215,10 @@ export default class CameraMain extends React.Component {
       program => program.number === this.state.programInEditor.number
     );
 
-    if ( currentProgramFromSpaceData ) {
+    if (currentProgramFromSpaceData) {
       const currentCode = currentProgramFromSpaceData.currentCode;
-      if ( currentCode !== this.state.codeInEditor ) {
-        this.setState( { codeInEditor: currentCode } );
+      if (currentCode !== this.state.codeInEditor) {
+        this.setState({ codeInEditor: currentCode });
       }
     }
   }
@@ -229,32 +231,32 @@ export default class CameraMain extends React.Component {
    */
   _updateAvailableCameraData() {
     navigator.mediaDevices.enumerateDevices()
-      .then( devices => {
+      .then(devices => {
 
         // Get a list of just the cameras from the list of all available devices.
-        const availableCameras = devices.filter( device => device.kind === 'videoinput' );
+        const availableCameras = devices.filter(device => device.kind === 'videoinput');
 
         // Update component state.
-        this.setState( { availableCameras } );
+        this.setState({ availableCameras });
 
         // If no camera was selected, or if the previously selected camera has disappeared, use the first listed camera
         // as the selected device.
-        const availableCameraDeviceIds = availableCameras.map( availableCamera => availableCamera.deviceId );
-        if ( availableCameraDeviceIds.length > 0 ) {
-          if ( !availableCameraDeviceIds.includes( this.state.selectedCameraDeviceId ) ) {
-            this.setState( { selectedCameraDeviceId: availableCameraDeviceIds[ 0 ] } );
+        const availableCameraDeviceIds = availableCameras.map(availableCamera => availableCamera.deviceId);
+        if (availableCameraDeviceIds.length > 0) {
+          if (!availableCameraDeviceIds.includes(this.state.selectedCameraDeviceId)) {
+            this.setState({ selectedCameraDeviceId: availableCameraDeviceIds[0] });
 
             // This change must also be stored in the configuration, since the projector needs it.
-            this.props.onConfigChange( {
+            this.props.onConfigChange({
               ...this.props.config,
-              selectedCameraDeviceId: availableCameraDeviceIds[ 0 ]
-            } );
+              selectedCameraDeviceId: availableCameraDeviceIds[0]
+            });
           }
         }
         else {
-          console.warn( 'No cameras detected on this project.' );
+          console.warn('No cameras detected on this project.');
         }
-      } );
+      });
 
     this._timeOfLastCameraDataUpdate = Date.now();
   }
@@ -265,42 +267,42 @@ export default class CameraMain extends React.Component {
    * @returns {string}
    * @private
    */
-  _getCameraLabelFromDeviceId( cameraDeviceId ) {
-    const camera = this.state.availableCameras.find( cameraInfo => cameraInfo.deviceId === cameraDeviceId );
+  _getCameraLabelFromDeviceId(cameraDeviceId) {
+    const camera = this.state.availableCameras.find(cameraInfo => cameraInfo.deviceId === cameraDeviceId);
     return camera ? camera.label : 'Camera not found';
   }
 
-  _print( program ) {
+  _print(program) {
     printPage(
       program.number,
-      codeToName( program.currentCode ),
+      codeToName(program.currentCode),
       this.props.config.paperSize
     );
-    this._markPrinted( program, true );
+    this._markPrinted(program, true);
   }
 
   _printCalibration() {
-    printCalibrationPage( this.props.config.paperSize );
+    printCalibrationPage(this.props.config.paperSize);
   }
 
-  _markPrinted( program, printed ) {
+  _markPrinted(program, printed) {
     xhr.post(
-      getApiUrl( this.state.spaceData.spaceName, `/programs/${program.number}/markPrinted` ),
+      getApiUrl(this.state.spaceData.spaceName, `/programs/${program.number}/markPrinted`),
       { json: { printed } },
-      ( error, response ) => {
-        if ( error ) {
-          console.error( error );
+      (error, response) => {
+        if (error) {
+          console.error(error);
         }
         else {
-          this.setState( { spaceData: response.body } );
+          this.setState({ spaceData: response.body });
         }
       }
     );
   }
 
-  _createDebugProgram( number, programName ) {
-    const paperSize = clientConstants.paperSizes[ this.props.config.paperSize ];
-    const widthToHeightRatio = paperSize[ 0 ] / paperSize[ 1 ];
+  _createDebugProgram(number, programName) {
+    const paperSize = clientConstants.paperSizes[this.props.config.paperSize];
+    const widthToHeightRatio = paperSize[0] / paperSize[1];
     const height = 0.25;
     const width = height * widthToHeightRatio;
 
@@ -315,8 +317,8 @@ export default class CameraMain extends React.Component {
         { x: 0.0, y: height }
       ]
     };
-    debugPrograms.push( newProgram );
-    this.setState( { debugPrograms } );
+    debugPrograms.push(newProgram);
+    this.setState({ debugPrograms });
   }
 
   /**
@@ -324,7 +326,7 @@ export default class CameraMain extends React.Component {
    * will run as if a marker of this color is detected by the camera.
    * @private
    */
-  _createDebugMarker( colorIndex ) {
+  _createDebugMarker(colorIndex) {
     markerCount++;
 
     const colorsRGB = this.props.config.colorsRGB.slice();
@@ -334,22 +336,22 @@ export default class CameraMain extends React.Component {
 
       // further from the origin so it is easier to grab initially
       position: { x: 0.3, y: 0.3 },
-      color: colorsRGB[ colorIndex ],
-      colorData: colorsRGB[ colorIndex ],
-      colorName: clientConstants.englishColorNames[ colorIndex ],
+      color: colorsRGB[colorIndex],
+      colorData: colorsRGB[colorIndex],
+      colorName: clientConstants.englishColorNames[colorIndex],
       count: markerCount
     };
-    debugMarkers.push( newMarker );
-    this.setState( { debugMarkers } );
+    debugMarkers.push(newMarker);
+    this.setState({ debugMarkers });
   }
 
-  _programsChange( programsToRender ) {
+  _programsChange(programsToRender) {
     this.props.onProgramsChange(
-      programsToRender.map( program => {
+      programsToRender.map(program => {
         const programWithData = this.state.spaceData.programs.find(
           program2 => program2.number.toString() === program.number.toString()
         );
-        if ( !programWithData ) {
+        if (!programWithData) {
           return null;
         }
         return {
@@ -361,12 +363,12 @@ export default class CameraMain extends React.Component {
           editorInfo: programWithData.editorInfo,
           codeHasChanged: programWithData.codeHasChanged
         };
-      } ).filter( Boolean )
+      }).filter(Boolean)
     );
   }
 
-  _handleNewSpaceNameChange( event ) {
-    this.setState( { newSpaceName: event.target.value } );
+  _handleNewSpaceNameChange(event) {
+    this.setState({ newSpaceName: event.target.value });
   }
 
   /**
@@ -377,21 +379,21 @@ export default class CameraMain extends React.Component {
   _loadEditorWithDefault() {
 
     // Set the editor to display the first program on the program list.
-    if ( this.state.spaceData.programs.length > 0 ) {
+    if (this.state.spaceData.programs.length > 0) {
       const programsSortedByIdNumber = this.state.spaceData.programs.sort(
-        ( programA, programB ) => programA.number - programB.number
+        (programA, programB) => programA.number - programB.number
       );
-      const autoSelectedProgram = programsSortedByIdNumber[ 0 ];
-      this.setState( {
+      const autoSelectedProgram = programsSortedByIdNumber[0];
+      this.setState({
         programInEditor: autoSelectedProgram,
         codeInEditor: autoSelectedProgram.currentCode.slice()
-      } );
+      });
     }
     else {
-      this.setState( {
+      this.setState({
         programInEditor: null,
         codeInEditor: '// No programs available.'
-      } );
+      });
     }
   }
 
@@ -401,7 +403,7 @@ export default class CameraMain extends React.Component {
    * @param monaco
    * @private
    */
-  _onEditorDidMount( editor, monaco ) {
+  _onEditorDidMount(editor, monaco) {
 
     this._loadEditorWithDefault();
 
@@ -418,16 +420,16 @@ export default class CameraMain extends React.Component {
   _getEditorLabelText() {
     let editorLabelText = '';
 
-    if ( !this.state.codeAccordionOpen ) {
+    if (!this.state.codeAccordionOpen) {
 
       // A title for the accordion that shows preview of the selected program code
-      return 'Preview Selected Program Code';
+      return 'Preview Selected Program Code (read-only)';
     }
-    else if ( this.state.programInEditor ) {
+    else if (this.state.programInEditor) {
       const program = this.state.programInEditor;
 
       // The program is in a state where the user should be able to view.
-      editorLabelText = `Viewing Program #${program.number}`;
+      editorLabelText = `Viewing Program #${program.number} (read-only)`;
     }
     else {
 
@@ -443,16 +445,16 @@ export default class CameraMain extends React.Component {
    * @param retVal
    * @private
    */
-  _printDebugMessage( message, retVal ) {
-    if ( this.lastDebugMessage === undefined || message !== this.lastDebugMessage ) {
-      console.log( message );
+  _printDebugMessage(message, retVal) {
+    if (this.lastDebugMessage === undefined || message !== this.lastDebugMessage) {
+      console.log(message);
       this.lastDebugMessage = message;
     }
     return retVal;
   }
 
   render() {
-    const commonMargin = parseInt( styles.commonMargin, 10 );
+    const commonMargin = parseInt(styles.commonMargin, 10);
     const editorUrl = new URL(
       `editor.html?${this.state.spaceData.spaceName}`,
       window.location.origin
@@ -462,16 +464,16 @@ export default class CameraMain extends React.Component {
 
     // Determine whether it is okay for the user to make changes to the program that is currently shown in the editor.
     const okayToEditSelectedProgram = !!this.state.programInEditor &&
-                                      !this.state.programInEditor.editorInfo.readOnly &&
-                                      !this.state.programInEditor.editorInfo.claimed;
+      !this.state.programInEditor.editorInfo.readOnly &&
+      !this.state.programInEditor.editorInfo.claimed;
 
     // variable for event keys in the accordion box
     let accordionItemEventKey = 0;
 
-    const filteredPrograms = this.state.spaceData.programs.filter( program => programMatchesFilterString(
+    const filteredPrograms = this.state.spaceData.programs.filter(program => programMatchesFilterString(
       program.currentCode, this.state.programListFilterString
-    ) );
-    const filteredSortedPrograms = sortProgramsByName( filteredPrograms );
+    ));
+    const filteredSortedPrograms = sortProgramsByName(filteredPrograms);
 
     // Return the JSX that defines this component.
     return (
@@ -479,12 +481,14 @@ export default class CameraMain extends React.Component {
         <div className={styles.appRoot}>
           {/* Title bar and sidebar control button that goes across the top */}
           <div className={styles.pageTitle}>
-            <h4>Camera & Editor View</h4>
+            <h4>Camera & Playground</h4>
+            <OverlayTrigger placement='left' overlay={<Tooltip id='tooltip'>Click to toggle the sidebar</Tooltip>}>
             <Button
-              onClick={() => this.setState( { sidebarOpen: !this.state.sidebarOpen } )}
+              onClick={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })}
             >
               {this.state.sidebarOpen ? '☰ Close Sidebar' : '☰ Open Sidebar'}
             </Button>
+            </OverlayTrigger>
           </div>
 
           <div className={styles.mainView}>
@@ -503,37 +507,37 @@ export default class CameraMain extends React.Component {
                     cameraDeviceId={this.state.selectedCameraDeviceId}
                     config={this.props.config}
                     onConfigChange={this.props.onConfigChange}
-                    onProcessVideo={( { programsToRender, markers, framerate } ) => {
-                      this.setState( { framerate } );
-                      this._programsChange( programsToRender );
-                      this.props.onMarkersChange( markers );
+                    onProcessVideo={({ programsToRender, markers, framerate }) => {
+                      this.setState({ framerate });
+                      this._programsChange(programsToRender);
+                      this.props.onMarkersChange(markers);
                     }}
                     allowSelectingDetectedPoints={this.state.selectedColorIndex !== -1}
-                    onSelectPoint={( { color, size } ) => {
-                      if ( this.state.selectedColorIndex === -1 ) {
+                    onSelectPoint={({ color, size }) => {
+                      if (this.state.selectedColorIndex === -1) {
                         return;
                       }
 
                       const colorsRGB = this.props.config.colorsRGB.slice();
-                      colorsRGB[ this.state.selectedColorIndex ] = color.map( value => Math.round( value ) );
+                      colorsRGB[this.state.selectedColorIndex] = color.map(value => Math.round(value));
 
                       const paperDotSizes = this.props.config.paperDotSizes.slice();
-                      paperDotSizes[ this.state.selectedColorIndex ] = size;
+                      paperDotSizes[this.state.selectedColorIndex] = size;
 
-                      this.props.onConfigChange( { ...this.props.config, colorsRGB, paperDotSizes } );
-                      this.setState( { selectedColorIndex: -1 } );
+                      this.props.onConfigChange({ ...this.props.config, colorsRGB, paperDotSizes });
+                      this.setState({ selectedColorIndex: -1 });
                     }}
                     debugPrograms={this.state.debugPrograms}
                     removeDebugProgram={program => {
-                      const debugPrograms = this.state.debugPrograms.filter( p => p !== program );
-                      this.setState( { debugPrograms } );
+                      const debugPrograms = this.state.debugPrograms.filter(p => p !== program);
+                      this.setState({ debugPrograms });
                     }}
                     debugMarkers={this.state.debugMarkers}
                     removeDebugMarker={marker => {
                       const debugMarkers = this.state.debugMarkers.slice();
-                      const index = debugMarkers.indexOf( marker );
-                      debugMarkers.splice( index, 1 );
-                      this.setState( { debugMarkers } );
+                      const index = debugMarkers.indexOf(marker);
+                      debugMarkers.splice(index, 1);
+                      this.setState({ debugMarkers });
                     }}
                   />
                 </div>
@@ -543,7 +547,7 @@ export default class CameraMain extends React.Component {
               <div className={styles.containerWithBackground}>
                 <Accordion defaultActiveKey={null} onSelect={
                   eventKey => {
-                    this.setState( { codeAccordionOpen: eventKey === 0 } );
+                    this.setState({ codeAccordionOpen: eventKey === 0 });
                   }
                 }>
                   <Accordion.Item eventKey={0}>
@@ -554,7 +558,7 @@ export default class CameraMain extends React.Component {
                           language='javascript'
                           theme='vs-dark'
                           value={this.state.codeInEditor || '// Select Program'}
-                          editorDidMount={this._onEditorDidMount.bind( this )}
+                          editorDidMount={this._onEditorDidMount.bind(this)}
                           width={videoAndEditorWidth}
                           options={{
                             readOnly: true,
@@ -586,157 +590,168 @@ export default class CameraMain extends React.Component {
                   onClick={() => {
 
                     // Put temporary debug code here.
-                    console.log( 'test button clicked' );
+                    console.log('test button clicked');
                   }}
                 >
                   Test Button
                 </Button>
-              ) : ( '' )}
+              ) : ('')}
 
               {/* Accordion element that comprises most of the sidebar */}
               <Accordion defaultActiveKey='0'>
-                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
+                <Accordion.Item eventKey={(accordionItemEventKey++).toString()}>
                   <Accordion.Header className={`${styles.accordionHeader}`}>Spaces & Programs</Accordion.Header>
                   <Accordion.Body className={`${styles.sidebarSection2} ${styles.create}`}>
                     <div>
                       <div>
-                        <h5>Space</h5>
+                        <h5>Select a Space</h5>
                         <label htmlFor='spaces'>Select:</label>
                         <Form.Select
                           name='spaces'
                           id='spaces'
                           value={this.state.selectedSpaceName}
                           onChange={event => {
-                            this.setState( { selectedSpaceName: event.target.value } );
-                            this.props.onConfigChange( {
+                            this.setState({ selectedSpaceName: event.target.value });
+                            this.props.onConfigChange({
                               ...this.props.config,
                               selectedSpaceName: event.target.value
-                            } );
+                            });
                           }}
                         >
-                          {this.state.availableSpaces.map( ( option, index ) => {
+                          {this.state.availableSpaces.map((option, index) => {
                             return <option key={index}>
                               {option}
                             </option>;
-                          } )}
+                          })}
                         </Form.Select>
                       </div>
                       <div>
                         {this.state.isAddingNewSpace ? (
                           <div>
                             <Form onSubmit={event => {
-                              if ( this._handleNewSpaceNameSubmit( event ) ) {
-                                this.setState( { isAddingNewSpace: false } );
+                              if (this._handleNewSpaceNameSubmit(event)) {
+                                this.setState({ isAddingNewSpace: false });
                               }
                             }}>
                               <label>
                                 Name:&nbsp;
                                 <input
                                   type='text'
-                                  onChange={this._handleNewSpaceNameChange.bind( this )}
+                                  onChange={this._handleNewSpaceNameChange.bind(this)}
                                 />
                               </label>
-                              <br/>
+                              <br />
                               <Button
                                 type='submit'
                                 style={{ marginRight: '20px' }}
                               >
                                 Confirm
                               </Button>
-                              <Button type='button' onClick={() => this.setState( { isAddingNewSpace: false } )}>
+                              <Button type='button' onClick={() => this.setState({ isAddingNewSpace: false })}>
                                 Cancel
                               </Button>
                             </Form>
                           </div>
                         ) : (
-                           <div
-                             className={styles.horizontalRow}
-                             style={{ marginTop: '15px' }}
-                           >
-                             <a
+                          <div
+                            className={styles.horizontalRow}
+                            style={{ marginTop: '15px' }}
+                          >
+                            <Button onClick={() => window.open(editorUrl, '_blank')}>
+                              (Advanced) Program Editor
+                            </Button>
+                            {/* <a
                                href={editorUrl}
                                target='_blank'
                                className={styles.editorAnchor}
                                rel='noreferrer'
-                             >
-                               Open Code Editor<br/>for this Space
-                             </a>
-                           </div>
-                         )}
+                             > */}
+                            {/* (Advanced) Program Editor<br/>
+                             </a> */}
+                            <p
+                              style={{
+                                marginTop: 'auto', marginBottom: 'auto', marginLeft: '15px', color: '#FF8080'
+                              }}>
+                              (caution - changes not saved if using <a href="./creator.html" target="_blank">Creator</a>)
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    <br/>
-                    <h5>Programs</h5>
+                    <br />
+                    <h5>Project Programs</h5>
 
-                    <label>Filter on:
+                    <p>Projects you <em>Send to Playground</em> will appear here with each paper program listed for your selected space.</p>
+
+                    <label>Filter Program List (name/keyword):
                       <input
                         name='filterProgramsOn'
                         style={{ marginBottom: '10px' }}
-                        onChange={e => this.setState( { programListFilterString: e.target.value } )}
+                        onChange={e => this.setState({ programListFilterString: e.target.value })}
                       />
                     </label>
                     <div className={`${styles.programList}`}>
                       <div>
-                        {filteredSortedPrograms.map( program => (
+                        {filteredSortedPrograms.map(program => (
                           <div
                             key={program.number}
                             className={[
                               this.state.programInEditor && program.number === this.state.programInEditor.number ?
-                              styles.selectedProgramListItem :
-                              styles.programListItem
-                            ].join( ' ' )}
+                                styles.selectedProgramListItem :
+                                styles.programListItem
+                            ].join(' ')}
                           >
                             <span
                               className={styles.programListItemContent}
                               onClick={event => {
                                 event.stopPropagation();
-                                this.setState( {
+                                this.setState({
                                   programInEditor: program,
                                   codeInEditor: program.currentCode.slice()
-                                } );
+                                });
                               }}
                             >
                               <span
                                 className={styles.programListItemName}
                               >
-                                <strong>#{program.number}</strong> {codeToName( program.currentCode )}{' '}
+                                #{program.number} {codeToName(program.currentCode)}{' '}
                               </span>
                             </span>
                             <span
                               className={styles.programListIcon}
                               onClick={event => {
                                 event.stopPropagation();
-                                this._print( program );
+                                this._print(program);
                               }}
                             >
-                              <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                              <img src={'media/images/printer.svg'} alt={'Printer icon'} />
                             </span>
-                            {this.state.debugPrograms.find( p => p.number === program.number ) === undefined ? (
+                            {this.state.debugPrograms.find(p => p.number === program.number) === undefined ? (
                               <span
                                 className={styles.programListIcon}
                                 onClick={event => {
                                   event.stopPropagation();
-                                  this._createDebugProgram( program.number, codeToName( program.currentCode ) );
+                                  this._createDebugProgram(program.number, codeToName(program.currentCode));
                                 }}
                               >
-                                <img src={'media/images/eye.svg'} alt={'Preview icon'}/>
+                                <img src={'media/images/eye.svg'} alt={'Preview icon'} />
                               </span>
                             ) : (
-                               ''
-                             )}
+                              ''
+                            )}
                           </div>
-                        ) )}
+                        ))}
                       </div>
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
+                <Accordion.Item eventKey={(accordionItemEventKey++).toString()}>
                   <Accordion.Header>Preview Markers</Accordion.Header>
                   <Accordion.Body>
                     Click on the preview icon next to the markers below to add virtual markers to the camera view.
                     <div className={styles.markerList}>
-                      {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                      {this.props.config.colorsRGB.map((color, colorIndex) => (
                         <span key={colorIndex} className={styles.markerListItem}>
                           <ColorListItem
                             colorIndex={colorIndex}
@@ -747,22 +762,22 @@ export default class CameraMain extends React.Component {
                             className={styles.markerPreviewIcon}
                             src={'media/images/eye.svg'}
                             alt={'Preview icon'}
-                            onClick={this._createDebugMarker.bind( this, colorIndex )}
+                            onClick={this._createDebugMarker.bind(this, colorIndex)}
                           />
                         </span>
-                      ) )}
+                      ))}
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
+                <Accordion.Item eventKey={(accordionItemEventKey++).toString()}>
                   <Accordion.Header>Calibration</Accordion.Header>
                   <Accordion.Body>
                     Click on a colored circle below, then click on a circle of that color on a printed paper program in
                     the camera view. Repeat for all colors to complete the calibration.
                     <div className={styles.sidebarSection}>
                       <div className={styles.calibrationColorList}>
-                        {this.props.config.colorsRGB.map( ( color, colorIndex ) => (
+                        {this.props.config.colorsRGB.map((color, colorIndex) => (
                           <ColorListItem
                             colorIndex={colorIndex}
                             color={color}
@@ -772,58 +787,58 @@ export default class CameraMain extends React.Component {
                               { selectedColorIndex: this.state.selectedColorIndex === indexOfColor ? -1 : indexOfColor }
                             )}
                           />
-                        ) )}
+                        ))}
                       </div>
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
+                <Accordion.Item eventKey={(accordionItemEventKey++).toString()}>
                   <Accordion.Header>Printing</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
                       To print a program, click the print icon (
-                      <img src={'media/images/printer.svg'} alt={'Printer icon'}/>
+                      <img src={'media/images/printer.svg'} alt={'Printer icon'} />
                       ) next to that program in the 'Spaces & Programs' area.
-                      <br/><br/>
+                      <br /><br />
                       <div className={styles.sidebarSubSection}>
                         <span>Paper Size: </span>
                         <Form.Select
                           value={this.props.config.paperSize}
                           onChange={event => {
                             const paperSize = event.target.value;
-                            this.props.onConfigChange( { ...this.props.config, paperSize } );
+                            this.props.onConfigChange({ ...this.props.config, paperSize });
                           }}
                         >
                           <optgroup label='Common'>
-                            {clientConstants.commonPaperSizeNames.map( name => {
+                            {clientConstants.commonPaperSizeNames.map(name => {
                               return (
                                 <option key={name} value={name}>
                                   {name}
                                 </option>
                               );
-                            } )}
+                            })}
                           </optgroup>
                           <optgroup label='Other'>
-                            {clientConstants.otherPaperSizeNames.map( name => {
+                            {clientConstants.otherPaperSizeNames.map(name => {
                               return (
                                 <option key={name} value={name}>
                                   {name}
                                 </option>
                               );
-                            } )}
+                            })}
                           </optgroup>
                         </Form.Select>
                       </div>
                       <div>
-                        <Button onClick={this._printCalibration.bind( this )}>Print Calibration Page</Button>
+                        <Button onClick={this._printCalibration.bind(this)}>Print Calibration Page</Button>
                         {' '}
                       </div>
                     </div>
                   </Accordion.Body>
                 </Accordion.Item>
 
-                <Accordion.Item eventKey={( accordionItemEventKey++ ).toString()}>
+                <Accordion.Item eventKey={(accordionItemEventKey++).toString()}>
                   <Accordion.Header>Detection</Accordion.Header>
                   <Accordion.Body>
                     <div className={styles.sidebarSection}>
@@ -834,10 +849,10 @@ export default class CameraMain extends React.Component {
                           name='freezeDetection'
                           checked={this.props.config.freezeDetection}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               freezeDetection: !this.props.config.freezeDetection
-                            } )
+                            })
                           }
                         />
                         <label htmlFor='freezeDetection'>pause</label>
@@ -859,10 +874,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showOverlayKeyPointCircles}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showOverlayKeyPointCircles: !this.props.config.showOverlayKeyPointCircles
-                            } )
+                            })
                           }
                         />{' '}
                         keypoint circles
@@ -873,10 +888,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showOverlayKeyPointText}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showOverlayKeyPointText: !this.props.config.showOverlayKeyPointText
-                            } )
+                            })
                           }
                         />{' '}
                         keypoint text
@@ -887,10 +902,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showOverlayComponentLines}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showOverlayComponentLines: !this.props.config.showOverlayComponentLines
-                            } )
+                            })
                           }
                         />{' '}
                         component lines
@@ -901,10 +916,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showOverlayShapeId}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showOverlayShapeId: !this.props.config.showOverlayShapeId
-                            } )
+                            })
                           }
                         />{' '}
                         shape ids
@@ -915,10 +930,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showOverlayProgram}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showOverlayProgram: !this.props.config.showOverlayProgram
-                            } )
+                            })
                           }
                         />{' '}
                         programs
@@ -929,10 +944,10 @@ export default class CameraMain extends React.Component {
                           type='checkbox'
                           checked={this.props.config.showWhiskerLines}
                           onChange={() =>
-                            this.props.onConfigChange( {
+                            this.props.onConfigChange({
                               ...this.props.config,
                               showWhiskerLines: !this.props.config.showWhiskerLines
-                            } )
+                            })
                           }
                         />{' '}
                         whisker lines
@@ -952,11 +967,11 @@ export default class CameraMain extends React.Component {
                         const selectedCamera = this.state.availableCameras.find(
                           cam => cam.label === event.target.value
                         );
-                        this.setState( { selectedCameraDeviceId: selectedCamera.deviceId } );
-                        this.props.onConfigChange( {
+                        this.setState({ selectedCameraDeviceId: selectedCamera.deviceId });
+                        this.props.onConfigChange({
                           ...this.props.config,
                           selectedCameraDeviceId: selectedCamera.deviceId
-                        } );
+                        });
                       }}
                     />
                     <div className={styles.sidebarSection}>
@@ -968,23 +983,23 @@ export default class CameraMain extends React.Component {
 
                         cameraEnabled={this.state.cameraEnabled}
                         setCameraEnabled={cameraEnabled => {
-                          this.setState( { cameraEnabled } );
-                          this.props.onConfigChange( { ...this.props.config, cameraEnabled } );
+                          this.setState({ cameraEnabled });
+                          this.props.onConfigChange({ ...this.props.config, cameraEnabled });
                         }}
 
-                        onCameraFlipChanged={( flipX, flipY ) => {
+                        onCameraFlipChanged={(flipX, flipY) => {
 
-                          this.setState( {
+                          this.setState({
                             flipCameraFeedX: flipX,
                             flipCameraFeedY: flipY
-                          } );
+                          });
 
                           // Apply the change to localStorage
-                          this.props.onConfigChange( {
+                          this.props.onConfigChange({
                             ...this.props.config,
                             flipCameraFeedX: flipX,
                             flipCameraFeedY: flipY
-                          } );
+                          });
                         }}
                       />
                     </div>
