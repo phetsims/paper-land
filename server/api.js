@@ -400,7 +400,7 @@ router.put( '/api/creator/templates', ( req, res ) => {
  * For some reason, I had to had a 'save' into the URL. I could not figure out why.
  * '/api/creator/templates/update' on its own did not work, the request would never get to this endpoint.
  */
-router.put( 'api/creator/templates/use', ( req, res ) => {
+router.put( '/api/creator/templates/update/save', ( req, res ) => {
   const {
     description,
     keyWords,
