@@ -37,33 +37,33 @@ export default function ViewComponentControls( props ) {
         </>
       )}
       <hr/>
+      <div>
+        <ModelComponentSelector
+          allModelComponents={props.allModelComponents}
+          componentsPrompt={props.componentsPrompt}
+          referenceComponentNames={props.formData.referenceComponentNames}
+          selectedModelComponents={selectedModelComponents}
+          handleChange={( selectedComponents, referenceComponentNames ) => {
+
+            const newObject = {
+              modelComponentNames: selectedComponents.map( component => component.nameProperty.value )
+            };
+
+            // If the second argument is null, this means a change (likely adding) to the model components but
+            // no change to the reference components.
+            if ( referenceComponentNames ) {
+              newObject.referenceComponentNames = referenceComponentNames;
+            }
+
+            props.handleChange( newObject );
+          }}
+        ></ModelComponentSelector>
+      </div>
+      <hr/>
       <Accordion hidden={props.allModelComponents.length === 0} defaultActiveKey={'0'}>
         <Accordion.Item eventKey='0'>
           <Accordion.Header>Control Function</Accordion.Header>
           <Accordion.Body>
-            <div>
-              <ModelComponentSelector
-                allModelComponents={props.allModelComponents}
-                componentsPrompt={props.componentsPrompt}
-                referenceComponentNames={props.formData.referenceComponentNames}
-                selectedModelComponents={selectedModelComponents}
-                handleChange={( selectedComponents, referenceComponentNames ) => {
-
-                  const newObject = {
-                    modelComponentNames: selectedComponents.map( component => component.nameProperty.value )
-                  };
-
-                  // If the second argument is null, this means a change (likely adding) to the model components but
-                  // no change to the reference components.
-                  if ( referenceComponentNames ) {
-                    newObject.referenceComponentNames = referenceComponentNames;
-                  }
-
-                  props.handleChange( newObject );
-                }}
-              ></ModelComponentSelector>
-            </div>
-            <hr/>
             <div>
               <p className={`${styles.controlElement} ${styles.largerText}`}>{props.functionPrompt}</p>
               {

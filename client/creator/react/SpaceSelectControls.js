@@ -69,7 +69,7 @@ const SpaceSelectControls = props => {
               setSelectedSpaceName( 'my-space' );
 
               setTimeout( () => {
-                setSelectedProjectName( 'ble-test' );
+                setSelectedProjectName( 'test-project' );
               }, 500 );
             }, 500 );
           }
