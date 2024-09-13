@@ -94,7 +94,7 @@ const ViewConstants = {
   LINK_WIRE_LINE_DASH: [ 1, 2 ],
   ARRAY_WIRE_LINE_DASH: [ 3, 3 ],
 
-  ACTIVE_EDIT_WIRE_LINE_WIDTH: 3, // line width for wires connected to the active edit
+  ACTIVE_EDIT_WIRE_LINE_WIDTH: 2, // line width for wires connected to the active edit
   DEFAULT_WIRE_LINE_WIDTH: 1.5, // all wires have this line width when no active edit is defined
   INNACTIVE_EDIT_WIRE_LINE_WIDTH: 0.5, // line width for wires not connected to the active edit (when one is defined)
 

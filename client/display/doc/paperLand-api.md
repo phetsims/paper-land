@@ -344,10 +344,10 @@ that is shared between all programs.
 ```js
 sharedData = {
 
-  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/main/docs/use/display-api.md#display-model-displaymodel
+  // A reference to the entire model. See https://github.com/phetsims/paper-land/blob/main/docs/use/paperLand-api.md#display-model-displaymodel
   model: displayModel,
   
-  // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/main/docs/use/display-api.md#display-view
+  // A reference to the root Node of the view. See https://github.com/phetsims/paper-land/blob/main/docs/use/paperLand-api.md#display-view
   scene: scene,
   
   // The size of the Display display, in view coordinates.
