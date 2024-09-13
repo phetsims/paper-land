@@ -4,10 +4,10 @@
 import { renameVariableInCode } from '../../../utils.js';
 import ComponentContainer from '../ComponentContainer.js';
 import BackgroundViewComponent from './BackgroundViewComponent.js';
-import SpeechViewComponent from './SpeechViewComponent.js';
 import ImageViewComponent from './ImageViewComponent.js';
 import ShapeViewComponent from './ShapeViewComponent.js';
 import SoundViewComponent from './SoundViewComponent.js';
+import SpeechViewComponent from './SpeechViewComponent.js';
 import TextViewComponent from './TextViewComponent.js';
 
 export default class ProgramViewContainer extends ComponentContainer {
@@ -149,7 +149,11 @@ export default class ProgramViewContainer extends ComponentContainer {
 
     // Gracefully handle missing properties
     const soundViews = json.soundViews || [];
-    const speechViews = json.speechViews || [];
+
+    // In https://github.com/phetsims/paper-land/issues/251 we renamed 'description' to 'speech'.
+    // Old saves will still have data in descriptionViews, so we try to find that here.
+    // TODO: At some point remove this, look into migration strategies.
+    const speechViews = json.speechViews || json.descriptionViews || [];
     const textViews = json.textViews || [];
     const shapeViews = json.shapeViews || [];
     const backgroundViews = json.backgroundViews || [];
