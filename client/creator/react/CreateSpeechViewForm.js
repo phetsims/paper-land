@@ -9,6 +9,7 @@ import ViewComponentControls from './ViewComponentControls.js';
 
 // Speech-specific functions available to the user to control the output.
 const SPEECH_FUNCTIONS = [
+  'speak( string ) - Speak the string.',
   'interruptSpeech() - Stop all speech and clear the speech queue.',
   'setMuted( boolean ) - Mute or unmute all speech (all speech components)',
   'setPriority( number ) - Set the priority for this speech. Higher priority speech will interrupt lower priority speech.',
