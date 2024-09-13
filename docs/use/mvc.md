@@ -73,7 +73,7 @@ Quickly breaking down the numbered sections of the above Program code:
 2) Boilerplate that tells Paper Land to create these model components when this Program is detected.
 
 NOTE: In a real example, it would be important to remove the model components when the program is removed. See
-[Display API](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md).
+[paperLand API](https://github.com/phetsims/paper-land/blob/main/docs/use/paperLand-api.md).
 
 ## Example Paper Land view
 
@@ -136,4 +136,4 @@ From a single `cakeTypeProperty`, we support several output modalities. You can 
 Programs that could play sounds, trigger vibrations, and many other things from this single model component.
 
 NOTE: In a real example, it would be important to remove the model components when the program is removed. See
-[Display API](https://github.com/phetsims/paper-land/blob/main/docs/use/board-api.md).
+[paperLand API](https://github.com/phetsims/paper-land/blob/main/docs/use/paperLand-api.md).

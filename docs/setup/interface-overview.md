@@ -15,7 +15,7 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 
 1. *Camera* (localhost:3000/camera.html)
 2. *Canvas* (localhost:3000/projector.html)
-3. *Interactive Display* (localhost:3000/board.html)
+3. *Interactive Display* (localhost:3000/display.html)
 4. *Creator* (localhost:3000/creator.html)
 
 ### What is the *Camera* page?
@@ -86,7 +86,7 @@ When working from the Creator interface, you may notice you can create Projects 
 
 The main display! This page is where your visuals and sounds will be displayed and if you're using a projector, the page you'll want to put onto your projector to overlay visuals in your play area!
 
-![Display Interface with example visuals](../assets/board-example.png)
+![Display Interface with example visuals](../assets/display-example.png)
 
 There are a few helpful additions to this page to help with your creation and play.
 

@@ -16,7 +16,7 @@ Find a place to place your projector that will let you move your paper programs 
 
 You may later find that you need to adjust the relative positions of your projector and webcam in order to get the best program detection and most space to move papers around. See [Fine-tuning program detection](#fine-tuning-program-detection) and [Webcam tips](#webcam-optimization-tips) for more advice on improving program detection.
 
-After powering on your projector and connecting it to your computer, open the *Display* interface (board.html) in a separate window and move it into the projector window.
+After powering on your projector and connecting it to your computer, open the *Display* interface (display.html) in a separate window and move it into the projector window.
 
 Now it's time to setup your webcam.
 
@@ -141,6 +141,6 @@ Look under the Detection header in the sidebar of Camera.html and adjust the con
 
 ## Canvas Projector Setup
 
-If you're using the legacy *Canvas* (projector.html) page to send visual elements to the web canvas, rather than the *Interactive Display* (board.html), you'll follow these instructions instead:
+If you're using the legacy *Canvas* (projector.html) page to send visual elements to the web canvas, rather than the *Interactive Display* (display.html), you'll follow these instructions instead:
 
 Power on the projector and separate [http://localhost:3000/projector.html](http://localhost:3000/projector.html) to its own window. Move this window to the projector's display and enter fullscreen mode (Ctrl/Cmd+Shift+F). If you encounter issues (e.g., a recently created program not displaying), refreshing the page should help.

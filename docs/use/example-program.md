@@ -9,7 +9,7 @@ We'll create a `Property` for its "altitude" above the ground and then create a 
 
 !!! note
 
-    These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the *Interactive Display* (board.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [legacy Paper API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md).
+    These examples use the Paper Event functions (`onProgramAdded`, `onProgramChangedPosition`, `onProgramRemoved`) to run code on the *Interactive Display* (display.html). They include basic code for the Projector (projector.html) to provide names if viewing that window. For more advanced usage of Projector, please see the [legacy Paper API](https://github.com/janpaul123/paperprograms/blob/master/docs/api.md).
 
 ## Model Program
 
@@ -29,7 +29,7 @@ importScripts( 'paper.js' );
 ( async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // display code
   //----------------------------------------------------------------------
 
   // Get the paper number of this piece of paper (which should not change).
@@ -61,16 +61,16 @@ importScripts( 'paper.js' );
     // range for the value as the program moves.
     const range = new phet.dot.Range( 0, 100 );
 
-    // If true, Text will be drawn to the board to display the value for debugging
+    // If true, Text will be drawn to the display to display the value for debugging
     const showText = true;
 
     // number of decimal places when representing the value
     const decimalPlaces = 0;
 
-    // font size for debugging text to see the value on the Board
+    // font size for debugging text to see the value on the display
     const fontSize = 50;
 
-    // positioning of the debugging text, relative to the top left of the board
+    // positioning of the debugging text, relative to the top left of the display
     const textLeft = 50;
     const textTop = 50;
 
@@ -81,16 +81,16 @@ importScripts( 'paper.js' );
     // Global model for all programs
     const model = sharedData.model;
 
-    // Use scene.addChild( someNode ) to draw components in the Board.
+    // Use scene.addChild( someNode ) to draw components in the display.
     const scene = sharedData.scene;
 
-    // Create the NumberProperty and add to the board model
+    // Create the NumberProperty and add to the display model
     const valueProperty = new phet.axon.NumberProperty( range.min, {
       range: range
     } );
     phet.paperLand.addModelComponent( propertyName, valueProperty );
 
-    // Print the value to the board for debugging
+    // Print the value to the display for debugging
     scratchpad.valueText = new phet.scenery.Text( '', {
       font: new phet.scenery.Font( { size: fontSize } ),
       leftTop: new phet.dot.Vector2( textLeft, textTop ),
@@ -122,7 +122,7 @@ importScripts( 'paper.js' );
       return;
     }
 
-    // global model for the board (all )    
+    // global model for the display (all )    
     const model = sharedData.model;
 
     if ( model.has( propertyName ) ) {
@@ -167,7 +167,7 @@ importScripts( 'paper.js' );
     // Global model for all programs
     const model = sharedData.model;
 
-    // Use scene.removeChild( someNode ) to remove components in the Board.
+    // Use scene.removeChild( someNode ) to remove components in the display.
     const scene = sharedData.scene;
 
     // unlink listener that updates debugging Text
@@ -236,7 +236,7 @@ importScripts('paper.js');
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // display code
   //----------------------------------------------------------------------
 
   // Get the paper number of this piece of paper (which should not change).
@@ -321,7 +321,7 @@ importScripts('paper.js');
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // display code
   //----------------------------------------------------------------------
 
   // Called when the program is detected or changed.
@@ -426,7 +426,7 @@ importScripts('paper.js');
 
 ## Add an Image vertically mapped to Altitude
 
-This program pulls an image from the `./www/media` directory and maps its vertical position in the Board to 
+This program pulls an image from the `./www/media` directory and maps its vertical position in the display to 
 
 ```js
 // Altitude: Image Y-Position mapped to Altitude
@@ -535,7 +535,7 @@ importScripts('paper.js');
 (async () => {
 
   //----------------------------------------------------------------------
-  // Board code
+  // display code
   //----------------------------------------------------------------------
 
   // Called when the program is detected or changed.
