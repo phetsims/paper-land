@@ -107,33 +107,30 @@ const ViewComponentTemplates = {
   },
   SpeechViewComponent: {
     onProgramAdded: `
-      // Speak whenever the dependencies change.
-      const {{NAME}}SpeechFunction = ( {{DEPENDENCY_ARGUMENTS}} ) => {
+      // a reusable utterance for this speech component so that only the latest value is spoken - in general
+      // it should not cancel other Utterances in this context but it should cancel itself
+      scratchpad.{{NAME}}SpeechUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
+      
+      scratchpad.{{NAME}}SpeechMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
       
         // get the additional reference constants so they are available in the control function
         {{REFERENCE_DECLARATIONS}}
       
         // in a local scope, define the functions that the user can use to manipulate the text
         {{CONTROL_FUNCTIONS}}
+        
+        // In a local scope, create the function that the user can call to speak
+        const speak = ( _speechContent ) => {
+          if ( _speechContent && _speechContent.toString ) {
+            const _speechString = _speechContent.toString();
+            if ( _speechString && _speechString.length > 0 ) {
+              scratchpad.{{NAME}}SpeechUtterance.alert = _speechString;
+              phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}SpeechUtterance );
+            }
+          }
+        };
       
         {{CONTROL_FUNCTION}}
-      }
-      
-      // a reusable utterance for this speech component so that only the latest value is spoken - in general
-      // it should not cancel other Utterances in this context but it should cancel itself
-      scratchpad.{{NAME}}SpeechUtterance = new phet.utteranceQueue.Utterance( { announcerOptions: { cancelOther: false } } );
-      
-      scratchpad.{{NAME}}SpeechMultilinkId = phet.paperLand.addModelPropertyMultilink( {{DEPENDENCY_NAMES_ARRAY}}, ( {{DEPENDENCY_ARGUMENTS}} ) => {
-
-        // Make sure there is a string to speak, including converting falsy values and numbers to a string       
-        const speechResult = {{NAME}}SpeechFunction( {{DEPENDENCY_ARGUMENTS}} );
-        if ( speechResult && speechResult.toString ) {
-          const speechString = speechResult.toString();
-          if ( speechString && speechString.length > 0 ) {
-            scratchpad.{{NAME}}SpeechUtterance.alert = speechString;
-            phet.scenery.voicingUtteranceQueue.addToBack( scratchpad.{{NAME}}SpeechUtterance ); 
-          }
-        }
       }, {
         lazy: {{LAZY}},
         otherReferences: {{REFERENCE_NAMES_ARRAY}}
