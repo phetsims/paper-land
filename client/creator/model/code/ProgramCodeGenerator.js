@@ -94,6 +94,12 @@ export default class ProgramCodeGenerator {
       // For translation, we want to insert undefined so that there isn't an unexpected translation to the origin
       return 'undefined';
     }
+    else if ( placeholder === 'BASIC_SPEECH_STRING' ) {
+
+      // For filling in speech, we want to insert a falsy non-empty value in the code to short circuit and
+      // move on to the control function.
+      return 'undefined';
+    }
     else if ( placeholder === 'SCALE' || placeholder === 'OPACITY' ) {
       return 1;
     }
@@ -544,6 +550,8 @@ export default class ProgramCodeGenerator {
       // If lazy, we wait to speak something until the paper is added.
       data = {
         LAZY: viewComponent.lazyLink,
+        BASIC_SPEECH_STRING_EXISTS: !!viewComponent.basicSpeechString,
+        BASIC_SPEECH_STRING: viewComponent.basicSpeechString.replace(/"/g, '\\"'), // Escaping quotes,
         CONTROL_FUNCTIONS: ViewCodeGenerator.getSetterFunctionsForViewType( componentType, viewComponent.nameProperty.value, {} )
       };
     }

@@ -214,7 +214,6 @@ export default function CreateViewComponentForm( props ) {
       }
       else if ( selectedTab === 'speech' ) {
         const basicSpeechString = speechDataRef.current.basicSpeechString;
-        debugger;
         newComponent = new SpeechViewComponent( componentName, selectedModelComponents, controlFunctionString, basicSpeechString, {
           lazyLink: lazyLink
         } );

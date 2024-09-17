@@ -129,8 +129,17 @@ const ViewComponentTemplates = {
             }
           }
         };
-      
-        {{CONTROL_FUNCTION}}
+        
+        if ( {{BASIC_SPEECH_STRING_EXISTS}} ) {
+        
+          // If the user provided a basic string to speak, just speak that.
+          speak( "{{BASIC_SPEECH_STRING}}" );
+        }
+        else {
+        
+          // The user is using a more complicated speech function to control what to speak.
+          {{CONTROL_FUNCTION}}
+        }
       }, {
         lazy: {{LAZY}},
         otherReferences: {{REFERENCE_NAMES_ARRAY}}
