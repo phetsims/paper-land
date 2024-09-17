@@ -24,6 +24,9 @@ export default function ViewComponentControls( props ) {
     throw new Error( 'ViewComponentControls requires a handleChange prop to control state.' );
   }
 
+  // Set this prop to true to show the control function by default.
+  const controlFunctionInitiallyOpen = props.controlFunctionInitiallyOpen || false;
+
   // Get the references to the actual model components from selected form data (name strings)
   const selectedModelComponents = Component.findComponentsByName( props.allModelComponents, props.formData.modelComponentNames );
 
@@ -60,7 +63,9 @@ export default function ViewComponentControls( props ) {
         ></ModelComponentSelector>
       </div>
       <hr/>
-      <Accordion hidden={props.allModelComponents.length === 0} defaultActiveKey={'0'}>
+      <Accordion
+        hidden={props.allModelComponents.length === 0}
+        defaultActiveKey={controlFunctionInitiallyOpen ? '0' : null}>
         <Accordion.Item eventKey='0'>
           <Accordion.Header>Control Function</Accordion.Header>
           <Accordion.Body>

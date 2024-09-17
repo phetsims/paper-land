@@ -40,16 +40,34 @@ export default function CreateSpeechViewForm( props ) {
   // Speech components have a checkbox to lazily link to the model components - waiting to speak until
   // there is a model change so that speech doesn't happen when you add the program
   const typeSpecificControls = (
-    <div className={styles.controlElement}>
-      <Form.Check
-        type={'checkbox'}
-        id={'lazy-link-checkbox'}
-        label={'Wait For Change - If checked, you will not hear speech when you add the program. Speech will wait until the model changes.'}
-        checked={formData.lazyLink}
-        onChange={event => {
-          handleChange( { lazyLink: event.target.checked } );
-        }}/>
-    </div>
+    <>
+      <div className={styles.controlElement}>
+        <h3>Basic String:</h3>
+        <Form.Control
+          type={'text'}
+          placeholder={'Enter a string to speak.'}
+          id={'basic-string'}
+          label={'Basic Speech'}
+
+          // value={formData.controlFunctionString}
+          onChange={event => {
+            // handleChange( { controlFunctionString: event.target.value } );
+          }}
+        />
+        <p>To make the string change or speak model component values, use the control function instead.</p>
+      </div>
+      <hr></hr>
+      <div className={styles.controlElement}>
+        <Form.Check
+          type={'checkbox'}
+          id={'lazy-link-checkbox'}
+          label={'Wait For Change - If checked, you will not hear speech when you add the program. Speech will wait until the model changes.'}
+          checked={formData.lazyLink}
+          onChange={event => {
+            handleChange( { lazyLink: event.target.checked } );
+          }}/>
+      </div>
+    </>
   );
 
   const speechFunctions = (
@@ -81,7 +99,7 @@ export default function CreateSpeechViewForm( props ) {
         handleChange={handleChange}
         additionalControlFunctions={`${formatFunctionListForPrompt( SPEECH_FUNCTIONS )}`}
         functionPrompt={'Write a function using the variables and functions below to control the Speech.'}
-        componentsPrompt={'Speech can happen whenever a selected component changes.'}
+        componentsPrompt={'Speech will happen whenever a selected component changes.'}
       ></ViewComponentControls>
     </div>
   );
