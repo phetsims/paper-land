@@ -154,16 +154,15 @@ If you do not have access to a remote database, you can host a local database on
 - [FIRST TIME - INITIAL SETUP ONLY] Use following command to create the database the first time in terminal
     - `npm run dev`
 
-#### Packaging the project
+#### Packaged Paper Playground
 
 To package the project so that it is sharable, we have custom build scripts that include necessary files and make it easy to install dependencies.
-While a standalone executable may be possible in the future, it is not currently available. For additional details and history on the packaging process, see #259
+While a standalone executable may be possible in the future, it is not currently available. For additional details and history on the packaging process, see https://github.com/phetsims/paper-land/issues/259.
 
-- We require that you have Node.js installed on your system to run these scripts.
-- Once you have Node.js you can run paper-playground by clicking on the setup executables.
+We require that you have Node.js installed on your system to run these scripts. Once you have Node.js you can run paper-playground by clicking on the setup executables.
 
 ##### Building your own package
-- If you are interested in packaging the project yourself, you can use the following steps:
+If you are interested in packaging the project yourself, you can use the following steps:
 1) Install pkg globally: `npm install -g pkg`. pkg is used to package setup scripts into an executable.
 2) Run `npm run build` to build the project. This will create a `build` directory in the root of the project.
 3) Within the build directory are platform specific executables that a user can run to install node modules and run the project.
