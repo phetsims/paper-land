@@ -40,6 +40,9 @@ export default function CreateSpeechViewForm( props ) {
       if ( controlFunctionLength === 0 && basicSpeechLength === 0 ) {
         invalidReasons.push( 'Must have a control function or basic speech string.' );
       }
+      if ( controlFunctionLength > 0 && basicSpeechLength > 0 ) {
+        invalidReasons.push( 'Cannot have both a control function and a basic speech string.' );
+      }
       if ( controlFunctionLength > 0 ) {
 
         // If there is a control function, it must include the speak() call somewhere to produce speech.
