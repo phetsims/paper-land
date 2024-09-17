@@ -87,6 +87,7 @@ export default function CreateViewComponentForm( props ) {
   // refs to form data
   const generalDataRef = useRef( {} );
   const soundsDataRef = useRef( {} );
+  const speechDataRef = useRef( {} );
   const imagesDataRef = useRef( {} );
   const shapesDataRef = useRef( {} );
   const backgroundDataRef = useRef( {} );
@@ -94,6 +95,7 @@ export default function CreateViewComponentForm( props ) {
   // to be called every change so that we can use data to create components
   const getDataForGeneral = data => {generalDataRef.current = data;};
   const getDataForSounds = data => {soundsDataRef.current = data;};
+  const getDataForSpeech = data => {speechDataRef.current = data;};
   const getDataForImages = data => {imagesDataRef.current = data;};
   const getDataForShapes = data => {shapesDataRef.current = data;};
   const getDataForBackground = data => {backgroundDataRef.current = data;};
@@ -176,6 +178,7 @@ export default function CreateViewComponentForm( props ) {
       }
       else if ( selectedTab === 'speech' ) {
         editingComponent.lazyLink = lazyLink;
+        editingComponent.basicSpeechString = speechDataRef.current.basicSpeechString;
       }
       else if ( selectedTab === 'images' ) {
         editingComponent.imageFileName = imagesDataRef.current.imageFileName;
@@ -210,7 +213,9 @@ export default function CreateViewComponentForm( props ) {
         activeProgram.viewContainer.addSoundView( newComponent );
       }
       else if ( selectedTab === 'speech' ) {
-        newComponent = new SpeechViewComponent( componentName, selectedModelComponents, controlFunctionString, {
+        const basicSpeechString = speechDataRef.current.basicSpeechString;
+        debugger;
+        newComponent = new SpeechViewComponent( componentName, selectedModelComponents, controlFunctionString, basicSpeechString, {
           lazyLink: lazyLink
         } );
         activeProgram.viewContainer.addSpeechView( newComponent );
@@ -350,6 +355,7 @@ export default function CreateViewComponentForm( props ) {
           <CreateSpeechViewForm
             allModelComponents={usableModelComponents}
             isFormValid={getSpeechFormInvalidReasons}
+            getSpeechFormData={getDataForSpeech}
             getGeneralFormData={getDataForGeneral}
             activeEdit={activeEdit}
           >

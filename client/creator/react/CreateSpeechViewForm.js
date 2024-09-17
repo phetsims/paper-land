@@ -20,20 +20,37 @@ const SPEECH_FUNCTIONS = [
 
 export default function CreateSpeechViewForm( props ) {
 
+  const getFormData = providedData => {
+    props.getGeneralFormData( providedData );
+    props.getSpeechFormData( providedData );
+  };
+
   const [ formData, handleChange ] = useEditableForm(
     props.activeEdit,
     props.isFormValid,
     componentData => {
       const invalidReasons = [];
+
+      const controlFunctionLength = componentData.controlFunctionString.length;
+      const basicSpeechLength = componentData.basicSpeechString.length;
+
       if ( componentData.modelComponentNames.length === 0 ) {
         invalidReasons.push( 'No model components selected.' );
       }
-      if ( componentData.controlFunctionString.length === 0 ) {
-        invalidReasons.push( 'Control function has no content.' );
+      if ( controlFunctionLength === 0 && basicSpeechLength === 0 ) {
+        invalidReasons.push( 'Must have a control function or basic speech string.' );
+      }
+      if ( controlFunctionLength > 0 ) {
+
+        // If there is a control function, it must include the speak() call somewhere to produce speech.
+        // Note that a speak() in comments will still pass this check.
+        if ( !componentData.controlFunctionString.includes( 'speak(' ) ) {
+          invalidReasons.push( 'Control function must include a speak() call to produce speech.' );
+        }
       }
       return invalidReasons;
     },
-    props.getGeneralFormData,
+    getFormData,
     SpeechViewComponent
   );
 
@@ -48,10 +65,9 @@ export default function CreateSpeechViewForm( props ) {
           placeholder={'Enter a string to speak.'}
           id={'basic-string'}
           label={'Basic Speech'}
-
-          // value={formData.controlFunctionString}
+          value={formData.basicSpeechString}
           onChange={event => {
-            // handleChange( { controlFunctionString: event.target.value } );
+            handleChange( { basicSpeechString: event.target.value } );
           }}
         />
         <p>To make the string change or speak model component values, use the control function instead.</p>
