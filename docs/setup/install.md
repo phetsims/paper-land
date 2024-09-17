@@ -156,8 +156,13 @@ If you do not have access to a remote database, you can host a local database on
 
 #### Packaging the project
 
-- To package the project so that it is sharable, we have custom build scripts that include necessary files and make it easy to install dependencies.
-- We require that you have Node.js installed on your system to run these scripts. Once you have Node.js you can run paper-playground by clicking on the setup executables.
+To package the project so that it is sharable, we have custom build scripts that include necessary files and make it easy to install dependencies.
+While a standalone executable may be possible in the future, it is not currently available. For additional details and history on the packaging process, see #259
+
+- We require that you have Node.js installed on your system to run these scripts.
+- Once you have Node.js you can run paper-playground by clicking on the setup executables.
+
+##### Building your own package
 - If you are interested in packaging the project yourself, you can use the following steps:
 1) Install pkg globally: `npm install -g pkg`. pkg is used to package setup scripts into an executable.
 2) Run `npm run build` to build the project. This will create a `build` directory in the root of the project.
@@ -166,15 +171,3 @@ If you do not have access to a remote database, you can host a local database on
 
 - Note that there are other build scripts to build individual parts of the project (front end, server, etc.). See package.json for more details.
 - Note that this process requires the user to have Node.js installed on their system. A fully standalone build is not supported at this time.
-
-- To package the project for deployment, we use Electron and Webpack. We do not provide a standalone executable, but a directory with dependencies and code packaged.
-This allows one to run the project on any system with the same architecture, without setting up a development environment. While a standalone executable may be
-possible in the future, it is not currently available. For additional details and history on the packaging process, see https://github.com/phetsims/paper-land/issues/259.
-The following scripts can be used to bundle the project.
-  - `npm run build` - The main build command that runs most of the following scripts in order, to create a distributable directory.
-  - `npm run build-react` - Uses webpack to build the front end React app.
-  - `npm run build-server` - Uses webpack to build the server code so it can be bundled with the Electron app.
-  - `npm run package` - Packages the Electron app into a distributable directory.
-  - `npm run afterpackage` - A script that puts a .env file with defaults into the build directory.
-
-- Additional scripts are available related to packaging this project, see package.json.
