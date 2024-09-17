@@ -1,1 +1,526 @@
-{"programs":[{"number":5,"title":"Hopping Frog","keywords":"microbit, button","description":"When triggered, buttonPressed boolean triggers an image change to animate a hopping frog (pair with BLE Button program).","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":331,"y":326.4286175999101},"modelContainer":{"namedBooleanProperties":[{"name":"buttonPressed","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[{"name":"blueBackground","modelComponentNames":[],"referenceComponentNames":[],"controlFunctionString":"","lazyLink":false,"fillColor":"#AFEEEE"}],"imageViews":[{"name":"hoppingImage","modelComponentNames":["buttonPressed"],"referenceComponentNames":[],"controlFunctionString":"// hopping when button is pressed\r\nsetVisible( buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );","lazyLink":false,"defaultViewOptions":{"centerX":0.5,"centerY":0.5,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"hopping-frog.gif"},{"name":"idleImage","modelComponentNames":["buttonPressed"],"referenceComponentNames":[],"controlFunctionString":"// idle when not pressed - boolean is false\r\nsetVisible( !buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );","lazyLink":false,"defaultViewOptions":{"centerX":0.5,"centerY":0.5,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"idle-frog.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":4,"title":"BLE Button","keywords":"microbit, button, controller","description":"Example for reading and setting a model component value using a button press from a micro:bit.","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":331,"y":125.69665612297524},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[{"name":"bleButtonController","controlledPropertyNames":["buttonPressed"],"controlFunctionString":"\r\n// The button is pressed if the deviceValue (8bit unsigned int)\r\n// is greater than 0.\r\nsetButtonPressed( deviceValue.getUint8( 0 ) > 0 );","dependencyNames":[],"referenceComponentNames":[],"writeToCharacteristic":false,"serviceId":"e95d9882-251d-470a-a062-fa1922dfa9a8","characteristicId":"e95dda91-251d-470a-a062-fa1922dfa9a8"}]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":2,"title":"LED Text Emoji by Rotation","keywords":"","description":"A simple program to send a happy or sad face as LED Text to the micro:bit by rotating the paper program.","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":21.863280662047472,"y":86.93885923569876},"modelContainer":{"namedBooleanProperties":[{"name":"paperRotated","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[{"name":"rotationController","controlledComponentName":"paperRotated","controlType":"ROTATION","controlTypeFamily":"","whiskerConfiguration":{"topLength":0.2,"rightLength":0.2,"bottomLength":0.2,"leftLength":0.2,"otherPaperNumber":null},"markerColor":""}],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[{"name":"bleFaceController","controlledPropertyNames":[],"controlFunctionString":"// micro:bit LED Text expects a UTF8 string.\r\n// Create an encoder and encode. Do not use writeStringToCharacteristic()\r\n// as this will add delimiters to your string.\r\n\r\nconst encoder = new TextEncoder();\r\n\r\nconst faceString = paperRotated ? ':)' : ':(';\r\nwriteToCharacteristic( encoder.encode( faceString ) );\r\n\r\nconsole.log( `sent data: ${faceString}` );","dependencyNames":["paperRotated"],"referenceComponentNames":[],"writeToCharacteristic":true,"serviceId":"e95dd91d-251d-470a-a062-fa1922dfa9a8","characteristicId":"e95d93ee-251d-470a-a062-fa1922dfa9a8"}]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":7,"title":"UART to IO Pins (LEDs) with Markers","keywords":"","description":"This program sends a string over UART RX to set p0 to up (red marker) or p1 to up (green marker), which will light up an LED in circuit with those pins.","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":138.38747850334147,"y":188.20450434275028},"modelContainer":{"namedBooleanProperties":[{"name":"led1p0UpBoolean","defaultValue":false,"propertyType":"BooleanProperty"},{"name":"led2p1UpBoolean","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[{"name":"receivedUARTString","propertyType":"StringProperty","defaultValue":""}]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[{"name":"p0RedMarkerController","controlledComponentName":"led1p0UpBoolean","controlType":"MARKER","controlTypeFamily":"","whiskerConfiguration":{"topLength":0.2,"rightLength":0.2,"bottomLength":0.2,"leftLength":0.2,"otherPaperNumber":null},"markerColor":"red"},{"name":"p1GreenMarkerController","controlledComponentName":"led2p1UpBoolean","controlType":"MARKER","controlTypeFamily":"","whiskerConfiguration":{"topLength":0.2,"rightLength":0.2,"bottomLength":0.2,"leftLength":0.2,"otherPaperNumber":null},"markerColor":"green"}],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[{"name":"receivedUARTText","modelComponentNames":["receivedUARTString"],"referenceComponentNames":[],"controlFunctionString":"setTop(0.5);\r\nsetLeft(0.5);\r\nsetFontSize(32);\r\nsetString( \"micro:bit confirms:\" + receivedUARTString );","lazyLink":false,"defaultViewOptions":{"centerX":0.5,"centerY":0.5,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"}}],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[{"name":"p0BLEWriter","controlledPropertyNames":[],"controlFunctionString":"let str = \"\";\r\n\r\nif (led1p0UpBoolean) {\r\n    str = \"p0U\";\r\n} else {\r\n    str = \"p0D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`pin 0 being set to ${str}`);\r\n","dependencyNames":["led1p0UpBoolean"],"referenceComponentNames":[],"writeToCharacteristic":true,"serviceId":"6e400001-b5a3-f393-e0a9-e50e24dcca9e","characteristicId":"6e400003-b5a3-f393-e0a9-e50e24dcca9e"},{"name":"p1BLEWriter","controlledPropertyNames":[],"controlFunctionString":"let str = \"\";\r\n\r\nif (led2p1UpBoolean) {\r\n    str = \"p1U\";\r\n} else {\r\n    str = \"p1D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`pin 1 being set to ${str}`);","dependencyNames":["led2p1UpBoolean"],"referenceComponentNames":[],"writeToCharacteristic":true,"serviceId":"6e400001-b5a3-f393-e0a9-e50e24dcca9e","characteristicId":"6e400003-b5a3-f393-e0a9-e50e24dcca9e"},{"name":"readMicrobitUARTStrings","controlledPropertyNames":["receivedUARTString"],"controlFunctionString":"setReceivedUARTString( deviceValueString );\r\n\r\nconsole.log( `received ${deviceValueString}` );","dependencyNames":[],"referenceComponentNames":[],"writeToCharacteristic":false,"serviceId":"6e400001-b5a3-f393-e0a9-e50e24dcca9e","characteristicId":"6e400002-b5a3-f393-e0a9-e50e24dcca9e"}]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":9,"title":"Simple UART Example","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":180.07511944486933,"y":527.4271624275366},"modelContainer":{"namedBooleanProperties":[{"name":"happyBoolean","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[{"name":"happyBooleanController","controlledComponentName":"happyBoolean","controlType":"MARKER","controlTypeFamily":"","whiskerConfiguration":{"topLength":0.2,"rightLength":0.2,"bottomLength":0.2,"leftLength":0.2,"otherPaperNumber":null},"markerColor":""}],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[{"name":"writeToMicrobit","controlledPropertyNames":[],"controlFunctionString":"let str = \"\";\r\n\r\nif (happyBoolean) {\r\n    str = \"happy\";\r\n} else {\r\n    str = \"sad\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`Sent ${str} to micro:bit.`);","dependencyNames":["happyBoolean"],"referenceComponentNames":[],"writeToCharacteristic":true,"serviceId":"6e400001-b5a3-f393-e0a9-e50e24dcca9e","characteristicId":"6e400003-b5a3-f393-e0a9-e50e24dcca9e"}]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]}
+{
+  "programs": [
+    {
+      "number": 5,
+      "title": "Hopping Frog",
+      "keywords": "microbit, button",
+      "description": "When triggered, buttonPressed boolean triggers an image change to animate a hopping frog (pair with BLE Button program).",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 331,
+        "y": 326.4286175999101
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "buttonPressed",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "blueBackground",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "#AFEEEE"
+          }
+        ],
+        "imageViews": [
+          {
+            "name": "hoppingImage",
+            "modelComponentNames": [
+              "buttonPressed"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// hopping when button is pressed\r\nsetVisible( buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "hopping-frog.gif"
+          },
+          {
+            "name": "idleImage",
+            "modelComponentNames": [
+              "buttonPressed"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// idle when not pressed - boolean is false\r\nsetVisible( !buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "idle-frog.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 4,
+      "title": "BLE Button",
+      "keywords": "microbit, button, controller",
+      "description": "Example for reading and setting a model component value using a button press from a micro:bit.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 331,
+        "y": 125.69665612297524
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "bleButtonController",
+            "controlledPropertyNames": [
+              "buttonPressed"
+            ],
+            "controlFunctionString": "\r\n// The button is pressed if the deviceValue (8bit unsigned int)\r\n// is greater than 0.\r\nsetButtonPressed( deviceValue.getUint8( 0 ) > 0 );",
+            "dependencyNames": [],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": false,
+            "serviceId": "e95d9882-251d-470a-a062-fa1922dfa9a8",
+            "characteristicId": "e95dda91-251d-470a-a062-fa1922dfa9a8"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2,
+      "title": "LED Text Emoji by Rotation",
+      "keywords": "",
+      "description": "A simple program to send a happy or sad face as LED Text to the micro:bit by rotating the paper program.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 21.863280662047472,
+        "y": 86.93885923569876
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "paperRotated",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "rotationController",
+            "controlledComponentName": "paperRotated",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "bleFaceController",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "// micro:bit LED Text expects a UTF8 string.\r\n// Create an encoder and encode. Do not use writeStringToCharacteristic()\r\n// as this will add delimiters to your string.\r\n\r\nconst encoder = new TextEncoder();\r\n\r\nconst faceString = paperRotated ? ':)' : ':(';\r\nwriteToCharacteristic( encoder.encode( faceString ) );\r\n\r\nconsole.log( `sent data: ${faceString}` );",
+            "dependencyNames": [
+              "paperRotated"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "e95dd91d-251d-470a-a062-fa1922dfa9a8",
+            "characteristicId": "e95d93ee-251d-470a-a062-fa1922dfa9a8"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 7,
+      "title": "UART to IO Pins (LEDs) with Markers",
+      "keywords": "",
+      "description": "This program sends a string over UART RX to set p0 to up (red marker) or p1 to up (green marker), which will light up an LED in circuit with those pins.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 138.38747850334147,
+        "y": 188.20450434275028
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "led1p0UpBoolean",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "led2p1UpBoolean",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "receivedUARTString",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "p0RedMarkerController",
+            "controlledComponentName": "led1p0UpBoolean",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "p1GreenMarkerController",
+            "controlledComponentName": "led2p1UpBoolean",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [
+          {
+            "name": "receivedUARTText",
+            "modelComponentNames": [
+              "receivedUARTString"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setTop(0.5);\r\nsetLeft(0.5);\r\nsetFontSize(32);\r\nsetString( \"micro:bit confirms:\" + receivedUARTString );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "p0BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (led1p0UpBoolean) {\r\n    str = \"p0U\";\r\n} else {\r\n    str = \"p0D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`pin 0 being set to ${str}`);\r\n",
+            "dependencyNames": [
+              "led1p0UpBoolean"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          },
+          {
+            "name": "p1BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (led2p1UpBoolean) {\r\n    str = \"p1U\";\r\n} else {\r\n    str = \"p1D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`pin 1 being set to ${str}`);",
+            "dependencyNames": [
+              "led2p1UpBoolean"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          },
+          {
+            "name": "readMicrobitUARTStrings",
+            "controlledPropertyNames": [
+              "receivedUARTString"
+            ],
+            "controlFunctionString": "setReceivedUARTString( deviceValueString );\r\n\r\nconsole.log( `received ${deviceValueString}` );",
+            "dependencyNames": [],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": false,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 9,
+      "title": "Simple UART Example",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 180.07511944486933,
+        "y": 527.4271624275366
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "happyBoolean",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "happyBooleanController",
+            "controlledComponentName": "happyBoolean",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMicrobit",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (happyBoolean) {\r\n    str = \"happy\";\r\n} else {\r\n    str = \"sad\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nconsole.log(`Sent ${str} to micro:bit.`);",
+            "dependencyNames": [
+              "happyBoolean"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,1 +1,881 @@
-{"programs":[{"number":2,"title":"Movable Object","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":496.7239088928752,"y":227.94302171789215},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[{"name":"position","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[{"name":"objectBounds","propertyType":"DerivedProperty","dependencyNames":["position","leftTopBounds","centerTopBounds","rightTopBounds","leftCenterBounds","centerBounds","rightCenterBounds","leftBottomBounds","centerBottomBounds","rightBottomBounds"],"derivation":"if ( leftTopBounds.containsPoint( position ) ) {\r\n    return leftTopBounds;\r\n}\r\nelse if ( centerTopBounds.containsPoint( position ) ) {\r\n    return centerTopBounds;\r\n}\r\nelse if ( rightTopBounds.containsPoint( position ) ) {\r\n    return rightTopBounds;\r\n}\r\nelse if ( leftCenterBounds.containsPoint( position ) ) {\r\n    return leftCenterBounds;\r\n}\r\nelse if ( centerBounds.containsPoint( position ) ) {\r\n    return centerBounds;\r\n}\r\nelse if ( rightCenterBounds.containsPoint( position ) ) {\r\n    return rightCenterBounds;\r\n}\r\nelse if ( leftBottomBounds.containsPoint( position ) ) {\r\n    return leftBottomBounds;\r\n}\r\nelse if ( centerBottomBounds.containsPoint( position ) ) {\r\n    return centerBottomBounds;\r\n}\r\nelse if ( rightBottomBounds.containsPoint( position ) ) {\r\n    return rightBottomBounds;\r\n}\r\nelse {\r\n    return null;\r\n}\r\n"}],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"positionController","controlledComponentName":"position","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[{"name":"objectView","modelComponentNames":["position"],"referenceComponentNames":[],"controlFunctionString":"setCenterX( position.x );\r\nsetCenterY( position.y );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"circle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":"0.1","ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}}],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":3,"title":"Bounds","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":323.02035926344416,"y":138.55869961635193},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"leftTopBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":"0.33","defaultMaxY":"0.33"},{"name":"centerTopBounds","propertyType":"Bounds2Property","defaultMinX":"0.33","defaultMinY":0,"defaultMaxX":"0.66","defaultMaxY":"0.33"},{"name":"rightTopBounds","propertyType":"Bounds2Property","defaultMinX":"0.66","defaultMinY":0,"defaultMaxX":1,"defaultMaxY":"0.33"},{"name":"leftCenterBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":"0.33","defaultMaxX":"0.33","defaultMaxY":"0.66"},{"name":"centerBounds","propertyType":"Bounds2Property","defaultMinX":"0.33","defaultMinY":"0.33","defaultMaxX":"0.66","defaultMaxY":"0.66"},{"name":"rightCenterBounds","propertyType":"Bounds2Property","defaultMinX":"0.66","defaultMinY":"0.33","defaultMaxX":1,"defaultMaxY":"0.66"},{"name":"leftBottomBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":"0.66","defaultMaxX":"0.33","defaultMaxY":1},{"name":"centerBottomBounds","propertyType":"Bounds2Property","defaultMinX":"0.33","defaultMinY":"0.66","defaultMaxX":"0.66","defaultMaxY":1},{"name":"rightBottomBounds","propertyType":"Bounds2Property","defaultMinX":"0.66","defaultMinY":"0.66","defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[{"name":"leftTopView","modelComponentNames":["leftTopBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( leftTopBounds );\r\nsetFill( 'rgba(255, 0, 0, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"centerTopView","modelComponentNames":["centerTopBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( centerTopBounds );\r\nsetFill( 'rgba(0, 0, 255, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"rightTopView","modelComponentNames":["rightTopBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( rightTopBounds );\r\nsetFill( 'rgba(0, 128, 0, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"leftCenterView","modelComponentNames":["leftCenterBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( leftCenterBounds );\r\nsetFill( 'rgba(255, 255, 0, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"centerView","modelComponentNames":["centerBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( centerBounds );\r\nsetFill( 'rgba(128, 0, 128, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"rightCenterView","modelComponentNames":["rightCenterBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( rightCenterBounds );\r\nsetFill( 'rgba(255, 165, 0, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"leftBottomView","modelComponentNames":["leftBottomBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( leftBottomBounds );\r\nsetFill( 'rgba(255, 192, 203, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"centerBottomView","modelComponentNames":["centerBottomBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( centerBottomBounds );\r\nsetFill( 'rgba(165, 42, 42, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"rightBottomView","modelComponentNames":["rightBottomBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( rightBottomBounds );\r\nsetFill( 'rgba(128, 128, 128, 0.5)' );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"lightblue","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.5,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}}],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":1,"title":"Movable Cupcake","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":137.32385571814547,"y":196.7700727710934},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[{"name":"cupcakePosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[{"name":"cupcakeRotation","propertyType":"NumberProperty","min":0,"max":"6.28","defaultValue":"0"},{"name":"cupcakeScale","propertyType":"NumberProperty","min":"0.1","max":"2","defaultValue":"1"}],"namedEnumerationProperties":[],"namedDerivedProperties":[{"name":"cupcakeBounds","propertyType":"DerivedProperty","dependencyNames":["leftTopBounds","centerTopBounds","rightTopBounds","leftCenterBounds","centerBounds","rightCenterBounds","leftBottomBounds","centerBottomBounds","rightBottomBounds","cupcakePosition"],"derivation":"if ( leftTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftTopBounds;\r\n}\r\nelse if ( centerTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerTopBounds;\r\n}\r\nelse if ( rightTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightTopBounds;\r\n}\r\nelse if ( leftCenterBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftCenterBounds;\r\n}\r\nelse if ( centerBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerBounds;\r\n}\r\nelse if ( rightCenterBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightCenterBounds;\r\n}\r\nelse if ( leftBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftBottomBounds;\r\n}\r\nelse if ( centerBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerBottomBounds;\r\n}\r\nelse if ( rightBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightBottomBounds;\r\n}\r\n"}],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"cupcakePositionController","controlledComponentName":"cupcakePosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"cupcakeImage","modelComponentNames":["cupcakePosition","cupcakeRotation","cupcakeScale"],"referenceComponentNames":[],"controlFunctionString":"// Sets the image scale to from the model component for scale\r\nsetScale( cupcakeScale );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( cupcakeRotation );\r\n\r\n// Sets the image center to match the model component for image position\r\nsetCenterX( cupcakePosition.x );\r\nsetCenterY( cupcakePosition.y );\r\n","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"frosted.png"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]}
+{
+  "programs": [
+    {
+      "number": 2,
+      "title": "Movable Object",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 496.7239088928752,
+        "y": 227.94302171789215
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "objectBounds",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "position",
+              "leftTopBounds",
+              "centerTopBounds",
+              "rightTopBounds",
+              "leftCenterBounds",
+              "centerBounds",
+              "rightCenterBounds",
+              "leftBottomBounds",
+              "centerBottomBounds",
+              "rightBottomBounds"
+            ],
+            "derivation": "if ( leftTopBounds.containsPoint( position ) ) {\r\n    return leftTopBounds;\r\n}\r\nelse if ( centerTopBounds.containsPoint( position ) ) {\r\n    return centerTopBounds;\r\n}\r\nelse if ( rightTopBounds.containsPoint( position ) ) {\r\n    return rightTopBounds;\r\n}\r\nelse if ( leftCenterBounds.containsPoint( position ) ) {\r\n    return leftCenterBounds;\r\n}\r\nelse if ( centerBounds.containsPoint( position ) ) {\r\n    return centerBounds;\r\n}\r\nelse if ( rightCenterBounds.containsPoint( position ) ) {\r\n    return rightCenterBounds;\r\n}\r\nelse if ( leftBottomBounds.containsPoint( position ) ) {\r\n    return leftBottomBounds;\r\n}\r\nelse if ( centerBottomBounds.containsPoint( position ) ) {\r\n    return centerBottomBounds;\r\n}\r\nelse if ( rightBottomBounds.containsPoint( position ) ) {\r\n    return rightBottomBounds;\r\n}\r\nelse {\r\n    return null;\r\n}\r\n"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "positionController",
+            "controlledComponentName": "position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "objectView",
+            "modelComponentNames": [
+              "position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( position.x );\r\nsetCenterY( position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": "0.1",
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 3,
+      "title": "Bounds",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 323.02035926344416,
+        "y": 138.55869961635193
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "leftTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.33",
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "centerTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": 0,
+            "defaultMaxX": "0.66",
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "rightTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "leftCenterBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": "0.33",
+            "defaultMaxX": "0.33",
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "centerBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": "0.33",
+            "defaultMaxX": "0.66",
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "rightCenterBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": "0.33",
+            "defaultMaxX": 1,
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "leftBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": "0.66",
+            "defaultMaxX": "0.33",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "centerBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": "0.66",
+            "defaultMaxX": "0.66",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "rightBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": "0.66",
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "leftTopView",
+            "modelComponentNames": [
+              "leftTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftTopBounds );\r\nsetFill( 'rgba(255, 0, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerTopView",
+            "modelComponentNames": [
+              "centerTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerTopBounds );\r\nsetFill( 'rgba(0, 0, 255, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightTopView",
+            "modelComponentNames": [
+              "rightTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightTopBounds );\r\nsetFill( 'rgba(0, 128, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "leftCenterView",
+            "modelComponentNames": [
+              "leftCenterBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftCenterBounds );\r\nsetFill( 'rgba(255, 255, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerView",
+            "modelComponentNames": [
+              "centerBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerBounds );\r\nsetFill( 'rgba(128, 0, 128, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightCenterView",
+            "modelComponentNames": [
+              "rightCenterBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightCenterBounds );\r\nsetFill( 'rgba(255, 165, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "leftBottomView",
+            "modelComponentNames": [
+              "leftBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftBottomBounds );\r\nsetFill( 'rgba(255, 192, 203, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerBottomView",
+            "modelComponentNames": [
+              "centerBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerBottomBounds );\r\nsetFill( 'rgba(165, 42, 42, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightBottomView",
+            "modelComponentNames": [
+              "rightBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightBottomBounds );\r\nsetFill( 'rgba(128, 128, 128, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1,
+      "title": "Movable Cupcake",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 137.32385571814547,
+        "y": 196.7700727710934
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "cupcakePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "cupcakeRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "cupcakeScale",
+            "propertyType": "NumberProperty",
+            "min": "0.1",
+            "max": "2",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "cupcakeBounds",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "leftTopBounds",
+              "centerTopBounds",
+              "rightTopBounds",
+              "leftCenterBounds",
+              "centerBounds",
+              "rightCenterBounds",
+              "leftBottomBounds",
+              "centerBottomBounds",
+              "rightBottomBounds",
+              "cupcakePosition"
+            ],
+            "derivation": "if ( leftTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftTopBounds;\r\n}\r\nelse if ( centerTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerTopBounds;\r\n}\r\nelse if ( rightTopBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightTopBounds;\r\n}\r\nelse if ( leftCenterBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftCenterBounds;\r\n}\r\nelse if ( centerBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerBounds;\r\n}\r\nelse if ( rightCenterBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightCenterBounds;\r\n}\r\nelse if ( leftBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return leftBottomBounds;\r\n}\r\nelse if ( centerBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return centerBottomBounds;\r\n}\r\nelse if ( rightBottomBounds.containsPoint( cupcakePosition ) ) {\r\n    return rightBottomBounds;\r\n}\r\n"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "cupcakePositionController",
+            "controlledComponentName": "cupcakePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "cupcakeImage",
+            "modelComponentNames": [
+              "cupcakePosition",
+              "cupcakeRotation",
+              "cupcakeScale"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Sets the image scale to from the model component for scale\r\nsetScale( cupcakeScale );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( cupcakeRotation );\r\n\r\n// Sets the image center to match the model component for image position\r\nsetCenterX( cupcakePosition.x );\r\nsetCenterY( cupcakePosition.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

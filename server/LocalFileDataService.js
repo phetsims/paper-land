@@ -151,6 +151,15 @@ class LocalFileDataService extends IDataService {
   }
 
   /**
+   * Sanitizes the file name by removing or replacing invalid characters.
+   * @param {string} filePath - The original file path.
+   * @returns {string} - The sanitized file path.
+   */
+  sanitizeName( filePath ) {
+    return filePath.replace( /[<>:"/\\|?*]+/g, '_' ); // Removes invalid characters
+  }
+
+  /**
    * Deletes a file from the fiile system, wrapped so that it is easily added to the queue.
    */
   deleteFile( filePath ) {
@@ -812,9 +821,11 @@ class LocalFileDataService extends IDataService {
       }
       else {
 
+        const sanitizedName = this.sanitizeName( templateName );
+
         // The data to write to the file
         const templateData = {
-          name: templateName,
+          name: sanitizedName,
           description: description,
           keyWords: keyWords,
           projectData: projectData,
@@ -823,11 +834,11 @@ class LocalFileDataService extends IDataService {
         };
 
         // Write the file
-        const templatePath = path.join( templatesDirectoryPath, `${templateName}.json` );
+        const templatePath = path.join( templatesDirectoryPath, `${sanitizedName}.json` );
         this.addToQueue( this.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ) ).then( () => {
           response.status( 200 ).json( {} );
         } ).catch( err => {
-          console.error( `Error creating template ${templateName}: ${err}` );
+          console.error( `Error creating template ${sanitizedName}: ${err}` );
           response.status( Constants.UNKNOWN_ERROR ).send( 'An error occurred while saving the template' );
         } );
       }
@@ -845,11 +856,12 @@ class LocalFileDataService extends IDataService {
       else {
 
         // The path to the template file
-        const templatePath = path.join( templatesDirectoryPath, `${templateName}.json` );
+        const sanitizedName = this.sanitizeName( templateName );
+        const templatePath = path.join( templatesDirectoryPath, `${sanitizedName}.json` );
 
         // The data to write to the file
         const templateData = {
-          name: templateName,
+          name: sanitizedName,
           description: description,
           keyWords: keyWords,
           projectData: projectData,
@@ -861,7 +873,7 @@ class LocalFileDataService extends IDataService {
         this.addToQueue( this.writeFile( templatePath, JSON.stringify( templateData, null, 2 ) ) ).then( () => {
           response.status( 200 ).json( {} );
         } ).catch( err => {
-          console.error( `Error saving template ${templateName}: ${err}` );
+          console.error( `Error saving template ${sanitizedName}: ${err}` );
           response.status( 500 ).send( 'Error saving template' );
         } );
       }

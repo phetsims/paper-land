@@ -1,1 +1,109 @@
-{"programs":[{"number":7,"title":"Servo Control by Rotation","keywords":"rotation, servo, microbit, uart","description":"Sends rotation value mapped from 0 - 180 as UART string to be read by micro:bit and set servo pin in order to set servo position.","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":194.49221091091607,"y":285.21493020035035},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[],"namedNumberProperties":[{"name":"servoPositionNumber","propertyType":"NumberProperty","min":"-90","max":"270","defaultValue":"90"}],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[{"name":"servoValueString","propertyType":"StringProperty","defaultValue":""}]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[{"name":"setServoPosition","controlledComponentName":"servoPositionNumber","controlType":"ROTATION","controlTypeFamily":"PAPER_MOVEMENT","markerColor":"all","relationshipControlType":"LINEAR"}],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"descriptionViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[{"name":"numberToStringforUART","controlledPropertyNames":["servoValueString"],"controlFunctionString":"//Only send integers to the servo, easier on the makecode string to number parser to have an integer\r\nsetServoValueString(String(Math.round(servoPositionNumber)));","dependencyNames":["servoPositionNumber"],"referenceComponentNames":[]}],"animationListeners":[],"bluetoothListeners":[{"name":"sendServoPositionToMicroBitRX","controlledPropertyNames":[],"controlFunctionString":"writeToCharacteristic(servoValueString);\r\n\r\nconsole.log(`Sending ${servoValueString} to microbit`);","dependencyNames":["servoValueString"],"referenceComponentNames":[],"writeToCharacteristic":true,"serviceId":"6e400001-b5a3-f393-e0a9-e50e24dcca9e","characteristicId":"6e400003-b5a3-f393-e0a9-e50e24dcca9e"}]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]}
+{
+  "programs": [
+    {
+      "number": 7,
+      "title": "Servo Control by Rotation",
+      "keywords": "rotation, servo, microbit, uart",
+      "description": "Sends rotation value mapped from 0 - 180 as UART string to be read by micro:bit and set servo pin in order to set servo position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 194.49221091091607,
+        "y": 285.21493020035035
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "servoPositionNumber",
+            "propertyType": "NumberProperty",
+            "min": "-90",
+            "max": "270",
+            "defaultValue": "90"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "servoValueString",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "setServoPosition",
+            "controlledComponentName": "servoPositionNumber",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "numberToStringforUART",
+            "controlledPropertyNames": [
+              "servoValueString"
+            ],
+            "controlFunctionString": "//Only send integers to the servo, easier on the makecode string to number parser to have an integer\r\nsetServoValueString(String(Math.round(servoPositionNumber)));",
+            "dependencyNames": [
+              "servoPositionNumber"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "sendServoPositionToMicroBitRX",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "writeToCharacteristic(servoValueString);\r\n\r\nconsole.log(`Sending ${servoValueString} to microbit`);",
+            "dependencyNames": [
+              "servoValueString"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

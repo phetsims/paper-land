@@ -1,1 +1,99 @@
-{"name":"Boolean Toggle using Marker: Speech","description":"A marker toggles a boolean. A description is spoken when the marker is added or removed.","keyWords":"marker, boolean, speech","projectData":{"programs":[{"number":314,"title":"Marker Toggle (speech, sound)","keywords":"speech, description, sound, marker","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":273.2146957699047,"y":265.37485650415005},"modelContainer":{"namedBooleanProperties":[{"name":"markerIsOn","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[{"name":"markerIsOnController","controlledComponentName":"markerIsOn","controlType":"MARKER","controlTypeFamily":"","whiskerConfiguration":{"topLength":0.2,"rightLength":0.2,"bottomLength":0.2,"leftLength":0.2,"otherPaperNumber":null},"markerColor":""}],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"descriptionViews":[{"name":"markerDescription","modelComponentNames":["markerIsOn"],"referenceComponentNames":[],"controlFunctionString":"if (markerIsOn) {\r\n  return \"Marker is on.\";\r\n} else {\r\n  return \"Marker is off.\";\r\n}","lazyLink":true}],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]},"id":48,"spaceName":null}
+{
+  "name": "Boolean Toggle using Marker_ Speech",
+  "description": "A marker toggles a boolean. A description is spoken when the marker is added or removed.",
+  "keyWords": "marker, boolean, speech",
+  "projectData": {
+    "programs": [
+      {
+        "number": 314,
+        "title": "Marker Toggle (speech, sound)",
+        "keywords": "speech, description, sound, marker",
+        "description": "",
+        "expanded": true,
+        "topWhiskerLength": 0.2,
+        "rightWhiskerLength": 0.2,
+        "bottomWhiskerLength": 0.2,
+        "leftWhiskerLength": 0.2,
+        "positionProperty": {
+          "x": 273.2146957699047,
+          "y": 265.37485650415005
+        },
+        "modelContainer": {
+          "namedBooleanProperties": [
+            {
+              "name": "markerIsOn",
+              "defaultValue": false,
+              "propertyType": "BooleanProperty"
+            }
+          ],
+          "namedVector2Properties": [],
+          "namedNumberProperties": [],
+          "namedEnumerationProperties": [],
+          "namedDerivedProperties": [],
+          "namedBounds2Properties": [],
+          "namedObservableArrays": [],
+          "namedArrayItems": [],
+          "namedArrayItemReferences": [],
+          "namedStringProperties": []
+        },
+        "controllerContainer": {
+          "vector2PropertyControllers": [],
+          "boundsPropertyControllers": [],
+          "booleanPropertyControllers": [
+            {
+              "name": "markerIsOnController",
+              "controlledComponentName": "markerIsOn",
+              "controlType": "MARKER",
+              "controlTypeFamily": "",
+              "whiskerConfiguration": {
+                "topLength": 0.2,
+                "rightLength": 0.2,
+                "bottomLength": 0.2,
+                "leftLength": 0.2,
+                "otherPaperNumber": null
+              },
+              "markerColor": ""
+            }
+          ],
+          "numberPropertyControllers": [],
+          "enumerationPropertyControllers": []
+        },
+        "viewContainer": {
+          "soundViews": [],
+          "speechViews": [
+            {
+              "name": "markerDescription",
+              "modelComponentNames": [
+                "markerIsOn"
+              ],
+              "referenceComponentNames": [],
+              "controlFunctionString": "if (markerIsOn) {\r\n  speak( \"Marker is on.\" );\r\n} else {\r\n  speak( \"Marker is off.\" );\r\n}",
+              "lazyLink": true
+            }
+          ],
+          "textViews": [],
+          "shapeViews": [],
+          "backgroundViews": [],
+          "imageViews": []
+        },
+        "listenerContainer": {
+          "linkListeners": [],
+          "animationListeners": [],
+          "bluetoothListeners": []
+        },
+        "customCodeContainer": {
+          "onProgramAddedCode": "",
+          "onProgramRemovedCode": "",
+          "onProgramChangedPositionCode": "",
+          "onProgramMarkersAddedCode": "",
+          "onProgramMarkersRemovedCode": "",
+          "onProgramMarkersChangedPositionCode": "",
+          "onProgramAdjacentCode": "",
+          "onProgramSeparatedCode": ""
+        }
+      }
+    ]
+  },
+  "spaceName": null,
+  "id": 48
+}

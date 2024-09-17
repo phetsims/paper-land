@@ -1,1 +1,1200 @@
-{"programs":[{"number":1,"title":"P1 FIREBALL","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":62.1351137429764,"y":150.03426262062342},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP1Fire","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p1FireImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p1FireballBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p1FireArrayItems","arrayName":"p1CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP1Fire"},{"entryName":"position","componentName":"p1FireImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p1FireImgPosCenter","controlledComponentName":"p1FireImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p1FireBoundController","controlledComponentName":"p1FireballBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[{"name":"p1FireballOutline","modelComponentNames":["p1FireballBounds"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( p1FireballBounds );","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"transparent","stroke":"gold","lineWidth":"2","rectWidth":0.5,"rectHeight":0.5,"circleRadius":0.05,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}}],"backgroundViews":[],"imageViews":[{"name":"p1FireBallImage","modelComponentNames":["p1FireballBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p1FireballBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/fireball.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":2,"title":"P1 ICE STORM","keywords":"","description":"","expanded":false,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":499.874573997964,"y":247.33682312388117},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP1Ice","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p1IceImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p1IceBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p1IceArrayItems","arrayName":"p1CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP1Ice"},{"entryName":"position","componentName":"p1IceImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p1IceImgPosCenter","controlledComponentName":"p1IceImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p1IceBoundController","controlledComponentName":"p1IceBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"p1IceStormImage","modelComponentNames":["p1IceImgPosition","p1IceBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p1IceBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/ice-storm.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":3,"title":"P1 TORNADO","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":156.64501845049273,"y":304.0126938213179},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP1Tornado","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p1TornadoImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p1TornadoBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p1TornadoArrayItems","arrayName":"p1CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP1Tornado"},{"entryName":"position","componentName":"p1TornadoImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p1TornadoImgPosCenter","controlledComponentName":"p1TornadoImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p1TornadoBoundController","controlledComponentName":"p1TornadoBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"p1TornadoImage","modelComponentNames":["p1TornadoImgPosition","p1TornadoBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p1TornadoBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/tornado.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":9,"title":"Paper Elements Game Model","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":322.0265167350964,"y":98.61061385065572},"modelContainer":{"namedBooleanProperties":[{"name":"IsP1Winner","defaultValue":false,"propertyType":"BooleanProperty"},{"name":"IsP2Winner","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[{"name":"p1CardArrayLength","propertyType":"DerivedProperty","dependencyNames":["p1CardArray"],"derivation":"return p1CardArray.length;"},{"name":"p2CardArrayLength","propertyType":"DerivedProperty","dependencyNames":["p2CardArray"],"derivation":"return p2CardArray.length;"}],"namedBounds2Properties":[{"name":"playArea","propertyType":"Bounds2Property","defaultMinX":"0.3","defaultMinY":0,"defaultMaxX":"0.66","defaultMaxY":1}],"namedObservableArrays":[{"name":"p1CardArray","propertyType":"ObservableArray","lengthComponentName":"p1CardArrayLength","arrayAddedItemReferenceName":"p1CardArrayAddedItem","arrayRemovedItemReferenceName":"p1CardArrayRemovedItem"},{"name":"p2CardArray","propertyType":"ObservableArray","lengthComponentName":"p2CardArrayLength","arrayAddedItemReferenceName":"p2CardArrayAddedItem","arrayRemovedItemReferenceName":"p2CardArrayRemovedItem"}],"namedArrayItems":[],"namedArrayItemReferences":[{"name":"p1CardArrayAddedItem"},{"name":"p1CardArrayRemovedItem"},{"name":"p2CardArrayAddedItem"},{"name":"p2CardArrayRemovedItem"}],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[{"name":"winningSound","modelComponentNames":["IsP1Winner","IsP2Winner"],"referenceComponentNames":[],"controlFunctionString":"setOutputLevel(1);\n\nif ( IsP1Winner || IsP2Winner ) {\n    play();\n    phet.paperLand.console.log(\"Someone Won!\");\n}","lazyLink":false,"soundFileName":"short-success.mp3","loop":false,"autoplay":false}],"speechViews":[],"textViews":[],"shapeViews":[{"name":"playAreaView","modelComponentNames":["playArea"],"referenceComponentNames":[],"controlFunctionString":"setRectBounds( playArea );\r\nmoveToFront();","lazyLink":false,"defaultViewOptions":{"centerX":"","centerY":"","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"rectangle","fill":"transparent","stroke":"red","lineWidth":"5","rectWidth":"0.5","rectHeight":"0.5","circleRadius":0.05,"ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}},{"name":"isP1WinnerTruthTeller","modelComponentNames":["IsP1Winner"],"referenceComponentNames":[],"controlFunctionString":"if ( IsP1Winner ) {\r\n    setFill( 'green' );\r\n} else {\r\n    setFill( 'red' );\r\n}","lazyLink":false,"defaultViewOptions":{"centerX":"0.01","centerY":"0.01","scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"defaultShapeOptions":{"shapeType":"circle","fill":"red","stroke":"red","lineWidth":1,"rectWidth":0.5,"rectHeight":0.5,"circleRadius":"0.005","ellipseRadiusX":0.3,"ellipseRadiusY":0.15,"lineStartX":0,"lineStartY":0,"lineEndX":0.3,"lineEndY":0.3,"triangleBaseWidth":0.1,"triangleHeight":0.3,"polygonPoints":[[0,0],[0.1,0],[0.1,0.1],[0,0.1]]}}],"backgroundViews":[],"imageViews":[{"name":"playAreaImage","modelComponentNames":["playArea"],"referenceComponentNames":[],"controlFunctionString":"matchBounds(playArea, true);\r\nmoveToBack();","lazyLink":false,"defaultViewOptions":{"centerX":0.5,"centerY":0.5,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"fantasy-card-mat.jpg"}]},"listenerContainer":{"linkListeners":[{"name":"setActiveCardsController","controlledPropertyNames":["isActiveCardP1Fire","isActiveCardP1Ice","isActiveCardP1Tornado","isActiveCardP2Tornado","isActiveCardP2Ice","isActiveCardP2Fire"],"controlFunctionString":"if (playArea.containsPoint(p1FireImgPosition)) {\r\n    setIsActiveCardP1Fire(true);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else if (playArea.containsPoint(p1IceImgPosition)) {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(true);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else if (playArea.containsPoint(p1TornadoImgPosition)) {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(true);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n}\r\n\r\nif (playArea.containsPoint(p2TornadoImgPosition)) {\r\n    setIsActiveCardP2Tornado(true);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(false);\r\n} else if (playArea.containsPoint(p2IceImgPosition)) {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(true);\r\n    setIsActiveCardP2Fire(false);\r\n} else if (playArea.containsPoint(p2FireImgPosition)) {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(true);\r\n} else {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(false);\r\n}\r\n\r\n// if (playArea.containsPoint(p1FireImgPosition)) {\r\n//     setIsActiveCardP1Fire(true);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(false);\r\n// } else if (playArea.containsPoint(p1IceImgPosition) && !isActiveCardP1Fire) {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(true);\r\n//     setIsActiveCardP1Tornado(false);\r\n// } else if (playArea.containsPoint(p1TornadoImgPosition) && !isActiveCardP1Fire && !isActiveCardP1Ice) {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(true);\r\n// } else {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(false);\r\n// }\r\n\r\n// if (playArea.containsPoint(p2TornadoImgPosition)) {\r\n//     setIsActiveCardP2Tornado(true);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(false);\r\n// } else if (playArea.containsPoint(p2IceImgPosition) && !isActiveCardP2Tornado) {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(true);\r\n//     setIsActiveCardP2Fire(false);\r\n// } else if (playArea.containsPoint(p2FireImgPosition) && !isActiveCardP2Tornado && !isActiveCardP2Ice) {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(true);\r\n// } else {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(false);\r\n// }","dependencyNames":["p1FireImgPosition","p1IceImgPosition","p1TornadoImgPosition","playArea","p2TornadoImgPosition","p2IceImgPosition","p2FireImgPosition"],"referenceComponentNames":[]},{"name":"DetermineWinner","controlledPropertyNames":["IsP1Winner","IsP2Winner"],"controlFunctionString":"\n// Fire beats Ice\nif (isActiveCardP1Fire && isActiveCardP2Ice) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Ice && isActiveCardP2Fire) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Ice beats Tornado\nelse if (isActiveCardP1Ice && isActiveCardP2Tornado) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Tornado && isActiveCardP2Ice) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Tornado beats Fire\nelse if (isActiveCardP1Tornado && isActiveCardP2Fire) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Fire && isActiveCardP2Tornado) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Handles the case where both players choose the same card\nelse if ((isActiveCardP1Fire && isActiveCardP2Fire) || (isActiveCardP1Ice && isActiveCardP2Ice) || (isActiveCardP1Tornado && isActiveCardP2Tornado)) {\n    setIsP1Winner(false);\n    setIsP2Winner(false);\n} else {\n    // Fallback for any unhandled cases\n    setIsP1Winner(false);\n    setIsP2Winner(false);\n}\n","dependencyNames":["isActiveCardP1Fire","isActiveCardP1Ice","isActiveCardP1Tornado","isActiveCardP2Tornado","isActiveCardP2Ice","isActiveCardP2Fire"],"referenceComponentNames":[]}],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":5,"title":"P2 TORNADO","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":688,"y":124.17834195011022},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP2Tornado","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p2TornadoImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p2TornadoBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p2TornadoArrayItems","arrayName":"p2CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP2Tornado"},{"entryName":"position","componentName":"p2TornadoImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p2TornadoImgPosCenter","controlledComponentName":"p2TornadoImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p2TornadoBoundController","controlledComponentName":"p2TornadoBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"p2TornadoImage","modelComponentNames":["p2TornadoImgPosition","p2TornadoBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p2TornadoBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/tornado.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":6,"title":"P2 ICE STORM","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":501.7299634224677,"y":441.7656649461858},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP2Ice","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p2IceImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p2IceBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p2IceArrayItems","arrayName":"p2CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP2Ice"},{"entryName":"position","componentName":"p2IceImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p2IceImgPosCenter","controlledComponentName":"p2IceImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p2IceBoundController","controlledComponentName":"p2IceBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"p2IceStormImage","modelComponentNames":["p2IceImgPosition","p2IceBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p2IceBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/ice-storm.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":4,"title":"P2 FIREBALL","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":688,"y":311.6043377469146},"modelContainer":{"namedBooleanProperties":[{"name":"isActiveCardP2Fire","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[{"name":"p2FireImgPosition","propertyType":"Vector2Property","defaultX":0,"defaultY":0}],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[{"name":"p2FireballBounds","propertyType":"Bounds2Property","defaultMinX":0,"defaultMinY":0,"defaultMaxX":1,"defaultMaxY":1}],"namedObservableArrays":[],"namedArrayItems":[{"name":"p2FireArrayItems","arrayName":"p2CardArray","itemSchema":[{"entryName":"active","componentName":"isActiveCardP2Fire"},{"entryName":"position","componentName":"p2FireImgPosition"}]}],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[{"name":"p2FireImgPosCenter","controlledComponentName":"p2FireImgPosition","controlType":"MATCH_CENTER","controlTypeFamily":""}],"boundsPropertyControllers":[{"name":"p2FireBoundController","controlledComponentName":"p2FireballBounds","controlType":"PAPER_SIZE","controlTypeFamily":""}],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[{"name":"p2FireballImage","modelComponentNames":["p2FireImgPosition","p2FireballBounds"],"referenceComponentNames":[],"controlFunctionString":"matchBounds( p2FireballBounds, false );","lazyLink":false,"defaultViewOptions":{"centerX":null,"centerY":null,"scale":1,"rotation":0,"opacity":1,"visible":true,"viewUnits":"model"},"imageFileName":"/uploads/fireball.gif"}]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}},{"number":8,"title":"Background","keywords":"","description":"","expanded":false,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":501.2049676996962,"y":123.1341515086367},"modelContainer":{"namedBooleanProperties":[],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"speechViews":[],"textViews":[],"shapeViews":[],"backgroundViews":[{"name":"backgroundComponent","modelComponentNames":[],"referenceComponentNames":[],"controlFunctionString":"","lazyLink":false,"fillColor":"green"}],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[],"bluetoothListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]}
+{
+  "programs": [
+    {
+      "number": 1,
+      "title": "P1 FIREBALL",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 62.1351137429764,
+        "y": 150.03426262062342
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP1Fire",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p1FireImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p1FireballBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p1FireArrayItems",
+            "arrayName": "p1CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP1Fire"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p1FireImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p1FireImgPosCenter",
+            "controlledComponentName": "p1FireImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p1FireBoundController",
+            "controlledComponentName": "p1FireballBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "p1FireballOutline",
+            "modelComponentNames": [
+              "p1FireballBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( p1FireballBounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "gold",
+              "lineWidth": "2",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p1FireBallImage",
+            "modelComponentNames": [
+              "p1FireballBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p1FireballBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/fireball.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2,
+      "title": "P1 ICE STORM",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 499.874573997964,
+        "y": 247.33682312388117
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP1Ice",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p1IceImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p1IceBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p1IceArrayItems",
+            "arrayName": "p1CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP1Ice"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p1IceImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p1IceImgPosCenter",
+            "controlledComponentName": "p1IceImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p1IceBoundController",
+            "controlledComponentName": "p1IceBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p1IceStormImage",
+            "modelComponentNames": [
+              "p1IceImgPosition",
+              "p1IceBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p1IceBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/ice-storm.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 3,
+      "title": "P1 TORNADO",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 156.64501845049273,
+        "y": 304.0126938213179
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP1Tornado",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p1TornadoImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p1TornadoBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p1TornadoArrayItems",
+            "arrayName": "p1CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP1Tornado"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p1TornadoImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p1TornadoImgPosCenter",
+            "controlledComponentName": "p1TornadoImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p1TornadoBoundController",
+            "controlledComponentName": "p1TornadoBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p1TornadoImage",
+            "modelComponentNames": [
+              "p1TornadoImgPosition",
+              "p1TornadoBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p1TornadoBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/tornado.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 9,
+      "title": "Paper Elements Game Model",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 322.0265167350964,
+        "y": 98.61061385065572
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "IsP1Winner",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "IsP2Winner",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "p1CardArrayLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "p1CardArray"
+            ],
+            "derivation": "return p1CardArray.length;"
+          },
+          {
+            "name": "p2CardArrayLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "p2CardArray"
+            ],
+            "derivation": "return p2CardArray.length;"
+          }
+        ],
+        "namedBounds2Properties": [
+          {
+            "name": "playArea",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.3",
+            "defaultMinY": 0,
+            "defaultMaxX": "0.66",
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [
+          {
+            "name": "p1CardArray",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "p1CardArrayLength",
+            "arrayAddedItemReferenceName": "p1CardArrayAddedItem",
+            "arrayRemovedItemReferenceName": "p1CardArrayRemovedItem"
+          },
+          {
+            "name": "p2CardArray",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "p2CardArrayLength",
+            "arrayAddedItemReferenceName": "p2CardArrayAddedItem",
+            "arrayRemovedItemReferenceName": "p2CardArrayRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "p1CardArrayAddedItem"
+          },
+          {
+            "name": "p1CardArrayRemovedItem"
+          },
+          {
+            "name": "p2CardArrayAddedItem"
+          },
+          {
+            "name": "p2CardArrayRemovedItem"
+          }
+        ],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "winningSound",
+            "modelComponentNames": [
+              "IsP1Winner",
+              "IsP2Winner"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setOutputLevel(1);\n\nif ( IsP1Winner || IsP2Winner ) {\n    play();\n    phet.paperLand.console.log(\"Someone Won!\");\n}",
+            "lazyLink": false,
+            "soundFileName": "short-success.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "playAreaView",
+            "modelComponentNames": [
+              "playArea"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( playArea );\r\nmoveToFront();",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "red",
+              "lineWidth": "5",
+              "rectWidth": "0.5",
+              "rectHeight": "0.5",
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "isP1WinnerTruthTeller",
+            "modelComponentNames": [
+              "IsP1Winner"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( IsP1Winner ) {\r\n    setFill( 'green' );\r\n} else {\r\n    setFill( 'red' );\r\n}",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "0.01",
+              "centerY": "0.01",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "red",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": "0.005",
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "playAreaImage",
+            "modelComponentNames": [
+              "playArea"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds(playArea, true);\r\nmoveToBack();",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "fantasy-card-mat.jpg"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "setActiveCardsController",
+            "controlledPropertyNames": [
+              "isActiveCardP1Fire",
+              "isActiveCardP1Ice",
+              "isActiveCardP1Tornado",
+              "isActiveCardP2Tornado",
+              "isActiveCardP2Ice",
+              "isActiveCardP2Fire"
+            ],
+            "controlFunctionString": "if (playArea.containsPoint(p1FireImgPosition)) {\r\n    setIsActiveCardP1Fire(true);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else if (playArea.containsPoint(p1IceImgPosition)) {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(true);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else if (playArea.containsPoint(p1TornadoImgPosition)) {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(true);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n\r\n} else {\r\n    setIsActiveCardP1Fire(false);\r\n    setIsActiveCardP1Ice(false);\r\n    setIsActiveCardP1Tornado(false);\r\n\r\n    phet.paperLand.console.log(isActiveCardP1Fire);\r\n    phet.paperLand.console.log(isActiveCardP1Tornado);\r\n    phet.paperLand.console.log(isActiveCardP1Ice);\r\n}\r\n\r\nif (playArea.containsPoint(p2TornadoImgPosition)) {\r\n    setIsActiveCardP2Tornado(true);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(false);\r\n} else if (playArea.containsPoint(p2IceImgPosition)) {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(true);\r\n    setIsActiveCardP2Fire(false);\r\n} else if (playArea.containsPoint(p2FireImgPosition)) {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(true);\r\n} else {\r\n    setIsActiveCardP2Tornado(false);\r\n    setIsActiveCardP2Ice(false);\r\n    setIsActiveCardP2Fire(false);\r\n}\r\n\r\n// if (playArea.containsPoint(p1FireImgPosition)) {\r\n//     setIsActiveCardP1Fire(true);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(false);\r\n// } else if (playArea.containsPoint(p1IceImgPosition) && !isActiveCardP1Fire) {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(true);\r\n//     setIsActiveCardP1Tornado(false);\r\n// } else if (playArea.containsPoint(p1TornadoImgPosition) && !isActiveCardP1Fire && !isActiveCardP1Ice) {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(true);\r\n// } else {\r\n//     setIsActiveCardP1Fire(false);\r\n//     setIsActiveCardP1Ice(false);\r\n//     setIsActiveCardP1Tornado(false);\r\n// }\r\n\r\n// if (playArea.containsPoint(p2TornadoImgPosition)) {\r\n//     setIsActiveCardP2Tornado(true);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(false);\r\n// } else if (playArea.containsPoint(p2IceImgPosition) && !isActiveCardP2Tornado) {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(true);\r\n//     setIsActiveCardP2Fire(false);\r\n// } else if (playArea.containsPoint(p2FireImgPosition) && !isActiveCardP2Tornado && !isActiveCardP2Ice) {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(true);\r\n// } else {\r\n//     setIsActiveCardP2Tornado(false);\r\n//     setIsActiveCardP2Ice(false);\r\n//     setIsActiveCardP2Fire(false);\r\n// }",
+            "dependencyNames": [
+              "p1FireImgPosition",
+              "p1IceImgPosition",
+              "p1TornadoImgPosition",
+              "playArea",
+              "p2TornadoImgPosition",
+              "p2IceImgPosition",
+              "p2FireImgPosition"
+            ],
+            "referenceComponentNames": []
+          },
+          {
+            "name": "DetermineWinner",
+            "controlledPropertyNames": [
+              "IsP1Winner",
+              "IsP2Winner"
+            ],
+            "controlFunctionString": "\n// Fire beats Ice\nif (isActiveCardP1Fire && isActiveCardP2Ice) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Ice && isActiveCardP2Fire) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Ice beats Tornado\nelse if (isActiveCardP1Ice && isActiveCardP2Tornado) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Tornado && isActiveCardP2Ice) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Tornado beats Fire\nelse if (isActiveCardP1Tornado && isActiveCardP2Fire) {\n    setIsP1Winner(true);\n    setIsP2Winner(false);\n} else if (isActiveCardP1Fire && isActiveCardP2Tornado) {\n    setIsP1Winner(false);\n    setIsP2Winner(true);\n}\n// Handles the case where both players choose the same card\nelse if ((isActiveCardP1Fire && isActiveCardP2Fire) || (isActiveCardP1Ice && isActiveCardP2Ice) || (isActiveCardP1Tornado && isActiveCardP2Tornado)) {\n    setIsP1Winner(false);\n    setIsP2Winner(false);\n} else {\n    // Fallback for any unhandled cases\n    setIsP1Winner(false);\n    setIsP2Winner(false);\n}\n",
+            "dependencyNames": [
+              "isActiveCardP1Fire",
+              "isActiveCardP1Ice",
+              "isActiveCardP1Tornado",
+              "isActiveCardP2Tornado",
+              "isActiveCardP2Ice",
+              "isActiveCardP2Fire"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 5,
+      "title": "P2 TORNADO",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 688,
+        "y": 124.17834195011022
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP2Tornado",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p2TornadoImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p2TornadoBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p2TornadoArrayItems",
+            "arrayName": "p2CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP2Tornado"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p2TornadoImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p2TornadoImgPosCenter",
+            "controlledComponentName": "p2TornadoImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p2TornadoBoundController",
+            "controlledComponentName": "p2TornadoBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p2TornadoImage",
+            "modelComponentNames": [
+              "p2TornadoImgPosition",
+              "p2TornadoBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p2TornadoBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/tornado.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 6,
+      "title": "P2 ICE STORM",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 501.7299634224677,
+        "y": 441.7656649461858
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP2Ice",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p2IceImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p2IceBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p2IceArrayItems",
+            "arrayName": "p2CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP2Ice"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p2IceImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p2IceImgPosCenter",
+            "controlledComponentName": "p2IceImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p2IceBoundController",
+            "controlledComponentName": "p2IceBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p2IceStormImage",
+            "modelComponentNames": [
+              "p2IceImgPosition",
+              "p2IceBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p2IceBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/ice-storm.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 4,
+      "title": "P2 FIREBALL",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 688,
+        "y": 311.6043377469146
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isActiveCardP2Fire",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "p2FireImgPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "p2FireballBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "p2FireArrayItems",
+            "arrayName": "p2CardArray",
+            "itemSchema": [
+              {
+                "entryName": "active",
+                "componentName": "isActiveCardP2Fire"
+              },
+              {
+                "entryName": "position",
+                "componentName": "p2FireImgPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "p2FireImgPosCenter",
+            "controlledComponentName": "p2FireImgPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "p2FireBoundController",
+            "controlledComponentName": "p2FireballBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "p2FireballImage",
+            "modelComponentNames": [
+              "p2FireImgPosition",
+              "p2FireballBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( p2FireballBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/fireball.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 8,
+      "title": "Background",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 501.2049676996962,
+        "y": 123.1341515086367
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "backgroundComponent",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "green"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

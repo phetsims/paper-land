@@ -1,1 +1,83 @@
-{"name":"Speech on Paper Detection","description":"A program that speaks whenever it is put in front of the camera.","keyWords":"","projectData":{"programs":[{"number":276,"title":"Simple Description","keywords":"","description":"","expanded":true,"topWhiskerLength":0.2,"rightWhiskerLength":0.2,"bottomWhiskerLength":0.2,"leftWhiskerLength":0.2,"positionProperty":{"x":397.41651235646015,"y":439.18593444628647},"modelContainer":{"namedBooleanProperties":[{"name":"descriptionTrigger","defaultValue":false,"propertyType":"BooleanProperty"}],"namedVector2Properties":[],"namedNumberProperties":[],"namedEnumerationProperties":[],"namedDerivedProperties":[],"namedBounds2Properties":[],"namedObservableArrays":[],"namedArrayItems":[],"namedArrayItemReferences":[],"namedStringProperties":[]},"controllerContainer":{"vector2PropertyControllers":[],"boundsPropertyControllers":[],"booleanPropertyControllers":[],"numberPropertyControllers":[],"enumerationPropertyControllers":[]},"viewContainer":{"soundViews":[],"descriptionViews":[{"name":"descriptionView","modelComponentNames":["descriptionTrigger"],"referenceComponentNames":[],"controlFunctionString":"return 'Hi there! I will speak whenever my paper is put in front of the camera.'","lazyLink":false}],"textViews":[],"shapeViews":[],"backgroundViews":[],"imageViews":[]},"listenerContainer":{"linkListeners":[],"animationListeners":[]},"customCodeContainer":{"onProgramAddedCode":"","onProgramRemovedCode":"","onProgramChangedPositionCode":"","onProgramMarkersAddedCode":"","onProgramMarkersRemovedCode":"","onProgramMarkersChangedPositionCode":"","onProgramAdjacentCode":"","onProgramSeparatedCode":""}}]},"id":13,"spaceName":null}
+{
+  "name": "Speech on Paper Detection",
+  "description": "A program that speaks whenever it is put in front of the camera.",
+  "keyWords": "",
+  "projectData": {
+    "programs": [
+      {
+        "number": 276,
+        "title": "Simple Description",
+        "keywords": "",
+        "description": "",
+        "expanded": true,
+        "topWhiskerLength": 0.2,
+        "rightWhiskerLength": 0.2,
+        "bottomWhiskerLength": 0.2,
+        "leftWhiskerLength": 0.2,
+        "positionProperty": {
+          "x": 397.41651235646015,
+          "y": 439.18593444628647
+        },
+        "modelContainer": {
+          "namedBooleanProperties": [
+            {
+              "name": "descriptionTrigger",
+              "defaultValue": false,
+              "propertyType": "BooleanProperty"
+            }
+          ],
+          "namedVector2Properties": [],
+          "namedNumberProperties": [],
+          "namedEnumerationProperties": [],
+          "namedDerivedProperties": [],
+          "namedBounds2Properties": [],
+          "namedObservableArrays": [],
+          "namedArrayItems": [],
+          "namedArrayItemReferences": [],
+          "namedStringProperties": []
+        },
+        "controllerContainer": {
+          "vector2PropertyControllers": [],
+          "boundsPropertyControllers": [],
+          "booleanPropertyControllers": [],
+          "numberPropertyControllers": [],
+          "enumerationPropertyControllers": []
+        },
+        "viewContainer": {
+          "soundViews": [],
+          "descriptionViews": [
+            {
+              "name": "descriptionView",
+              "modelComponentNames": [
+                "descriptionTrigger"
+              ],
+              "referenceComponentNames": [],
+              "controlFunctionString": "speak( 'Hi there! I will speak whenever my paper is put in front of the camera.' );",
+              "lazyLink": false
+            }
+          ],
+          "textViews": [],
+          "shapeViews": [],
+          "backgroundViews": [],
+          "imageViews": []
+        },
+        "listenerContainer": {
+          "linkListeners": [],
+          "animationListeners": []
+        },
+        "customCodeContainer": {
+          "onProgramAddedCode": "",
+          "onProgramRemovedCode": "",
+          "onProgramChangedPositionCode": "",
+          "onProgramMarkersAddedCode": "",
+          "onProgramMarkersRemovedCode": "",
+          "onProgramMarkersChangedPositionCode": "",
+          "onProgramAdjacentCode": "",
+          "onProgramSeparatedCode": ""
+        }
+      }
+    ]
+  },
+  "id": 13,
+  "spaceName": null
+}
