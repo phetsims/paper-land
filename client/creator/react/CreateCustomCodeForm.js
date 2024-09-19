@@ -114,7 +114,7 @@ export default function CreateCustomCodeForm( props ) {
       <hr></hr>
       <h3>Custom Code</h3>
       <p>Write custom code for functionality that is not supported by the Creator interface. Your code will be run <b>after</b> any other generated code for that event.</p>
-      <p>Refer to <a href='https://github.com/phetsims/paper-land/blob/main/client/board/doc/board-api.md' target='_blank' rel='noreferrer'>Paper Land documentation</a> for more detailed information.</p>
+      <p>Refer to <a href='https://github.com/phetsims/paper-land/blob/main/client/display/doc/paperLand-api.md' target='_blank' rel='noreferrer'>Paper Land documentation</a> for more detailed information.</p>
 
       <div>
         <CustomCodeEditor
