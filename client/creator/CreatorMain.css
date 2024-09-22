@@ -3,7 +3,7 @@
 
 @value displayHeight: 500px;
 
-@value baseButtonColor: rgb(89, 93, 94);
+@value baseButtonColor: #2383f1;
 
 @value pressedButtonColor: rgb(54,56,57);
 
@@ -109,7 +109,7 @@
 
 /*Override the default focus highlight styling for bootstrap to match our color scheme*/
 :local(.for-control:focus) {
-  border-color: #2383f1;
+  border-color: rgb(35, 131, 241);
   box-shadow: 0 0 0 0.1rem #6C8EAC;
 }
 
@@ -117,7 +117,7 @@
 /*active tab*/
 .nav.nav-tabs .nav-link.active {
   background-color: #2383f1;
-  color: white;
+  color: rgb(189, 203, 218);
 }
 
 /*inactive tabs*/
@@ -127,38 +127,38 @@
 }
 
 .nav.nav-tabs .nav-link:hover {
-  background-color: rgb(122, 125, 126);
-  color: rgb(189, 203, 218);
+  background-color: rgb(132, 202, 234);
+  color: #3a3a3a;
 }
 
 /* Override default for bootstrap pill tabs*/
 .nav.nav-pill .nav-link.active {
-  background-color: rgb(89, 93, 94);
-  color: rgb(189, 203, 218);
+  background-color: #2383f1;
+  color: rgb(189, 203, 218)
 }
 
 /*inactive tabs*/
 .nav.nav-pill .nav-link {
-  background-color: transparent;
+  background-color: #4b4b4b;
   color: rgb(189, 203, 218);
 }
 
 /*disabled tabs*/
 .nav.nav-tabs .nav-link:disabled {
-  background-color: transparent;
+  background-color: #4b4b4b;
   opacity: 0.5;
   color: rgb(189, 203, 218);
 }
 
 .nav.nav-pill .nav-link:disabled {
-  background-color: transparent;
+  background-color: #4b4b4b;
   opacity: 0.5;
   color: rgb(189, 203, 218);
 }
 
 .nav.nav-pill .nav-link:hover {
-  background-color: rgb(122, 125, 126);
-  color: rgb(189, 203, 218);
+  background-color: rgb(132, 202, 234);
+  color: rgb(255, 255, 255);
 }
 
 :local(.inlineBlock) {
@@ -184,7 +184,7 @@
 }
 
 :local(.customButton:active) {
-  background-color: pressedButtonColor !important;
+  background-color: #7db7e9 !important;
   color: rgb(189, 203, 218) !important;
   border-color: buttonBorderColor !important;
 }
@@ -258,13 +258,13 @@
 }
 
 .accordion-button {
-  background-color: backgroundColor;
-  color: textColor;
+  background-color: #5C5C5C;
+  color: rgb(255, 255, 255);
 }
 
 .accordion-button:not(.collapsed) {
-  background-color: backgroundColor;
-  color: textColor;
+  background-color: rgb(132, 202, 234);;
+  color: black;
 }
 
 .accordion-button:focus {

@@ -2,17 +2,18 @@ import CustomButtonAppearanceStrategy from './CustomButtonAppearanceStrategy.js'
 
 const TEXT_FONT = new phet.scenery.Font( { size: 16 } );
 const TEXT_FONT_LARGE = new phet.scenery.Font( { size: 24 } );
-const TEXT_FILL_COLOR = new phet.scenery.Color( 189, 203, 218 );
-const BUTTON_FILL_COLOR = new phet.scenery.Color( 89, 93, 94 );
+const TEXT_FILL_COLOR = new phet.scenery.Color( 255, 255, 255 );
+const BUTTON_FILL_COLOR = new phet.scenery.Color( 35, 131, 241 );
 const BUTTON_STROKE_COLOR = new phet.scenery.Color( 80, 80, 80 );
 const BUTTON_APPEARANCE_STRATEGY = phet.sun.ButtonNode.FlatAppearanceStrategy;
 const BUTTON_DISABLED_COLOR = BUTTON_FILL_COLOR.colorUtilsBrighter( 0.25 );
 const BUTTON_PRESSED_COLOR = BUTTON_FILL_COLOR.colorUtilsDarker( 0.2 );
+const RECTANGULAR_BUTTON_FILL = new phet.scenery.Color( '#5C5C5C');
 const ARROW_SIZE = new phet.dot.Dimension2( 120, 21 );
 const FOCUS_HIGHLIGHT_COLOR = new phet.scenery.Color( '#6C8EAC' );
 const INTERACTION_COLOR = new phet.scenery.Color( 'blue' );
 const ERROR_COLOR = new phet.scenery.Color( '#8b0000' );
-const BACKGROUND_COLOR = new phet.scenery.Color( '#2E4152' );
+const BACKGROUND_COLOR = new phet.scenery.Color( '#3A3A3A' );
 
 const PROGRAM_FONT = new phet.scenery.Font( { size: 6 } );
 
@@ -30,7 +31,7 @@ const TEXT_BUTTON_OPTIONS = {
 const RECTANGULAR_BUTTON_OPTIONS = {
   stroke: BUTTON_STROKE_COLOR,
   buttonAppearanceStrategy: BUTTON_APPEARANCE_STRATEGY,
-  baseColor: BUTTON_FILL_COLOR,
+  baseColor: RECTANGULAR_BUTTON_FILL,
   disabledColor: BUTTON_DISABLED_COLOR,
   xMargin: 3,
   yMargin: 3
