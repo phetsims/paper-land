@@ -6,7 +6,7 @@ If you're already setup, then head over the [Interface Overview](../setup/interf
 
 ## *Interactive Display* Projector Setup
 
-If you are only using the paper program detection capabilities of Paper Playground and planning to use Preview papers (eye icon next to programs in the Camera interface), skip to [Camera Setup](#camera-setup).
+If you are only using the paper program detection capabilities of Paper Playground and planning to use Preview papers (eye icon next to programs in the Camera interface), skip to [Camera Setup](#camera-device-setup).
 
 If you are using a projector to display visual elements in your playspace or on your paper programs, then, read on.
 

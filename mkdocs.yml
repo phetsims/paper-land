@@ -96,6 +96,7 @@ markdown_extensions:
   - pymdownx.betterem:
       smart_enable: all
   - pymdownx.caret
+  - pymdownx.critic
   - pymdownx.details
   - pymdownx.emoji:
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -131,7 +132,6 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Getting Started:
-      - Hardware Recommendations: setup/reqs.md
       - Installation: setup/install.md
       - Device Setup: setup/device-setup.md
       - Interface Overview: setup/interface-overview.md

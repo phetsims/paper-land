@@ -1,8 +1,22 @@
-# Using Paper Playground
+# Interface Tutorial
 
 <!-- https://facelessuser.github.io/pymdown-extensions/extensions/keys/#key-map-index -->
 
 Before we begin, make sure you have [installed Paper Playground](../setup/install.md) and [set up your equipment](../setup/device-setup.md).
+
+## Quick Start - Running Example Programs
+
+1. **Open the Creator interface**: Go to [http://localhost:3000/creator](http://localhost:3000/creator.html) to start working with example programs.
+
+2. **Suggested Start**: Select the example “cat-fetch” and click “Send to Playground” to launch it in the main interface.
+
+3. **Open the Camera**: Go to [http://localhost:3000/camera](http://localhost:3000/camera.html) to monitor the camera view, ensuring it detects objects accurately.
+
+4. **Open Interactive Display & Canvas** To execute your code setup, open the Interactive Display ([http://localhost:3000/display.html](http://localhost:3000/display.html)) (on a second window or screen) and Canvas ([http://localhost:3000/projector.html](http://localhost:3000/projector.html)) (can be hidden on another tab).
+
+5. **Preview Programs**: Use the 'eye' icon besides each program to execute the paper programs that script the "Cat," "Ball," and "Items". Move them around! Go back to Creator to make edits and repeat the process!
+
+6. **Print the Programs**: Click the print option for each program to print the paper itself and set up the physical play space.
 
 ## Interface Overview and Startup
 

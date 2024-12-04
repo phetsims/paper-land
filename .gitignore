@@ -9,6 +9,7 @@ package-lock.json
 
 # ONLY FOR DOCS BRANCH, ignore the server directory
 **/server/*
+/paper_env/
 
 # Ignore all files in the uploads directories
 **/uploads/*
