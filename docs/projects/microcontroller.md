@@ -1,5 +1,9 @@
 # Microcontroller Integration with Paper Playground over Bluetooth
 
+<figure markdown>
+  ![alt text](../assets/led.gif)
+</figure>
+
 ## Paper meets circuits
 
 You can now communicate with microcontrollers over bluetooth! This expands the already near infinite capabilities of Paper Playground to enhance the tangible possibilities.
@@ -19,9 +23,23 @@ You will find demo projects using the micro:bit installed by default in Paper Pl
 
 ## Walkthroughs
 
-1. For a complete walkthrough using the micro:bit microcontroller, see the published [Instructable](<https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/>) or [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685).
+For a complete walkthrough using the micro:bit microcontroller, check out this [Instructable](https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/) or this [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685).
 
-2. This [Instructable](https://www.instructables.com/Random-Servo-Position-With-Microbit-and-Paper-Play/) will show you how to create a random spinner dial using a 180-servo, micro:bit, and a Paper Playground program. Paper Playground is an open-source system that enables you to design tangible, multimodal experiences using your computer's web browser, a webcam, and printed pieces of paper. [This particular example does not require a webcam and printer].
+  [Simple Micro:bit Instructable](<https://www.instructables.com/Microbit-and-Paper-Playground-Integration-for-Enha/>){ .md-button .md-button--secondary }
+
+  [Hackster.io project](https://www.hackster.io/brfi7385/micro-bit-and-paper-playground-tangible-virtual-interfaces-184685){ .md-button .md-button--secondary }
+
+This [Instructable](https://www.instructables.com/Random-Servo-Position-With-Microbit-and-Paper-Play/) will show you how to create a random spinner dial using a 180-servo, micro:bit, and a Paper Playground program. [This particular example does not require a webcam and printer].
+
+  [Micro:bit Servo Instructable](https://www.instructables.com/Random-Servo-Position-With-Microbit-and-Paper-Play/){ .md-button .md-button--secondary }
+
+Create a musical instrument using a micro:bit and Paper Playground. This [Instructable](https://www.instructables.com/Microbit-Note-Sequencer-With-Paper-Playground/) will show you how to create a note sequencer using a micro:bit and Paper Playground.
+
+  [Micro:bit Note Sequencer Instructable](https://www.instructables.com/Microbit-Note-Sequencer-With-Paper-Playground/){ .md-button .md-button--secondary }
+
+<figure markdown>
+  ![alt text](../assets/servo.gif)
+</figure>
 
 ## Implementation Notes and Tips
 

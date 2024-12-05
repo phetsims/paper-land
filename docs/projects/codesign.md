@@ -21,6 +21,8 @@ A goal of Paper Playground is to explore the capabilities of a tool that can hel
 
 We know that collaboration in the real world is best supported when users can make use of the space around them and use their bodies to gesture and enact their ideas. Codesign practices often make use of paper or craft lo-fi prototyping at the initial stages of an idea. But, as previously emphasized, **sound and speech design should begin as early as possible!** So, why not make it easy to augment lo-fi prototypes with those auditory (and more!) features that are afforded easily by virtual interfaces?
 
+![Lo-fi prototyping of card games using Paper Playground program papers.](../assets/program-cards-with-gems.jpg)
+
 ## Follow our research
 
 Follow our research by checking out our [Open Science Framework repository](https://osf.io/6ad5g/)

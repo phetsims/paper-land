@@ -1,10 +1,10 @@
 # Creator Tutorial
 
-!!! warning "In Development"
+## What is *Creator*?
+
+!!! warning inline end "In Development"
 
       The *Creator* interface is in development! The current feature set is evolving and documentation may be out of date. Follow the development in [GitHub](https://github.com/phetsims/paper-land) or our [community channels](../community.md)!
-
-## What is *Creator*?
 
 *Creator* is where you will add code to your paper programs before printing and playing with them in the *Camera*! The primary vision of Creator is to bring the relationships between the components of your project to the forefront, with significantly less code than using pure JavaScript. The goal is to let you focus on the most important pieces and how they connect to your chosen interactions and outputs (sounds, speech, images, etc). Making programs in Creator is organized around the Model-View-Controller (MVC) software design pattern.
 
@@ -775,3 +775,5 @@ Some templates are already included in Paper Playground. However, if you'd like 
 ## More Walkthroughs
 
 [Show me more walkthroughs](../use/walkthroughs/walkthroughs.md){ .md-button .md-button--primary }
+
+Find more demos and walkthroughs at <https://www.youtube.com/@PaperPlaygroundCommunity>

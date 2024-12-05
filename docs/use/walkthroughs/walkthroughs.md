@@ -4,7 +4,15 @@ render_macros: true
 ---
 # Walkthroughs
 
-## Using Whiskers, markers, and shapes - with paper crafting!
+Find more demos and walkthroughs at <https://www.youtube.com/@PaperPlaygroundCommunity> and some  [Instructables](../../projects/microcontroller.md) that include Paper Playground programs.
+
+## Creator Demo and Walkthrough
+
+<figure>
+<iframe width="877" height="493" src="https://www.youtube.com/embed/YfBxRFhASNg" title="Paper Playground - Electric Field Hockey Demo + Creator Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</figure>
+
+## Using Whiskers, markers, and shapes - with paper crafting
 
 {% with pdf_file = "../craft-tutorial.pdf" %}
 {% set solid_filepdf = '<i class="fas craft-tutorial"></i>' %}

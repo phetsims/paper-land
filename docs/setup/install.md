@@ -1,7 +1,9 @@
 
 # Paper Playground Installation Guide
 
-![Setup Diagram](https://phetsims.github.io/paper-land/assets/configs-efh-horizontal.png)
+<figure markdown>
+  ![Configuration Possibilities](../assets/card-full-interface.PNG)
+</figure>
 
 This guide will walk you through setting up Paper Playground, including hardware recommendations, installation, and troubleshooting. Follow each section to ensure proper configuration.
 
@@ -26,9 +28,14 @@ This guide will walk you through setting up Paper Playground, including hardware
 
 - **Projector** & **Projector Suspension Mount**
       - Ideally, at least 2000 lumens. A 1000 lumens projector might suffice in certain conditions, but the dim light required for projections might be too dark for your camera to detect programs.
-      - If your projector is large, ensure the projector is secured to a load-bearing structure like a beam or stud. Command Strips or screws in drywall may not suffice. Note: You can project onto a wall and tape your programs there for a vertical setup. It is also possible to [use mirrors for an optical trick]()!
+      - If your projector is large, ensure the projector is secured to a load-bearing structure like a beam or stud. Command Strips or screws in drywall may not suffice. Note: You can project onto a wall and tape your programs there for a vertical setup. It is also possible to use a mirror at 45 degrees near the projector output to redirect the image!
 - {++_Note 1_++}: Depending on your setup, you might need extension cables for your video (VGA, HDMI, DisplayPort, etc) and USB cables to connect the camera and projector to the computer.
 - {++_Note 2_++}: A solid black rug or mat for projection. Note: a projector's brightness is limited by its bulb, and its darkness is determined by the surface it projects onto.
+
+<figure markdown>
+  ![Configuration Possibilities](../assets/configs-card.png)
+  <figcaption>A. Second monitor and B. Projector configurations. Primary display at (a) and (f). Webcam positioned at (b) and (e). Second monitor at (c). Projector mounted at (d). A projection surface (a curtain in this case) at (g).</figcaption>
+</figure>
 
 ---
 
@@ -40,7 +47,17 @@ Coming soon!
 
 ==}
 
-<!-- 1. **Download the Package**: Download the latest Paper Playground package from the [Releases page]( -->
+<!-- 1. **Install Node.js Dependency**: Paper Playground requires Node.js to run. You can download the latest version of Node.js from the [official website](https://nodejs.org/en/). 
+2. **Download the Package**: Download the latest Paper Playground package from the [Releases page](https://github.com/phetsims/paper-land/releases) on GitHub. Choose the package that matches your operating system (Windows, MacOS, Linux).
+3. **Extract the Package**: Extract the contents of the package to a directory of your choice.
+4. **Change Configuration (optional)**: Check the `config.json` file in the root directory of the project. 
+   1. By default, the server will run on port 3000. If you need to change the port, change the key:value pair in `config.json`. 
+   2. You can also add an [OpenAI API key](https://platform.openai.com/docs/quickstart) to the `config.json` file if you want to use the AI Code Assistant in *Creator*. 
+   3. You may also add a remote database URL to the config.json file if you want to create a remotely collaborative program space. See instructions below for [Remote or Local database](#optional-installing-database-for-collaborative-editing). -->
+<!-- 5. **Run the Setup Executable**: Run the setup executable to install and start the program. -->
+<!-- 6. **Access Paper Playground**:
+    - Open [http://localhost:3000](http://localhost:3000/) in a web browser to access the main interface.
+    - To access the camera page, go to [http://localhost:3000/camera](http://localhost:3000/camera.html) and ensure it’s working as expected. -->
 
 ## Command Line Installation Instructions (Advanced)
 
@@ -61,7 +78,11 @@ Coming soon!
     npm install # Install dependencies
     ```
 
-3. Check the config.json file in the root directory of the project. By default, the server will run on port 3000. If you need to change the port, you can do so in the config.json file. You can also add an OpenAI API key to the config.json file if you want to use the OpenAI API. You may also add a remote database URL to the config.json file if you want to use a remote database. (see instructions below for [Remote or Local database](#optional-installing-database-for-collaborative-editing))
+3. **Change Configuration (optional)**: Check the `config.json` file in the root directory of the project.
+   1. By default, the server will run on port 3000. If you need to change the port, change the key:value pair in `config.json`.
+   2. You can also add an [OpenAI API key](https://platform.openai.com/docs/quickstart) to the `config.json` file if you want to use the AI Code Assistant in _Creator_.
+   3. You may also add a remote database URL to the config.json file if you want to create a remotely collaborative program space. See instructions below for [Remote or Local database](#optional-installing-database-for-collaborative-editing).
+
 4. **Start Paper Playground**: Run the following command to start the program:
 
     ```bash
@@ -83,6 +104,19 @@ The programs you create are stored in `root/server/data`.
 ---
 
 ## Updating Paper Playground
+
+### Package Update Instructions
+
+{==
+
+Coming soon!
+
+==}
+
+<!-- 1. Back up your programs by copying the `root/server/data` directory to a safe location.
+2. Delete the `paper-land` directory from your computer.
+3. See the [GitHub Releases page](https://github.com/phetsims/paper-land/releases) for the latest version of Paper Playground. You can download the latest package and follow the installation instructions above to update your version of Paper Playground.
+4. Replace the `root/server/data` directory with your backed-up programs. -->
 
 ### CLI Update Instructions
 
@@ -137,8 +171,14 @@ If you do not have access to a remote database, you can host a local database on
 
 #### Initial Run
 
-- [FIRST TIME - INITIAL SETUP ONLY] Use following command to create the database the first time in terminal
-  - `npm run dev`
+Run the following command to set up the database:
+        ```bash
+        npm run dev
+        ```
+
+{==
+You only need to run this command the first time you set up your database.
+==}
 
 ---
 
@@ -148,11 +188,14 @@ The Paper Playground client runs locally. For program storage, Paper Playground 
 
 ### Additional recommended start up commands if following development
 
-Currently, Paper Playground must be run from the command line. If you're following the development of Paper Playground, it is recommended to regularly execute the following commands:
+Install Paper Playground according to the [CLI Installation Instructions](#command-line-installation-instructions-advanced).
 
-1. `git pull`
-2. `npm install`
-3. `npm start`
+If you're following the development of Paper Playground, it is recommended to regularly execute the following commands:
+    ```bash
+    git pull
+    npm install
+    npm start
+    ```
 
 ### Packaging Paper Playground
 
@@ -163,12 +206,16 @@ We require that you have Node.js installed on your system to run these scripts. 
 
 #### Building your own package
 
+{==
+These steps need to be followed for Windows and MacOS separately on a device with the OS of choice. The resulting build scripts are platform-specific and will not work across platforms. Likewise, you cannot create a MacOS build on a Windows machine or vice versa.
+==}
+
 If you are interested in packaging the project yourself, you can use the following steps:
 
-1) Install pkg globally: `npm install -g pkg`. pkg is used to package setup scripts into an executable.
-2) Run `npm run build` to build the project. This will create a `build` directory in the root of the project.
-3) Within the build directory are platform specific executables that a user can run to install node modules and run the project.
-4) It also includes a .env file where you can configure variables for the project.
+1. Install pkg globally: `npm install -g pkg`. pkg is used to package setup scripts into an executable.
+2. Run `npm run build` to build the project. This will create a `build` directory in the root of the project.
+3. Within the build directory are platform specific executables that a user can run to install node modules and run the project.
+4. It also includes a `config.json` file where you can configure variables for the project ([see installation instructions above](#package-installation-intructions-preferred).)
 
-- Note that there are other build scripts to build individual parts of the project (front end, server, etc.). See package.json for more details.
-- Note that this process requires the user to have Node.js installed on their system. A fully standalone build is not supported at this time.
+    - Note that there are other build scripts to build individual parts of the project (front end, server, etc.). See `package.json` for more details.
+    - Note that this process requires the user to have Node.js installed on their system. A fully standalone build is not supported at this time.

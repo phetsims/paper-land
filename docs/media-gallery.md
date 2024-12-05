@@ -29,3 +29,11 @@
 ## Pictures
 
 ![Submarine controlled by paper movement](assets/lunar-lander-craft.gif)
+
+![alt text](assets/solar-system-display-camera.png)
+
+![alt text](assets/scale_paper.jpg)
+
+![alt text](assets/program-cards-with-gems.jpg)
+
+![alt text](assets/monitor-setup-tcc.jpg)

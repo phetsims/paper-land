@@ -2,21 +2,9 @@
 
 <!-- https://facelessuser.github.io/pymdown-extensions/extensions/keys/#key-map-index -->
 
+Read on to learn about the different interfaces and how they work together. You can move onto the [Creator tutorial](creator.md) if you're ready to start building programs visually.
+
 Before we begin, make sure you have [installed Paper Playground](../setup/install.md) and [set up your equipment](../setup/device-setup.md).
-
-## Quick Start - Running Example Programs
-
-1. **Open the Creator interface**: Go to [http://localhost:3000/creator](http://localhost:3000/creator.html) to start working with example programs.
-
-2. **Suggested Start**: Select the example “cat-fetch” and click “Send to Playground” to launch it in the main interface.
-
-3. **Open the Camera**: Go to [http://localhost:3000/camera](http://localhost:3000/camera.html) to monitor the camera view, ensuring it detects objects accurately.
-
-4. **Open Interactive Display & Canvas** To execute your code setup, open the Interactive Display ([http://localhost:3000/display.html](http://localhost:3000/display.html)) (on a second window or screen) and Canvas ([http://localhost:3000/projector.html](http://localhost:3000/projector.html)) (can be hidden on another tab).
-
-5. **Preview Programs**: Use the 'eye' icon besides each program to execute the paper programs that script the "Cat," "Ball," and "Items". Move them around! Go back to Creator to make edits and repeat the process!
-
-6. **Print the Programs**: Click the print option for each program to print the paper itself and set up the physical play space.
 
 ## Interface Overview and Startup
 
@@ -34,11 +22,11 @@ Navigate to localhost:3000 in your browser and either click the links or open in
 
 ### What is the *Camera* page?
 
-The *Camera* page is where all the action happens for turning your paper programs interactive!
+The *Camera* page is where all the action happens detecting and interacting with your paper programs!
 
 ![Camera Spaces](../assets/camera-spaces-tab.png)
 
-On this page you will find the preview of your webcam, a preview of the full JavaScript for your currently selected paper program, and a plethora of options in the sidebar. Explore the headings in the sidebar to create and navigate between [spaces](#what-is-a-space), [calibrate your webcam](../setup/device-setup.md#color-calibrating-your-webcam-for-program-detection) to detect paper programs, print and [virtually preview programs and markers](#what-are-preview-papers-eye), and [fine-tune your detection](../setup/device-setup.md#fine-tuning-program-detection).
+On this page you will find the preview of your webcam, a preview of the full JavaScript for your currently selected paper program, and a plethora of options in the sidebar. Explore the headings in the sidebar to create and navigate between [spaces](#what-is-a-space), [calibrate your webcam](../setup/device-setup.md#color-calibrating-your-webcam-for-program-detection) to detect paper programs, print and [virtually preview programs and markers](#what-are-preview-papers), and [fine-tune your detection](../setup/device-setup.md#fine-tuning-program-detection).
 
 You'll use this page to match up where your papers are in space with visuals on a projector. Think of it as your play space.
 
@@ -113,17 +101,19 @@ You can adjust the sensitivity of your programs to paper movement (in the event 
 !!! warning
       Keep this value as low as you can. At high values, your paper will be able to move very far without the program recognizing it has moved. Values as low as **0.1-0.2** work in many cases.
 
-##### Print Speech
-
 ##### Show Console/Console
 
 If you use the `phet.paperland.console.log`/`warn` functionality in any custom code section of your programs, that code will display here. See the [Paper Playground API](../use/paperland-api.md/#phetpaperlandconsoleerror-args) for more information.
 
 Regular JavaScript usage of `console.log` will display in your browser's developer console (F12 menu) as usual, but will not display in the Display Console.
 
+##### Print Speech
+
+This will log the text that is being spoken by the Text-to-Speech engine to the console. This can be helpful for debugging or understanding what is being spoken.
+
 ### What is the *Canvas* page?
 
-At this time, given the legacy structure of the client, all of the code detected in the Camera is executed through the Canvas. However, in Paper Playground, all development has been focused on paper program output sent to the Display.
+At this time, given the legacy structure of the client, all of the code detected in the Camera is executed through the Canvas. However, in Paper Playground, all development has been focused on paper program output sent to the Interactive Display.
 
 !!! danger "Canvas is Required"
       **The *Canvas* page must be opened to run the code, *but the tab or window does not need to be visible.***
@@ -132,13 +122,14 @@ If you would like to use vanilla Web Canvas or make use of the projection overla
 
 ## Creating and Editing Programs
 
-### *Creator*: Building programs visually
+### *Creator* (recommended): Building programs visually
 
-See [the *Creator* tutorial](creator.md).
+--> [*Creator* tutorial](creator.md){ .md-button .md-button--secondary } <--
+---
 
 [![Creator interface example](../assets/creator-create-component.png)](creator.md)
 
-### *Editor*: If you're comfortable with JavaScript and reading API documents
+### *Editor* (advanced): If you're comfortable with JavaScript and reading API documents
 
 Create new paper programs from the *Camera* interface (Spaces and Programs on the sidebar). You can copy an existing program from any other Space or start from a fresh template.
 

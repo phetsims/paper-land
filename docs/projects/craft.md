@@ -1,6 +1,10 @@
 # Mixing Paper Crafting with Paper Playground
 
+![Using sliding papers to show and hide a hot air balloon image](../assets/slidingprogs.gif)
+
 Paper Playground provides a novel way to integrate craft with STEM exploration. The paper programs can be incorporated into paper sculpture — or other craft-based objects — enabling students to personalize their learning experiences. In addition to building paper controllers (such as the RGB sliders pictured above), students might also create an entire scene or narrative around STEM concepts. This type of tangible interface links the playful affordances of paper with computational elements.
+
+[CU Craft Tech Paper Playground page](https://cucraftlab.org/paper-playground/){ .md-button .md-button--primary }
 
 ![RGB sliders using markers on one paper program](../assets/rgb-sliders.png)
 

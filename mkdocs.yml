@@ -132,10 +132,10 @@ markdown_extensions:
 nav:
     - Home: index.md
     - Getting Started:
-      - Installation: setup/install.md
-      - Device Setup: setup/device-setup.md
-      - Interface Overview: setup/interface-overview.md
-      - Creator Tutorial: setup/creator.md
+      - 1. Installation: setup/install.md
+      - 2. Device Setup: setup/device-setup.md
+      - 3. Overview: setup/interface-overview.md
+      - 4. Creator Tutorial: setup/creator.md
     - Projects:
       - Multimodal Codesign: projects/codesign.md
       - Paper Craft: projects/craft.md
@@ -146,7 +146,6 @@ nav:
       - About Model-View-Controller: use/mvc.md
       - paperLand API: use/paperland-api.md
       - Downloadables: use/resources.md
-      - Project Design Tips: use/designing-programs.md
       - Example Custom JS Papers: use/example-program.md
     - Community:
       - Join Us: community.md 

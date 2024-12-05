@@ -139,6 +139,24 @@ Look under the Detection header in the sidebar of Camera.html and adjust the con
 - **Min Dot Separation (pixels):** The minimum numbers of pixels the algorithm expects to see dots. Lower values will help to detect smaller dots or farther away programs, at the cost of detecting more image features that may not be paper dots.
 - **Scale Factor:** Recommended to keep at 1. Higher values lower the effective resolution of your camera feed. If you need higher performance and dot detection is not a problem/you are using a very high resolution camera, this will speed up the algorithm significantly to get more performance.
 
+
+## Quick Start - Running Example Programs
+
+1. **Calibrate the Camera**: As described above. Go to [http://localhost:3000/camera](http://localhost:3000/camera.html) to monitor the camera view, ensuring it detects objects accurately. Calibrate and align the camera for color detection and marker detection.
+
+2. **Navigate to Creator**: Go to [http://localhost:3000/creator](http://localhost:3000/creator.html) to start working with example programs.
+
+3. **Suggested Start**: Select the example “cat-fetch” and click “Send to Playground” to launch it in the main interface.
+
+4. **Open Interactive Display & Canvas** To execute your code setup, open the Interactive Display ([http://localhost:3000/display.html](http://localhost:3000/display.html)) and Canvas ([http://localhost:3000/projector.html](http://localhost:3000/projector.html)).
+
+5. **Separate the Camera and Display windows**: Move the Camera interface and the Display interface to your secondary display (e.g., a projector or a second monitor). This will allow you to see the camera view and the program output side-by-side. You can hide Canvas.
+
+6. **Print and Place your Papers OR Preview Programs**: 
+   1. Print the papers for the "Cat," "Ball," and "Items" programs. Clicking the Printer icon will download an image for you which you can then print or copy by hand on a sheet of paper. Place the papers in the camera view and play around!
+   2. Alternatively, use the Preview Papers feature to simulate the papers. Use the 'eye' icon besides each program to execute the paper programs that script the "Cat," "Ball," and "Items". Move them around! Go back to Creator to make edits and repeat the process!
+
+
 ## Canvas Projector Setup
 
 If you're using the legacy *Canvas* (projector.html) page to send visual elements to the web canvas, rather than the *Interactive Display* (display.html), you'll follow these instructions instead:
