@@ -1,4 +1,4 @@
-# Welcome to Paper Playground: Your Interactive Design Space
+# Paper Playground: Web Interactivity in the Real World
 
 [![GitHub](https://img.shields.io/badge/github-repo-yellow?logo=github&logoColor=white)](https://www.github.com/phetsims/paper-land/)
 [![Matrix Chat](https://img.shields.io/badge/matrix-chat-green?logo=matrix&logoColor=green)](https://matrix.to/#/#interactive-paper-programming:matrix.org)
