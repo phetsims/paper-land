@@ -6,15 +6,16 @@
 [![License](https://img.shields.io/github/license/phetsims/paper-land?color=blue)](https://github.com/phetsims/paper-land/blob/main/LICENSE)
 
 <figure markdown>
-  ![Paper Playground interface](assets/card-full-interface.png)
+  ![Paper Playground Demo](assets/pixelgarden2.gif)
 </figure>
 
 Paper Playground is an open-source project for collaboratively creating multimodal web experiences by means of mapping code to real pieces of paper and manipulating the code in your **physical space**. Everything runs on your machine and you can collaborate locally or using a hosting service to collaborate over projects with others in your shared space.
 
 While Paper Playground can support many uses, our aim is to support a community interested in bringing physical interaction as a means to collaboratively solve problems in codesigning technology.
 
-[Get Started](./setup/install.md){ .md-button .md-button--primary }
----
+<figure markdown>
+  [Get Started](./setup/install.md){ .md-button .md-button--primary }
+</figure>
 
 Paper Playground is based on the [Paper Programs](https://paperprograms.org) open-source project and has been extended to incorporate [SceneryStack](https://scenerystack.org/), the web development stack used by [PhET Interactive Simulations](https://phet.colorado.edu) as a robust 2D scene renderer and support for multimodal features.
 
@@ -32,8 +33,9 @@ Check out the [Microcontroller Integration](./projects/microcontroller.md) page 
 
 Paper Playground is open to contribution of all forms, from code to documentation to design. We welcome you to join our community and help us build a tool that supports a wide range of users in creating interactive web experiences.
 
-[🌍 Join the Community 🌍](community.md){ .md-button .md-button--primary }
----
+<figure markdown>
+  [🌍 Join the Community 🌍](community.md){ .md-button .md-button--primary }
+</figure>
 
 ---
 
@@ -54,14 +56,19 @@ Paper Playground is built around a few key components that work together seamles
 You’ll interact with Paper Playground through three main interfaces:
 
 1. ***Camera***: Detects your paper programs using an attached camera device.
-2. ***Interactive Display***: Shows the results of your programs, which can be interacted with virtually or projected.
-3. ***Creator***: A low-code interface where you design your programs, step by step.
+2. ***Creator***: A low-code interface where you design your programs, step by step.
+3. ***Interactive Display***: Shows the results of your programs, which can be interacted with virtually or projected.
+
+<figure markdown>
+  ![Paper Playground interface](assets/card-full-interface.png)
+</figure>
 
 ---
 
-### Setup and Interface Tutorial
+<figure markdown>
+  [Get Started](./setup/install.md){ .md-button .md-button--primary }
+</figure>
 
-[Get Started](./setup/install.md){ .md-button .md-button--primary }
 ---
 
 <figure markdown>
