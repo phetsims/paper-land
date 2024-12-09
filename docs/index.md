@@ -60,7 +60,7 @@ You’ll interact with Paper Playground through three main interfaces:
 3. ***Interactive Display***: Shows the results of your programs, which can be interacted with virtually or projected.
 
 <figure markdown>
-  ![Paper Playground interface](assets/card-full-interface.png)
+  ![Paper Playground interface](assets/card-full-interface.PNG)
 </figure>
 
 ---
