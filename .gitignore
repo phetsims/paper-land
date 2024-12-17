@@ -2,6 +2,7 @@
 node_modules/
 .idea/
 .env
+*env*
 config.json
 site/
 notes.md
