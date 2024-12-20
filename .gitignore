@@ -7,8 +7,11 @@ site/
 notes.md
 package-lock.json
 
-# ONLY FOR DOCS BRANCH, ignore the server directory
-**/server/*
+# ONLY FOR DOCS BRANCH, ignore the server and build directories
+/server/
+/server-dist/
+/dist/
+/www/
 /paper_env/
 
 # Ignore all files in the uploads directories

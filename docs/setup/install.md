@@ -41,23 +41,18 @@ This guide will walk you through setting up Paper Playground, including hardware
 
 ## Package Installation Intructions (Preferred)
 
-{==
-
-Coming soon!
-
-==}
-
-<!-- 1. **Install Node.js Dependency**: Paper Playground requires Node.js to run. You can download the latest version of Node.js from the [official website](https://nodejs.org/en/). 
-2. **Download the Package**: Download the latest Paper Playground package from the [Releases page](https://github.com/phetsims/paper-land/releases) on GitHub. Choose the package that matches your operating system (Windows, MacOS, Linux).
+1. **Install Node.js Dependency**: Paper Playground requires Node.js to run. You can download the latest version of Node.js from the [official website](https://nodejs.org/en/). Latest tested Node.js version was LTS v22.12.0 (Dec 2024).
+2. **Download the Package**: Download the latest Paper Playground package from the [Releases page](https://github.com/phetsims/paper-land/releases) on GitHub. Choose the package that matches your operating system (Windows, MacOS). For Linux, follow the advanced command-line installation below.
 3. **Extract the Package**: Extract the contents of the package to a directory of your choice.
-4. **Change Configuration (optional)**: Check the `config.json` file in the root directory of the project. 
-   1. By default, the server will run on port 3000. If you need to change the port, change the key:value pair in `config.json`. 
-   2. You can also add an [OpenAI API key](https://platform.openai.com/docs/quickstart) to the `config.json` file if you want to use the AI Code Assistant in *Creator*. 
-   3. You may also add a remote database URL to the config.json file if you want to create a remotely collaborative program space. See instructions below for [Remote or Local database](#optional-installing-database-for-collaborative-editing). -->
-<!-- 5. **Run the Setup Executable**: Run the setup executable to install and start the program. -->
-<!-- 6. **Access Paper Playground**:
+4. **Change Configuration (optional)**: Check the `config.json` file in the root directory of the project.
+    - By default, the server will run on port 3000. If you need to change the port, change the key:value pair in `config.json`.
+    - You can also add an [OpenAI API key](https://platform.openai.com/docs/quickstart) to the `config.json` file if you want to use the AI Code Assistant in _Creator_.
+    - You may also add a remote database URL to the config.json file if you want to create a remotely collaborative program space. See instructions below for [Remote or Local database](#optional-installing-database-for-collaborative-editing). -->
+5. **Run the Executable**: Run the executable (.exe or .dmg) to install and start the program.
+6. **Access Paper Playground**:
     - Open [http://localhost:3000](http://localhost:3000/) in a web browser to access the main interface.
-    - To access the camera page, go to [http://localhost:3000/camera](http://localhost:3000/camera.html) and ensure it’s working as expected. -->
+    - To access the camera page, go to [http://localhost:3000/camera](http://localhost:3000/camera.html) and ensure it’s working as expected.
+    - To close Paper Playground, close the terminal window or press `Ctrl+C` in the terminal.
 
 ## Command Line Installation Instructions (Advanced)
 
@@ -107,16 +102,10 @@ The programs you create are stored in `root/server/data`.
 
 ### Package Update Instructions
 
-{==
-
-Coming soon!
-
-==}
-
-<!-- 1. Back up your programs by copying the `root/server/data` directory to a safe location.
+1. Back up your programs by copying the `root/server/data` directory and `root/config.json` to a safe location.
 2. Delete the `paper-land` directory from your computer.
 3. See the [GitHub Releases page](https://github.com/phetsims/paper-land/releases) for the latest version of Paper Playground. You can download the latest package and follow the installation instructions above to update your version of Paper Playground.
-4. Replace the `root/server/data` directory with your backed-up programs. -->
+4. Replace the `root/server/data` directory with your backed-up programs and replace or copy in the text from your saved `root/config.json` to the new `config.json` for quick setup.
 
 ### CLI Update Instructions
 
@@ -139,8 +128,7 @@ If you are using a remote program database, which you can find online by searchi
 - Example: `DATABASE_URL=postgres://someDatabaseAddressFromSomeHostingService`
 
 !!! note
-
-      Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
+    Are you working with us? Send an email to `brett dot fiedler at colorado dot edu` to request access to our database of programs!
 
 ### Local Database
 
@@ -207,7 +195,7 @@ We require that you have Node.js installed on your system to run these scripts. 
 #### Building your own package
 
 {==
-These steps need to be followed for Windows and MacOS separately on a device with the OS of choice. The resulting build scripts are platform-specific and will not work across platforms. Likewise, you cannot create a MacOS build on a Windows machine or vice versa.
+These steps need to be followed for Windows and MacOS separately on a device with the OS of choice. The resulting build scripts are platform-specific and will not work across platforms. Likewise, you cannot create a MacOS build on a Windows machine or vice versa. The build script will automatically detect your platform and build the correct version.
 ==}
 
 If you are interested in packaging the project yourself, you can use the following steps:
