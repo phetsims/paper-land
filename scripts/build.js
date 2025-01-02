@@ -17,6 +17,21 @@
 // User can then run the packaged script to install node modules and start the server.
 
 const { execSync } = require( 'child_process' );
+const os = require('os'); // Import the os module
+
+// Detect the OS and set the pkg target
+let pkgTarget;
+switch (os.platform()) {
+  case 'win32':
+    pkgTarget = 'latest-win';
+    break;
+  case 'darwin':
+    pkgTarget = 'latest-macos';
+    break;
+  default:
+    console.error('Unsupported platform. Build script supports Windows and macOS only.');
+    process.exit(1);
+}
 
 // The build for the server requires a config.json to be available.
 require( '../server/create-config-json.js' );
@@ -83,7 +98,7 @@ catch( error ) {
 // Run the package scripts that will be able to install node modules and start the server.
 try {
   console.log( 'Packaging the scripts that will install dependencies...' );
-  execSync( 'cd pkg-setup && pkg .', { stdio: 'inherit' } );
+  execSync(`cd pkg-setup && pkg -t ${pkgTarget} .`, { stdio: 'inherit' });
   execSync( 'cd ..' );
 }
 catch( error ) {
