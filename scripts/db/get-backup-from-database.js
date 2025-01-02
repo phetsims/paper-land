@@ -42,16 +42,22 @@ if ( process.argv.length !== 3 || ( process.argv.length === 3 && process.argv[ 2
 // Helper function to fix end-of-line issues so that this works on any OS.
 const fixEOL = string => string.split( '\r' ).join( '' ).split( '\n' ).join( os.EOL );
 
+// Removes invalid characters from a name so that it can be used as a file name.
+const sanitizeName = providedName => providedName.replace( /[<>:"/\\|?*]+/g, '_' );
+
 const pathToBackupDirectory = process.argv[ 2 ];
 
 // Set up the DB connection.
 const knex = require( 'knex' )( require( '../../knexfile' )[ config.MODE || 'development' ] );
 
-// Verify that the location where the programs will be stored exists.
-if ( !fs.existsSync( pathToBackupDirectory ) ) {
-  console.log( `Local backup directory ${pathToBackupDirectory} not found, aborting.` );
-  process.exit( 1 );
+// Clear the old backup directory if it exists.
+if ( fs.existsSync( pathToBackupDirectory ) ) {
+  console.log( `Clearing old backup directory ${pathToBackupDirectory}` );
+  fs.rmdirSync( pathToBackupDirectory, { recursive: true } );
 }
+
+// Create the backup directory.
+fs.mkdirSync( pathToBackupDirectory );
 
 // Create subdirectories for spaces and templates.
 const spacesSubdirectory = `${pathToBackupDirectory}/spaces`;
@@ -70,7 +76,7 @@ paths.forEach( path => {
 // enclosed in an async function.
 ( async () => {
 
-  console.log( 'Reading paper programs from DB...' );
+  console.log( 'Reading data from DB...' );
   console.log( `  DB URL =  ${config.DATABASE_URL}` );
 
   try {
@@ -108,7 +114,50 @@ paths.forEach( path => {
         const filePath = `${programsSubdirectory}/${programInfoObject.number.toString()}.js`;
         fs.writeFileSync( filePath, fixEOL( programInfoObject.currentCode ) );
       } );
+
+      console.log( `  Getting projects in playSpace ${playSpace}` );
+
+      const projectsSubdirectory = `${playSpaceSubdirectory}/projects`;
+      if ( !fs.existsSync( projectsSubdirectory ) ) {
+        fs.mkdirSync( projectsSubdirectory );
+      }
+
+      const projectInfo = await knex
+        .select( [ 'projectName', 'projectData' ] )
+        .from( 'creator-data' )
+        .where( { spaceName: playSpace } );
+
+      projectInfo.forEach( projectInfoObject => {
+        console.log( `    Getting project "${projectInfoObject.projectName}"` );
+        const filePath = `${projectsSubdirectory}/${projectInfoObject.projectName}.json`;
+
+        let projectData = projectInfoObject.projectData;
+        if ( typeof projectData !== 'string' ) {
+
+          // Convert to a pretty-printed JSON string
+          projectData = JSON.stringify( projectData, null, 2 );
+        }
+
+        fs.writeFileSync( filePath, fixEOL( projectData ) );
+      } );
     }
+
+    // Get all templates and save them.
+    console.log( `  Getting templates...` );
+
+    const templateInfo = await knex
+      .select( [ 'name', 'description', 'keyWords', 'projectData', 'id', 'spaceName' ] )
+      .from( 'creator-templates' )
+
+    templateInfo.forEach( templateInfoObject => {
+
+      // Write the template to a file
+      console.log( `    Getting template "${templateInfoObject.name}"` );
+      const filePath = `${templatesSubdirectory}/${sanitizeName( templateInfoObject.name )}.json`;
+
+      const templateDataString = JSON.stringify( templateInfoObject, null, 2 );
+      fs.writeFileSync( filePath, fixEOL( templateDataString ) );
+    } );
   }
   catch( e ) {
     console.log( `  Error:  = ${e}` );
