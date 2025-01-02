@@ -1,0 +1,113 @@
+{
+  "programs": [
+    {
+      "number": 1776,
+      "title": "Yellow Light",
+      "keywords": "",
+      "description": "Draws a yellow circle in the yellow traffic light position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 25.08166503906252,
+        "y": 35.36309305826823
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "yellowLightView",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "yellow",
+              "stroke": "black",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

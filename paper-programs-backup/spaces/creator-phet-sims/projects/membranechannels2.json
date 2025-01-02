@@ -1,0 +1,515 @@
+{
+  "programs": [
+    {
+      "number": 1,
+      "title": "Membranes",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 74.56967775343443,
+        "y": 106.04293859206271
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "topCO2Number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "100"
+          },
+          {
+            "name": "bottomCO2Number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "50",
+            "defaultValue": "0"
+          },
+          {
+            "name": "topNaNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "0"
+          },
+          {
+            "name": "bottomNaNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "50"
+          },
+          {
+            "name": "topGlucNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "200"
+          },
+          {
+            "name": "bottomGlucNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "roundedTopCO2Number",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "topCO2Number"
+            ],
+            "derivation": "return Math.round(topCO2Number);"
+          },
+          {
+            "name": "roundedBottomCO2Number",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "bottomCO2Number"
+            ],
+            "derivation": "return Math.round(bottomCO2Number);\r\n"
+          },
+          {
+            "name": "roundedTopNaNumber",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "topNaNumber"
+            ],
+            "derivation": "return Math.round(topNaNumber);"
+          },
+          {
+            "name": "roundedBottomNaNumber",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "bottomNaNumber"
+            ],
+            "derivation": "return Math.round(bottomNaNumber);"
+          },
+          {
+            "name": "roundedTopGlucNumber",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "topGlucNumber"
+            ],
+            "derivation": "return Math.round(topGlucNumber);"
+          },
+          {
+            "name": "roundedBottomGlucNumber",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "bottomGlucNumber"
+            ],
+            "derivation": "return Math.round(bottomGlucNumber);"
+          },
+          {
+            "name": "totalParticlesTop",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedTopCO2Number",
+              "roundedTopNaNumber",
+              "roundedTopGlucNumber"
+            ],
+            "derivation": "return roundedTopCO2Number + roundedTopGlucNumber + roundedTopNaNumber"
+          },
+          {
+            "name": "totalParticlesBottom",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedBottomCO2Number",
+              "roundedBottomNaNumber",
+              "roundedBottomGlucNumber"
+            ],
+            "derivation": "return roundedBottomCO2Number + roundedBottomGlucNumber + roundedBottomNaNumber"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "calcNewCO2NumberAnimation",
+            "controlledPropertyNames": [
+              "topCO2Number",
+              "bottomCO2Number"
+            ],
+            "controlFunctionString": "\r\nlet scaledTopCO2Number = topCO2Number * 10;\r\nlet scaledBottomCO2Number = bottomCO2Number * 10;\r\n\r\nconst concentrationDifference = scaledTopCO2Number - scaledBottomCO2Number;\r\n\r\nlet change;// Calculate the change in concentration\r\n\r\nchange = (concentrationDifference * 0.01 * dt) / 10;\r\n\r\nscaledTopCO2Number = scaledTopCO2Number / 10;\r\nscaledBottomCO2Number = scaledBottomCO2Number / 10;\r\n\r\n// Update the concentrations\r\nsetBottomCO2Number( scaledBottomCO2Number + change );\r\nsetTopCO2Number( scaledTopCO2Number - change );\r\n\r\nconsole.log(`CO2 change: ${change}`);\r\nconsole.log(`CO2 top: ${topCO2Number}`);\r\nconsole.log(`CO2 bottom: ${bottomCO2Number}`);"
+          },
+          {
+            "name": "calcNewNaNumberAnimation",
+            "controlledPropertyNames": [
+              "topNaNumber",
+              "bottomNaNumber"
+            ],
+            "controlFunctionString": "const concentrationDifference = topNaNumber - bottomNaNumber;\r\n\r\nlet change;// Calculate the change in concentration\r\n\r\nchange = concentrationDifference * 0.01 * dt;\r\n\r\n// Update the concentrations\r\nsetBottomNaNumber( bottomNaNumber + change );\r\nsetTopNaNumber( topNaNumber - change );\r\n\r\nconsole.log(`Sodium change: ${change}`);\r\nconsole.log(`Sodium top: ${topNaNumber}`);\r\nconsole.log(`Sodium bottom: ${bottomNaNumber}`);"
+          },
+          {
+            "name": "calcNewGlucNumberAnimation",
+            "controlledPropertyNames": [
+              "topGlucNumber",
+              "bottomGlucNumber"
+            ],
+            "controlFunctionString": "const concentrationDifference = topGlucNumber - bottomGlucNumber;\r\n\r\nlet change;// Calculate the change in concentration\r\n\r\nchange = concentrationDifference * 0.0001 * dt;\r\n\r\n// Update the concentrations\r\nsetBottomGlucNumber( bottomGlucNumber + change );\r\nsetTopGlucNumber( topGlucNumber - change );\r\n\r\nconsole.log(`Glucose change: ${change}`);\r\nconsole.log(`Glucose top: ${topGlucNumber}`);\r\nconsole.log(`Glucose bottom: ${bottomGlucNumber}`);"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 621,
+      "title": "Description ",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 254.99263877770977,
+        "y": 196.8623512924103
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "speakCurrentDetails",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "bottomCO2NumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedBottomCO2Number"
+            ],
+            "derivation": "if (roundedBottomCO2Number > 0) {\r\n    return `${roundedBottomCO2Number} oxygen molecules`\r\n} else {\r\n    return \"\"\r\n}"
+          },
+          {
+            "name": "topCO2NumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedTopCO2Number"
+            ],
+            "derivation": "if (roundedTopCO2Number > 0) {\r\n    return `${roundedTopCO2Number} oxygen molecules`\r\n} else {\r\n    return \"\"\r\n}"
+          },
+          {
+            "name": "topNaNumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedTopNaNumber"
+            ],
+            "derivation": "if (roundedTopNaNumber > 0) {\r\n    return `${roundedTopNaNumber} sodium ions`\r\n} else {\r\n    return \"\"\r\n}"
+          },
+          {
+            "name": "bottomNaNumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedBottomNaNumber"
+            ],
+            "derivation": "if (roundedBottomNaNumber > 0) {\r\n    return `${roundedBottomNaNumber} sodium ions`\r\n} else {\r\n    return \"\"\r\n}"
+          },
+          {
+            "name": "topGlucNumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedTopGlucNumber"
+            ],
+            "derivation": "if (roundedTopGlucNumber > 0) {\r\n    return `${roundedTopGlucNumber} glucose molecules`\r\n} else {\r\n    return \"\"\r\n}"
+          },
+          {
+            "name": "bottomGlucNumberString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "roundedBottomGlucNumber"
+            ],
+            "derivation": "if (roundedBottomGlucNumber > 0) {\r\n    return `${roundedBottomGlucNumber} glucose molecules`\r\n} else {\r\n    return \"\"\r\n}"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "rotateToSpeakCurrentDetails",
+            "controlledComponentName": "speakCurrentDetails",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "readOutCurrentDetails",
+            "modelComponentNames": [
+              "speakCurrentDetails",
+              "totalParticlesTop",
+              "totalParticlesBottom",
+              "bottomCO2NumberString",
+              "topCO2NumberString",
+              "topNaNumberString",
+              "bottomNaNumberString",
+              "topGlucNumberString",
+              "bottomGlucNumberString"
+            ],
+            "referenceComponentNames": [
+              "bottomCO2NumberString",
+              "bottomGlucNumberString",
+              "bottomNaNumberString",
+              "topCO2NumberString",
+              "topGlucNumberString",
+              "topNaNumberString",
+              "totalParticlesBottom",
+              "totalParticlesTop"
+            ],
+            "controlFunctionString": "if ( speakCurrentDetails ) {\r\n    speak( `Currently, outside cell:` \r\n    + `${topCO2NumberString};` \r\n    + `${topNaNumberString};` \r\n    + `${topGlucNumberString};` \r\n    + `inside the cell:` \r\n    + `${bottomCO2NumberString};` \r\n    + `${bottomNaNumberString};` \r\n    + `${bottomGlucNumberString};` );\r\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2093,
+      "title": "Add Particle Mockup",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 445.83622694940624,
+        "y": 155.07500826860283
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "AddedToTop",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "AddedToBottom",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isRedMarker",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isBlueMarker",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isBlackMarker",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "makeItRed",
+            "controlledComponentName": "isRedMarker",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "makeItBlue",
+            "controlledComponentName": "isBlueMarker",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "makeItBlack",
+            "controlledComponentName": "isBlackMarker",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "speakAddedOxygen",
+            "modelComponentNames": [
+              "isRedMarker",
+              "roundedTopCO2Number"
+            ],
+            "referenceComponentNames": [
+              "roundedTopCO2Number"
+            ],
+            "controlFunctionString": "if (isRedMarker) {\r\n    speak( `Oxygen particle added. Now, ${roundedTopCO2Number}.` );\r\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "speakAddedSodium",
+            "modelComponentNames": [
+              "isBlueMarker",
+              "roundedTopNaNumber"
+            ],
+            "referenceComponentNames": [
+              "roundedTopNaNumber"
+            ],
+            "controlFunctionString": "if (isBlueMarker) {\r\n    speak( `Sodium particle added. Now, ${roundedTopNaNumber}.` );\r\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "speakAddedGluc",
+            "modelComponentNames": [
+              "isBlackMarker",
+              "roundedTopGlucNumber"
+            ],
+            "referenceComponentNames": [
+              "roundedTopGlucNumber"
+            ],
+            "controlFunctionString": "if (isBlackMarker) {\r\n    speak( `Glucose particle added. Now, ${roundedTopGlucNumber}.` );\r\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

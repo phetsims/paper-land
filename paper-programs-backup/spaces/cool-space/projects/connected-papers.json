@@ -1,0 +1,339 @@
+{
+  "programs": [
+    {
+      "number": 1103,
+      "title": "Hook 1",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 141.22758482701803,
+        "y": 231.72378382034265
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "hook1Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "hook1PaperBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "hook1PositionControl",
+            "controlledComponentName": "hook1Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "hook1PaperBoundsController",
+            "controlledComponentName": "hook1PaperBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "hook1Rectangle",
+            "modelComponentNames": [
+              "hook1PaperBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// hook1Position - Access x and y values with `hook1Position.x` and `hook1Position.y`\r\n// setCenterX( hook1Position.x );\r\n// setCenterY( hook1Position.y );\r\n\r\nsetRectBounds( hook1PaperBounds, true );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": "0.1",
+              "rectHeight": "0.2",
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "ropeLine",
+            "modelComponentNames": [
+              "hook1Position",
+              "hook1PaperBounds",
+              "hook2Position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "const width = hook1PaperBounds.maxX - hook1PaperBounds.minX;\r\nconst height = hook1PaperBounds.maxY - hook1PaperBounds.minY;\r\n\r\nconst area = width * height * 100;\r\n\r\nsetX1( hook1Position.x );\r\nsetY1( hook1Position.y );\r\nsetX2( hook2Position.x );\r\nsetY2( hook2Position.y );\r\n\r\n\r\n\r\nsetLineWidth( area );\r\n\r\nphet.paperLand.console.log('The area of the paper is:', area);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "line",
+              "fill": "brown",
+              "stroke": "brown",
+              "lineWidth": "5",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 665,
+      "title": "Hook 2",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 328.05580643027287,
+        "y": 255.08285374427686
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "hook2Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "hook2PaperBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "hook2PositionControl",
+            "controlledComponentName": "hook2Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "hook2PaperBoundsController",
+            "controlledComponentName": "hook2PaperBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "hook2Rectangle",
+            "modelComponentNames": [
+              "hook2PaperBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// hook2Position - Access x and y values with `hook2Position.x` and `hook2Position.y`\r\n// setCenterX( hook2Position.x );\r\n// setCenterY( hook2Position.y );\r\n\r\nsetRectBounds( hook2PaperBounds, true);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": "0.1",
+              "rectHeight": "0.2",
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

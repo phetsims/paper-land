@@ -1,0 +1,204 @@
+{
+  "programs": [
+    {
+      "number": 1748,
+      "title": "Whisker - Sound",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 222.5732915309851,
+        "y": 234.0287611704204
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isConnected",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "whiskerController",
+            "controlledComponentName": "isConnected",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "connectionSound",
+            "modelComponentNames": [
+              "isConnected"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isConnected) {\r\n    setOutputLevel(0.7);\r\n    play();\r\n} else {\r\n    setOutputLevel(0);\r\n}\r\n",
+            "lazyLink": false,
+            "soundFileName": "quadShapeCollision.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "connectionView",
+            "modelComponentNames": [
+              "isConnected"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( isConnected ) {\r\n    setFill( 'green' );\r\n}\r\nelse {\r\n    setFill( 'red' );\r\n}",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 95,
+      "title": "Whisker - Connected Paper",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 315.2803997860125,
+        "y": 385.39091332774524
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

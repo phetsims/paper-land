@@ -1,0 +1,95 @@
+{
+  "programs": [
+    {
+      "number": 1813,
+      "title": "Random Servo Position",
+      "keywords": "180servo, random",
+      "description": "Marker placement generates a random number [0-180] and servo moves to that position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 225.43165324218057,
+        "y": 157.22255705330258
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "randomRedMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "randomRedMarkerController",
+            "controlledComponentName": "randomRedMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeRandomPositionToMicrobit",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\n// general formula:  Math. floor(Math. random() * (max - min + 1)) + min\r\n// generate a random number between 0 and 180\r\nlet myRandomNumber = Math.floor(Math.random() * (180 - 0 + 1)) + 0;\r\nphet.paperLand.console.log(\"myRandomNumber\" + myRandomNumber);\r\n// in MakeCode file, the word speed applies to continuous servo\r\n// angle is for 180 servo\r\n\r\nif (randomRedMarkerOn) {\r\n    //sendString = \"speed:50\";\r\n    sendString = \"angle:\" + myRandomNumber;\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "randomRedMarkerOn"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

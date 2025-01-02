@@ -1,0 +1,254 @@
+{
+  "programs": [
+    {
+      "number": 1841,
+      "title": "Input Area",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 23.508771371347052,
+        "y": 240.74597857298784
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "inputBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0",
+            "defaultMinY": "0",
+            "defaultMaxX": "0.5",
+            "defaultMaxY": "1"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "inputBoundsController",
+            "controlledComponentName": "inputBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "inputView",
+            "modelComponentNames": [
+              "inputBounds"
+            ],
+            "controlFunctionString": "setRectBounds( inputBounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "white",
+              "lineWidth": "25",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// create a video element to feed data webcam data into the canvas - it will be the entire\r\n// display size and we will capture a subset of that to display.\r\nconst videoElement = document.createElement( 'video' );\r\nvideoElement.width = sharedData.displaySize.width;\r\nvideoElement.height = sharedData.displaySize.height;\r\nscratchpad.videoElement = videoElement;\r\n\r\nconst canvasElement = document.createElement( 'canvas' );\r\ncanvasElement.width = videoElement.width;\r\ncanvasElement.height = videoElement.height;\r\nscratchpad.canvasElement = canvasElement;\r\n\r\nscratchpad.canvasNode = new phet.scenery.DOM( canvasElement );\r\nsharedData.scene.addChild( scratchpad.canvasNode );\r\n\r\nconst canvasContext = canvasElement.getContext('2d');\r\n\r\n// Get webcam feed\r\nnavigator.mediaDevices.getUserMedia({ video: true })\r\n    .then(stream => {\r\n        videoElement.srcObject = stream;\r\n        videoElement.play();\r\n\r\n        // this begins the loop but is only called once, so we don't need to cancel it\r\n        requestAnimationFrame(drawVideo);\r\n    })\r\n    .catch(err => console.error(\"An error occurred: \" + err));\r\n\r\n// Draws the video feed onto the canvas\r\nfunction drawVideo() {\r\n    const modelBounds = phet.paperLand.getModelComponent( 'inputBounds' ).value;\r\n    const viewBounds = phet.paperLand.utils.paperToBoardBounds( modelBounds, sharedData.displaySize.width, sharedData.displaySize.height );\r\n    canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height );\r\n    canvasContext.drawImage(\r\n        videoElement,\r\n        viewBounds.minX, viewBounds.minY, viewBounds.width, viewBounds.height,\r\n        viewBounds.minX, viewBounds.minY, viewBounds.width, viewBounds.height\r\n    );\r\n\r\n    // this will loop forever so we need to store the id to stop rendering later\r\n    scratchpad.animationId = requestAnimationFrame(drawVideo);\r\n}",
+        "onProgramRemovedCode": "cancelAnimationFrame( scratchpad.animationId );\r\nsharedData.scene.removeChild( scratchpad.canvasNode );",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1326,
+      "title": "Output Area",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 258.30180607666284,
+        "y": 246.2039865706765
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "outputBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.5",
+            "defaultMinY": "0",
+            "defaultMaxX": "1",
+            "defaultMaxY": "1"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "outputBoundsController",
+            "controlledComponentName": "outputBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "outputView",
+            "modelComponentNames": [
+              "outputBounds"
+            ],
+            "controlFunctionString": "setRectBounds( outputBounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "white",
+              "lineWidth": "25",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// create a video element to feed data webcam data into the canvas - it will be the entire\r\n// display size and we will capture a subset of that to display.\r\nconst videoElement = document.createElement( 'video' );\r\nvideoElement.width = sharedData.displaySize.width;\r\nvideoElement.height = sharedData.displaySize.height;\r\nscratchpad.videoElement = videoElement;\r\n\r\nconst canvasElement = document.createElement( 'canvas' );\r\ncanvasElement.width = videoElement.width;\r\ncanvasElement.height = videoElement.height;\r\nscratchpad.canvasElement = canvasElement;\r\n\r\nscratchpad.canvasNode = new phet.scenery.DOM( canvasElement );\r\nsharedData.scene.addChild( scratchpad.canvasNode );\r\n\r\nconst canvasContext = canvasElement.getContext('2d');\r\n\r\n// Get webcam feed\r\nnavigator.mediaDevices.getUserMedia({ video: true })\r\n    .then(stream => {\r\n        videoElement.srcObject = stream;\r\n        videoElement.play();\r\n\r\n        // this begins the loop but is only called once, so we don't need to cancel it\r\n        requestAnimationFrame(drawVideo);\r\n    })\r\n    .catch(err => console.error(\"An error occurred: \" + err));\r\n\r\n// Draws the video feed onto the canvas\r\nfunction drawVideo() {\r\n\r\n    // the input bounds come from another program so we need to be graceful in how we \r\n    // access it (it might not be added to the camera yet)\r\n    const inputModelBoundsProperty = phet.paperLand.getModelComponent( 'inputBounds' );\r\n    if ( inputModelBoundsProperty ) {\r\n        const inputModelBounds = inputModelBoundsProperty.value;\r\n        const inputViewBounds = phet.paperLand.utils.paperToBoardBounds( inputModelBounds, sharedData.displaySize.width, sharedData.displaySize.height );\r\n\r\n        const outputModelBounds = phet.paperLand.getModelComponent( 'outputBounds' ).value;\r\n        const outputViewBounds = phet.paperLand.utils.paperToBoardBounds( outputModelBounds, sharedData.displaySize.width, sharedData.displaySize.height );\r\n        canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height );\r\n\r\n        // draw the video data from the input area to the output area\r\n        canvasContext.drawImage(\r\n            videoElement,\r\n            inputViewBounds.minX, inputViewBounds.minY, inputViewBounds.width, inputViewBounds.height,\r\n            outputViewBounds.minX, outputViewBounds.minY, outputViewBounds.width, outputViewBounds.height\r\n        );\r\n\r\n        // for fun, modify the colors for a spooky halloween theme!\r\n        const imageData = canvasContext.getImageData(outputViewBounds.minX, outputViewBounds.minY, outputViewBounds.width, outputViewBounds.height);\r\n        const data = imageData.data;\r\n        for (let i = 0; i < data.length; i += 4) {\r\n            data[i] = Math.min(255, data[i] + 50);       // Boost Red\r\n            data[i + 1] = data[i + 1] * 0.25;            // Diminish Green\r\n            data[i + 2] = 255 - data[i + 2];             // Invert Blue\r\n        }\r\n        canvasContext.putImageData(imageData, outputViewBounds.minX, outputViewBounds.minY);\r\n    }\r\n\r\n    // this will loop forever so we need to store the id to stop rendering later\r\n    scratchpad.animationId = requestAnimationFrame(drawVideo);\r\n}",
+        "onProgramRemovedCode": "cancelAnimationFrame( scratchpad.animationId );\r\nsharedData.scene.removeChild( scratchpad.canvasNode );",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

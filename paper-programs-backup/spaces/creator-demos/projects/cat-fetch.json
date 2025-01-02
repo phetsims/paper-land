@@ -1,0 +1,379 @@
+{
+  "programs": [
+    {
+      "number": 2,
+      "title": "Cat",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 251.68252526448163,
+        "y": 65.4541323250975
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "catPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.1",
+            "defaultY": "0.5"
+          },
+          {
+            "name": "nextCatPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "catTimeIdle",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "5",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [
+          {
+            "name": "catState",
+            "propertyType": "EnumerationProperty",
+            "defaultValue": "idle",
+            "values": [
+              "idle",
+              "walking",
+              "running",
+              "tapping"
+            ]
+          }
+        ],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "catWalkingSong",
+            "modelComponentNames": [
+              "catState"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setOutputLevel( 0.3 );\r\nif ( catState !== 'running' ) {\r\n  play();\r\n}\r\nelse {\r\n  // stop();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "musicalSimpleBeat.mp3",
+            "loop": true,
+            "autoplay": false
+          },
+          {
+            "name": "catRunningSound",
+            "modelComponentNames": [
+              "catState"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setOutputLevel( 0.1 );\r\n\r\nif ( catState === 'running' ) {\r\n    play();\r\n}\r\nelse {\r\n    stop();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "musicalTrackNine.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "catBackground",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "#40B5AD"
+          }
+        ],
+        "imageViews": [
+          {
+            "name": "catImage",
+            "modelComponentNames": [
+              "catPosition",
+              "catState"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( catState === 'walking' ) {\r\n    setImage( 'walking-cat.gif' );\r\n}\r\nelse if ( catState === 'idle' ) {\r\n    setImage( 'idle-cat.gif' );\r\n}\r\nelse if ( catState === 'running' ) {\r\n    setImage( 'running-cat.gif' );\r\n}\r\n\r\nsetCenterX( catPosition.x );\r\nsetCenterY( catPosition.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "idle-cat.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "catAnimationController",
+            "controlledPropertyNames": [
+              "catPosition",
+              "nextCatPosition",
+              "catTimeIdle",
+              "catState",
+              "items"
+            ],
+            "controlFunctionString": "if ( catState === 'idle' ) {\r\n    setCatTimeIdle( catTimeIdle + dt );\r\n\r\n    if ( catTimeIdle > 4 ) {\r\n\r\n        // switch to walking\r\n        setCatState( 'walking' );\r\n\r\n        // set a new next position - this is where we will walk to\r\n        if ( items.length > 0 ) {\r\n\r\n            // grab a random item from the available ones and move there\r\n            const randomBallIndex = Math.floor( Math.random() * ( items.length - 1 ) );\r\n            setNextCatPosition( items[ randomBallIndex ].ballPosition );\r\n        }\r\n        else {\r\n            setNextCatPosition( new phet.dot.Vector2( Math.random(), Math.random() ) );\r\n        }\r\n\r\n        // no longer idle\r\n        setCatTimeIdle( 0 ); \r\n    }\r\n}\r\nelse if ( catState === 'walking' || catState === 'running' ) {\r\n\r\n    // if the cat is near any ball, start running!\r\n    for ( let i = 0; i < items.length; i++ ) {\r\n        const ballPosition = items[ i ].ballPosition;\r\n\r\n        // if we find a ball, start running with it until we get to the next position!\r\n        if ( Math.abs( ballPosition.x - catPosition.x ) < 0.05 && Math.abs( ballPosition.y - catPosition.y ) < 0.05 ) {\r\n            setCatState( 'running' );\r\n\r\n            // run the ball to one of the corners randomly for fun\r\n            // this returns 1 or 0 (min or max of model units)\r\n            const randomCornerX = Math.round( Math.random() );\r\n            const randomCornerY = Math.round( Math.random() );\r\n            setNextCatPosition( new phet.dot.Vector2( randomCornerX, randomCornerY ) );\r\n        }\r\n    }\r\n\r\n    // in model units per second\r\n    const catSpeed = catState === 'walking' ? 1 / 10 : 1 / 5;\r\n\r\n    // the direction the cat needs to move\r\n    const deltaX = nextCatPosition.x - catPosition.x;\r\n    const deltaY = nextCatPosition.y - catPosition.y;\r\n\r\n    const magnitude = Math.sqrt( deltaX * deltaX + deltaY * deltaY );\r\n\r\n    // if the magnitude is small enough, we are close enough to the destination to go back to idle!\r\n    if ( magnitude < 0.01 ) {\r\n        setCatState( 'idle' );\r\n    }\r\n    else {\r\n\r\n        // not there yet, keep moving in the direction of the difference at the provided speed\r\n        const unitVector = new phet.dot.Vector2( deltaX / magnitude, deltaY / magnitude );\r\n        const delta = new phet.dot.Vector2( unitVector.x * catSpeed * dt, unitVector.y * catSpeed * dt );\r\n        setCatPosition( new phet.dot.Vector2( catPosition.x + delta.x, catPosition.y + delta.y ) );\r\n    }\r\n}"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 3,
+      "title": "Items",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 162.290484841311,
+        "y": 240.55566066346526
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "itemsLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "items"
+            ],
+            "derivation": "return items.length;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [
+          {
+            "name": "items",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "itemsLength",
+            "arrayAddedItemReferenceName": "itemsAddedItem",
+            "arrayRemovedItemReferenceName": "itemsRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "itemsAddedItem"
+          },
+          {
+            "name": "itemsRemovedItem"
+          }
+        ],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 6,
+      "title": "Ball",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 67.81846573943969,
+        "y": 69.64336278779012
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "ballPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "ballArrayItem",
+            "arrayName": "items",
+            "itemSchema": [
+              {
+                "entryName": "ballPosition",
+                "componentName": "ballPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "ballPositionController",
+            "controlledComponentName": "ballPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "ballCircle",
+            "modelComponentNames": [
+              "catState",
+              "ballPosition"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( ballPosition.x );\r\nsetCenterY( ballPosition.y );\r\n\r\nif (catState === 'running') {\r\n    setVisible(false);\r\n} else {\r\n    setVisible(true);\r\n}",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "red",
+              "stroke": "lightblue",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": "0.01",
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

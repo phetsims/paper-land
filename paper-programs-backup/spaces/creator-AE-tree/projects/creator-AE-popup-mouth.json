@@ -1,0 +1,125 @@
+{
+  "programs": [
+    {
+      "number": 1693,
+      "title": "Froggie",
+      "keywords": "pop-up",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 291.52296389737256,
+        "y": 156.27504165616227
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "imagePosition_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "imageRotation_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "imageScale_Copy1",
+            "propertyType": "NumberProperty",
+            "min": "0.1",
+            "max": "2",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "imagePositionController_Copy1",
+            "controlledComponentName": "imagePosition_Copy1",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "frogNoise",
+            "modelComponentNames": [
+              "imagePosition_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "play();",
+            "lazyLink": false,
+            "soundFileName": "/uploads/Frog-sound-ribbit.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "imageView_Copy1",
+            "modelComponentNames": [
+              "imagePosition_Copy1",
+              "imageRotation_Copy1",
+              "imageScale_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Sets the image scale to from the model component for scale\r\nsetScale( imageScale_Copy1 );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( imageRotation_Copy1 );\r\n\r\n// Sets the image center to match the model component for image position\r\nsetCenterX( imagePosition_Copy1.x );\r\nsetCenterY( imagePosition_Copy1.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "sub.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

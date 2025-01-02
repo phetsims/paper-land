@@ -1,0 +1,283 @@
+{
+  "programs": [
+    {
+      "number": 286,
+      "title": "AE Program 1",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 143.57938239069094,
+        "y": 182.09329767483177
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isWinterComponent",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isSummerComponent",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "seasonPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "currentSeason",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "4",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "helloPositionController",
+            "controlledComponentName": "seasonPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "toggleWinterController",
+            "controlledComponentName": "isWinterComponent",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": "0.8",
+              "rightLength": "0.8",
+              "bottomLength": "0.8",
+              "leftLength": "0.8",
+              "otherPaperNumber": "10"
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "toggleSummerController",
+            "controlledComponentName": "isSummerComponent",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "1739"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "seasonChangeSound",
+            "modelComponentNames": [
+              "isWinterComponent",
+              "isSummerComponent"
+            ],
+            "controlFunctionString": "if ( isWinterComponent ) {\n    play();\n    phet.paperLand.console.log('whisker twitch', isWinterComponent);\n}",
+            "lazyLink": false,
+            "soundFileName": "d-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "winterView",
+            "modelComponentNames": [
+              "isWinterComponent",
+              "seasonPosition"
+            ],
+            "controlFunctionString": "setCenterX(seasonPosition.x);\nsetCenterY(seasonPosition.y);\n\nif(isWinterComponent){\n    setScale(0.1,0.1);\n    setVisible(true);\n}\nelse setVisible(false);\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/ladybug.jpg"
+          },
+          {
+            "name": "summerView",
+            "modelComponentNames": [
+              "isSummerComponent",
+              "seasonPosition"
+            ],
+            "controlFunctionString": "setCenterX( seasonPosition.x );\nsetCenterY( seasonPosition.y );\n\nif ( isSummerComponent ) {\n    setVisible(true);\n} \nelse setVisible(false);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "sub.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 10,
+      "title": "WinterMaker",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.8,
+      "rightWhiskerLength": 0.8,
+      "bottomWhiskerLength": 0.8,
+      "leftWhiskerLength": 0.8,
+      "positionProperty": {
+        "x": 333.0577897999291,
+        "y": 174.7561044547782
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1739,
+      "title": "SummerMaker",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 384.17324824053935,
+        "y": 401.9420956133182
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

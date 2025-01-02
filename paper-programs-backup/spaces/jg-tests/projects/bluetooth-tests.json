@@ -1,0 +1,261 @@
+{
+  "programs": [
+    {
+      "number": 2010,
+      "title": "Frog",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 708.2628878093866,
+        "y": 372.06474770034185
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "buttonPressed",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "blueBackground",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "#AFEEEE"
+          }
+        ],
+        "imageViews": [
+          {
+            "name": "hoppingImage",
+            "modelComponentNames": [
+              "buttonPressed"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// hopping when button is pressed\r\nsetVisible( buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          },
+          {
+            "name": "idleImage",
+            "modelComponentNames": [
+              "buttonPressed"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// idle when not pressed - boolean is false\r\nsetVisible( !buttonPressed );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/idle.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1326,
+      "title": "BLE Button",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 607.4730427801605,
+        "y": 193.7971023999417
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "bleButtonController",
+            "controlledPropertyNames": [
+              "buttonPressed"
+            ],
+            "controlFunctionString": "\r\n// The button is pressed if the deviceValue (8bit unsigned int)\r\n// is greater than 0.\r\nsetButtonPressed( deviceValue.getUint8( 0 ) > 0 );",
+            "dependencyNames": [],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": false,
+            "serviceId": "e95d9882-251d-470a-a062-fa1922dfa9a8",
+            "characteristicId": "e95dda91-251d-470a-a062-fa1922dfa9a8"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 932,
+      "title": "Matrix Test",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 353.93227792365013,
+        "y": 427.1401452065695
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "stringComponent",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "matrixTest",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "writeMatrixToCharacteristic( [\r\n    [ 1, 1, 1, 1, 1 ],\r\n    [ 1, 0, 0, 0, 0 ],\r\n    [ 1, 0, 0, 0, 0 ],\r\n    [ 1, 0, 0, 0, 0 ],\r\n    [ 1, 0, 0, 0, 0 ]\r\n] );\r\n\r\nconsole.log( 'writing matrix' );",
+            "dependencyNames": [
+              "stringComponent"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "e95dd91d-251d-470a-a062-fa1922dfa9a8",
+            "characteristicId": "e95d7b77-251d-470a-a062-fa1922dfa9a8"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

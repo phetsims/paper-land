@@ -1,0 +1,379 @@
+{
+  "programs": [
+    {
+      "number": 989,
+      "title": "Circle",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 162.32220585796543,
+        "y": 215.14434207377008
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "circlePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "circlePositionController",
+            "controlledComponentName": "circlePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "movedsoundplay",
+            "modelComponentNames": [
+              "circlePosition"
+            ],
+            "controlFunctionString": "if (circlePosition.x !== 0 || circlePosition.y !== 0) {\n  setPlaybackRate(1);\n  setOutputLevel(0.5);\n  play();\n}",
+            "lazyLink": false,
+            "soundFileName": "b-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "circleView",
+            "modelComponentNames": [
+              "circlePosition"
+            ],
+            "controlFunctionString": "setCenterX( circlePosition.x );\r\nsetCenterY( circlePosition.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "yellow",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.1",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1755,
+      "title": "Square",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 371.9367913240703,
+        "y": 220.39016880724506
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "squarePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "squareWidth",
+            "propertyType": "NumberProperty",
+            "min": "0.05",
+            "max": "1",
+            "defaultValue": "0.5"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "squarePositionController",
+            "controlledComponentName": "squarePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "squareView",
+            "modelComponentNames": [
+              "squarePosition",
+              "squareWidth"
+            ],
+            "controlFunctionString": "// Set the square to the desired size\r\n\r\nsetRectBounds( new phet.dot.Bounds2( 0, 0, squareWidth, squareWidth * sharedData.displaySize.width / sharedData.displaySize.height ) );\r\n\r\n// Set center of the square (after size changes)\r\nsetCenterX( squarePosition.x );\r\nsetCenterY( squarePosition.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "grey",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": "50",
+              "rectHeight": 50,
+              "circleRadius": 50,
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1609,
+      "title": "Rectangle",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 297.7662814879551,
+        "y": 410.7932118357976
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "rectanglePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "rectanglePositionController",
+            "controlledComponentName": "rectanglePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "rectangleView",
+            "modelComponentNames": [
+              "rectanglePosition"
+            ],
+            "controlFunctionString": "setCenterX( rectanglePosition.x );\r\nsetCenterY( rectanglePosition.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "blue",
+              "stroke": "black",
+              "lineWidth": 1,
+              "rectWidth": "1",
+              "rectHeight": "0.2",
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

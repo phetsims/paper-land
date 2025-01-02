@@ -1,0 +1,117 @@
+{
+  "programs": [
+    {
+      "number": 808,
+      "title": "Movable Image",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 185.85859157800968,
+        "y": 221.28557642313234
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "imagePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "imageRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "imageScale",
+            "propertyType": "NumberProperty",
+            "min": "0.1",
+            "max": "2",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "pageBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "pageBoundsController",
+            "controlledComponentName": "pageBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "imageView",
+            "modelComponentNames": [
+              "imageRotation",
+              "pageBounds"
+            ],
+            "controlFunctionString": "matchBounds( pageBounds, true );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( imageRotation );\r\n\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "sub.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

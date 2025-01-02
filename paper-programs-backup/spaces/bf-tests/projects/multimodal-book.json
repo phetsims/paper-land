@@ -1,0 +1,241 @@
+{
+  "programs": [
+    {
+      "number": 1,
+      "title": "Cover",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 195.1031812196159,
+        "y": 182.6407544597269
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "coverPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "coverRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "coverScale",
+            "propertyType": "NumberProperty",
+            "min": "0.0001",
+            "max": "1",
+            "defaultValue": "0.001"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "pageBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "coverTitleString",
+            "propertyType": "StringProperty",
+            "defaultValue": "The Multimodal Book, by Brett"
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "coverPositionController",
+            "controlledComponentName": "coverPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "pageBoundsController",
+            "controlledComponentName": "pageBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "coverRotationController",
+            "controlledComponentName": "coverRotation",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "coverSound",
+            "modelComponentNames": [
+              "coverTitleString"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "soundFileName": "trill1.wav",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "coverTTS",
+            "modelComponentNames": [
+              "coverTitleString"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setVoiceRate(0.9);\r\nspeak( coverTitleString );",
+            "lazyLink": false
+          }
+        ],
+        "textViews": [
+          {
+            "name": "coverText",
+            "modelComponentNames": [
+              "coverPosition",
+              "coverTitleString",
+              "pageBounds"
+            ],
+            "referenceComponentNames": [
+              "coverPosition"
+            ],
+            "controlFunctionString": "setString(coverTitleString); // Set the content of the text to \"Hello, World!\".\r\nsetCenterX( coverPosition.x ); // Set the x position of the text to the x position of the cover.\r\nsetCenterY( coverPosition.y - 0.1 ); // Set the y position of the text just above the paper by subtracting half the coverScale from the y position of the cover.\r\nsetFontSize(16); // Set the font size of the text to scale with the coverScale by multiplying it with 0.1.\r\nsetTextColor('yellow'); // Set the font color of the text to black.\r\nsetFontFamily('Arial'); // Set the font family of the text to Arial.\r\nmoveToFront();",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [
+          {
+            "name": "pageBorder",
+            "modelComponentNames": [
+              "pageBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds(pageBounds);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "gold",
+              "lineWidth": "5",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "coverImage",
+            "modelComponentNames": [
+              "coverPosition"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( coverPosition.x );\r\nsetCenterY( coverPosition.y + 0.05 );\r\nsetScale( 1 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

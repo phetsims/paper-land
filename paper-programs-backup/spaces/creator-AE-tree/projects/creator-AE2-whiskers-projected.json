@@ -1,0 +1,265 @@
+{
+  "programs": [
+    {
+      "number": 286,
+      "title": "AE Program 1",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 114.23990485162844,
+        "y": 219.72232599514427
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isWinterComponent",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isSummerComponent",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "seasonPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "currentSeason",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "4",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "helloPositionController",
+            "controlledComponentName": "seasonPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "toggleWinterController",
+            "controlledComponentName": "isWinterComponent",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": "0.8",
+              "rightLength": "0.8",
+              "bottomLength": "0.8",
+              "leftLength": "0.8",
+              "otherPaperNumber": "10"
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "toggleSummerController",
+            "controlledComponentName": "isSummerComponent",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "1739"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "seasonChangeSound",
+            "modelComponentNames": [
+              "isWinterComponent",
+              "isSummerComponent"
+            ],
+            "controlFunctionString": "if ( isWinterComponent ) {\n    play();\n    phet.paperLand.console.log('whisker twitch', isWinterComponent);\n}",
+            "soundFileName": "d-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "winterView",
+            "modelComponentNames": [
+              "isWinterComponent",
+              "seasonPosition"
+            ],
+            "controlFunctionString": "setCenterX( seasonPosition.x );\nsetCenterY( seasonPosition.y );\n\nif ( isWinterComponent ) {\n  setScale(0.25,0.25);\n    setVisible(true);\n} \nelse setVisible(false);\n\n\n//if ( isWinterComponent ) {\n  //  setVisible(true);\n//}\n//else {\n //   setVisible(false);\n//}",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/greenimage.jpg"
+          },
+          {
+            "name": "summerView",
+            "modelComponentNames": [
+              "isSummerComponent",
+              "seasonPosition"
+            ],
+            "controlFunctionString": "setCenterX( seasonPosition.x );\nsetCenterY( seasonPosition.y );\n\nif ( isSummerComponent ) {\n    setVisible(true);\n} \nelse setVisible(false);",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "sub.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 10,
+      "title": "WinterMaker",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 282.752603946587,
+        "y": 185.49259317369078
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1739,
+      "title": "SummerMaker",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 281.5785813805166,
+        "y": 372.89710464805177
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

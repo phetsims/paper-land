@@ -1,0 +1,110 @@
+{
+  "programs": [
+    {
+      "number": 249,
+      "title": "Animated Image_Copy",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 343.71697710642843,
+        "y": 404.6186540414521
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "position_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "rotation_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playsound",
+            "modelComponentNames": [
+              "position_Copy1",
+              "rotation_Copy1"
+            ],
+            "controlFunctionString": "if (position_Copy1.y > 0.9) {\n  setPlaybackRate(1);\n  setOutputLevel(1);\n  play();\nconst maxRotation = 360; // Define the maximum rotation value in degrees.\nconst maxPlaybackRate = 2; // Define the maximum playback rate.\n\nconst rotationInDegrees = rotation_Copy1; // Get the current rotation value.\nconst rotationInRadians = rotationInDegrees * (Math.PI / 180); // Convert rotation to radians.\n\n// Calculate the playback rate based on the current rotation.\nconst playbackRate = (Math.sin(rotationInRadians) * maxPlaybackRate) + 1;\n\n// Set the calculated playback rate for the sound.\nsetPlaybackRate(playbackRate);}",
+            "soundFileName": "g-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "image_Copy1",
+            "modelComponentNames": [
+              "position_Copy1",
+              "rotation_Copy1"
+            ],
+            "controlFunctionString": "setRotation( rotation_Copy1 );\r\n\r\nsetCenterX( position_Copy1.x );\r\nsetCenterY( position_Copy1.y );",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "animation_Copy1",
+            "controlledPropertyNames": [
+              "position_Copy1",
+              "rotation_Copy1"
+            ],
+            "controlFunctionString": "// Move the position_Copy1 up and down over time with a sin function\r\nsetPosition_Copy1( new phet.dot.Vector2( 0.5, Math.sin( elapsedTime ) * 0.25 + 0.4 ) );\r\n\r\n// Make the rotation_Copy1 change a bit so that it looks like it moves up and down\r\nsetRotation_Copy1( Math.sin( elapsedTime ) * 0.5 );\r\n"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

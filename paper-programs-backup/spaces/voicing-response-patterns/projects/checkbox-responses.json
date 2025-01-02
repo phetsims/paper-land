@@ -1,0 +1,249 @@
+{
+  "programs": [
+    {
+      "number": 8,
+      "title": "Checkbox Responses",
+      "keywords": "",
+      "description": "A sample checkbox with voicing responses.",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 238.23225168784876,
+        "y": 143.48097849328894
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isChecked",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "paperPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "nameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Force Values"
+          },
+          {
+            "name": "checkedContextResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Shown in newtons."
+          },
+          {
+            "name": "uncheckedContextResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Hidden."
+          },
+          {
+            "name": "hintResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Explore with or without newtons."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "paperPositionController",
+            "controlledComponentName": "paperPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isCheckedController",
+            "controlledComponentName": "isChecked",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "focusbyWhiskerPaperNumber",
+            "controlledComponentName": "isFocused",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "20"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playCheckboxChecked",
+            "modelComponentNames": [
+              "isChecked"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isChecked) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "checkboxChecked.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "playCheckboxUnchecked",
+            "modelComponentNames": [
+              "isChecked"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isChecked === false){\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "checkboxUnchecked.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceFocusResponses",
+            "modelComponentNames": [
+              "isFocused",
+              "nameResponse",
+              "hintResponse"
+            ],
+            "referenceComponentNames": [
+              "hintResponse",
+              "nameResponse"
+            ],
+            "controlFunctionString": "if(isFocused) {\n    speak( nameResponse + hintResponse );\n}\n// Name response only\n// if(isFocused) {\n//     return nameResponse;\n// }",
+            "lazyLink": false
+          },
+          {
+            "name": "voiceCheckingResponses",
+            "modelComponentNames": [
+              "isChecked",
+              "nameResponse",
+              "checkedContextResponse",
+              "uncheckedContextResponse"
+            ],
+            "referenceComponentNames": [
+              "nameResponse",
+              "checkedContextResponse",
+              "uncheckedContextResponse"
+            ],
+            "controlFunctionString": "if (isChecked){\n    speak( nameResponse + checkedContextResponse );\n} else {\n    speak( nameResponse + uncheckedContextResponse );\n    }\n// The default behavior is the latest response interrupts a previous response.\n// You may need to set the priority of your responses dependent on your design context.",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 20,
+      "title": "Focus",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.01,
+      "rightWhiskerLength": 0.01,
+      "bottomWhiskerLength": 0.01,
+      "leftWhiskerLength": 0.01,
+      "positionProperty": {
+        "x": 432.3887358224183,
+        "y": 394.64839492172035
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

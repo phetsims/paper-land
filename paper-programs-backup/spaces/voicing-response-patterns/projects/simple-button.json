@@ -1,0 +1,223 @@
+{
+  "programs": [
+    {
+      "number": 210,
+      "title": "Simple Button Responses",
+      "keywords": "",
+      "description": "A sample toggle button with voicing responses.",
+      "expanded": true,
+      "topWhiskerLength": 0.05,
+      "rightWhiskerLength": 0.05,
+      "bottomWhiskerLength": 0.05,
+      "leftWhiskerLength": 0.05,
+      "positionProperty": {
+        "x": 36.663067366016975,
+        "y": 169.1123044937428
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isTriggered",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "paperPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "nameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Reset All."
+          },
+          {
+            "name": "triggeredContextResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Everything reset."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "paperPositionController",
+            "controlledComponentName": "paperPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isTriggeredController",
+            "controlledComponentName": "isTriggered",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "focusByWhiskerProgramNumber",
+            "controlledComponentName": "isFocused",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "20"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playButtonTriggered",
+            "modelComponentNames": [
+              "isTriggered"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isTriggered) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "resetAll.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceFocusResponses",
+            "modelComponentNames": [
+              "isFocused",
+              "nameResponse"
+            ],
+            "referenceComponentNames": [
+              "nameResponse"
+            ],
+            "controlFunctionString": "if(isFocused) {\n    return nameResponse;\n}\n",
+            "lazyLink": false
+          },
+          {
+            "name": "voiceTriggerResponse",
+            "modelComponentNames": [
+              "isTriggered",
+              "nameResponse",
+              "triggeredContextResponse"
+            ],
+            "referenceComponentNames": [
+              "nameResponse",
+              "triggeredContextResponse"
+            ],
+            "controlFunctionString": "if (isTriggered){\n    return nameResponse + triggeredContextResponse;\n}\n// The default behavior is the latest response interrupts a previous response.\n// You may need to set the priority of your responses dependent on your design context.",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 20,
+      "title": "Focus",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 205.28394028966233,
+        "y": 290.22279000077975
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "programs": [
+    {
+      "number": 1528,
+      "title": "",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 528.5665856835966,
+        "y": 385.93092678687765
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// Create a circle with scenery. Save it to the scratchpad so we can reposition it and\r\n// remove it later. Add it to the scene so it is rendered.\r\nscratchpad.circle = new phet.scenery.Circle( 25, { fill: 'red' } );\r\nsharedData.scene.addChild( scratchpad.circle );",
+        "onProgramRemovedCode": "// Remove the circle that was added.\r\nsharedData.scene.removeChild( scratchpad.circle );",
+        "onProgramChangedPositionCode": "scratchpad.circle.center = phet.paperLand.utils.paperToBoardCoordinates(\r\n    phet.paperLand.utils.getProgramCenter( points ),\r\n    sharedData.displaySize.width,\r\n    sharedData.displaySize.height\r\n);",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

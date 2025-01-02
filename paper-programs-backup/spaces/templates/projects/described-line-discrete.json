@@ -1,0 +1,107 @@
+{
+  "programs": [
+    {
+      "number": 1176,
+      "title": "Slider - Discrete",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 287.94377880705844,
+        "y": 206.22059609066392
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          },
+          {
+            "name": "roundedRegionNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "verticalNumberController",
+            "controlledComponentName": "number",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "numberDescription",
+            "modelComponentNames": [
+              "roundedRegionNumber"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (roundedRegionNumber >= 0 && roundedRegionNumber < 2 ) {\r\n  speak( \"This is the starting number.\" );\r\n} else if (roundedRegionNumber >= 2 && roundedRegionNumber < 4 ) {\r\n  speak( \"The number increased by 2 units.\" );\r\n} else if (roundedRegionNumber >= 4 && roundedRegionNumber < 6 ) {\r\n  speak( \"The number increased by 4 units.\" );\r\n} else if (roundedRegionNumber >= 6 && roundedRegionNumber < 8 ) {\r\n  speak( \"The number increased by 6 units.\" );\r\n} else if (roundedRegionNumber >= 8 && roundedRegionNumber < 10 ) {\r\n  speak( \"The number increased by 8 units.\" );\r\n} else if (roundedRegionNumber === 10 ) {\r\n  speak( \"The number increased by 10 units.\" );\r\n} else {\r\n  speak( \"No specific condition matched.\" );\r\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "roundTheNumberLink",
+            "controlledPropertyNames": [
+              "roundedRegionNumber"
+            ],
+            "controlFunctionString": "setRoundedRegionNumber(Math.round(number));\r\nphet.paperLand.console.log(`${number} to ${roundedRegionNumber}`);",
+            "dependencyNames": [
+              "number"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

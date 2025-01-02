@@ -1,0 +1,151 @@
+{
+  "programs": [
+    {
+      "number": 1,
+      "title": "Multimodal Paper",
+      "keywords": "",
+      "description": "A bounded image with sound. Model components and controllers for paper position, rotation, scale, and bounds.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 247.97623154962668,
+        "y": 123.52228156909658
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "paperPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "paperRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "paperScale",
+            "propertyType": "NumberProperty",
+            "min": "0.0001",
+            "max": "1",
+            "defaultValue": "0.001"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "positionController",
+            "controlledComponentName": "paperPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "boundsController",
+            "controlledComponentName": "paperBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "rotationController",
+            "controlledComponentName": "paperRotation",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "paperSound",
+            "modelComponentNames": [
+              "paperPosition"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setOutputLevel(1/paperPosition.y);\r\nsetPlaybackRate(paperPosition.x*20);",
+            "lazyLink": false,
+            "soundFileName": "b-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage",
+            "modelComponentNames": [
+              "paperPosition",
+              "paperRotation",
+              "paperScale",
+              "paperBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Sets the image scale to from the model component for scale\r\nsetScale( 0.03 );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( paperRotation );\r\n\r\n// Set image to page bounds\r\nmatchBounds(paperBounds, false);\r\n\r\n\r\n\r\n// Sets the image center to match the model component for image position\r\n// setCenterX( paperPosition.x );\r\n// setCenterY( paperPosition.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

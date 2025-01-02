@@ -1,0 +1,83 @@
+{
+  "programs": [
+    {
+      "number": 252,
+      "title": "Movable Text",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 247.5589301442186,
+        "y": 288.66626145160086
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "textPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "textPositionController",
+            "controlledComponentName": "textPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [
+          {
+            "name": "textView",
+            "modelComponentNames": [
+              "textPosition"
+            ],
+            "controlFunctionString": "// Set the string you want to show.\r\nsetString( 'Hello, Paper Playground!' );\r\n\r\n// Set your desired font size\r\nsetFontSize( 32 );\r\n\r\n// Set the position (after setting string so that center is correct)\r\nsetCenterX( phet.paperLand.utils.paperToBoardX( textPosition.x, sharedData.displaySize.width ));\r\nsetCenterY( phet.paperLand.utils.paperToBoardY( textPosition.y, sharedData.displaySize.height ));",
+            "lazyLink": false
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

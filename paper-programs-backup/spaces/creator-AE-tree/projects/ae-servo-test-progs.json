@@ -1,0 +1,409 @@
+{
+  "programs": [
+    {
+      "number": 7,
+      "title": "Servo Control by Rotation",
+      "keywords": "rotation, servo, microbit, uart",
+      "description": "Sends rotation value mapped from 0-255  as UART string to be read by micro:bit and set servo pin in order to set servo position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 90.21919806509896,
+        "y": 169.2272169879605
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "servoPositionNumber",
+            "propertyType": "NumberProperty",
+            "min": "0",
+            "max": "180",
+            "defaultValue": "90"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "servoValueString",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "setServoPosition",
+            "controlledComponentName": "servoPositionNumber",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "numberToStringforUART",
+            "controlledPropertyNames": [
+              "servoValueString"
+            ],
+            "controlFunctionString": "//Only send integers to the servo, easier on the makecode string to number parser to have an integer\r\nsetServoValueString(String(Math.round(servoPositionNumber)));",
+            "dependencyNames": [
+              "servoPositionNumber"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "sendServoPositionToMicroBitRX",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "writeStringToCharacteristic(servoValueString);\r\n\r\nphet.paperLand.console.log(`Sending ${servoValueString} to microbit`);",
+            "dependencyNames": [
+              "servoValueString"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1833,
+      "title": "UART to IO Pins (LEDs) with Markers",
+      "keywords": "",
+      "description": "This program sends a string over UART RX to set p0 to up (red marker) or p1 to up (green marker), which will light up an LED in circuit with those pins.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 268.9157276251636,
+        "y": 79.7665498146512
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "led1p0UpBoolean",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "p0RedMarkerController",
+            "controlledComponentName": "led1p0UpBoolean",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "p0BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (led1p0UpBoolean) {\r\n    str = \"p0U\";\r\n} else {\r\n    str = \"p0D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nphet.paperLand.console.log(`pin 0 being set to ${str}`);\r\n",
+            "dependencyNames": [
+              "led1p0UpBoolean"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1421,
+      "title": "Servo Control by Marker",
+      "keywords": "rotation, servo, microbit, uart",
+      "description": "Sends rotation value mapped from 0-255  as UART string to be read by micro:bit and set servo pin in order to set servo position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 375,
+        "y": 338.90487038015385
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "servoIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "servoIsOnController",
+            "controlledComponentName": "servoIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "sendServoPositionToMicroBitRX_Copy1",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (servoIsOn) {\r\n    str = \"45\";\r\n} else {\r\n    str = \"135\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nphet.paperLand.console.log(`servo speed being set to ${str}`);\r\n",
+            "dependencyNames": [
+              "servoIsOn"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1294,
+      "title": "Old Servo Control by Marker_Copy",
+      "keywords": "rotation, servo, microbit, uart",
+      "description": "Sends rotation value mapped from 0-255  as UART string to be read by micro:bit and set servo pin in order to set servo position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 216.65695190429688,
+        "y": 520.0290555381237
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "servoIsOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "servoPositionNumber_Copy1_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "180",
+            "defaultValue": "90"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "servoValueString_Copy1_Copy1",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "servoIsOnController_Copy1",
+            "controlledComponentName": "servoIsOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "numberToStringforUART_Copy1_Copy1",
+            "controlledPropertyNames": [
+              "servoValueString_Copy1_Copy1"
+            ],
+            "controlFunctionString": "//Only send integers to the servo, easier on the makecode string to number parser to have an integer\r\nsetServoValueString_Copy1_Copy1(String(Math.round(servoPositionNumber_Copy1_Copy1)));",
+            "dependencyNames": [
+              "servoPositionNumber_Copy1_Copy1"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "sendServoPositionToMicroBitRX_Copy1_Copy1",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (servoIsOn_Copy1) {\r\n    str = \"0\";\r\n} else {\r\n    str = \"180\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nphet.paperLand.console.log(`servo speed being set to ${str}`);\r\n",
+            "dependencyNames": [
+              "servoIsOn_Copy1",
+              "servoValueString_Copy1_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

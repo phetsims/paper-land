@@ -1,0 +1,88 @@
+{
+  "programs": [
+    {
+      "number": 1464,
+      "title": "Paper Dial",
+      "keywords": "dial, custom code, rotation, paper controller",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 254.5156058937373,
+        "y": 163.2817647377986
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "dialValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [
+          {
+            "name": "valueDisplay",
+            "modelComponentNames": [
+              "dialValue"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setString( dialValue.toFixed( 0 ) );\r\nsetFontSize( 64 );\r\n\r\nsetCenterX( 0.5 );\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "if ( markers && markers[ 0 ] && markers[ 0 ].positionOnPaper ) {\r\n  const x = markers[ 0 ].positionOnPaper.x;\r\n  const y = markers[ 0 ].positionOnPaper.y;\r\n\r\n    // Calculate the differences from the center of the paper\r\n  let dx = x - 0.5;\r\n  let dy = y - 0.5;\r\n  \r\n  // Use Math.atan2() to get the angle in radians\r\n  let angleRadians = Math.atan2(dy, dx);\r\n  \r\n  // If you prefer the angle in degrees\r\n  let angleDegrees = angleRadians * (180 / Math.PI);\r\n\r\n  // Normalize the angle to 0-360 degrees\r\n  angleDegrees = (angleDegrees + 360) % 360;\r\n\r\n  // make the rotation increase the value moving counter-clockwise\r\n  angleDegrees = 360 - angleDegrees;\r\n\r\n  // manually get the dial value component from paper-land\r\n  const dialValueComponent = phet.paperLand.getModelComponent( 'dialValue' );\r\n\r\n  // set the value to the calculated angle in degrees\r\n  dialValueComponent.value = angleDegrees;\r\n}",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

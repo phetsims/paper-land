@@ -1,0 +1,1156 @@
+{
+  "programs": [
+    {
+      "number": 717,
+      "title": "Sound 1",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 52.815551049715026,
+        "y": 71.90352715480283
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter",
+            "controlledComponentName": "paperBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController",
+            "controlledComponentName": "markerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl",
+            "controlledComponentName": "soundPlaybackRate",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl",
+            "controlledComponentName": "soundOutputLevel",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound",
+            "modelComponentNames": [
+              "markerIsOn",
+              "soundPlaybackRate",
+              "soundOutputLevel"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate}`);\r\nphet.paperLand.console.log(`${soundOutputLevel}`);\r\n\r\n\r\nif (markerIsOn) {\r\n    setPlaybackRate(soundPlaybackRate);\r\n    setOutputLevel(soundOutputLevel);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks000.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage",
+            "modelComponentNames": [
+              "paperBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2049,
+      "title": "Rate and Output Text",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 153.45617769603277,
+        "y": 450.0969001147368
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "reportValuesArrayLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "reportValuesArray"
+            ],
+            "derivation": "return reportValuesArray.length;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [
+          {
+            "name": "reportValuesArray",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "reportValuesArrayLength",
+            "arrayAddedItemReferenceName": "reportValuesArrayAddedItem",
+            "arrayRemovedItemReferenceName": "reportValuesArrayRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "reportValuesArrayAddedItem"
+          },
+          {
+            "name": "reportValuesArrayRemovedItem"
+          }
+        ],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [
+          {
+            "name": "parametersText",
+            "modelComponentNames": [
+              "reportValuesArray",
+              "reportValuesArrayLength"
+            ],
+            "referenceComponentNames": [
+              "reportValuesArray"
+            ],
+            "controlFunctionString": "setLeft(0);\r\nsetCenterY(0.1);\r\nsetFontSize(15);\r\n\r\nphet.paperLand.console.log(`array length is ${reportValuesArrayLength}`);\r\n\r\nlet result;\r\n\r\nif (reportValuesArrayLength === 0) {\r\n    result = \"The array is empty.\";\r\n} else if (reportValuesArrayLength === 1) {\r\n    result = `${reportValuesArray.rate1}`;\r\n} else if (reportValuesArrayLength === 2) {\r\n    result = \"The array has two elements.\";\r\n} else if (reportValuesArrayLength === 3) {\r\n    result = \"The array has three elements.\";\r\n} else if (reportValuesArrayLength === 4) {\r\n    result = \"The array has four elements.\";\r\n} else if (reportValuesArrayLength === 5) {\r\n    result = \"The array has five elements.\";\r\n} else if (reportValuesArrayLength === 6) {\r\n    result = \"The array has six elements.\";\r\n} else if (reportValuesArrayLength === 7) {\r\n    result = \"The array has seven elements.\";\r\n} else if (reportValuesArrayLength === 8) {\r\n    result = \"The array has eight elements.\";\r\n} else if (reportValuesArrayLength === 9) {\r\n    result = \"The array has nine elements.\";\r\n} else if (reportValuesArrayLength === 10) {\r\n    result = \"The array has ten elements.\";\r\n} else {\r\n    result = \"The array has more than ten elements.\";\r\n}\r\n\r\nsetString(result);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 280,
+      "title": "Sound 2",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 145.97482101068022,
+        "y": 106.59673881496371
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate_Copy1",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds_Copy1",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters_Copy1",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate_Copy1"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel_Copy1"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter_Copy1",
+            "controlledComponentName": "paperBounds_Copy1",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy1",
+            "controlledComponentName": "markerIsOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl_Copy1",
+            "controlledComponentName": "soundPlaybackRate_Copy1",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl_Copy1",
+            "controlledComponentName": "soundOutputLevel_Copy1",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound_Copy1",
+            "modelComponentNames": [
+              "markerIsOn_Copy1",
+              "soundPlaybackRate_Copy1",
+              "soundOutputLevel_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate_Copy1}`);\r\nphet.paperLand.console.log(`${soundOutputLevel_Copy1}`);\r\n\r\n\r\nif (markerIsOn_Copy1) {\r\n    setPlaybackRate(soundPlaybackRate_Copy1);\r\n    setOutputLevel(soundOutputLevel_Copy1);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks002.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage_Copy1",
+            "modelComponentNames": [
+              "paperBounds_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds_Copy1, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 665,
+      "title": "Sound 3",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 185.24704914700305,
+        "y": 162.48563615256785
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate_Copy2",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel_Copy2",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds_Copy2",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters_Copy2",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate_Copy2"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel_Copy2"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter_Copy2",
+            "controlledComponentName": "paperBounds_Copy2",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy2",
+            "controlledComponentName": "markerIsOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl_Copy2",
+            "controlledComponentName": "soundPlaybackRate_Copy2",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl_Copy2",
+            "controlledComponentName": "soundOutputLevel_Copy2",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound_Copy2",
+            "modelComponentNames": [
+              "markerIsOn_Copy2",
+              "soundPlaybackRate_Copy2",
+              "soundOutputLevel_Copy2"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate_Copy2}`);\r\nphet.paperLand.console.log(`${soundOutputLevel_Copy2}`);\r\n\r\n\r\nif (markerIsOn_Copy2) {\r\n    setPlaybackRate(soundPlaybackRate_Copy2);\r\n    setOutputLevel(soundOutputLevel_Copy2);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks003.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage_Copy2",
+            "modelComponentNames": [
+              "paperBounds_Copy2"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds_Copy2, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1268,
+      "title": "Sound 4",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 203.94026080716392,
+        "y": 219.95107594905144
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy3",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate_Copy3",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel_Copy3",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds_Copy3",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters_Copy3",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate_Copy3"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel_Copy3"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter_Copy3",
+            "controlledComponentName": "paperBounds_Copy3",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy3",
+            "controlledComponentName": "markerIsOn_Copy3",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl_Copy3",
+            "controlledComponentName": "soundPlaybackRate_Copy3",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl_Copy3",
+            "controlledComponentName": "soundOutputLevel_Copy3",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound_Copy3",
+            "modelComponentNames": [
+              "markerIsOn_Copy3",
+              "soundPlaybackRate_Copy3",
+              "soundOutputLevel_Copy3"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate_Copy3}`);\r\nphet.paperLand.console.log(`${soundOutputLevel_Copy3}`);\r\n\r\n\r\nif (markerIsOn_Copy3) {\r\n    setPlaybackRate(soundPlaybackRate_Copy3);\r\n    setOutputLevel(soundOutputLevel_Copy3);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks004.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage_Copy3",
+            "modelComponentNames": [
+              "paperBounds_Copy3"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds_Copy3, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 452,
+      "title": "Sound 5",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 231.7884128980458,
+        "y": 253.95354996633392
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy4",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate_Copy4",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel_Copy4",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds_Copy4",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters_Copy4",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate_Copy4"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel_Copy4"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter_Copy4",
+            "controlledComponentName": "paperBounds_Copy4",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy4",
+            "controlledComponentName": "markerIsOn_Copy4",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl_Copy4",
+            "controlledComponentName": "soundPlaybackRate_Copy4",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl_Copy4",
+            "controlledComponentName": "soundOutputLevel_Copy4",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound_Copy4",
+            "modelComponentNames": [
+              "markerIsOn_Copy4",
+              "soundPlaybackRate_Copy4",
+              "soundOutputLevel_Copy4"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate_Copy4}`);\r\nphet.paperLand.console.log(`${soundOutputLevel_Copy4}`);\r\n\r\n\r\nif (markerIsOn_Copy4) {\r\n    setPlaybackRate(soundPlaybackRate_Copy4);\r\n    setOutputLevel(soundOutputLevel_Copy4);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks005.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage_Copy4",
+            "modelComponentNames": [
+              "paperBounds_Copy4"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds_Copy4, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 304,
+      "title": "Sound 6",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 246.79026841100767,
+        "y": 330.4986247433003
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy5",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate_Copy5",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel_Copy5",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paperBounds_Copy5",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sound1Parameters_Copy5",
+            "arrayName": "reportValuesArray",
+            "itemSchema": [
+              {
+                "entryName": "rate1",
+                "componentName": "soundPlaybackRate_Copy5"
+              },
+              {
+                "entryName": "level1",
+                "componentName": "soundOutputLevel_Copy5"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paperBoundsSetter_Copy5",
+            "controlledComponentName": "paperBounds_Copy5",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy5",
+            "controlledComponentName": "markerIsOn_Copy5",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl_Copy5",
+            "controlledComponentName": "soundPlaybackRate_Copy5",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl_Copy5",
+            "controlledComponentName": "soundOutputLevel_Copy5",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound_Copy5",
+            "modelComponentNames": [
+              "markerIsOn_Copy5",
+              "soundPlaybackRate_Copy5",
+              "soundOutputLevel_Copy5"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate_Copy5}`);\r\nphet.paperLand.console.log(`${soundOutputLevel_Copy5}`);\r\n\r\n\r\nif (markerIsOn_Copy5) {\r\n    setPlaybackRate(soundPlaybackRate_Copy5);\r\n    setOutputLevel(soundOutputLevel_Copy5);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks006.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "paperImage_Copy5",
+            "modelComponentNames": [
+              "paperBounds_Copy5"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paperBounds_Copy5, false );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "paper-sound.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

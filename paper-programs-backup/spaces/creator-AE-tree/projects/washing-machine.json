@@ -1,0 +1,155 @@
+{
+  "programs": [
+    {
+      "number": 479,
+      "title": "Servo Controller",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 204.65669521280054,
+        "y": 104.34499237536534
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "redMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blueMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "greenMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blackMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "redMarkerController",
+            "controlledComponentName": "redMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "blueMarkerController",
+            "controlledComponentName": "blueMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "greenMarkerController",
+            "controlledComponentName": "greenMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "blackControllerController",
+            "controlledComponentName": "blackMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMicrobit",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\nif (redMarkerOn && !blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    //sendString = \"speed:50\";\r\n    //calling the wash routine from MakeCode\r\n    //sendString = \"wash:50\";\r\n    //phet.paperLand.console.log(\"sending wash command\");\r\n}\r\nelse if (!redMarkerOn && blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    sendString = \"speed:-50\";\r\n}\r\nelse if (redMarkerOn && blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    sendString = \"speed:0\";\r\n}\r\nelse if (!redMarkerOn && !blueMarkerOn && greenMarkerOn && !blackMarkerOn) {\r\n    //sendString = \"angle:0\";\r\n    sendString = \"wash:50\";\r\n    phet.paperLand.console.log(\"sending wash command\");\r\n}\r\nelse if (!redMarkerOn && !blueMarkerOn && !greenMarkerOn && blackMarkerOn) {\r\n    //sendString = \"angle:180\";\r\n    //sendString = \"wash:50\";\r\n    //phet.paperLand.console.log(\"sending wash command\");\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "redMarkerOn",
+              "blueMarkerOn",
+              "greenMarkerOn",
+              "blackMarkerOn"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

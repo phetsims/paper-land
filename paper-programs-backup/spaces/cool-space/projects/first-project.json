@@ -1,0 +1,164 @@
+{
+  "programs": [
+    {
+      "number": 123,
+      "title": "FireballCard",
+      "keywords": "",
+      "description": "",
+      "positionProperty": {
+        "x": 199.88928664787645,
+        "y": 172.7127002932187
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "IMG_Location",
+            "propertyType": "Vector2Property",
+            "defaultX": "200",
+            "defaultY": "200"
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "Location_Sensor",
+            "controlledComponentName": "IMG_Location",
+            "controlType": "MATCH_CENTER"
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "Sound",
+            "modelComponentNames": [
+              "IMG_Location",
+              "PLAY_ZONE"
+            ],
+            "controlFunctionString": "if (PLAY_ZONE.containsPoint(IMG_Location)) { // Check if IMG_Location is within the playback zone defined by PLAY_ZONE\n    setPlaybackRate(1); // Set the playback rate to normal speed\n    setOutputLevel(1); // Set the output level to full volume\n    play(); // Play the selected sound\n  }",
+            "soundFileName": "quadBeatTracksBuildingBuildingTracks003.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "FireballImage",
+            "modelComponentNames": [
+              "IMG_Location"
+            ],
+            "controlFunctionString": "setScale(3,3);\nsetCenterX(IMG_Location.x)\nsetCenterY(IMG_Location.y)",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/fire-fireball.gif"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1,
+      "title": "Bounds",
+      "keywords": "",
+      "description": "",
+      "positionProperty": {
+        "x": 338.8464099635485,
+        "y": 152.93614016136758
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "P1_HAND",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "3333333333333333333333333333333333333333333333333333333333333333333333",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "PLAY_ZONE",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": ".3333333333333333333333333333333333333333333333333333333333333333333333",
+            "defaultMinY": "0",
+            "defaultMaxX": ".666666666666666666666666666666666666666666666666666666666666666666666",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "P2_HAND",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": ".666666666666666666666666666666666666666666666666666666666666666666666",
+            "defaultMinY": 0,
+            "defaultMaxX": ".999999999999999999999999999999999999399999999999999999999999999999999",
+            "defaultMaxY": 1
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,688 @@
+{
+  "programs": [
+    {
+      "number": 479,
+      "title": "Servo Position By Marker",
+      "keywords": "180servo",
+      "description": "Set the position of the servo arm using markers.",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 203.2901616834742,
+        "y": 31.649192186518157
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "redMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blueMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "greenMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blackMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "redMarkerController",
+            "controlledComponentName": "redMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "blueMarkerController",
+            "controlledComponentName": "blueMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "greenMarkerController",
+            "controlledComponentName": "greenMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "blackControllerController",
+            "controlledComponentName": "blackMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMicrobit",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\n// in MakeCode file, the word speed applies to continuous servo\r\n// angle is for 180 servo\r\n\r\nif (redMarkerOn && !blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    //sendString = \"speed:50\";\r\n    sendString = \"angle:30\";\r\n}\r\nelse if (!redMarkerOn && blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    //sendString = \"speed:-50\";\r\n    sendString = \"angle:60\";\r\n}\r\n//else if (redMarkerOn && blueMarkerOn && !greenMarkerOn && !blackMarkerOn) {\r\n    //sendString = \"speed:0\";\r\n//}  This would turn off the continuous servo if both a red and blue marker were on.\r\n\r\nelse if (!redMarkerOn && !blueMarkerOn && greenMarkerOn && !blackMarkerOn) {\r\n    sendString = \"angle:120\";\r\n}\r\nelse if (!redMarkerOn && !blueMarkerOn && !greenMarkerOn && blackMarkerOn) {\r\n    sendString = \"angle:150\";\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "redMarkerOn",
+              "blueMarkerOn",
+              "greenMarkerOn",
+              "blackMarkerOn"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 340,
+      "title": "Servo Controller_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 16.09892587975989,
+        "y": 98.66780353846477
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "redMarkerOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blueMarkerOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "greenMarkerOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blackMarkerOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "redMarkerController_Copy1",
+            "controlledComponentName": "redMarkerOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "blueMarkerController_Copy1",
+            "controlledComponentName": "blueMarkerOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "greenMarkerController_Copy1",
+            "controlledComponentName": "greenMarkerOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "blackControllerController_Copy1",
+            "controlledComponentName": "blackMarkerOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMicrobit_Copy1",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\nif (redMarkerOn_Copy1 && !blueMarkerOn_Copy1 && !greenMarkerOn_Copy1 && !blackMarkerOn_Copy1) {\r\n    sendString = \"speed:50\";\r\n}\r\nelse if (!redMarkerOn_Copy1 && blueMarkerOn_Copy1 && !greenMarkerOn_Copy1 && !blackMarkerOn_Copy1) {\r\n    sendString = \"speed:-50\";\r\n}\r\nelse if (redMarkerOn_Copy1 && blueMarkerOn_Copy1 && !greenMarkerOn_Copy1 && !blackMarkerOn_Copy1) {\r\n    sendString = \"speed:0\";\r\n}\r\nelse if (!redMarkerOn_Copy1 && !blueMarkerOn_Copy1 && greenMarkerOn_Copy1 && !blackMarkerOn_Copy1) {\r\n    sendString = \"angle:0\";\r\n}\r\nelse if (!redMarkerOn_Copy1 && !blueMarkerOn_Copy1 && !greenMarkerOn_Copy1 && blackMarkerOn_Copy1) {\r\n    sendString = \"angle:180\";\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "redMarkerOn_Copy1",
+              "blueMarkerOn_Copy1",
+              "greenMarkerOn_Copy1",
+              "blackMarkerOn_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1627,
+      "title": "Random Servo Position By Marker",
+      "keywords": "180servo, random",
+      "description": "Marker placement generates a random number [0-180] and servo moves to that position.",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 15.678229442494626,
+        "y": 163.9362014035121
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "redMarkerOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blueMarkerOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "greenMarkerOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blackMarkerOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "redMarkerController_Copy2",
+            "controlledComponentName": "redMarkerOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "blueMarkerController_Copy2",
+            "controlledComponentName": "blueMarkerOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "greenMarkerController_Copy2",
+            "controlledComponentName": "greenMarkerOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "blackControllerController_Copy2",
+            "controlledComponentName": "blackMarkerOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMicrobit_Copy2",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\n// general formula:  Math. floor(Math. random() * (max - min + 1)) + min\r\n// generate a random number between 0 and 180\r\nlet myRandomNumber = Math.floor(Math.random() * (180 - 0 + 1)) + 0;\r\nphet.paperLand.console.log(\"myRandomNumber\" + myRandomNumber);\r\n// in MakeCode file, the word speed applies to continuous servo\r\n// angle is for 180 servo\r\n\r\nif (redMarkerOn_Copy2 && !blueMarkerOn_Copy2 && !greenMarkerOn_Copy2 && !blackMarkerOn_Copy2) {\r\n    //sendString = \"speed:50\";\r\n    sendString = \"angle:\" + myRandomNumber;\r\n}\r\nelse if (!redMarkerOn_Copy2 && blueMarkerOn_Copy2 && !greenMarkerOn_Copy2 && !blackMarkerOn_Copy2) {\r\n    //sendString = \"speed:-50\";\r\n    sendString = \"angle:60\";\r\n}\r\n//else if (redMarkerOn_Copy2 && blueMarkerOn_Copy2 && !greenMarkerOn_Copy2 && !blackMarkerOn_Copy2) {\r\n    //sendString = \"speed:0\";\r\n//}  This would turn off the continuous servo if both a red and blue marker were on.\r\n\r\nelse if (!redMarkerOn_Copy2 && !blueMarkerOn_Copy2 && greenMarkerOn_Copy2 && !blackMarkerOn_Copy2) {\r\n    sendString = \"angle:120\";\r\n}\r\nelse if (!redMarkerOn_Copy2 && !blueMarkerOn_Copy2 && !greenMarkerOn_Copy2 && blackMarkerOn_Copy2) {\r\n    sendString = \"angle:150\";\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "redMarkerOn_Copy2",
+              "blueMarkerOn_Copy2",
+              "greenMarkerOn_Copy2",
+              "blackMarkerOn_Copy2"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1813,
+      "title": "Random Servo Position Simplified",
+      "keywords": "180servo, random",
+      "description": "Marker placement generates a random number [0-180] and servo moves to that position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 275.9786356130897,
+        "y": 116.77440186207588
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "randomRedMarkerOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "randomRedMarkerController",
+            "controlledComponentName": "randomRedMarkerOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeRandomPositionToMicrobit",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let sendString = \"\";\r\n\r\n// general formula:  Math. floor(Math. random() * (max - min + 1)) + min\r\n// generate a random number between 0 and 180\r\nlet myRandomNumber = Math.floor(Math.random() * (180 - 0 + 1)) + 0;\r\nphet.paperLand.console.log(\"myRandomNumber\" + myRandomNumber);\r\n// in MakeCode file, the word speed applies to continuous servo\r\n// angle is for 180 servo\r\n\r\nif (randomRedMarkerOn) {\r\n    //sendString = \"speed:50\";\r\n    sendString = \"angle:\" + myRandomNumber;\r\n}\r\n\r\nif (sendString !== \"\") {\r\n    phet.paperLand.console.log(`Sending servo command ${sendString}`)\r\n    writeStringToCharacteristic(sendString);\r\n}",
+            "dependencyNames": [
+              "randomRedMarkerOn"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 212,
+      "title": "LED by Pins",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 78.86623029585229,
+        "y": 221.42669219874202
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "ledPin0On",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "ledPin13On",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "receivedUARTString",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "p0BlueMarkerController",
+            "controlledComponentName": "ledPin0On",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "p13BlackMarkerController",
+            "controlledComponentName": "ledPin13On",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "p0BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\nif (ledPin0On){\n    // for now writing to p0 to test\n    str = \"p0U\";\n} else {\n    str = \"p0D\";\n}\n\nwriteStringToCharacteristic(str);\nconsole.log(`pin 9 being set to ${str}`);\n",
+            "dependencyNames": [
+              "ledPin0On"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          },
+          {
+            "name": "readMicrobitUARTStrings",
+            "controlledPropertyNames": [
+              "receivedUARTString"
+            ],
+            "controlFunctionString": "setReceivedUARTString(deviceValueString);\n\nphet.paperLand.console.log(`received ${deviceValueString}`);\n",
+            "dependencyNames": [],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": false,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+          },
+          {
+            "name": "p13BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\nif (ledPin13On){\n    // for now writing to p0 to test\n    str = \"p13U\";\n} else {\n    str = \"p13D\";\n}\n\nwriteStringToCharacteristic(str);\nconsole.log(`pin 13 being set to ${str}`);\n",
+            "dependencyNames": [
+              "ledPin13On"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,460 @@
+{
+  "programs": [
+    {
+      "number": 1,
+      "title": "2 Diamond",
+      "keywords": "card, suit",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 279.43309372918134,
+        "y": 194.0020752980616
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "addOnePoint2D",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "addTwoPoints2D",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "speak2DCard",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "twoDiamondPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "twoDiamondValue",
+            "propertyType": "NumberProperty",
+            "min": "0",
+            "max": "10",
+            "defaultValue": "2"
+          },
+          {
+            "name": "twoDiamondRotationValue",
+            "propertyType": "NumberProperty",
+            "min": "0",
+            "max": "1",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "twoDiamondBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "twoDiamondArrayData",
+            "arrayName": "cardArray",
+            "itemSchema": [
+              {
+                "entryName": "bounds",
+                "componentName": "twoDiamondBounds"
+              },
+              {
+                "entryName": "value",
+                "componentName": "twoDiamondValue"
+              },
+              {
+                "entryName": "suit",
+                "componentName": "twoDiamondSuit"
+              },
+              {
+                "entryName": "rotation",
+                "componentName": "twoDiamondRotationValue"
+              },
+              {
+                "entryName": "position",
+                "componentName": "twoDiamondPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "twoDiamondSuit",
+            "propertyType": "StringProperty",
+            "defaultValue": "club"
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "twoDiamondPositionController",
+            "controlledComponentName": "twoDiamondPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "twoDiamondBoundsController",
+            "controlledComponentName": "twoDiamondBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [
+          {
+            "name": "addOnePointGreenMarker",
+            "controlledComponentName": "addOnePoint2D",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "addTwoPointsBlueMarker",
+            "controlledComponentName": "addTwoPoints2D",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "speak2DCardController",
+            "controlledComponentName": "speak2DCard",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "inPlaySound2D",
+            "modelComponentNames": [
+              "twoDiamondPosition",
+              "playArea"
+            ],
+            "referenceComponentNames": [
+              "playArea"
+            ],
+            "controlFunctionString": "if (playArea.containsPoint( twoDiamondPosition )) {\r\n    setOutputLevel(0.7);\r\n    play();\r\n    phet.paperLand.console.log(`Playing sound.`);\r\n\r\n} else {\r\n    setOutputLevel( 0 );\r\n}",
+            "lazyLink": false,
+            "soundFileName": "generalSoftClick.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "twoDiamondView",
+            "modelComponentNames": [
+              "twoDiamondBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "let twoDiamondBoundsLarger = new phet.dot.Bounds2(twoDiamondBounds.minX - 0.03, twoDiamondBounds.minY - 0.05, twoDiamondBounds.maxX + 0.03, twoDiamondBounds.maxY + 0.05);\r\n\r\nsetRectBounds(twoDiamondBoundsLarger);\r\n\r\nmoveToFront();",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "#FF10F0",
+              "lineWidth": "10",
+              "rectWidth": "0.3",
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "markerValueBoost2D",
+            "controlledPropertyNames": [
+              "twoDiamondValue"
+            ],
+            "controlFunctionString": "if ( addOnePoint2D ) {\r\n    setTwoDiamondValue( twoDiamondValue + 1 );\r\n} else if ( addTwoPoints2D ) {\r\n    setTwoDiamondValue( twoDiamondValue + 2 );\r\n} else {\r\n    setTwoDiamondValue( 2 );\r\n}\r\n\r\nphet.paperLand.console.log(`Card value is: ${twoDiamondValue}`);",
+            "dependencyNames": [
+              "addOnePoint2D",
+              "addTwoPoints2D"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 21,
+      "title": "Game",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.01,
+      "rightWhiskerLength": 0.01,
+      "bottomWhiskerLength": 0.01,
+      "leftWhiskerLength": 0.01,
+      "positionProperty": {
+        "x": 513.392330142906,
+        "y": 261.2686548850642
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "cardArrayLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "cardArray"
+            ],
+            "derivation": "return cardArray.length;"
+          }
+        ],
+        "namedBounds2Properties": [
+          {
+            "name": "playArea",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": 0,
+            "defaultMaxX": "0.66",
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [
+          {
+            "name": "cardArray",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "cardArrayLength",
+            "arrayAddedItemReferenceName": "cardArrayAddedItem",
+            "arrayRemovedItemReferenceName": "cardArrayRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "cardArrayAddedItem"
+          },
+          {
+            "name": "cardArrayRemovedItem"
+          }
+        ],
+        "namedStringProperties": [
+          {
+            "name": "activeCardRedSuit",
+            "propertyType": "StringProperty",
+            "defaultValue": "none"
+          },
+          {
+            "name": "activeCardBlackSuit",
+            "propertyType": "StringProperty",
+            "defaultValue": "none"
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "playAreaView",
+            "modelComponentNames": [
+              "playArea"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( playArea );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "black",
+              "lineWidth": "5",
+              "rectWidth": "0.3",
+              "rectHeight": "0.3",
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [
+          {
+            "name": "backgroundComponent",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "darkgreen"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "activeCardSetter",
+            "controlledPropertyNames": [
+              "activeCardRedSuit",
+              "activeCardBlackSuit"
+            ],
+            "controlFunctionString": "if (cardArrayLength > 0) {\r\n    if (playArea.containsPoint(cardArray[0].position)) {\r\n        if (cardArray[0].suit === 'heart' || cardArray[0].suit === 'diamond') {\r\n            setActiveCardRedSuit(cardArray[0].suit);\r\n        } else if (cardArray[0].suit === 'club' || cardArray[0].suit === 'spade') {\r\n            setActiveCardBlackSuit(cardArray[0].suit);\r\n        }\r\n    }\r\n    phet.paperLand.console.log(`Card Array, item 0, suit: ${cardArray[0].suit}`);\r\n    phet.paperLand.console.log(`Card Array, item 0, position: ${cardArray[0].position}`);\r\n    phet.paperLand.console.log(`Card Array, item 0, value: ${cardArray[0].value}`);\r\n\r\n    phet.paperLand.console.log(`Card Array, item 0, suit: ${cardArray[1].suit}`);\r\n    phet.paperLand.console.log(`Card Array, item 0, position: ${cardArray[1].position}`);\r\n    phet.paperLand.console.log(`Card Array, item 0, value: ${cardArray[1].value}`);\r\n}\r\n\r\nphet.paperLand.console.log(`Red is ${activeCardRedSuit}`);\r\nphet.paperLand.console.log(`Black is ${activeCardBlackSuit}`);\r\n\r\n// phet.paperLand.console.log(`Card Array, item 1, suit: ${cardArray[1].suit}`);\r\n// phet.paperLand.console.log(`Card Array, item 1, position: ${cardArray[1].position}`);\r\n// phet.paperLand.console.log(`Card Array, item 1, value: ${cardArray[1].value}`);\r\n// phet.paperLand.console.log(`Card Array, item 2, suit: ${cardArray[2].suit}`);\r\n// phet.paperLand.console.log(`Card Array, item 2, position: ${cardArray[2].position}`);\r\n// phet.paperLand.console.log(`Card Array, item 2, value: ${cardArray[2].value}`);",
+            "dependencyNames": [
+              "playArea",
+              "cardArray",
+              "cardArrayLength"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

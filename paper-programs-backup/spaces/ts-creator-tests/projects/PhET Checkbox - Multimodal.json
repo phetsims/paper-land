@@ -1,0 +1,417 @@
+{
+  "programs": [
+    {
+      "number": 183,
+      "title": "Voicing Checkbox 2",
+      "keywords": "Voicing check box that simulates responses for mouse and keyboard.",
+      "description": "Use paper movement to toggle the state of the checkbox from T to F or F to T and to play appropriate Name and Context responses. Use a marker to simulate a focus event to play Name and Hint responses on focus. Create constants to create name response, hint response and two context responses.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 84.13269172830783,
+        "y": 79.9421677880047
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "booleanCheckboxModel",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "focusEventModel",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "rotateToggleController",
+            "controlledComponentName": "booleanCheckboxModel",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "focusEventController",
+            "controlledComponentName": "focusEventModel",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "toggleCheckboxResponses",
+            "modelComponentNames": [
+              "booleanCheckboxModel"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Create constant strings\n // Voicing responses for toggling a checkbox.\n    const nameResponse = 'Force Values.';\n    const contextResponseTrue = 'Shown in newtons.';\n    const contextResponseFalse = 'Hidden.';\n\n// Play name response and context response when rotated\nif (booleanCheckboxModel === true) {\n speak(nameResponse + contextResponseTrue);\n}\nif (booleanCheckboxModel === false) {\n    speak(nameResponse + contextResponseFalse);\n}\n    ",
+            "lazyLink": true
+          },
+          {
+            "name": "focusEventResponses",
+            "modelComponentNames": [
+              "focusEventModel"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Create constant strings\n // Voicing responses for checkbox focus events.\n    const nameResponse = 'Force Values.';\n    const hintResponse = 'Explore with or without newtons.';\n\n// Play name response and hint response when marker is added\nif (focusEventModel) {\n  speak(nameResponse + hintResponse);\n} // else nothing",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "setBackgroundToWhite",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "white"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 487,
+      "title": "Voicing Random Number(s) Button",
+      "keywords": "A button that generates a random number between 1 and 15.",
+      "description": "Idea to simulate a a kicked ball. The generated number is the position on which the kicked ball lands.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 191.6181923074925,
+        "y": 166.8286908667935
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "paperRotatedModel",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "rotatePaperController",
+            "controlledComponentName": "paperRotatedModel",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "kickedBallLandingResponse",
+            "modelComponentNames": [
+              "paperRotatedModel"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": " const randomNumber = Math.floor(Math.random() * 15) + 1;\nsetRandomNumberModel(randomNumber);\n\n if (randomNumber == 0){\n      speak('');\n }\n else {\n    speak('Landing on' + randomNumber);\n }",
+            "lazyLink": false
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 899,
+      "title": "PhET Checkbox",
+      "keywords": "",
+      "description": "A sample checkbox with sound and voiced responses/ descriptions.",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 378.0061931842706,
+        "y": 81.44899216449738
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isEnabled",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "visualPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.5",
+            "defaultY": "0.5"
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "fontSize",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "48",
+            "defaultValue": "24"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "checkboxNameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Force Values"
+          },
+          {
+            "name": "checkedResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Shown in newtons."
+          },
+          {
+            "name": "uncheckedResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Hidden."
+          },
+          {
+            "name": "checkboxHintResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Explore with or without newtons."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "positionController",
+            "controlledComponentName": "visualPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isEnabledRotationController",
+            "controlledComponentName": "isEnabled",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "isFocusedMarkerController",
+            "controlledComponentName": "isFocused",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playCheckboxChecked",
+            "modelComponentNames": [
+              "isEnabled"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "/uploads/checkboxChecked.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "playCheckboxUnchecked",
+            "modelComponentNames": [
+              "isEnabled"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled === false){\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "/uploads/checkboxUnchecked.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceResponsesForChanges",
+            "modelComponentNames": [
+              "isEnabled",
+              "checkboxNameResponse",
+              "checkedResponse",
+              "uncheckedResponse"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled) {\n  speak( checkboxNameResponse + checkedResponse );\n} \nelse {\n  speak( checkboxNameResponse + uncheckedResponse );\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "voiceResponsesForFocus",
+            "modelComponentNames": [
+              "isFocused",
+              "checkboxNameResponse",
+              "checkboxHintResponse"
+            ],
+            "referenceComponentNames": [
+              "checkboxNameResponse"
+            ],
+            "controlFunctionString": "if (isFocused){\n    speak( checkboxNameResponse + checkboxHintResponse );\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "setBackgroundWhite",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "white"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// Create a checkbox and add it to the scene.\r\nconst fontSizeA = phet.paperLand.getModelComponent(`fontSize`);\r\nconst checkboxLabelA = phet.paperLand.getModelComponent(`checkboxNameResponse`);\r\nconst isEnabledA = phet.paperLand.getModelComponent(`isEnabled`);\r\n\r\nconst checkboxLabelText = new phet.scenery.Text(checkboxLabelA.value, {\r\n    font: new phet.sceneryPhet.PhetFont( fontSizeA.value )\r\n});\r\n\r\nconst checkbox = new phet.sun.Checkbox(isEnabledA, checkboxLabelText);\r\nsharedData.scene.addChild(checkbox);\r\nscratchpad.checkbox = checkbox;\r\ncheckbox.moveToFront();",
+        "onProgramRemovedCode": "if (scratchpad.checkbox) {\r\n    sharedData.scene.removeChild(scratchpad.checkbox);\r\n    scratchpad.checkbox = null;\r\n}\r\nelse {\r\n    alert('Error: Checkbox node not found in scratchpad data.');\r\n}",
+        "onProgramChangedPositionCode": "const visualPosition = phet.paperLand.getModelComponent(`visualPosition`);\r\nif (scratchpad.checkbox) {\r\n\r\n    // Center the image based on the position of the paper.\r\n    const centerPositionDisplayUnits = phet.paperLand.utils.paperToBoardCoordinates(visualPosition.value, sharedData.displaySize.width, sharedData.displaySize.height);\r\n    scratchpad.checkbox.centerX = centerPositionDisplayUnits.x;\r\n    scratchpad.checkbox.centerY = centerPositionDisplayUnits.y;\r\n}",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

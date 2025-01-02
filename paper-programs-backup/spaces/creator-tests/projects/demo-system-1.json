@@ -1,0 +1,255 @@
+{
+  "programs": [
+    {
+      "number": 539,
+      "title": "Anchor",
+      "keywords": "",
+      "description": "",
+      "positionProperty": {
+        "x": 231.55404661012471,
+        "y": 296.24263525239826
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "anchorPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "anchorController",
+            "controlledComponentName": "anchorPosition",
+            "controlType": "MATCH_CENTER"
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "anchorCircle",
+            "modelComponentNames": [
+              "anchorPosition"
+            ],
+            "controlFunctionString": "setCenterX( anchorPosition.x );\r\nsetCenterY( anchorPosition.y );",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "#007BFF",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "25",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1376,
+      "title": "Bob",
+      "keywords": "",
+      "description": "",
+      "positionProperty": {
+        "x": 236.2675599713035,
+        "y": 490.96137737221113
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "bobPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "period",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": 10,
+            "defaultValue": 5
+          },
+          {
+            "name": "length",
+            "propertyType": "NumberProperty",
+            "min": "150",
+            "max": "500",
+            "defaultValue": "300"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "bobSound",
+            "modelComponentNames": [
+              "anchorPosition",
+              "bobPosition"
+            ],
+            "controlFunctionString": "  if (window.prevBobX && bobPosition.x < anchorPosition.x && window.prevBobX >= anchorPosition.x) {\r\n    play();\r\n  }\r\n  if (window.prevBobX && bobPosition.x > anchorPosition.x && window.prevBobX <= anchorPosition.x) {\r\n    play();\r\n  }\r\n  window.prevBobX = bobPosition.x; // Store the current x coordinate as the previous one",
+            "soundFileName": "b-tone.mp3",
+            "loop": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "bobCircle",
+            "modelComponentNames": [
+              "bobPosition"
+            ],
+            "controlFunctionString": "setCenterX( bobPosition.x );\r\nsetCenterY( bobPosition.y );",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "#007BFF",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": 50,
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "bobController",
+            "controlledPropertyNames": [
+              "anchorPosition",
+              "bobPosition",
+              "period",
+              "length"
+            ],
+            "controlFunctionString": "    // Compute the angle of the pendulum based on the current time\r\n    var angle = Math.sin(2 * Math.PI * elapsedTime / period);\r\n\r\n    // Compute the new position of the bob based on the angle and length\r\n    var x = anchorPosition.x + length * Math.sin(angle);\r\n    var y = anchorPosition.y + length * Math.cos(angle);\r\n    setBobPosition(new phet.dot.Vector2(x, y));"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

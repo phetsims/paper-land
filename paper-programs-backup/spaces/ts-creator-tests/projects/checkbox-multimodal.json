@@ -1,0 +1,204 @@
+{
+  "programs": [
+    {
+      "number": 899,
+      "title": "Multimodal Checkbox",
+      "keywords": "",
+      "description": "A sample checkbox with sound and voiced responses/ descriptions.\n\nCopy the template into your own project, edit the String Model Components to try out your own name, hint, and checkbox responses. The hint response is optional. To not hear it, just remove it from the View component called voiceResponsesForFocus.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 211.91683138386037,
+        "y": 128.51978544681378
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isEnabled",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "visualPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.5",
+            "defaultY": "0.5"
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "fontSize",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "48",
+            "defaultValue": "24"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "checkboxNameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Force Values"
+          },
+          {
+            "name": "checkedResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Shown in newtons."
+          },
+          {
+            "name": "uncheckedResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Hidden."
+          },
+          {
+            "name": "checkboxHintResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Explore with or without newtons."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "positionController",
+            "controlledComponentName": "visualPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isEnabledRotationController",
+            "controlledComponentName": "isEnabled",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "isFocusedMarkerController",
+            "controlledComponentName": "isFocused",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playCheckboxChecked",
+            "modelComponentNames": [
+              "isEnabled"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "/uploads/checkboxChecked.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "playCheckboxUnchecked",
+            "modelComponentNames": [
+              "isEnabled"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled === false){\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "/uploads/checkboxUnchecked.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceResponsesForChanges",
+            "modelComponentNames": [
+              "isEnabled",
+              "checkboxNameResponse",
+              "checkedResponse",
+              "uncheckedResponse"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled) {\n  speak( checkboxNameResponse + checkedResponse );\n} \nelse {\n  speak( checkboxNameResponse + uncheckedResponse );\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "voiceResponsesForFocus",
+            "modelComponentNames": [
+              "isFocused",
+              "checkboxNameResponse",
+              "checkboxHintResponse"
+            ],
+            "referenceComponentNames": [
+              "checkboxNameResponse"
+            ],
+            "controlFunctionString": "if (isFocused){\n    speak( checkboxNameResponse + checkboxHintResponse ) ;\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "setBackgroundWhite",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "white"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// Create a checkbox and add it to the scene.\r\nconst fontSizeA = phet.paperLand.getModelComponent(`fontSize`);\r\nconst checkboxLabelA = phet.paperLand.getModelComponent(`checkboxNameResponse`);\r\nconst isEnabledA = phet.paperLand.getModelComponent(`isEnabled`);\r\n\r\nconst checkboxLabelText = new phet.scenery.Text(checkboxLabelA.value, {\r\n    font: new phet.sceneryPhet.PhetFont( fontSizeA.value )\r\n});\r\n\r\nconst checkbox = new phet.sun.Checkbox(isEnabledA, checkboxLabelText);\r\nsharedData.scene.addChild(checkbox);\r\nscratchpad.checkbox = checkbox;\r\ncheckbox.moveToFront();",
+        "onProgramRemovedCode": "if (scratchpad.checkbox) {\r\n    sharedData.scene.removeChild(scratchpad.checkbox);\r\n    scratchpad.checkbox = null;\r\n}\r\nelse {\r\n    alert('Error: Checkbox node not found in scratchpad data.');\r\n}",
+        "onProgramChangedPositionCode": "const visualPosition = phet.paperLand.getModelComponent(`visualPosition`);\r\nif (scratchpad.checkbox) {\r\n\r\n    // Center the image based on the position of the paper.\r\n    const centerPositionDisplayUnits = phet.paperLand.utils.paperToBoardCoordinates(visualPosition.value, sharedData.displaySize.width, sharedData.displaySize.height);\r\n    scratchpad.checkbox.centerX = centerPositionDisplayUnits.x;\r\n    scratchpad.checkbox.centerY = centerPositionDisplayUnits.y;\r\n}",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "programs": [
+    {
+      "number": 1657,
+      "title": "Micro:bit PlayMelody",
+      "keywords": "microbit, music",
+      "description": "Follow along on the Instructables here: https://www.instructables.com/Microbit-Note-Sequencer-With-Paper-Playground/",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 210.6559160449823,
+        "y": 213.94662893282631
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "playMelodyTriggerEvent",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "btSend",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "playMelodyPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "lastNoteIndex",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": 10,
+            "defaultValue": "-1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "activeMelody",
+            "propertyType": "StringProperty",
+            "defaultValue": "0,0,0,0,0,0,0,0,0,0"
+          },
+          {
+            "name": "melodyStartTime",
+            "propertyType": "StringProperty",
+            "defaultValue": "0.0"
+          },
+          {
+            "name": "setMelodyNote",
+            "propertyType": "StringProperty",
+            "defaultValue": ""
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "playMelodyPositionController",
+            "controlledComponentName": "playMelodyPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "playActiveMelody",
+            "controlledPropertyNames": [
+              "playMelodyTriggerEvent",
+              "btSend",
+              "lastNoteIndex",
+              "activeMelody",
+              "melodyStartTime",
+              "setMelodyNote"
+            ],
+            "controlFunctionString": "if (playMelodyTriggerEvent) {\r\n    setPlayMelodyTriggerEvent(false);\r\n    setMelodyStartTime(elapsedTime.toString());\r\n\r\n    console.log(`[sendActiveMelody] Starting melody at ${elapsedTime}`);\r\n    console.log(`[sendActiveMelody] Active melody: ${activeMelody}`);\r\n}\r\n\r\n// Melody started, send notes every 0.5 seconds\r\nif (parseFloat(melodyStartTime) > 0.0) {\r\n    let noteIndex = Math.floor((elapsedTime - parseFloat(melodyStartTime)) / 0.5)\r\n    if (noteIndex < 10 && noteIndex !== lastNoteIndex) {\r\n        let melodyArray = activeMelody.split(',');\r\n        console.log(`[sendActiveMelody] Playing note [${noteIndex}]: ${melodyArray[noteIndex]}`);\r\n\r\n        setSetMelodyNote(melodyArray[noteIndex]);\r\n        setBtSend(true);\r\n\r\n        setLastNoteIndex(noteIndex);\r\n    } else {\r\n        setBtSend(false);\r\n    }\r\n    \r\n    if (noteIndex >= 10) {\r\n        setPlayMelodyTriggerEvent(true);\r\n        setLastNoteIndex(-1);\r\n    }\r\n}"
+          }
+        ],
+        "bluetoothListeners": [
+          {
+            "name": "sendActiveMelodyNote",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "if (btSend) {\r\n    let str = \"playNote->\" + setMelodyNote;\r\n\r\n    if (setMelodyNote !== \"\") {\r\n        writeStringToCharacteristic(str);\r\n        phet.paperLand.console.log(`[PlayMelody] Sent ${str} to micro:bit.`);\r\n    }\r\n}",
+            "dependencyNames": [
+              "btSend",
+              "setMelodyNote"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "let activeMelody = phet.paperLand.getModelComponent('activeMelody');\r\nlet melodyArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\r\n\r\nif (markers.length > 0) {\r\n    // phet.paperLand.console.log(`Found ${markers.length} markers`);\r\n    for (var i = 0; i < markers.length; i++) {\r\n        let markerPosition = new phet.dot.Vector2(markers[i].positionOnPaper.x, markers[i].positionOnPaper.y);\r\n        let markerNote = Math.floor(markerPosition.y * 7);\r\n        let markerTime = Math.floor(markerPosition.x * 10);\r\n\r\n        // phet.paperLand.console.log(`Marker [${i}]: Note ${markerNote} at time ${markerTime}`);\r\n\r\n        switch (markerNote) {\r\n            case 0: melodyArray[markerTime] = 262;\r\n                    break;\r\n            case 1: melodyArray[markerTime] = 294;\r\n                    break;\r\n            case 2: melodyArray[markerTime] = 330;\r\n                    break;\r\n            case 3: melodyArray[markerTime] = 349;\r\n                    break;\r\n            case 4: melodyArray[markerTime] = 392;\r\n                    break;\r\n            case 5: melodyArray[markerTime] = 440;\r\n                    break;\r\n            case 6: melodyArray[markerTime] = 494;\r\n                    break;\r\n            default: melodyArray[markerTime] = 0;\r\n        }\r\n    }\r\n}\r\n\r\nconsole.log(`[1657:onProgramMarkersAdded] Active melody: ${melodyArray.toString()}`);\r\nactiveMelody.set(melodyArray.toString());",
+        "onProgramMarkersRemovedCode": "let activeMelody = phet.paperLand.getModelComponent('activeMelody');\r\nlet melodyArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\r\n\r\nif (markers.length > 0) {\r\n    // phet.paperLand.console.log(`Found ${markers.length} markers`);\r\n    for (var i = 0; i < markers.length; i++) {\r\n        let markerPosition = new phet.dot.Vector2(markers[i].positionOnPaper.x, markers[i].positionOnPaper.y);\r\n        let markerNote = Math.floor(markerPosition.y * 7);\r\n        let markerTime = Math.floor(markerPosition.x * 10);\r\n\r\n        // phet.paperLand.console.log(`Marker [${i}]: Note ${markerNote} at time ${markerTime}`);\r\n\r\n        switch (markerNote) {\r\n            case 0: melodyArray[markerTime] = 262;\r\n                    break;\r\n            case 1: melodyArray[markerTime] = 294;\r\n                    break;\r\n            case 2: melodyArray[markerTime] = 330;\r\n                    break;\r\n            case 3: melodyArray[markerTime] = 349;\r\n                    break;\r\n            case 4: melodyArray[markerTime] = 392;\r\n                    break;\r\n            case 5: melodyArray[markerTime] = 440;\r\n                    break;\r\n            case 6: melodyArray[markerTime] = 494;\r\n                    break;\r\n            default: melodyArray[markerTime] = 0;\r\n        }\r\n    }\r\n}\r\n\r\nconsole.log(`[1657:onProgramMarkersRemoved] Active melody: ${melodyArray}`);\r\nactiveMelody.set(melodyArray.toString());",
+        "onProgramMarkersChangedPositionCode": "let activeMelody = phet.paperLand.getModelComponent('activeMelody');\r\nlet melodyArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];\r\n\r\nif (markers.length > 0) {\r\n    // phet.paperLand.console.log(`Found ${markers.length} markers`);\r\n    for (var i = 0; i < markers.length; i++) {\r\n        let markerPosition = new phet.dot.Vector2(markers[i].positionOnPaper.x, markers[i].positionOnPaper.y);\r\n        let markerNote = Math.floor(markerPosition.y * 7);\r\n        let markerTime = Math.floor(markerPosition.x * 10);\r\n\r\n        // phet.paperLand.console.log(`Marker [${i}]: Note ${markerNote} at time ${markerTime}`);\r\n\r\n        switch (markerNote) {\r\n            case 0: melodyArray[markerTime] = 262;\r\n                    break;\r\n            case 1: melodyArray[markerTime] = 294;\r\n                    break;\r\n            case 2: melodyArray[markerTime] = 330;\r\n                    break;\r\n            case 3: melodyArray[markerTime] = 349;\r\n                    break;\r\n            case 4: melodyArray[markerTime] = 392;\r\n                    break;\r\n            case 5: melodyArray[markerTime] = 440;\r\n                    break;\r\n            case 6: melodyArray[markerTime] = 494;\r\n                    break;\r\n            default: melodyArray[markerTime] = 0;\r\n        }\r\n    }\r\n}\r\n\r\nconsole.log(`[1657:onProgramMarkersChangedPosition] Active melody: ${melodyArray}`);\r\nactiveMelody.set(melodyArray.toString());",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

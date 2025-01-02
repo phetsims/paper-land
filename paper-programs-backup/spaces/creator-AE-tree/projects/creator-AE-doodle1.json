@@ -1,0 +1,120 @@
+{
+  "programs": [
+    {
+      "number": 563,
+      "title": "Circle_Copy",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 188.89958130703084,
+        "y": 139.73672708553534
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "circlePosition_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "circlePositionController_Copy1",
+            "controlledComponentName": "circlePosition_Copy1",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "circleView_Copy1",
+            "modelComponentNames": [
+              "circlePosition_Copy1"
+            ],
+            "controlFunctionString": "setCenterX( circlePosition_Copy1.x );\r\nsetCenterY( circlePosition_Copy1.y );",
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "#007BFF",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.2",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

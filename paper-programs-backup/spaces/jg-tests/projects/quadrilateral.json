@@ -1,0 +1,427 @@
+{
+  "programs": [
+    {
+      "number": 1510,
+      "title": "Load Simulation",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 343.8999938964844,
+        "y": 192.03235820738792
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// Create the simulation simFrame.\r\nconst simFrame = document.createElement('iframe');\r\nsimFrame.src = 'https://phet-dev.colorado.edu/html/quadrilateral/1.0.0-paperLandTest.3/phet/quadrilateral_en_phet.html?brand=phet&ea&deviceConnection&postMessageOnLoad&voicingInitiallyEnabled'\r\n//simFrame.src = 'http://localhost:8080/quadrilateral/quadrilateral_en.html?brand=phet&ea&debugger&deviceConnection&postMessageOnLoad&voicingInitiallyEnabled'\r\n\r\n// Styling to make the iframe go on top of the interactive display.\r\n// HACK ALERT!! If this id changes, there will be problems.\r\nconst displayElement = document.getElementById('scenery-display');\r\n\r\n// Remove the iframe from the flow of the document and adjust its size\r\nsimFrame.style.position = 'absolute';\r\nsimFrame.style.width = `${displayElement.offsetWidth}px`;\r\nsimFrame.style.height = `${displayElement.offsetHeight}px`;\r\nsimFrame.style.top = `${displayElement.offsetTop}px`;\r\nsimFrame.style.left = `${displayElement.offsetLeft}px`;\r\n\r\n// Add the iframe as a sibling of the display element.\r\ndisplayElement.parentNode.insertBefore(simFrame, displayElement.nextSibling);\r\n\r\n// Save a reference to the iframe so that it can be removed onProgramRemoved.\r\nscratchpad.simFrame = simFrame;\r\n\r\n// A message that will be sent from paper playground into the simulation, attempting to calibrate.\r\nconst loadMessage = JSON.stringify({\r\n    type: 'quadrilateralCalibration',\r\n    width: sharedData.displaySize.width,\r\n    height: sharedData.displaySize.height\r\n});\r\n\r\nconst iframeWindow = simFrame.contentWindow;\r\n\r\n// Try sending the message right away just in case (but we probably need to wait for the sim to load).\r\niframeWindow.postMessage(loadMessage, '*');\r\n\r\n// The sim sends a message when loading is complete (postMessageOnLoad query param). When loading is complete,\r\n// send a message back attempting to calibrate to map paper playground coordinates to simulation coordinates.\r\nscratchpad.windowMessageListener = event => {\r\n    const data = JSON.parse(event.data);\r\n\r\n    if (data.type === 'load') {\r\n        iframeWindow.postMessage(loadMessage, '*');\r\n    }\r\n};\r\nwindow.addEventListener('message', scratchpad.windowMessageListener);\r\n\r\n// Forward 4 positions in normalized paper-land coordinates to the simulation.\r\nconst updateFromPaperLandPositions = (vertexA, vertexB, vertexC, vertexD) => {\r\n\r\n    // Convert each point from normalized paper-land coordinates to\r\n    // display coordinates - working in display coordinates is better\r\n    // because no matter what the projection transform is, paper positions\r\n    // will more likely match quadrilateral positions.\r\n    const displayWidth = sharedData.displaySize.width;\r\n    const displayHeight = sharedData.displaySize.height;\r\n    const displayPointA = phet.paperLand.utils.paperToDisplayCoordinates( vertexA, displayWidth, displayHeight );\r\n    const displayPointB = phet.paperLand.utils.paperToDisplayCoordinates( vertexB, displayWidth, displayHeight );\r\n    const displayPointC = phet.paperLand.utils.paperToDisplayCoordinates( vertexC, displayWidth, displayHeight );\r\n    const displayPointD = phet.paperLand.utils.paperToDisplayCoordinates( vertexD, displayWidth, displayHeight );\r\n\r\n    iframeWindow.postMessage(JSON.stringify({\r\n        type: 'quadrilateralControl',\r\n        vertexA: {\r\n            x: displayPointA.x,\r\n            y: displayPointA.y\r\n        },\r\n        vertexB: {\r\n            x: displayPointB.x,\r\n            y: displayPointB.y\r\n        },\r\n        vertexC: {\r\n            x: displayPointC.x,\r\n            y: displayPointC.y\r\n        },\r\n        vertexD: {\r\n            x: displayPointD.x,\r\n            y: displayPointD.y\r\n        },\r\n    }), '*');\r\n};\r\n\r\n// When all corner programs are detected, add a multilink that will update\r\n// simulation positions to match paper positions.\r\nscratchpad.vertexPositionMultilink = phet.paperLand.addModelPropertyMultilink(\r\n    ['vertexA', 'vertexB', 'vertexC', 'vertexD'],\r\n    (vertexA, vertexB, vertexC, vertexD) => {\r\n        updateFromPaperLandPositions( vertexA, vertexB, vertexC, vertexD );\r\n\r\n    }\r\n);\r\n\r\n// When the program representing all vertex positions is added,\r\n// forward those values to the simulation.\r\nscratchpad.combinedVertexPositionMultilink = phet.paperLand.addModelPropertyMultilink(\r\n    [ 'vertexACombined', 'vertexBCombined', 'vertexCCombined', 'vertexDCombined' ],\r\n    ( vertexA, vertexB, vertexC, vertexD ) => {\r\n        updateFromPaperLandPositions( vertexA, vertexB, vertexC, vertexD );\r\n    }\r\n);",
+        "onProgramRemovedCode": "// Remove the simFrame from the body when the program is removed\r\nscratchpad.simFrame.remove();\r\ndelete scratchpad.simFrame;\r\n\r\n// Remove the multilink for the vertex positions on individual programs.\r\nphet.paperLand.removeModelPropertyMultilink(\r\n    [ 'vertexA', 'vertexB', 'vertexC', 'vertexD' ],\r\n    scratchpad.vertexPositionMultilink\r\n);\r\ndelete scratchpad.vertexPositionMultilink;\r\n\r\n// Remove the multilink for the vertex positions on the same program.\r\nphet.paperLand.removeModelPropertyMultilink(\r\n    [ 'vertexACombined', 'vertexBCombined', 'vertexCCombined', 'vertexDCombined' ],\r\n    scratchpad.combinedVertexPositionMultilink\r\n);\r\ndelete scratchpad.combinedVertexPositionMultilink;",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1972,
+      "title": "Vertex A",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 17,
+        "y": 178.73655775409253
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "vertexA",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "vertexAController",
+            "controlledComponentName": "vertexA",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 700,
+      "title": "Vertex B",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 17,
+        "y": 232.5511281271215
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "vertexB",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "vertexBController",
+            "controlledComponentName": "vertexB",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 227,
+      "title": "Vertex C",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 17,
+        "y": 291.35204187552927
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "vertexC",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "vertexCController",
+            "controlledComponentName": "vertexC",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1549,
+      "title": "Vertex D",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 17,
+        "y": 345.30743137912845
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "vertexD",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "vertexDController",
+            "controlledComponentName": "vertexD",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 519,
+      "title": "Quad (All Vertices)",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 178.80003356933594,
+        "y": 177.810657332221
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "vertexACombined",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "vertexBCombined",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "vertexCCombined",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "vertexDCombined",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "// Since all of these components are created by this program,\r\n// they are guaranteed to be available.\r\nconst vA = phet.paperLand.getModelComponent( 'vertexACombined' );\r\nconst vB = phet.paperLand.getModelComponent( 'vertexBCombined' );\r\nconst vC = phet.paperLand.getModelComponent( 'vertexCCombined' );\r\nconst vD = phet.paperLand.getModelComponent( 'vertexDCombined' );\r\n\r\n// We can use Vector2.fromStateObject go easily convert from\r\n// paper programs object literal to dot.Vector2 instance.\r\n// Note that paper programs points order just happens to match\r\n// Quadrilateral order.\r\nvA.value = phet.dot.Vector2.fromStateObject( points[ 0 ] );\r\nvB.value = phet.dot.Vector2.fromStateObject( points[ 1 ] );\r\nvC.value = phet.dot.Vector2.fromStateObject( points[ 2 ] );\r\nvD.value = phet.dot.Vector2.fromStateObject( points[ 3 ] );",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

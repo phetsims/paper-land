@@ -1,0 +1,160 @@
+{
+  "programs": [
+    {
+      "number": 547,
+      "title": "PhET Checkbox",
+      "keywords": "",
+      "description": "A sample checkbox with sound and description.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 214.91276041666663,
+        "y": 86.696760622473
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isEnabled",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "centerPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.5",
+            "defaultY": "0.5"
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "fontSize",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "48",
+            "defaultValue": "24"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "checkboxLabel",
+            "propertyType": "StringProperty",
+            "defaultValue": "Force Values"
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "centerPositionController",
+            "controlledComponentName": "centerPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isEnabledMarkerController",
+            "controlledComponentName": "isEnabled",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "isFocusedRotationController",
+            "controlledComponentName": "isFocused",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "viewDescriptionForceValues",
+            "modelComponentNames": [
+              "isEnabled"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isEnabled) {\n  speak( \"Force values shown in newtons.\" );\n} \nelse {\n  speak( \"Force values hidden.\" );\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "viewDescriptionForFocus",
+            "modelComponentNames": [
+              "isFocused",
+              "checkboxLabel"
+            ],
+            "referenceComponentNames": [
+              "checkboxLabel"
+            ],
+            "controlFunctionString": "if (isFocused){\n    speak( checkboxLabel );\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "setBackgroundWhite",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "fillColor": "white"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// Create a checkbox and add it to the scene.\r\nconst fontSizeA = phet.paperLand.getModelComponent(`fontSize`);\r\nconst checkboxLabelA = phet.paperLand.getModelComponent(`checkboxLabel`);\r\nconst isEnabledA = phet.paperLand.getModelComponent(`isEnabled`);\r\n\r\nconst checkboxLabelText = new phet.scenery.Text(checkboxLabelA.value, {\r\n    font: new phet.sceneryPhet.PhetFont(fontSizeA.value)\r\n});\r\n\r\nconst checkbox = new phet.sun.Checkbox(isEnabledA, checkboxLabelText);\r\nsharedData.scene.addChild(checkbox);\r\nscratchpad.checkbox = checkbox;\r\ncheckbox.moveToFront();",
+        "onProgramRemovedCode": "if (scratchpad.checkbox) {\r\n    sharedData.scene.removeChild(scratchpad.checkbox);\r\n    scratchpad.checkbox = null;\r\n}\r\nelse {\r\n    alert('Error: Checkbox node not found in scratchpad data.');\r\n}",
+        "onProgramChangedPositionCode": "const centerPosition = phet.paperLand.getModelComponent(`centerPosition`);\r\nif (scratchpad.checkbox) {\r\n\r\n    // Center the image based on the position of the paper.\r\n    const centerPositionDisplayUnits = phet.paperLand.utils.paperToBoardCoordinates(centerPosition.value, sharedData.displaySize.width, sharedData.displaySize.height);\r\n    scratchpad.checkbox.centerX = centerPositionDisplayUnits.x;\r\n    scratchpad.checkbox.centerY = centerPositionDisplayUnits.y;\r\n}",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

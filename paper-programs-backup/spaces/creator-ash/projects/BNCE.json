@@ -1,0 +1,111 @@
+{
+  "programs": [
+    {
+      "number": 394,
+      "title": "Animated Image",
+      "keywords": "",
+      "description": "",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 324.03620895260065,
+        "y": 385.3131383818017
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "rotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playsound",
+            "modelComponentNames": [
+              "position"
+            ],
+            "controlFunctionString": "if (position.x > window.innerWidth / 2) {\n    setPlaybackRate(1);\n    setOutputLevel(0.5);\n    play();\n} else {\n    setPlaybackRate(0.5);\n    setOutputLevel(0.2);\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "b-tone.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "image",
+            "modelComponentNames": [
+              "position",
+              "rotation"
+            ],
+            "controlFunctionString": "setRotation( rotation );\r\n\r\nsetCenterX( position.x );\r\nsetCenterY( position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "frosted.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "animation",
+            "controlledPropertyNames": [
+              "position",
+              "rotation"
+            ],
+            "controlFunctionString": "// Move the position up and down over time with a sin function\r\nsetPosition( new phet.dot.Vector2( 0.5, Math.sin( elapsedTime ) * 0.25 + 0.4 ) );\r\n\r\n// Make the rotation change a bit so that it looks like it moves up and down\r\nsetRotation( Math.sin( elapsedTime ) * 0.2 );\r\n"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

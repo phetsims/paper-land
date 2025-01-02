@@ -1,0 +1,378 @@
+{
+  "programs": [
+    {
+      "number": 572,
+      "title": "Membranes",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 201.57406940076464,
+        "y": 162.6631264698441
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "topCO2Number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "50"
+          },
+          {
+            "name": "bottomCO2Number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "50",
+            "defaultValue": "0"
+          },
+          {
+            "name": "topOxygenNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "0"
+          },
+          {
+            "name": "bottomOxygenNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "500",
+            "defaultValue": "40"
+          },
+          {
+            "name": "diffusionCoefficient",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": "0.005"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "roundedTopCO2Number",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "topCO2Number"
+            ],
+            "derivation": "return Math.round(topCO2Number);"
+          },
+          {
+            "name": "roundedBottomCO2Number",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "bottomCO2Number"
+            ],
+            "derivation": "return Math.round(bottomCO2Number);\r\n"
+          }
+        ],
+        "namedBounds2Properties": [
+          {
+            "name": "viewBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0",
+            "defaultMinY": "0",
+            "defaultMaxX": "1",
+            "defaultMaxY": "1"
+          },
+          {
+            "name": "topSolutionBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": "0.5"
+          },
+          {
+            "name": "bottomSolutionBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": "0.5",
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "simBoundsView",
+            "modelComponentNames": [
+              "viewBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( viewBounds );\r\nmoveToFront();",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "gold",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "topSolutionBoundsView",
+            "modelComponentNames": [
+              "topSolutionBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds(topSolutionBounds);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "bottomSolutionBoundsView",
+            "modelComponentNames": [
+              "bottomSolutionBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds(bottomSolutionBounds);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "blue",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "calcNewCO2NumberAnimation",
+            "controlledPropertyNames": [
+              "topCO2Number",
+              "bottomCO2Number"
+            ],
+            "controlFunctionString": "const concentrationDifference = topCO2Number - bottomCO2Number;\r\n\r\nlet change;// Calculate the change in concentration\r\n\r\nchange = concentrationDifference * 0.01 * dt;\r\n\r\n// Update the concentrations\r\nsetBottomCO2Number( bottomCO2Number + change );\r\nsetTopCO2Number( topCO2Number - change );\r\n\r\nconsole.log(`change: ${change}`);\r\nconsole.log(`top: ${topCO2Number}`);\r\nconsole.log(`bottom: ${bottomCO2Number}`);"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 621,
+      "title": "Description ",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 254.65127511100775,
+        "y": 69.39777945712265
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "cO2NumberSpeech",
+            "modelComponentNames": [
+              "roundedTopCO2Number",
+              "roundedBottomCO2Number"
+            ],
+            "referenceComponentNames": [
+              "roundedBottomCO2Number"
+            ],
+            "controlFunctionString": "speak( `${roundedTopCO2Number} in top, ${roundedBottomCO2Number} in bottom.` );",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

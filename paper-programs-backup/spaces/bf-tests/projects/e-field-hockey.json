@@ -1,0 +1,1541 @@
+{
+  "programs": [
+    {
+      "number": 979,
+      "title": "Obstacle 3 Bounds",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 410,
+        "y": 279.732255934104
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "obstacle3Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.25",
+            "defaultMinY": "0.25",
+            "defaultMaxX": "0.75",
+            "defaultMaxY": "0.75"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "obstacle3ArrayItem",
+            "arrayName": "obstacleArray",
+            "itemSchema": [
+              {
+                "entryName": "bounds",
+                "componentName": "obstacle3Bounds"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "obstacle3BoundPaperController",
+            "controlledComponentName": "obstacle3Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "obstacle3View",
+            "modelComponentNames": [
+              "obstacle3Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds(obstacle3Bounds);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "green",
+              "lineWidth": "3",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1112,
+      "title": "Charge 1 (+)",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 24.539403775271325,
+        "y": 82.03410938231283
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "charge1Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "charge1Charge",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": "1",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "charge1ArrayItem",
+            "arrayName": "chargeArray",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "charge1Position"
+              },
+              {
+                "entryName": "charge",
+                "componentName": "charge1Charge"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "charge1PositionController",
+            "controlledComponentName": "charge1Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "charge1View",
+            "modelComponentNames": [
+              "charge1Position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( charge1Position.x );\r\nsetCenterY( charge1Position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "#007BFF",
+              "stroke": "white",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.01",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1893,
+      "title": "Charge 3 (+)",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 51.46457242946343,
+        "y": 175.72400429099702
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "charge3Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "charge3Charge",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": "1",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "charge3ArrayItem",
+            "arrayName": "chargeArray",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "charge3Position"
+              },
+              {
+                "entryName": "charge",
+                "componentName": "charge3Charge"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "charge3PositionController",
+            "controlledComponentName": "charge3Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "charge3View",
+            "modelComponentNames": [
+              "charge3Position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( charge3Position.x );\r\nsetCenterY( charge3Position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "blue",
+              "stroke": "white",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.01",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 858,
+      "title": "Test Charge",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 264.72526244328833,
+        "y": 155.32641210803294
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "testChargePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.1",
+            "defaultY": "0.5"
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "testChargeCharge",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": "1",
+            "defaultValue": "1"
+          },
+          {
+            "name": "testChargeScale",
+            "propertyType": "NumberProperty",
+            "min": "0.05",
+            "max": "1",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "electricFieldMagnitude",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "testChargePosition",
+              "testChargeCharge",
+              "chargeArray"
+            ],
+            "derivation": "// // Calculate the distance between the test charge and charge 1\r\n// const dx1 = testChargePosition.x - charge1Position.x;\r\n// const dy1 = testChargePosition.y - charge1Position.y;\r\n// const distance1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);\r\n\r\n// // Calculate the distance between the test charge and charge 2\r\n// const dx2 = testChargePosition.x - charge2Position.x;\r\n// const dy2 = testChargePosition.y - charge2Position.y;\r\n// const distance2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);\r\n\r\n// // Calculate the distance between the test charge and charge 2\r\n// const dx3 = testChargePosition.x - charge3Position.x;\r\n// const dy3 = testChargePosition.y - charge3Position.y;\r\n// const distance3 = Math.sqrt(dx3 * dx3 + dy3 * dy3);\r\n\r\n// // Calculate the distance between the test charge and charge 2\r\n// const dx4 = testChargePosition.x - charge4Position.x;\r\n// const dy4 = testChargePosition.y - charge4Position.y;\r\n// const distance4 = Math.sqrt(dx4 * dx4 + dy4 * dy4);\r\n\r\n// let field1\r\n// let field2\r\n// let field3\r\n// let field4\r\n// let totalField\r\n\r\n// // Calculate the electric field caused by each charge\r\n// if (distance1 !== 0 && distance2 !== 0 && distance3 !== 0 && distance4 !== 0) {\r\n//     field1 = (charge1Charge / (distance1 * distance1));\r\n//     field2 = (charge2Charge / (distance2 * distance2));\r\n//     field3 = (charge3Charge / (distance3 * distance3));\r\n//     field4 = (charge4Charge / (distance4 * distance4));\r\n\r\n//     // Calculate the total electric field by summing up the individual fields\r\n\r\n//     totalField = {\r\n//         x: field1 * (dx1 / distance1) + field2 * (dx2 / distance2) + field3 * (dx3 / distance3) + field4 * (dx4 / distance4),\r\n//         y: field1 * (dy1 / distance1) + field2 * (dy2 / distance2) + field3 * (dy3 / distance3) + field4 * (dy4 / distance4)\r\n//     };\r\n// }\r\n\r\n// // phet.paperLand.console.log( totalField.x, totalField.y );\r\n\r\n// return totalField;\r\n\r\nlet fields = [];\r\nlet distances = [];\r\n\r\n// Calculate the distance and electric field for each charge\r\nfor (let i = 0; i < chargeArray.length; i++) {\r\n  const dx = testChargePosition.x - chargeArray[i].position.x;\r\n  const dy = testChargePosition.y - chargeArray[i].position.y;\r\n  const distance = Math.sqrt(dx * dx + dy * dy);\r\n  const field = chargeArray[i].charge / (distance * distance);\r\n  \r\n  distances.push(distance);\r\n  fields.push(field);\r\n}\r\n\r\n// Calculate the total electric field by summing up the individual fields\r\nlet totalField = { x: 0, y: 0 };\r\nfor (let i = 0; i < chargeArray.length; i++) {\r\n  const dx = testChargePosition.x - chargeArray[i].position.x;\r\n  const dy = testChargePosition.y - chargeArray[i].position.y;\r\n  totalField.x += fields[i] * (dx / distances[i]);\r\n  totalField.y += fields[i] * (dy / distances[i]);\r\n}\r\n\r\nphet.paperLand.console.log( totalField.x, totalField.y );\r\n\r\nreturn totalField;"
+          },
+          {
+            "name": "netForceX",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "electricFieldMagnitude",
+              "testChargeCharge"
+            ],
+            "derivation": "return electricFieldMagnitude.x * testChargeCharge;"
+          },
+          {
+            "name": "netForceY",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "electricFieldMagnitude",
+              "testChargeCharge"
+            ],
+            "derivation": "return electricFieldMagnitude.y * testChargeCharge;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [
+          {
+            "name": "chargeArray",
+            "propertyType": "ObservableArray"
+          },
+          {
+            "name": "obstacleArray",
+            "propertyType": "ObservableArray"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "eFieldMagnitudeSound",
+            "modelComponentNames": [
+              "electricFieldMagnitude"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "let eFieldMagnitude = Math.sqrt(Math.pow(electricFieldMagnitude.x,2)+Math.pow(electricFieldMagnitude.y,2));\r\n\r\nif (eFieldMagnitude != 0) {\r\n  setPlaybackRate(eFieldMagnitude/5);\r\n//   play();\r\n} else {\r\n  setPlaybackRate(1);\r\n  setOutputLevel(0);\r\n//   play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "stringsLoopMiddleCOscilloscope.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "testChargeShape",
+            "modelComponentNames": [
+              "testChargePosition",
+              "testChargeScale",
+              "targetBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX(testChargePosition.x);\r\nsetCenterY(testChargePosition.y);\r\n\r\nif (targetBounds.containsPoint(testChargePosition)) {\r\n    setScale(7);\r\n    setFill('pink');\r\n    setTimeout(function () {\r\n        setScale(1);\r\n        setFill('white');\r\n    }, 3000);\r\n} ",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "white",
+              "stroke": "blue",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": "0.005",
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "testChargeAnimation",
+            "controlledPropertyNames": [
+              "obstacle3Bounds",
+              "testChargePosition",
+              "testChargeCharge",
+              "testChargeScale",
+              "viewBounds",
+              "obstacle1Bounds",
+              "obstacle2Bounds",
+              "targetBounds",
+              "netForceX",
+              "netForceY"
+            ],
+            "controlFunctionString": "//The new position is calculated by adding the product of the net force in the x-direction and the time step (`netForceX * dt`) to the current x position of the test charge, and similarly for the y-direction (`netForceY * dt`)\r\nif (obstacle1Bounds.containsPoint(testChargePosition) || obstacle2Bounds.containsPoint(testChargePosition) || obstacle3Bounds.containsPoint(testChargePosition)) {\r\n    setTestChargePosition(new phet.dot.Vector2(0.1, 0.5));\r\n} else if (targetBounds.containsPoint(testChargePosition)) {\r\n    setTimeout(function () {\r\n        setTestChargePosition(new phet.dot.Vector2(0.1, 0.5));\r\n    }, 3000);\r\n}\r\nelse if (viewBounds.containsPoint(testChargePosition)) {\r\n    phet.paperLand.console.log( 'Calculating trajectory!');    \r\n    setTestChargePosition(new phet.dot.Vector2(testChargePosition.x + (netForceX / 100 * dt), testChargePosition.y + (netForceY / 100 * dt)));\r\n} else {\r\n    phet.paperLand.console.log(testChargePosition.x, testChargePosition.y);\r\n    setTestChargePosition(new phet.dot.Vector2(0.1, 0.5));\r\n}"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1079,
+      "title": "Charge 4 (-)",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 71.57303966707121,
+        "y": 258.78549045579217
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "charge4Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "charge4Charge",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": "1",
+            "defaultValue": "-1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "charge4ArrayItem",
+            "arrayName": "chargeArray",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "charge4Position"
+              },
+              {
+                "entryName": "charge",
+                "componentName": "charge4Charge"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "charge4PositionController",
+            "controlledComponentName": "charge4Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "charge4View",
+            "modelComponentNames": [
+              "charge4Position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( charge4Position.x );\r\nsetCenterY( charge4Position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "yellow",
+              "stroke": "white",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.01",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 152,
+      "title": "Outer Bounds",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 410.00000000000006,
+        "y": 150.41868228951614
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "viewBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0",
+            "defaultMinY": "0",
+            "defaultMaxX": "1",
+            "defaultMaxY": "1"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "viewboundsView",
+            "modelComponentNames": [
+              "viewBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( viewBounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "lightblue",
+              "lineWidth": "5",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1386,
+      "title": "Charge 2 (-)",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 105.53043376361015,
+        "y": 167.4307964838752
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "charge2Position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "charge2Charge",
+            "propertyType": "NumberProperty",
+            "min": "-1",
+            "max": "1",
+            "defaultValue": "-1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "charge2ArrayItem",
+            "arrayName": "chargeArray",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "charge2Position"
+              },
+              {
+                "entryName": "charge",
+                "componentName": "charge2Charge"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "charge2PositionController",
+            "controlledComponentName": "charge2Position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "charge2View",
+            "modelComponentNames": [
+              "charge2Position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( charge2Position.x );\r\nsetCenterY( charge2Position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "orange",
+              "stroke": "white",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.01",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1526,
+      "title": "Obstacle 1 Bounds",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 406.1000061035156,
+        "y": 455.1763224819292
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "obstacle1Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.25",
+            "defaultMinY": "0.25",
+            "defaultMaxX": "0.75",
+            "defaultMaxY": "0.75"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "obstacle1ArrayItem",
+            "arrayName": "obstacleArray",
+            "itemSchema": [
+              {
+                "entryName": "bounds",
+                "componentName": "obstacle1Bounds"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "obstacle1BoundPaperController",
+            "controlledComponentName": "obstacle1Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "obstacle1View",
+            "modelComponentNames": [
+              "obstacle1Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( obstacle1Bounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "green",
+              "lineWidth": "3",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1865,
+      "title": "Obstacle 2 Bounds",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 291.9308684976767,
+        "y": 507.6
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "obstacle2Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.25",
+            "defaultMinY": "0.25",
+            "defaultMaxX": "0.75",
+            "defaultMaxY": "0.75"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "obstacle2ArrayItem",
+            "arrayName": "obstacleArray",
+            "itemSchema": [
+              {
+                "entryName": "bounds",
+                "componentName": "obstacle2Bounds"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "obstacle2BoundPaperController",
+            "controlledComponentName": "obstacle2Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "obstacle2View",
+            "modelComponentNames": [
+              "obstacle2Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( obstacle2Bounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "green",
+              "lineWidth": "3",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 572,
+      "title": "Target",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 398.8999938964844,
+        "y": 372.4361380572266
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "targetBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.25",
+            "defaultMinY": "0.25",
+            "defaultMaxX": "0.75",
+            "defaultMaxY": "0.75"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "targetBoundPaperController",
+            "controlledComponentName": "targetBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "targetView",
+            "modelComponentNames": [
+              "targetBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( targetBounds );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "transparent",
+              "stroke": "#d4af37",
+              "lineWidth": "3",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 813,
+      "title": "Description",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 412.5,
+        "y": 271.72550137906416
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "resetSpeech",
+            "modelComponentNames": [
+              "obstacle3Bounds",
+              "testChargePosition",
+              "viewBounds",
+              "obstacle1Bounds",
+              "obstacle2Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (obstacle1Bounds.containsPoint(testChargePosition) || obstacle2Bounds.containsPoint(testChargePosition) || obstacle3Bounds.containsPoint(testChargePosition)) {\r\n    speak( 'Wall hit. Position reset.' );\r\n} else if (viewBounds.containsPoint(testChargePosition)) {\r\n} else {\r\n    speak( 'Left window. Position reset.' );    \r\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "goalDescription",
+            "modelComponentNames": [
+              "testChargePosition",
+              "targetBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (targetBounds.containsPoint(testChargePosition)) {\r\n  speak( \"GOAL!\" );\r\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

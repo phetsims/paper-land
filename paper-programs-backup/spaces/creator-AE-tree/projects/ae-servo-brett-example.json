@@ -1,0 +1,164 @@
+{
+  "programs": [
+    {
+      "number": 1630,
+      "title": "Servo Control by Marker",
+      "keywords": "rotation, servo, microbit, uart",
+      "description": "Sends rotation value mapped from 0-255  as UART string to be read by micro:bit and set servo pin in order to set servo position.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 124.62277134193363,
+        "y": 103.55944693564541
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "blueMarkerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "redMarkerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "greenMarkerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "blackMarkerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "outboundString",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "blueMarkerIsOn",
+              "redMarkerIsOn",
+              "greenMarkerIsOn",
+              "blackMarkerIsOn"
+            ],
+            "derivation": "let outputString = '';\r\n\r\n\r\nif (blueMarkerIsOn && !redMarkerIsOn && !greenMarkerIsOn && !blackMarkerIsOn) {\r\n    outputString = \"speed:50\";\r\n}\r\nelse if (!blueMarkerIsOn && redMarkerIsOn && !greenMarkerIsOn && !blackMarkerIsOn) {\r\n    outputString =\"speed:-50\";\r\n}\r\nelse if (!blueMarkerIsOn && !redMarkerIsOn && greenMarkerIsOn && !blackMarkerIsOn) {\r\n    outputString =\"angle:0\";\r\n}\r\nelse if (!blueMarkerIsOn && !redMarkerIsOn && !greenMarkerIsOn && blackMarkerIsOn) {\r\n    outputString =\"angle:90\";\r\n}\r\nelse {\r\n    outputString = \"speed:0\"\r\n}\r\n\r\nphet.paperLand.console.log( outputString );\r\nreturn outputString;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "blueMarkerOnPaper",
+            "controlledComponentName": "blueMarkerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "blue"
+          },
+          {
+            "name": "redMarkerOnPaper",
+            "controlledComponentName": "redMarkerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          },
+          {
+            "name": "greenMarkerOnPaper",
+            "controlledComponentName": "greenMarkerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "green"
+          },
+          {
+            "name": "blackMarkerOnPaper",
+            "controlledComponentName": "blackMarkerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "black"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "writeToMbitUART",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "writeStringToCharacteristic(outboundString);\r\n\r\nphet.paperLand.console.log(`servo speed being set to ${outboundString}`);\r\n",
+            "dependencyNames": [
+              "outboundString"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

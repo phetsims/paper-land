@@ -1,0 +1,442 @@
+{
+  "programs": [
+    {
+      "number": 979,
+      "title": "Game Model",
+      "keywords": "game, dice, model",
+      "description": "A simple dice rolling game.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 214.5713634198788,
+        "y": 126.39555876766141
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "diceOneValue",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "20",
+            "defaultValue": "1"
+          },
+          {
+            "name": "diceTwoValue",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "20",
+            "defaultValue": "1"
+          },
+          {
+            "name": "roundCounter",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "3",
+            "defaultValue": "0"
+          },
+          {
+            "name": "player1WonRounds",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "3",
+            "defaultValue": "0"
+          },
+          {
+            "name": "player2WonRounds",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "3",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [
+          {
+            "name": "scoreView",
+            "modelComponentNames": [
+              "diceOneValue",
+              "diceTwoValue",
+              "roundCounter",
+              "player1WonRounds",
+              "player2WonRounds"
+            ],
+            "controlFunctionString": "setCenterX( 400 );\r\nsetCenterY( 100 );\r\nsetFontSize( 38 );\r\nsetTextColor( `#03fc66` );\r\nsetFontFamily( 'serif' );\r\n\r\nif (roundCounter === 3 ){\r\n    if ( player1WonRounds > player2WonRounds ) {\r\n        setString( `Player One wins!` );\r\n    } else if ( player1WonRounds === player2WonRounds ) {\r\n        setString ( `Tie! Roll again.` );\r\n    } else {\r\n        setString( `Player Two wins!` );\r\n    }\r\n} else if ( roundCounter === 0 ) {\r\n    setString( `Touch each paper to the Game paper to begin!` );\r\n} else {\r\n    setString( `P1: ${player1WonRounds} | P2: ${player2WonRounds} | Rounds remaining: ${3 - roundCounter}` )\r\n}\r\n",
+            "lazyLink": false
+          },
+          {
+            "name": "roundCounterView",
+            "modelComponentNames": [
+              "roundCounter"
+            ],
+            "controlFunctionString": "setFontSize( 38 );\r\nsetCenterY( 800 );\r\nsetCenterX( 400 );\r\nsetTextColor ( '#03fc66' );\r\nsetString(`Round ${roundCounter} of 3`);",
+            "lazyLink": false
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "roundIncrementer",
+            "controlledPropertyNames": [
+              "roundCounter"
+            ],
+            "controlFunctionString": "if ( roundCounter === 3 ) {\r\n    setRoundCounter( 0 );\r\n} else if ( readyToRollDice1 && readyToRollDice2 ) {\r\n    setRoundCounter( roundCounter + 1 );\r\n}",
+            "dependencyNames": [
+              "readyToRollDice1",
+              "readyToRollDice2"
+            ]
+          },
+          {
+            "name": "roundWonIncrementer",
+            "controlledPropertyNames": [
+              "player1WonRounds",
+              "player2WonRounds"
+            ],
+            "controlFunctionString": "if (roundCounter === 0) {\r\n    setPlayer1WonRounds( 0 );\r\n    setPlayer2WonRounds( 0 );\r\n} else if ( diceOneValue > diceTwoValue ) {\r\n    setPlayer1WonRounds( player1WonRounds + 1 );\r\n} else if ( diceOneValue < diceTwoValue ) {\r\n    setPlayer2WonRounds( player2WonRounds + 1 );\r\n}",
+            "dependencyNames": [
+              "diceOneValue",
+              "diceTwoValue",
+              "roundCounter"
+            ]
+          }
+        ],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1865,
+      "title": "Dice One Roller",
+      "keywords": "dice, roller",
+      "description": "Touch to the right side of the Game Model and roll your dice!",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.25,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 47.00880397617106,
+        "y": 263.4960983588589
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "readyToRollDice1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "position1179",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "position1179Controller",
+            "controlledComponentName": "position1179",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "closeEnoughToRoll1",
+            "controlledComponentName": "readyToRollDice1",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": "0",
+              "rightLength": "0.4",
+              "bottomLength": "0",
+              "leftLength": "0",
+              "otherPaperNumber": "1616"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "dice1RollSound",
+            "modelComponentNames": [
+              "readyToRollDice1"
+            ],
+            "controlFunctionString": "if ( readyToRollDice1 ) {\r\n    play();\r\n    phet.paperLand.console.log( `playing dice 1 sound` );\r\n}",
+            "lazyLink": false,
+            "soundFileName": "dice-roll.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [
+          {
+            "name": "dice1Score",
+            "modelComponentNames": [
+              "diceOneValue",
+              "position1179"
+            ],
+            "controlFunctionString": "setString ( diceOneValue );\r\nsetCenterX( position1179.x );\r\nsetCenterY( position1179.y );\r\nsetFontSize( 48 );\r\nsetTextColor( 'blue' );",
+            "lazyLink": false
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "rollDice1Link",
+            "controlledPropertyNames": [
+              "diceOneValue"
+            ],
+            "controlFunctionString": "if (readyToRollDice1) {\r\n    let randNum1;\r\n    randNum1 = Math.floor(Math.random() * 20) + 1;\r\n    setDiceOneValue (randNum1);\r\n}",
+            "dependencyNames": [
+              "readyToRollDice1"
+            ]
+          }
+        ],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1112,
+      "title": "Dice Two Roller",
+      "keywords": "dice, roller",
+      "description": "Touch to the left side of the Game Model and roll your dice!",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.25,
+      "positionProperty": {
+        "x": 217.2526240002366,
+        "y": 328.02706801354196
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "readyToRollDice2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "position1905",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "position1905Controller",
+            "controlledComponentName": "position1905",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "closeEnoughToRoll2",
+            "controlledComponentName": "readyToRollDice2",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": "0",
+              "rightLength": "0",
+              "bottomLength": "0",
+              "leftLength": "0.4",
+              "otherPaperNumber": "1616"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "dice2RollSound",
+            "modelComponentNames": [
+              "readyToRollDice2"
+            ],
+            "controlFunctionString": "if ( readyToRollDice2 ) {\r\n    play();\r\n    phet.paperLand.console.log( `playing dice 2 sound` );\r\n}",
+            "lazyLink": false,
+            "soundFileName": "dice-roll.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [
+          {
+            "name": "dice2Score",
+            "modelComponentNames": [
+              "diceTwoValue",
+              "position1905"
+            ],
+            "controlFunctionString": "setString ( diceTwoValue );\r\nsetCenterX( position1905.x );\r\nsetCenterY( position1905.y );\r\nsetFontSize( 48 );\r\nsetTextColor( 'red' );\r\n",
+            "lazyLink": false
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "rollDice2Link",
+            "controlledPropertyNames": [
+              "diceTwoValue"
+            ],
+            "controlFunctionString": "if ( readyToRollDice2 ) {\r\n    let randNum2;\r\n    randNum2 = Math.floor(Math.random() * 20) + 1;\r\n    setDiceTwoValue (randNum2);\r\n}",
+            "dependencyNames": [
+              "readyToRollDice2"
+            ]
+          }
+        ],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 547,
+      "title": "PhET Checkbox",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 66.45883022984455,
+        "y": 162.67360724952985
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "console.log( `onProgramAdded called for ppn ${paperNumber}`);\r\n\r\n    // Create a checkbox and add it to the scene.\r\n    const checkBoxLabelText = 'CHECK this out!'\r\n    const fontSize = 16;\r\n    const checkboxLabel = new phet.scenery.Text( checkBoxLabelText, {\r\n      font: new phet.sceneryPhet.PhetFont( fontSize )\r\n    } );\r\n    const booleanProperty = new phet.axon.BooleanProperty( false );\r\n    const checkbox = new phet.sun.Checkbox( booleanProperty, checkboxLabel );\r\n    sharedData.scene.addChild( checkbox );\r\n    scratchpad.checkbox = checkbox;",
+        "onProgramRemovedCode": "    console.log( `onProgramRemoved called for ppn ${paperNumber}`);\r\n    if ( scratchpad.checkbox ){\r\n      sharedData.scene.removeChild( scratchpad.checkbox );\r\n      scratchpad.checkbox = null;\r\n    }\r\n    else{\r\n      alert( 'Error: Checkbox node not found in scratchpad data.' );\r\n    }",
+        "onProgramChangedPositionCode": "    console.log( `onProgramChangedPosition called for ppn ${paperNumber}`);\r\n\r\n    if ( scratchpad.checkbox ){\r\n\r\n      // Center the image based on the position of the paper.\r\n      const paperCenterX = ( points[0].x + points[1].x ) / 2;\r\n      const paperCenterY = ( points[0].y + points[2].y ) / 2;\r\n      scratchpad.checkbox.centerX = paperCenterX * sharedData.displaySize.width;\r\n      scratchpad.checkbox.centerY = paperCenterY * sharedData.displaySize.height;\r\n    }",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,1311 @@
+{
+  "programs": [
+    {
+      "number": 1992,
+      "title": "Solar System",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 301.91492753535283,
+        "y": 12.768488173241508
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "resetTrigger",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "bodiesLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "bodies"
+            ],
+            "derivation": "return bodies.length;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [
+          {
+            "name": "bodies",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "bodiesLength",
+            "arrayAddedItemReferenceName": "bodiesAddedItem",
+            "arrayRemovedItemReferenceName": "bodiesRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "bodiesAddedItem"
+          },
+          {
+            "name": "bodiesRemovedItem"
+          }
+        ],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "resetLink",
+            "controlledPropertyNames": [
+              "bodies"
+            ],
+            "controlFunctionString": "bodies.forEach( body => {\r\n    body.velocity = new phet.dot.Vector2( 0, 0 );\r\n    body.acceleration = new phet.dot.Vector2( 0, 0 );\r\n    body.position = body.resetPosition;\r\n\r\n} );",
+            "dependencyNames": [
+              "resetTrigger"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [
+          {
+            "name": "animationController",
+            "controlledPropertyNames": [
+              "bodies"
+            ],
+            "controlFunctionString": "function calculateGravitationalForce(body1, body2) {\r\n    const G = 6.67430e-11; // gravitational constant\r\n    const distance = Math.sqrt(Math.pow(body2.position.x - body1.position.x, 2) + Math.pow(body2.position.y - body1.position.y, 2));\r\n\r\n    // making G artifically bigger since positions are in normalized coordinates\r\n    const force = G * body1.mass * body2.mass / Math.pow(distance, 2) * 1e6;\r\n    return force;\r\n}\r\n\r\nbodies.forEach(body => {\r\n    // Reset acceleration to 0\r\n    const bodyAcceleration = { x: 0, y: 0 };\r\n\r\n    // Calculate gravitational force from other bodies\r\n    bodies.forEach(otherBody => {\r\n        if (body !== otherBody) {\r\n            const force = Math.min( calculateGravitationalForce(body, otherBody), 10000 );\r\n            // Assuming direct line for simplicity, adjust for x, y components\r\n            // This is a simplification and should be adjusted for more accuracy\r\n            bodyAcceleration.x += force / body.mass * (otherBody.position.x - body.position.x);\r\n            bodyAcceleration.y += force / body.mass * (otherBody.position.y - body.position.y);\r\n        }\r\n    });\r\n\r\n    // Update velocity and position\r\n    body.velocity = new phet.dot.Vector2(\r\n        body.velocity.x + bodyAcceleration.x * dt,\r\n        body.velocity.y + bodyAcceleration.y * dt\r\n    );\r\n    body.position = new phet.dot.Vector2(\r\n        body.position.x + body.velocity.x * dt,\r\n        body.position.y + body.velocity.y * dt\r\n    );\r\n});"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1032,
+      "title": "Sun",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 109.7998565279527,
+        "y": 96.50185659649993
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "velocity",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.1",
+            "defaultY": "-0.1"
+          },
+          {
+            "name": "acceleration",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "sunResetPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "mass",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100000",
+            "defaultValue": "10000"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "sunBodyArrayItem",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "mass",
+                "componentName": "mass"
+              },
+              {
+                "entryName": "position",
+                "componentName": "position"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "velocity"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "acceleration"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "sunResetPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "initialPositionController",
+            "controlledComponentName": "position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "sunResetPositionController",
+            "controlledComponentName": "sunResetPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "sunImage",
+            "modelComponentNames": [
+              "position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.7 );\r\n\r\nsetCenterX( position.x );\r\nsetCenterY( position.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0001.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 452,
+      "title": "Earth",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 311.2492287992337,
+        "y": 315.45814519546144
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController",
+            "controlledComponentName": "earthPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController",
+            "controlledComponentName": "resetPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage",
+            "modelComponentNames": [
+              "earthPosition"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition.x );\r\nsetCenterY( earthPosition.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 68,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 492.9320705138673,
+        "y": 376.1633202115393
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy1",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy1"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy1"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy1"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy1"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy1"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy1",
+            "controlledComponentName": "earthPosition_Copy1",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy1",
+            "controlledComponentName": "resetPosition_Copy1",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy1",
+            "modelComponentNames": [
+              "earthPosition_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy1.x );\r\nsetCenterY( earthPosition_Copy1.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1707,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 489.01817531985887,
+        "y": 311.4553720801019
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy2",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy2",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy2",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy2",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy2",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy2",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy2"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy2"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy2"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy2"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy2"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy2",
+            "controlledComponentName": "earthPosition_Copy2",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy2",
+            "controlledComponentName": "resetPosition_Copy2",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy2",
+            "modelComponentNames": [
+              "earthPosition_Copy2"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy2.x );\r\nsetCenterY( earthPosition_Copy2.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2039,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 310.7640164925463,
+        "y": 382.16378296125055
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy3",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy3",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy3",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy3",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy3",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy3",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy3"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy3"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy3"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy3"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy3"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy3",
+            "controlledComponentName": "earthPosition_Copy3",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy3",
+            "controlledComponentName": "resetPosition_Copy3",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy3",
+            "modelComponentNames": [
+              "earthPosition_Copy3"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy3.x );\r\nsetCenterY( earthPosition_Copy3.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1159,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 306.27279689688254,
+        "y": 536.8486257447505
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy4",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy4",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy4",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy4",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy4",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy4",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy4"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy4"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy4"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy4"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy4"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy4",
+            "controlledComponentName": "earthPosition_Copy4",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy4",
+            "controlledComponentName": "resetPosition_Copy4",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy4",
+            "modelComponentNames": [
+              "earthPosition_Copy4"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy4.x );\r\nsetCenterY( earthPosition_Copy4.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 329,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 313.3507398921018,
+        "y": 454.0006589680083
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy5",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy5",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy5",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy5",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy5",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy5",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy5"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy5"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy5"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy5"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy5"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy5",
+            "controlledComponentName": "earthPosition_Copy5",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy5",
+            "controlledComponentName": "resetPosition_Copy5",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy5",
+            "modelComponentNames": [
+              "earthPosition_Copy5"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy5.x );\r\nsetCenterY( earthPosition_Copy5.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1744,
+      "title": "Earth_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 489.400647511305,
+        "y": 461.1975163294613
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "earthPosition_Copy6",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "earthVelocity_Copy6",
+            "propertyType": "Vector2Property",
+            "defaultX": "0",
+            "defaultY": 0
+          },
+          {
+            "name": "earthAcceleration_Copy6",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          },
+          {
+            "name": "resetPosition_Copy6",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "earthMass_Copy6",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "100",
+            "defaultValue": "100"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "bodyArrayItem_Copy6",
+            "arrayName": "bodies",
+            "itemSchema": [
+              {
+                "entryName": "position",
+                "componentName": "earthPosition_Copy6"
+              },
+              {
+                "entryName": "mass",
+                "componentName": "earthMass_Copy6"
+              },
+              {
+                "entryName": "acceleration",
+                "componentName": "earthAcceleration_Copy6"
+              },
+              {
+                "entryName": "velocity",
+                "componentName": "earthVelocity_Copy6"
+              },
+              {
+                "entryName": "resetPosition",
+                "componentName": "resetPosition_Copy6"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "earthInitialPositionController_Copy6",
+            "controlledComponentName": "earthPosition_Copy6",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          },
+          {
+            "name": "resetPositionController_Copy6",
+            "controlledComponentName": "resetPosition_Copy6",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "planetImage_Copy6",
+            "modelComponentNames": [
+              "earthPosition_Copy6"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setScale( 0.3 );\r\n\r\nsetCenterX( earthPosition_Copy6.x );\r\nsetCenterY( earthPosition_Copy6.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/Sprite-0002.png"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

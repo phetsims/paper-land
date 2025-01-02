@@ -1,0 +1,362 @@
+{
+  "programs": [
+    {
+      "number": 711,
+      "title": "Item_A",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 163.1683650362319,
+        "y": 66.72096769459453
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "Sign",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "Coefficient",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "ItemData",
+            "arrayName": "TestArray",
+            "itemSchema": [
+              {
+                "entryName": "sign",
+                "componentName": "Sign"
+              },
+              {
+                "entryName": "coefficient",
+                "componentName": "Coefficient"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 345,
+      "title": "ArrayForItem",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 471.89996337890625,
+        "y": 247.68684993528802
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "ArrayLength",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "TestArray"
+            ],
+            "derivation": "return TestArray.length;"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [
+          {
+            "name": "TestArray",
+            "propertyType": "ObservableArray",
+            "lengthComponentName": "ArrayLength",
+            "arrayAddedItemReferenceName": "ArrayAddedItem",
+            "arrayRemovedItemReferenceName": "ArrayRemovedItem"
+          }
+        ],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [
+          {
+            "name": "ArrayAddedItem"
+          },
+          {
+            "name": "ArrayRemovedItem"
+          }
+        ],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "ItemAddedDescription",
+            "modelComponentNames": [
+              "ArrayAddedItem"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (ArrayAddedItem) {\n    let signString = null;\n\n    if (ArrayAddedItem.sign) {\n        signString = 'positive';\n    }\n    else {\n        signString = 'negative';    \n    }\n    speak( `${signString} item with ${ArrayAddedItem.coefficient}` );\n}",
+            "lazyLink": true
+          },
+          {
+            "name": "ItemRemovedDescription",
+            "modelComponentNames": [
+              "ArrayRemovedItem"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (ArrayRemovedItem) {\n    let signString = null;\n\n    if (ArrayRemovedItem.sign) {\n        signString = 'positive';\n    }\n    else {\n        signString = 'negative';    \n    }\n    speak( `${signString} item with ${ArrayRemovedItem.coefficient} removed` );\n}",
+            "lazyLink": false
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2032,
+      "title": "Item_B",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 384.4857823500263,
+        "y": 100.97254634685427
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "Sign_Copy1",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "Coefficient_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "ItemData_Copy1",
+            "arrayName": "TestArray",
+            "itemSchema": [
+              {
+                "entryName": "sign",
+                "componentName": "Sign_Copy1"
+              },
+              {
+                "entryName": "coefficient",
+                "componentName": "Coefficient_Copy1"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1142,
+      "title": "Item_C",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 231.24595655617588,
+        "y": 340.8760624714877
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "Sign_Copy1_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "Coefficient_Copy1_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [
+          {
+            "name": "ItemData_Copy1_Copy1",
+            "arrayName": "TestArray",
+            "itemSchema": [
+              {
+                "entryName": "sign",
+                "componentName": "Sign_Copy1_Copy1"
+              },
+              {
+                "entryName": "coefficient",
+                "componentName": "Coefficient_Copy1_Copy1"
+              }
+            ]
+          }
+        ],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

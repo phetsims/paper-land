@@ -1,0 +1,95 @@
+{
+  "programs": [
+    {
+      "number": 7,
+      "title": "UART to IO Pins (LEDs) with Markers",
+      "keywords": "",
+      "description": "This program sends a string over UART RX to set p0 to up (red marker) or p1 to up (green marker), which will light up an LED in circuit with those pins.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 198.62637686731443,
+        "y": 234.73876025415092
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "led1p0UpBoolean",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "p0RedMarkerController",
+            "controlledComponentName": "led1p0UpBoolean",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": "red"
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": [
+          {
+            "name": "p0BLEWriter",
+            "controlledPropertyNames": [],
+            "controlFunctionString": "let str = \"\";\r\n\r\nif (led1p0UpBoolean) {\r\n    str = \"p0U\";\r\n} else {\r\n    str = \"p0D\";\r\n}\r\n\r\nwriteStringToCharacteristic(str);\r\n\r\nphet.paperLand.console.log(`pin 0 being set to ${str}`);\r\n",
+            "dependencyNames": [
+              "led1p0UpBoolean"
+            ],
+            "referenceComponentNames": [],
+            "writeToCharacteristic": true,
+            "serviceId": "6e400001-b5a3-f393-e0a9-e50e24dcca9e",
+            "characteristicId": "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+          }
+        ]
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

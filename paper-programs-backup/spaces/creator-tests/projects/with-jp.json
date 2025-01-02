@@ -1,0 +1,172 @@
+{
+  "programs": [
+    {
+      "number": 990,
+      "title": "Custom code for position",
+      "keywords": "",
+      "description": "Custom code that creates a model component, adds it to paper land, and creates a controller that makes the position match the paper center in the camera view.",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 134.17776694955833,
+        "y": 160.1070583975143
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// create a model component representing position and add it to paper land\r\nconst positionProperty = new phet.dot.Vector2Property( 0, 0 );\r\nphet.paperLand.addModelComponent( 'positionProperty', positionProperty );\r\n\r\n",
+        "onProgramRemovedCode": "// remove the model component from paper land\r\nphet.paperLand.removeModelComponent( 'positionProperty' );",
+        "onProgramChangedPositionCode": "// Get the model component - if it exists, set its value to match the center of the paper,\r\n// in board coordinates\r\nconst positionProperty = phet.paperLand.getModelComponent( 'positionProperty' );\r\nif ( positionProperty ) {\r\n    positionProperty.value = phet.paperLand.utils.getBoardPositionFromPoints( points, sharedData.displaySize );\r\n}",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 255,
+      "title": "Component generated code",
+      "keywords": "",
+      "description": "Creates a boolean value. Whenever a marker is placed on this program, the value is set to true.",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 221.62209392185173,
+        "y": 381.9820373471524
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "booleanValue",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "booleanMarkerController",
+            "controlledComponentName": "booleanValue",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {},
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 637,
+      "title": "Custom code for a circle",
+      "keywords": "",
+      "description": "Creates a circle that translates with the custom code for position and changes color with the generated boolean value.",
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 322.52868378820153,
+        "y": 173.3891107365594
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "// create a circle and add it to the view\r\nconst circleNode = new phet.scenery.Circle( 50, { fill: 'red' } );\r\nsharedData.scene.addChild( circleNode );\r\n\r\n// assign it to the scratchpad so that we can remove the circle later\r\nscratchpad.circleNode = circleNode;\r\n\r\n// Wire the circle center to the custom-code created position\r\nscratchpad.listenerId = phet.paperLand.addModelPropertyLink( 'positionProperty', position => {\r\n  circleNode.center = position;\r\n} );\r\n\r\n// Wire the circle to the Creator-made boolean component to change the color\r\nscratchpad.colorListenerId = phet.paperLand.addModelPropertyLink( 'booleanValue', value => {\r\n  circleNode.fill = value ? 'green' : 'red';\r\n} )",
+        "onProgramRemovedCode": "// remove the circle\r\nscratchpad.scene.removeChild( scratchpad.circleNode );\r\ndelete scratchpad.circle;\r\n\r\nphet.paperLand.removeModelPropertyLink( 'positionProperty', scratchpad.listenerId );\r\ndelete scratchpad.listenerId;\r\n\r\nphet.paperLand.removeModelPropertyLink( 'booleanValue', scratchpad.colorListenerId );\r\ndelete scratchpad.colorListenerId;",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "console.log( 'This program just became adjacent to another!' );",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

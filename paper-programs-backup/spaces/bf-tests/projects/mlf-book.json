@@ -1,0 +1,332 @@
+{
+  "programs": [
+    {
+      "number": 1386,
+      "title": "Cover",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 79.40098038085748,
+        "y": 189.25432959686736
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "coverPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "coverRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "coverScale",
+            "propertyType": "NumberProperty",
+            "min": "0.0001",
+            "max": "1",
+            "defaultValue": "0.001"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "pageBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "coverPositionController",
+            "controlledComponentName": "coverPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "pageBoundsController",
+            "controlledComponentName": "pageBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "coverRotationController",
+            "controlledComponentName": "coverRotation",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "coverTTS",
+            "modelComponentNames": [
+              "coverScale"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "speak( 'The Nature of Adirondacks. A book about Nature by Margot Fiedler and her Daddy' );",
+            "lazyLink": false
+          }
+        ],
+        "textViews": [
+          {
+            "name": "coverText",
+            "modelComponentNames": [
+              "coverPosition",
+              "pageBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setString(`The Nature of Adirondacks.\\n A book about Nature by Margot Fiedler and her Daddy`); // Set the content of the text to \"Hello, World!\".\r\nsetCenterX(500); // Set the x position of the text to the x position of the cover.\r\nsetCenterY(100); // Set the y position of the text just above the paper by subtracting half the coverScale from the y position of the cover.\r\nsetFontSize(16); // Set the font size of the text to scale with the coverScale by multiplying it with 0.1.\r\nsetTextColor('yellow'); // Set the font color of the text to black.\r\nsetFontFamily('Arial'); // Set the font family of the text to Arial.",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "coverImage",
+            "modelComponentNames": [
+              "coverPosition",
+              "coverRotation",
+              "coverScale",
+              "pageBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Sets the image scale to from the model component for scale\r\nsetScale( 0.03 );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( coverRotation );\r\n\r\n// Set image to page bounds\r\nmatchBounds(pageBounds, false);\r\n\r\n\r\n\r\n// Sets the image center to match the model component for image position\r\n// setCenterX( coverPosition.x );\r\n// setCenterY( coverPosition.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/cover.jpg"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 572,
+      "title": "Cover_Copy",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 308.373533508097,
+        "y": 189.07163904565908
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "coverPosition_Copy1",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "coverRotation_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "6.28",
+            "defaultValue": "0"
+          },
+          {
+            "name": "coverScale_Copy1",
+            "propertyType": "NumberProperty",
+            "min": "0.0001",
+            "max": "1",
+            "defaultValue": "0.001"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "pageBounds_Copy1",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "coverPositionController_Copy1",
+            "controlledComponentName": "coverPosition_Copy1",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [
+          {
+            "name": "pageBoundsController_Copy1",
+            "controlledComponentName": "pageBounds_Copy1",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "coverRotationController_Copy1",
+            "controlledComponentName": "coverRotation_Copy1",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "coverTTS_Copy1",
+            "modelComponentNames": [
+              "coverScale_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "return 'Nature is Magical. Just make nature better. How do you find your home in nature? You look around the land. Just find your next thing.';",
+            "lazyLink": false
+          }
+        ],
+        "textViews": [
+          {
+            "name": "coverText_Copy1",
+            "modelComponentNames": [
+              "coverPosition_Copy1",
+              "pageBounds_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setString(`Nature is Magical. Just make nature better. How do you find your home in nature? You look around the land. Just find your next thing.`); // Set the content of the text to \"Hello, World!\".\r\nsetCenterX(500); // Set the x position of the text to the x position of the cover.\r\nsetCenterY(100); // Set the y position of the text just above the paper by subtracting half the coverScale_Copy1 from the y position of the cover.\r\nsetFontSize(16); // Set the font size of the text to scale with the coverScale_Copy1 by multiplying it with 0.1.\r\nsetTextColor('yellow'); // Set the font color of the text to black.\r\nsetFontFamily('Arial'); // Set the font family of the text to Arial.",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": [
+          {
+            "name": "coverImage_Copy1",
+            "modelComponentNames": [
+              "coverPosition_Copy1",
+              "coverRotation_Copy1",
+              "coverScale_Copy1",
+              "pageBounds_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// Sets the image scale to from the model component for scale\r\nsetScale( 0.03 );\r\n\r\n// Sets the rotation from the model component\r\nsetRotation( coverRotation_Copy1 );\r\n\r\n// Set image to page bounds\r\nsetLeft(pageBounds_Copy1.minX);\r\nsetTop(pageBounds_Copy1.minY);\r\n\r\n\r\n\r\n// Sets the image center to match the model component for image position\r\n// setCenterX( coverPosition_Copy1.x );\r\n// setCenterY( coverPosition_Copy1.y );\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "imageFileName": "/uploads/page1.jpg"
+          }
+        ]
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

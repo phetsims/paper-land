@@ -1,0 +1,106 @@
+{
+  "programs": [
+    {
+      "number": 1233,
+      "title": "Marker Toggle (sound)",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 181.97625238845256,
+        "y": 203.56096060146788
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController",
+            "controlledComponentName": "markerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound",
+            "modelComponentNames": [
+              "markerIsOn"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (markerIsOn) {\r\n  play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "quadShapeCollision.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "markerIsOffSound",
+            "modelComponentNames": [
+              "markerIsOn"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (markerIsOn === false) {\r\n  play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "grabHighPitch.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

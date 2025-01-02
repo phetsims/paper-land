@@ -1,0 +1,87 @@
+{
+  "programs": [
+    {
+      "number": 2014,
+      "title": "Marker Slider",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 319.79998779296875,
+        "y": 259.6000213623047
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "value",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "markerValueController",
+            "controlledComponentName": "value",
+            "controlType": "MARKER_LOCATION",
+            "controlTypeFamily": "MARKERS",
+            "markerColor": "all",
+            "relationshipControlType": null
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "descriptionViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "background",
+            "modelComponentNames": [
+              "value"
+            ],
+            "controlFunctionString": "// The value goes from 0-255, so when the marker is at the bottom of the\r\n// program, the background will be black, and when the marker is at\r\n// the top the background will be white.\r\nreturn `rgb(${value},${value},${value})`;",
+            "lazyLink": false,
+            "fillColor": "green"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

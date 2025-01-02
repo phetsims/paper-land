@@ -1,0 +1,540 @@
+{
+  "programs": [
+    {
+      "number": 1678,
+      "title": "Marker Slider",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 142.53826904296875,
+        "y": 142.82707513473605
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "markerGreenValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "markerRedValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "markerBlueValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "greenValueController",
+            "controlledComponentName": "markerGreenValue",
+            "controlType": "MARKER_LOCATION",
+            "controlTypeFamily": "MARKERS",
+            "markerColor": "green",
+            "relationshipControlType": null
+          },
+          {
+            "name": "redValueController",
+            "controlledComponentName": "markerRedValue",
+            "controlType": "MARKER_LOCATION",
+            "controlTypeFamily": "MARKERS",
+            "markerColor": "red",
+            "relationshipControlType": null
+          },
+          {
+            "name": "blueValueController",
+            "controlledComponentName": "markerBlueValue",
+            "controlType": "MARKER_LOCATION",
+            "controlTypeFamily": "MARKERS",
+            "markerColor": "blue",
+            "relationshipControlType": null
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [
+          {
+            "name": "background",
+            "modelComponentNames": [],
+            "referenceComponentNames": [],
+            "controlFunctionString": "// The markerGreenValue goes from 0-255, so when the marker is at the bottom of the\r\n// program, the background will be black, and when the marker is at\r\n// the top the background will be white.\r\n//return `rgb(${markerGreenValue},${markerGreenValue},${markerGreenValue})`;\r\nphet.paperLand.console.log('markerRedValue is', markerRedValue);\r\nphet.paperLand.console.log('markerGreenValue is', markerGreenValue);\r\nphet.paperLand.console.log('markerBlueValue is', markerBlueValue);\r\n\r\n\r\n",
+            "lazyLink": false,
+            "fillColor": "#ffffff"
+          }
+        ],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1039,
+      "title": "Rectangle",
+      "keywords": "",
+      "description": "Demonstration of color control.  When RGB Marker Slider (#1678) is within whisker range of rectangle, the rectangle changes to RGB color specified by marker positions.  When the RGB slider is out of whisker range, the color of the rectangle remains at its current setting.  ",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 348.49320936950187,
+        "y": 143.2044994100632
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "rectColorSetMode",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "rectanglePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "rectRedValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "rectGreenValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "rectBlueValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "rectScaleValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "2",
+            "defaultValue": "1"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "rectanglePositionController",
+            "controlledComponentName": "rectanglePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "rectangleColorSetModeController",
+            "controlledComponentName": "rectColorSetMode",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "1678"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "rectangleView",
+            "modelComponentNames": [
+              "rectanglePosition",
+              "rectRedValue",
+              "rectGreenValue",
+              "rectBlueValue",
+              "rectScaleValue"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( rectanglePosition.x );\r\nsetCenterY( rectanglePosition.y );\r\nsetScale(rectScaleValue);\r\n\r\nsetFill( `rgb(${rectRedValue}, ${rectGreenValue}, ${rectBlueValue})`);",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "blue",
+              "stroke": "black",
+              "lineWidth": 1,
+              "rectWidth": "0.1",
+              "rectHeight": "0.2",
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "rectSetRedController",
+            "controlledPropertyNames": [
+              "rectRedValue"
+            ],
+            "controlFunctionString": "if ( rectColorSetMode ) {\n    setRectRedValue(markerRedValue);\n} ;",
+            "dependencyNames": [
+              "markerRedValue",
+              "rectColorSetMode"
+            ],
+            "referenceComponentNames": []
+          },
+          {
+            "name": "rectSetBlueController",
+            "controlledPropertyNames": [
+              "rectBlueValue"
+            ],
+            "controlFunctionString": "if ( rectColorSetMode ) {\n    setRectBlueValue(markerBlueValue);\n} ;",
+            "dependencyNames": [
+              "markerBlueValue",
+              "rectColorSetMode"
+            ],
+            "referenceComponentNames": []
+          },
+          {
+            "name": "rectSetGreenController",
+            "controlledPropertyNames": [
+              "rectGreenValue"
+            ],
+            "controlFunctionString": "if ( rectColorSetMode ) {\n    setRectGreenValue(markerGreenValue);\n} ",
+            "dependencyNames": [
+              "markerGreenValue",
+              "rectColorSetMode"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1248,
+      "title": "Circle",
+      "keywords": "",
+      "description": "Demonstration of color control.  When RGB Marker Slider is within whisker twitch of circle, the circle changes to RGB color specified by marker positions.  When the RGB slider is out of whisker range, the color of the circle remains at its current setting.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 531.1093034422186,
+        "y": 138.60159850069397
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "circleColorSetMode",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "circlePosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "circleRedValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "circleGreenValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          },
+          {
+            "name": "circleBlueValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "255",
+            "defaultValue": "0"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "circlePositionController",
+            "controlledComponentName": "circlePosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "circleColorSetModeController",
+            "controlledComponentName": "circleColorSetMode",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "1678"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "circleView",
+            "modelComponentNames": [
+              "circlePosition",
+              "circleRedValue",
+              "circleGreenValue",
+              "circleBlueValue"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( circlePosition.x );\r\nsetCenterY( circlePosition.y );\r\nsetFill( `rgb(${circleRedValue}, ${circleGreenValue}, ${circleBlueValue})`);\r\n",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": null,
+              "centerY": null,
+              "scale": "1",
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "#007BFF",
+              "stroke": "#001F3F",
+              "lineWidth": 1,
+              "rectWidth": 100,
+              "rectHeight": 50,
+              "circleRadius": "0.1",
+              "ellipseRadiusX": 100,
+              "ellipseRadiusY": 50,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 100,
+              "lineEndY": 100,
+              "triangleBaseWidth": 100,
+              "triangleHeight": 100,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  100,
+                  0
+                ],
+                [
+                  100,
+                  100
+                ],
+                [
+                  0,
+                  100
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "circleSetRedController",
+            "controlledPropertyNames": [
+              "circleRedValue"
+            ],
+            "controlFunctionString": "if (circleColorSetMode){\nsetCircleRedValue(markerRedValue);\n};",
+            "dependencyNames": [
+              "markerRedValue"
+            ],
+            "referenceComponentNames": []
+          },
+          {
+            "name": "circleSetGreenController",
+            "controlledPropertyNames": [
+              "circleGreenValue"
+            ],
+            "controlFunctionString": "if (circleColorSetMode){\n    setCircleGreenValue(markerGreenValue);\n};",
+            "dependencyNames": [
+              "markerGreenValue",
+              "circleColorSetMode"
+            ],
+            "referenceComponentNames": []
+          },
+          {
+            "name": "circleSetBlueController",
+            "controlledPropertyNames": [
+              "circleBlueValue"
+            ],
+            "controlFunctionString": "if (circleColorSetMode){\n    setCircleBlueValue(markerBlueValue);\n};",
+            "dependencyNames": [
+              "markerBlueValue",
+              "circleColorSetMode"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

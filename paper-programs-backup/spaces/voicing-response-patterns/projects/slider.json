@@ -1,0 +1,417 @@
+{
+  "programs": [
+    {
+      "number": 2,
+      "title": "Slider - Smooth Quantitative",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 568.4136784757515,
+        "y": 276.1878942854617
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [
+          {
+            "name": "sizeChangeParameters",
+            "propertyType": "EnumerationProperty",
+            "defaultValue": "shrinks",
+            "values": [
+              "shrinks",
+              "grows"
+            ]
+          }
+        ],
+        "namedDerivedProperties": [
+          {
+            "name": "contextResponse",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "sizeChangeParameters",
+              "currentValue"
+            ],
+            "derivation": "const decimalPlaces = 1;\r\nconst factor = Math.pow(10, decimalPlaces);\r\nreturn `As letter V ${sizeChangeParameters}, letter I ${sizeChangeParameters}. Current now ${Math.floor(currentValue * factor) / factor} milliamps.`;\r\n"
+          },
+          {
+            "name": "objectResponseQuantitative",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "voltageValue"
+            ],
+            "derivation": "return `${Math.floor(voltageValue)} Volts.`"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "nameResponseSmooth",
+            "propertyType": "StringProperty",
+            "defaultValue": "V, Voltage."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isFocusedWhiskerController",
+            "controlledComponentName": "isFocused",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "20"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "voltageValueController",
+            "controlledComponentName": "voltageValue",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": [
+          {
+            "name": "sizeChangeParameterRotationController",
+            "controlledComponentName": "sizeChangeParameters",
+            "controlType": "ROTATION",
+            "controlTypeFamily": ""
+          }
+        ]
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "voiceContextResponses",
+            "modelComponentNames": [
+              "contextResponse",
+              "objectResponseQuantitative"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "speak( objectResponseQuantitative + contextResponse );",
+            "lazyLink": true
+          },
+          {
+            "name": "voiceFocusedResponses",
+            "modelComponentNames": [
+              "isFocused",
+              "nameResponseSmooth",
+              "objectResponseQuantitative"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isFocused) {\r\n    speak( nameResponseSmooth + objectResponseQuantitative );\r\n}",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 75,
+      "title": "Slider - Snappy Qualitative",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 0,
+        "y": 161.40693452180682
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isFocused2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "value2",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          },
+          {
+            "name": "roundedRegionValue",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isFocusedWhiskerController2",
+            "controlledComponentName": "isFocused2",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "20"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "paperPositionValueController2",
+            "controlledComponentName": "value2",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "roundTheNumberLink",
+            "controlledPropertyNames": [
+              "roundedRegionValue"
+            ],
+            "controlFunctionString": "setRoundedRegionValue(Math.floor(value2));\r\n\r\nphet.paperLand.console.log(`${value2} to ${roundedRegionValue}`);",
+            "dependencyNames": [
+              "value2"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1,
+      "title": "Model Data",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 374.78664545592085,
+        "y": 170.02975147669616
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "voltageValue",
+            "propertyType": "NumberProperty",
+            "min": "0.1",
+            "max": "9.0",
+            "defaultValue": "4.5"
+          },
+          {
+            "name": "resistanceValue",
+            "propertyType": "NumberProperty",
+            "min": "10",
+            "max": "1000",
+            "defaultValue": "500"
+          },
+          {
+            "name": "currentValue",
+            "propertyType": "NumberProperty",
+            "min": "0.0001",
+            "max": "0.9",
+            "defaultValue": "0.009"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "calculateCurrentLink",
+            "controlledPropertyNames": [
+              "currentValue"
+            ],
+            "controlFunctionString": "setCurrentValue( (1000 * voltageValue) / (resistanceValue) );\r\n// returns milliamps",
+            "dependencyNames": [
+              "voltageValue",
+              "resistanceValue"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 20,
+      "title": "Focus Emulator",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 170.64462657133583,
+        "y": 356.5926883301087
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

@@ -1,0 +1,1034 @@
+{
+  "programs": [
+    {
+      "number": 8,
+      "title": "Game Logic",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 70.97589613637189,
+        "y": 217.19775516252113
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "gameWon",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "ballPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.5",
+            "defaultY": "0.5"
+          },
+          {
+            "name": "ballVelocity",
+            "propertyType": "Vector2Property",
+            "defaultX": "0.05",
+            "defaultY": "0.1"
+          }
+        ],
+        "namedNumberProperties": [
+          {
+            "name": "ballRotation",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "gameBeat",
+            "modelComponentNames": [
+              "gameWon"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "soundFileName": "musicalBeat.mp3",
+            "loop": true,
+            "autoplay": true
+          },
+          {
+            "name": "gameWonSound",
+            "modelComponentNames": [
+              "gameWon"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( gameWon ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "short-success.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [
+          {
+            "name": "gameWonText",
+            "modelComponentNames": [
+              "gameWon"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setVisible( gameWon );\r\nsetString( 'You Won!!' );\r\nsetFontSize( 48 );\r\n\r\nsetCenterX( 0.5 )\r\nsetCenterY( 0.5 );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            }
+          }
+        ],
+        "shapeViews": [
+          {
+            "name": "ballView",
+            "modelComponentNames": [
+              "ballPosition",
+              "ballRotation"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( ballPosition.x );\r\nsetCenterY( ballPosition.y );\r\n\r\nsetRotation( ballRotation );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "ellipse",
+              "fill": "red",
+              "stroke": "blue",
+              "lineWidth": 1,
+              "rectWidth": "0.04",
+              "rectHeight": "0.04",
+              "circleRadius": 0.05,
+              "ellipseRadiusX": "0.03",
+              "ellipseRadiusY": "0.03",
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": "0.06",
+              "triangleHeight": "0.035",
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [
+          {
+            "name": "gameLoop",
+            "controlledPropertyNames": [
+              "gameWon",
+              "ballPosition",
+              "ballVelocity",
+              "ballRotation",
+              "paddleCollideTrigger",
+              "paddleBounds",
+              "brick1Visible",
+              "brick1Bounds",
+              "resetGameTrigger",
+              "brick2Visible",
+              "brick2Bounds",
+              "brick3Visible",
+              "brick3Bounds",
+              "brick4Visible",
+              "brick4Bounds"
+            ],
+            "controlFunctionString": "// A constant used to set speed of the ball, change this value to make it move faster\r\n// or slower - ball velocity will be set based on game state using this value.\r\nconst ballSpeedY = 0.3;\r\nconst ballSpeedX = 0.2;\r\n\r\n// just for fun, make the ball rotate\r\nsetBallRotation( elapsedTime * 10 );\r\n\r\n// Update the ball to its new position based on the current velocity\r\nsetBallPosition( new phet.dot.Vector2(\r\n    ballPosition.x + ballVelocity.x * dt,\r\n    ballPosition.y + ballVelocity.y * dt,\r\n) );\r\n\r\n// if the ball goes below the paddle, reset its position and velocity to keep playing\r\nif ( ballPosition.y > 1 ) {\r\n    setBallPosition( new phet.dot.Vector2( 0.5, 0.5 ) );\r\n    setBallVelocity( new phet.dot.Vector2( 0, ballSpeedY ) );\r\n}\r\n\r\n// if the ball hits the left or right edge of the screen, set the x component\r\n// so that it stays in screen\r\nif ( ballPosition.x < 0 ) {\r\n    setBallVelocity( new phet.dot.Vector2( ballSpeedX, ballVelocity.y ) );\r\n}\r\nif ( ballPosition.x > 1 ) {\r\n    setBallVelocity( new phet.dot.Vector2( -ballSpeedX, ballVelocity.y ) );\r\n}\r\n\r\n// if the ball hits the top (0), flip the y component of velocity\r\nif ( ballPosition.y < 0 ) {\r\n    setBallVelocity( new phet.dot.Vector2( ballVelocity.x, ballSpeedY ) );\r\n}\r\n\r\n// If the ball hits the paddle, make it move up and give a random component of x velocity\r\nif ( paddleBounds.containsPoint( ballPosition ) ) {\r\n\r\n    // Ball will move in the direction of the side of the paddle it hits\r\n    let ballVelocityX = 0.5 * ( ( ballPosition.x - paddleBounds.centerX ) / paddleBounds.width );\r\n    setBallVelocity( new phet.dot.Vector2( ballVelocityX, -ballSpeedY ) );\r\n\r\n    // Set a trigger that will play a sound on the collision\r\n    setPaddleCollideTrigger( true );\r\n}\r\nelse {\r\n\r\n    // The paddle is no longer touching the ball, set the collide trigger to false\r\n    setPaddleCollideTrigger( false );\r\n}\r\n\r\n\r\n// collect brick bounds, visibility, and visibility setter functions into an array to work with them easily\r\nconst allBrickBounds = [\r\n    brick1Bounds,\r\n    brick2Bounds,\r\n    brick3Bounds,\r\n    brick4Bounds\r\n];\r\n\r\nconst allBrickVisibles = [\r\n    brick1Visible,\r\n    brick2Visible,\r\n    brick3Visible,\r\n    brick4Visible\r\n];\r\n\r\nconst brickVisibleSetters = [\r\n    setBrick1Visible,\r\n    setBrick2Visible,\r\n    setBrick3Visible,\r\n    setBrick4Visible\r\n];\r\n\r\n// If the ball hits any brick, make it invisible and then make the ball move down\r\nallBrickBounds.forEach( ( bounds, index ) => {\r\n\r\n    // NOTE - this assumes that the bricks in bounds and visibilities are IN THE SAME ORDER\r\n    // because the lookup for visibility setter uses the index from the bounds array.\r\n    const isBrickVisible = allBrickVisibles[ index ];\r\n    if ( isBrickVisible && bounds.containsPoint( ballPosition ) ) {\r\n        brickVisibleSetters[ index ]( false );\r\n        setBallVelocity( new phet.dot.Vector2( ballVelocity.x, ballSpeedY ) );\r\n    }\r\n} );\r\n\r\n// instead of using a link, it is easiest to reset the game state directly in the game loop since\r\n// we have the collections of bricks set up here\r\nif ( resetGameTrigger ) {\r\n    setBallVelocity( new phet.dot.Vector2( ballSpeedX, ballSpeedY ) );\r\n    setBallPosition( new phet.dot.Vector2( 0.5, 0.5 ) );\r\n\r\n    brickVisibleSetters.forEach( visibleSetter => {\r\n        visibleSetter( true );\r\n    } );\r\n}\r\n\r\n// game is won when all bricks are invisible\r\nsetGameWon( allBrickVisibles.every( brickVisible => !brickVisible ) );"
+          }
+        ],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2,
+      "title": "Paddle",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 171.3000030517578,
+        "y": 166.19395706719004
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "paddleCollideTrigger",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "paddleBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "paddleBoundsController",
+            "controlledComponentName": "paddleBounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "paddleHitSound",
+            "modelComponentNames": [
+              "paddleCollideTrigger"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "soundFileName": "bong.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "paddleView",
+            "modelComponentNames": [
+              "paddleBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( paddleBounds, true )",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 3,
+      "title": "Brick One",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 272,
+        "y": 309.99999999999994
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "brick1Visible",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "brick1Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.25",
+            "defaultMaxY": "0.25"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "brick1BoundsController",
+            "controlledComponentName": "brick1Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "brick1BreakSound",
+            "modelComponentNames": [
+              "brick1Visible"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( !brick1Visible ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "click.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "brick1View",
+            "modelComponentNames": [
+              "brick1Visible",
+              "brick1Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( brick1Bounds, true );\r\nsetVisible( brick1Visible )",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "#AA4A44",
+              "stroke": "white",
+              "lineWidth": "2",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 7,
+      "title": "Reset Game with Marker",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 76.17220924589068,
+        "y": 310
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "resetGameTrigger",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "resetGameController",
+            "controlledComponentName": "resetGameTrigger",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "resetSound",
+            "modelComponentNames": [
+              "resetGameTrigger"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( resetGameTrigger ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "resetAll.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 4,
+      "title": "Brick Two",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 272,
+        "y": 310
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "brick2Visible",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "brick2Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.25",
+            "defaultMaxY": "0.25"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "brick2BoundsController",
+            "controlledComponentName": "brick2Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "brick2BreakSound",
+            "modelComponentNames": [
+              "brick2Visible"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( !brick2Visible ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "click.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "brick2View",
+            "modelComponentNames": [
+              "brick2Visible",
+              "brick2Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( brick2Bounds, true );\r\nsetVisible( brick2Visible )",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "#AA4A44",
+              "stroke": "white",
+              "lineWidth": "2",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 5,
+      "title": "Brick Three",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 272,
+        "y": 265.585122201382
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "brick3Visible",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "brick3Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.25",
+            "defaultMaxY": "0.25"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "brick3BoundsController",
+            "controlledComponentName": "brick3Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "brick3BreakSound",
+            "modelComponentNames": [
+              "brick3Visible"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( !brick3Visible ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "click.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "brick3View",
+            "modelComponentNames": [
+              "brick3Visible",
+              "brick3Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( brick3Bounds, true );\r\nsetVisible( brick3Visible )",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "#AA4A44",
+              "stroke": "white",
+              "lineWidth": "2",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 6,
+      "title": "Brick Four",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 272,
+        "y": 310
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "brick4Visible",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "brick4Bounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.25",
+            "defaultMaxY": "0.25"
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [
+          {
+            "name": "brick4BoundsController",
+            "controlledComponentName": "brick4Bounds",
+            "controlType": "PAPER_SIZE",
+            "controlTypeFamily": ""
+          }
+        ],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "brick4BreakSound",
+            "modelComponentNames": [
+              "brick4Visible"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( !brick4Visible ) {\r\n    play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "click.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "brick4View",
+            "modelComponentNames": [
+              "brick4Visible",
+              "brick4Bounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "matchBounds( brick4Bounds, true );\r\nsetVisible( brick4Visible )",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "#AA4A44",
+              "stroke": "white",
+              "lineWidth": "2",
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

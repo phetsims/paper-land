@@ -1,0 +1,251 @@
+{
+  "programs": [
+    {
+      "number": 31,
+      "title": "Accordion Box Responses",
+      "keywords": "",
+      "description": "A sample accordion box interaction with voicing responses. Requires a blank program to trigger focus responses.",
+      "expanded": true,
+      "topWhiskerLength": 0.05,
+      "rightWhiskerLength": 0.05,
+      "bottomWhiskerLength": 0.05,
+      "leftWhiskerLength": 0.05,
+      "positionProperty": {
+        "x": 228.40813183888966,
+        "y": 131.6067958885443
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isOpen",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [
+          {
+            "name": "paperPosition",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "nameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "My Challenge"
+          },
+          {
+            "name": "accordionOpenContextResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Current challenge 1 to 2."
+          },
+          {
+            "name": "accordionCloseContextResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Hidden."
+          },
+          {
+            "name": "hintResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Change Challenge and move hands."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "paperPositionController",
+            "controlledComponentName": "paperPosition",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "isOpenController",
+            "controlledComponentName": "isOpen",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "focusByWhiskerProgramNumber",
+            "controlledComponentName": "isFocused",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": "20"
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playAccordionBoxOpen",
+            "modelComponentNames": [
+              "isOpen"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isOpen) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "accordionBoxOpen.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "playAccordionBoxClose",
+            "modelComponentNames": [
+              "isOpen"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isOpen === false){\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "accordionBoxClose.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceFocusResponses",
+            "modelComponentNames": [
+              "isFocused",
+              "nameResponse",
+              "hintResponse"
+            ],
+            "referenceComponentNames": [
+              "hintResponse",
+              "nameResponse"
+            ],
+            "controlFunctionString": "if(isFocused) {\n    speak( nameResponse );\n}",
+            "lazyLink": false
+          },
+          {
+            "name": "voiceAccordionResponses",
+            "modelComponentNames": [
+              "isOpen",
+              "nameResponse",
+              "accordionOpenContextResponse",
+              "accordionCloseContextResponse",
+              "hintResponse"
+            ],
+            "referenceComponentNames": [
+              "nameResponse",
+              "accordionCloseContextResponse",
+              "accordionOpenContextResponse",
+              "hintResponse"
+            ],
+            "controlFunctionString": "if (isOpen){\n    speak( nameResponse + accordionOpenContextResponse + hintResponse );\n} else {\n    speak( nameResponse + accordionCloseContextResponse );\n    }\n// The default behavior is the latest response interrupts a previous response.\n// You may need to set the priority of your responses dependent on your design context.",
+            "lazyLink": true
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 20,
+      "title": "Focus Emulator",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 436.9939848818082,
+        "y": 424.765863611649
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}
