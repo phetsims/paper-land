@@ -1,5 +1,5 @@
 /**
- * NodeJS script to read the paper programs from the configured database and store them locally.  This is generally
+ * NodeJS script to read the paper program data from the configured database and store them locally.  This is generally
  * used to back up the paper programs and potentially store them in GitHub.
  *
  * Data will be stored in the following directory structure:
@@ -10,7 +10,7 @@
  *     spaces/
  *       <space-name>/
  *         programs/
- *           <program-number>.js
+ *           <program-number>.json
  *           ...
  *         projects/
  *           <project-name>.json
@@ -111,8 +111,25 @@ paths.forEach( path => {
 
       programInfo.forEach( programInfoObject => {
         console.log( `    Getting program #${programInfoObject.number}, "${extractTitleFromCode( programInfoObject.currentCode )}"` );
-        const filePath = `${programsSubdirectory}/${programInfoObject.number.toString()}.js`;
-        fs.writeFileSync( filePath, fixEOL( programInfoObject.currentCode ) );
+        const filePath = `${programsSubdirectory}/${programInfoObject.number.toString()}.json`;
+
+        const fullProgramDataObject = {
+          number: programInfoObject.number,
+          originalCode: programInfoObject.currentCode,
+          currentCode: programInfoObject.currentCode,
+          printed: false,
+          editorInfo: {},
+          currentCodeUrl: `program.${playSpace}.${programInfoObject.number}.js`,
+          currentCodeHash: '',
+          debugUrl: `/api/spaces/${playSpace}/programs/${programInfoObject.number}/debugInfo`,
+          claimUrl: `/api/spaces/${playSpace}/programs/${programInfoObject.number}/claim`,
+          codeHasChanged: false,
+          debugInfo: '{"logs":[]}'
+        };
+
+        // Convert to a pretty-printed JSON string
+        const programDataString = JSON.stringify( fullProgramDataObject, null, 2 );
+        fs.writeFileSync( filePath, fixEOL( programDataString ) );
       } );
 
       console.log( `  Getting projects in playSpace ${playSpace}` );
