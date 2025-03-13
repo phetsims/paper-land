@@ -1,0 +1,1728 @@
+{
+  "programs": [
+    {
+      "number": 4,
+      "title": "Sound on Paper Overlap (Whisker)",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 585.4210042668725,
+        "y": 55.5820406901112
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isConnected",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "whiskerProximityDetector",
+            "controlledComponentName": "isConnected",
+            "controlType": "WHISKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "isConnectedSound",
+            "modelComponentNames": [
+              "isConnected"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isConnected) {\r\n  play();\r\n} else {\r\n    \r\n}",
+            "lazyLink": false,
+            "soundFileName": "generalOpen.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "connectionView",
+            "modelComponentNames": [
+              "isConnected"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if ( isConnected ) {\r\n    setFill( 'green' );\r\n}\r\nelse {\r\n    setFill( 'red' );\r\n}",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": 0.5,
+              "centerY": 0.5,
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.05,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 3,
+      "title": "Sound with Positional Rate and Output Level Control",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.1,
+      "rightWhiskerLength": 0.1,
+      "bottomWhiskerLength": 0.1,
+      "leftWhiskerLength": 0.1,
+      "positionProperty": {
+        "x": 403.104926577193,
+        "y": 36.89679160036024
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "soundPlaybackRate",
+            "propertyType": "NumberProperty",
+            "min": "1",
+            "max": "3",
+            "defaultValue": "1"
+          },
+          {
+            "name": "soundOutputLevel",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": "1",
+            "defaultValue": "0.7"
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController",
+            "controlledComponentName": "markerIsOn",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [
+          {
+            "name": "playbackRateRotationControl",
+            "controlledComponentName": "soundPlaybackRate",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          },
+          {
+            "name": "outputLevelVerticalControl",
+            "controlledComponentName": "soundOutputLevel",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsOnSound",
+            "modelComponentNames": [
+              "markerIsOn",
+              "soundPlaybackRate",
+              "soundOutputLevel"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "phet.paperLand.console.log(`${soundPlaybackRate}`);\r\nphet.paperLand.console.log(`${soundOutputLevel}`);\r\n\r\n\r\nif (markerIsOn) {\r\n    setPlaybackRate(soundPlaybackRate);\r\n    setOutputLevel(soundOutputLevel);\r\n    play();\r\n} else {\r\n    setPlaybackRate(1);\r\n    setOutputLevel(0);\r\n}",
+            "lazyLink": false,
+            "soundFileName": "musicalBeat.mp3",
+            "loop": true,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 1,
+      "title": "Sound on Paper Detection",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 16.185872389794127,
+        "y": 79.54033915861083
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isDetected",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playSound",
+            "modelComponentNames": [
+              "isDetected"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "play();",
+            "lazyLink": false,
+            "soundFileName": "loonCall.mp3",
+            "loop": false,
+            "autoplay": true
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 2,
+      "title": "Marker Toggle for Sound",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 198.1614604273054,
+        "y": 78.87457944389325
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy1",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy1",
+            "controlledComponentName": "markerIsOn_Copy1",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "markerIsTrueSound",
+            "modelComponentNames": [
+              "markerIsOn_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (markerIsOn_Copy1) {\r\n  play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "checkboxChecked.mp3",
+            "loop": false,
+            "autoplay": false
+          },
+          {
+            "name": "markerIsFalseSound",
+            "modelComponentNames": [
+              "markerIsOn_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (markerIsOn_Copy1 === false) {\r\n  play();\r\n}",
+            "lazyLink": false,
+            "soundFileName": "checkboxUnchecked.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 6,
+      "title": "Marker Toggle for Speech",
+      "keywords": "speech, description, sound, marker",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 27.547650470872895,
+        "y": 348.54521129349934
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "markerIsOn_Copy2",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "markerIsOnController_Copy2",
+            "controlledComponentName": "markerIsOn_Copy2",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "markerDescription",
+            "modelComponentNames": [
+              "markerIsOn_Copy2"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (markerIsOn_Copy2) {\r\n  speak( \"Marker is on.\" );\r\n} else {\r\n  speak( \"Marker is off.\" );\r\n}",
+            "lazyLink": true,
+            "basicSpeechString": ""
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 10,
+      "title": "Simple Button",
+      "keywords": "simple button, partial reset",
+      "description": "A simple button example with sound and voiced responses/ descriptions.",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 748.4302088009863,
+        "y": 351.1860195030507
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "isTriggered",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          },
+          {
+            "name": "isFocused",
+            "defaultValue": false,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": [
+          {
+            "name": "nameResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Reset Balloon."
+          },
+          {
+            "name": "hintResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Reset Balloon to start position and an uncharged state."
+          },
+          {
+            "name": "buttonTriggerResponse",
+            "propertyType": "StringProperty",
+            "defaultValue": "Balloon and sweater reset."
+          }
+        ]
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [
+          {
+            "name": "triggerRotationController",
+            "controlledComponentName": "isTriggered",
+            "controlType": "ROTATION",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          },
+          {
+            "name": "markerFocusController",
+            "controlledComponentName": "isFocused",
+            "controlType": "MARKER",
+            "controlTypeFamily": "",
+            "whiskerConfiguration": {
+              "topLength": 0.2,
+              "rightLength": 0.2,
+              "bottomLength": 0.2,
+              "leftLength": 0.2,
+              "otherPaperNumber": null
+            },
+            "markerColor": ""
+          }
+        ],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [
+          {
+            "name": "playTriggerSound",
+            "modelComponentNames": [
+              "isTriggered"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isTriggered) {\n    play();\n}",
+            "lazyLink": false,
+            "soundFileName": "generalButton.mp3",
+            "loop": false,
+            "autoplay": false
+          }
+        ],
+        "speechViews": [
+          {
+            "name": "voiceTriggerResponses",
+            "modelComponentNames": [
+              "isTriggered",
+              "nameResponse",
+              "buttonTriggerResponse"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isTriggered) {\n  speak( nameResponse + buttonTriggerResponse );\n} ",
+            "lazyLink": true,
+            "basicSpeechString": ""
+          },
+          {
+            "name": "voiceFocusResponses",
+            "modelComponentNames": [
+              "isFocused",
+              "nameResponse",
+              "hintResponse"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (isFocused){\n    speak( nameResponse + hintResponse ) ;\n}",
+            "lazyLink": false,
+            "basicSpeechString": ""
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 5,
+      "title": "Speech on Paper Detection",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 762.0765812061464,
+        "y": 95.95136289045914
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [
+          {
+            "name": "descriptionTrigger",
+            "defaultValue": true,
+            "propertyType": "BooleanProperty"
+          }
+        ],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "descriptionView",
+            "modelComponentNames": [
+              "descriptionTrigger"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "",
+            "lazyLink": false,
+            "basicSpeechString": "Hello World!"
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 7,
+      "title": "Slider - Discrete",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 210.1349717611954,
+        "y": 350.55115840537076
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "number",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          },
+          {
+            "name": "roundedRegionNumber",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "verticalNumberController",
+            "controlledComponentName": "number",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "numberDescription",
+            "modelComponentNames": [
+              "roundedRegionNumber"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "if (roundedRegionNumber >= 0 && roundedRegionNumber < 2 ) {\r\n  speak( \"This is the starting number.\" );\r\n} else if (roundedRegionNumber >= 2 && roundedRegionNumber < 4 ) {\r\n  speak( \"The number increased by 2 units.\" );\r\n} else if (roundedRegionNumber >= 4 && roundedRegionNumber < 6 ) {\r\n  speak( \"The number increased by 4 units.\" );\r\n} else if (roundedRegionNumber >= 6 && roundedRegionNumber < 8 ) {\r\n  speak( \"The number increased by 6 units.\" );\r\n} else if (roundedRegionNumber >= 8 && roundedRegionNumber < 10 ) {\r\n  speak( \"The number increased by 8 units.\" );\r\n} else if (roundedRegionNumber === 10 ) {\r\n  speak( \"The number increased by 10 units.\" );\r\n} else {\r\n  speak( \"No specific condition matched.\" );\r\n}",
+            "lazyLink": true,
+            "basicSpeechString": ""
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [
+          {
+            "name": "roundTheNumberLink",
+            "controlledPropertyNames": [
+              "roundedRegionNumber"
+            ],
+            "controlFunctionString": "setRoundedRegionNumber(Math.round(number));\r\nphet.paperLand.console.log(`${number} to ${roundedRegionNumber}`);",
+            "dependencyNames": [
+              "number"
+            ],
+            "referenceComponentNames": []
+          }
+        ],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 8,
+      "title": "Slider - Continuous",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 391.837272309644,
+        "y": 356.5830086233052
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [
+          {
+            "name": "number_Copy1",
+            "propertyType": "NumberProperty",
+            "min": 0,
+            "max": 10,
+            "defaultValue": 5
+          }
+        ],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [
+          {
+            "name": "verticalNumberController_Copy1",
+            "controlledComponentName": "number_Copy1",
+            "controlType": "VERTICAL",
+            "controlTypeFamily": "PAPER_MOVEMENT",
+            "markerColor": "all",
+            "relationshipControlType": "LINEAR"
+          }
+        ],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "numberDescription_Copy1",
+            "modelComponentNames": [
+              "number_Copy1"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "speak( `Number is now ${number_Copy1}.` );",
+            "lazyLink": true,
+            "basicSpeechString": ""
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 9,
+      "title": "Speech in 3x3 Grid (Object)",
+      "keywords": "",
+      "description": "",
+      "expanded": true,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 564.7206991900902,
+        "y": 344.21913110652093
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [
+          {
+            "name": "position",
+            "propertyType": "Vector2Property",
+            "defaultX": 0,
+            "defaultY": 0
+          }
+        ],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [
+          {
+            "name": "objectBounds",
+            "propertyType": "DerivedProperty",
+            "dependencyNames": [
+              "position",
+              "leftTopBounds",
+              "centerTopBounds",
+              "rightTopBounds",
+              "leftCenterBounds",
+              "centerBounds",
+              "rightCenterBounds",
+              "leftBottomBounds",
+              "centerBottomBounds",
+              "rightBottomBounds"
+            ],
+            "derivation": "if ( leftTopBounds.containsPoint( position ) ) {\r\n    return leftTopBounds;\r\n}\r\nelse if ( centerTopBounds.containsPoint( position ) ) {\r\n    return centerTopBounds;\r\n}\r\nelse if ( rightTopBounds.containsPoint( position ) ) {\r\n    return rightTopBounds;\r\n}\r\nelse if ( leftCenterBounds.containsPoint( position ) ) {\r\n    return leftCenterBounds;\r\n}\r\nelse if ( centerBounds.containsPoint( position ) ) {\r\n    return centerBounds;\r\n}\r\nelse if ( rightCenterBounds.containsPoint( position ) ) {\r\n    return rightCenterBounds;\r\n}\r\nelse if ( leftBottomBounds.containsPoint( position ) ) {\r\n    return leftBottomBounds;\r\n}\r\nelse if ( centerBottomBounds.containsPoint( position ) ) {\r\n    return centerBottomBounds;\r\n}\r\nelse if ( rightBottomBounds.containsPoint( position ) ) {\r\n    return rightBottomBounds;\r\n}\r\nelse {\r\n    return null;\r\n}\r\n"
+          }
+        ],
+        "namedBounds2Properties": [],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [
+          {
+            "name": "positionController",
+            "controlledComponentName": "position",
+            "controlType": "MATCH_CENTER",
+            "controlTypeFamily": ""
+          }
+        ],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [
+          {
+            "name": "objectBoundsDescription",
+            "modelComponentNames": [
+              "position",
+              "leftTopBounds",
+              "centerTopBounds",
+              "rightTopBounds",
+              "leftCenterBounds",
+              "centerBounds",
+              "rightCenterBounds",
+              "leftBottomBounds",
+              "centerBottomBounds",
+              "rightBottomBounds",
+              "objectBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "let objectBoundsDescription = '';\r\nif (leftTopBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'left top';\r\n}\r\nelse if (centerTopBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'center top';\r\n}\r\nelse if (rightTopBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'right top'\r\n}\r\nelse if (leftCenterBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'left center'\r\n}\r\nelse if (centerBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'center'\r\n}\r\nelse if (rightCenterBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'right center'\r\n}\r\nelse if (leftBottomBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'left bottom'\r\n}\r\nelse if (centerBottomBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'center bottom'\r\n}\r\nelse if (rightBottomBounds.containsPoint(position)) {\r\n    objectBoundsDescription = 'right bottom'\r\n}\r\n\r\nspeak( objectBoundsDescription );",
+            "lazyLink": false,
+            "basicSpeechString": ""
+          }
+        ],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "objectView",
+            "modelComponentNames": [
+              "position"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setCenterX( position.x );\r\nsetCenterY( position.y );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "circle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": "0.1",
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    },
+    {
+      "number": 20,
+      "title": "3x3 Grid (Bounds)",
+      "keywords": "",
+      "description": "",
+      "expanded": false,
+      "topWhiskerLength": 0.2,
+      "rightWhiskerLength": 0.2,
+      "bottomWhiskerLength": 0.2,
+      "leftWhiskerLength": 0.2,
+      "positionProperty": {
+        "x": 566.4937470529312,
+        "y": 608
+      },
+      "modelContainer": {
+        "namedBooleanProperties": [],
+        "namedVector2Properties": [],
+        "namedNumberProperties": [],
+        "namedEnumerationProperties": [],
+        "namedDerivedProperties": [],
+        "namedBounds2Properties": [
+          {
+            "name": "leftTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": 0,
+            "defaultMaxX": "0.33",
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "centerTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": 0,
+            "defaultMaxX": "0.66",
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "rightTopBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": 0,
+            "defaultMaxX": 1,
+            "defaultMaxY": "0.33"
+          },
+          {
+            "name": "leftCenterBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": "0.33",
+            "defaultMaxX": "0.33",
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "centerBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": "0.33",
+            "defaultMaxX": "0.66",
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "rightCenterBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": "0.33",
+            "defaultMaxX": 1,
+            "defaultMaxY": "0.66"
+          },
+          {
+            "name": "leftBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": 0,
+            "defaultMinY": "0.66",
+            "defaultMaxX": "0.33",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "centerBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.33",
+            "defaultMinY": "0.66",
+            "defaultMaxX": "0.66",
+            "defaultMaxY": 1
+          },
+          {
+            "name": "rightBottomBounds",
+            "propertyType": "Bounds2Property",
+            "defaultMinX": "0.66",
+            "defaultMinY": "0.66",
+            "defaultMaxX": 1,
+            "defaultMaxY": 1
+          }
+        ],
+        "namedObservableArrays": [],
+        "namedArrayItems": [],
+        "namedArrayItemReferences": [],
+        "namedStringProperties": []
+      },
+      "controllerContainer": {
+        "vector2PropertyControllers": [],
+        "boundsPropertyControllers": [],
+        "booleanPropertyControllers": [],
+        "numberPropertyControllers": [],
+        "enumerationPropertyControllers": []
+      },
+      "viewContainer": {
+        "soundViews": [],
+        "speechViews": [],
+        "textViews": [],
+        "shapeViews": [
+          {
+            "name": "leftTopView",
+            "modelComponentNames": [
+              "leftTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftTopBounds );\r\nsetFill( 'rgba(255, 0, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerTopView",
+            "modelComponentNames": [
+              "centerTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerTopBounds );\r\nsetFill( 'rgba(0, 0, 255, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightTopView",
+            "modelComponentNames": [
+              "rightTopBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightTopBounds );\r\nsetFill( 'rgba(0, 128, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "leftCenterView",
+            "modelComponentNames": [
+              "leftCenterBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftCenterBounds );\r\nsetFill( 'rgba(255, 255, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerView",
+            "modelComponentNames": [
+              "centerBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerBounds );\r\nsetFill( 'rgba(128, 0, 128, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightCenterView",
+            "modelComponentNames": [
+              "rightCenterBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightCenterBounds );\r\nsetFill( 'rgba(255, 165, 0, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "leftBottomView",
+            "modelComponentNames": [
+              "leftBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( leftBottomBounds );\r\nsetFill( 'rgba(255, 192, 203, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "centerBottomView",
+            "modelComponentNames": [
+              "centerBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( centerBottomBounds );\r\nsetFill( 'rgba(165, 42, 42, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          },
+          {
+            "name": "rightBottomView",
+            "modelComponentNames": [
+              "rightBottomBounds"
+            ],
+            "referenceComponentNames": [],
+            "controlFunctionString": "setRectBounds( rightBottomBounds );\r\nsetFill( 'rgba(128, 128, 128, 0.5)' );",
+            "lazyLink": false,
+            "defaultViewOptions": {
+              "centerX": "",
+              "centerY": "",
+              "scale": 1,
+              "rotation": 0,
+              "opacity": 1,
+              "visible": true,
+              "viewUnits": "model"
+            },
+            "defaultShapeOptions": {
+              "shapeType": "rectangle",
+              "fill": "lightblue",
+              "stroke": "red",
+              "lineWidth": 1,
+              "rectWidth": 0.5,
+              "rectHeight": 0.5,
+              "circleRadius": 0.5,
+              "ellipseRadiusX": 0.3,
+              "ellipseRadiusY": 0.15,
+              "lineStartX": 0,
+              "lineStartY": 0,
+              "lineEndX": 0.3,
+              "lineEndY": 0.3,
+              "triangleBaseWidth": 0.1,
+              "triangleHeight": 0.3,
+              "polygonPoints": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0.1,
+                  0
+                ],
+                [
+                  0.1,
+                  0.1
+                ],
+                [
+                  0,
+                  0.1
+                ]
+              ]
+            }
+          }
+        ],
+        "backgroundViews": [],
+        "imageViews": []
+      },
+      "listenerContainer": {
+        "linkListeners": [],
+        "animationListeners": [],
+        "bluetoothListeners": []
+      },
+      "customCodeContainer": {
+        "onProgramAddedCode": "",
+        "onProgramRemovedCode": "",
+        "onProgramChangedPositionCode": "",
+        "onProgramMarkersAddedCode": "",
+        "onProgramMarkersRemovedCode": "",
+        "onProgramMarkersChangedPositionCode": "",
+        "onProgramAdjacentCode": "",
+        "onProgramSeparatedCode": ""
+      }
+    }
+  ]
+}

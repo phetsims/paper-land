@@ -1,8 +1,8 @@
 {
-  "name": "paperprograms",
-  "version": "0.0.8",
+  "name": "paperplayground",
+  "version": "1.0.1",
   "description": "Co-design environment for accessible educational simulations.",
-  "author": "PhET Interactive Simulations <phethelp@colorado.edu>, Jan Paul Posma <j@npaulpos.ma>",
+  "author": "PhET Interactive Simulations <phethelp@colorado.edu>",
   "license": "MIT",
   "scripts": {
     "createdb": "psql -c \"SELECT 1\" paper_programs_development 2>/dev/null 1>/dev/null || createdb paper_programs_development",
