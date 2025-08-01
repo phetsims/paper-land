@@ -253,7 +253,16 @@ export default class CreatorView extends phet.scenery.Node {
 
         // Clear the active edit (and therefore the React form) if you click on anything in the scenery display other
         // than a program or the thumb that changes the display column width.
-        if ( !_.some( event.trail.nodes, node => node instanceof ProgramNode ) && !event.trail.nodes.includes( this.columnDragThumb ) ) {
+        // than a program, the thumb that changes the display column width, or control buttons (save/send/etc).
+        const isClickOnControlButton = event.trail.nodes.includes( this.saveProjectButton ) || 
+                                     event.trail.nodes.includes( this.sendToPaperLandButton ) ||
+                                     event.trail.nodes.includes( this.saveProjectJSONButton ) ||
+                                     event.trail.nodes.includes( this.loadProjectJSONButton ) ||
+                                     event.trail.nodes.includes( this.newProgramFromTemplateButton );
+        
+        if ( !_.some( event.trail.nodes, node => node instanceof ProgramNode ) && 
+             !event.trail.nodes.includes( this.columnDragThumb ) && 
+             !isClickOnControlButton ) {
           model.activeEditProperty.value = null;
         }
       }
