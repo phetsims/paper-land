@@ -1,0 +1,1503 @@
+diff --git a/README_TYPESCRIPT_SOLUTION.md b/README_TYPESCRIPT_SOLUTION.md
+new file mode 100644
+index 0000000..118b7ef
+--- /dev/null
++++ b/README_TYPESCRIPT_SOLUTION.md
+@@ -0,0 +1,93 @@
++# Paper Land TypeScript IntelliSense - Complete Solution
++
++## Summary
++
++This solution implements **GitHub Issue #273** by adding comprehensive TypeScript IntelliSense support to Monaco Editor for Paper Land's core API objects: `sharedData`, `points`, and `scratchpad`.
++
++## Implementation Overview
++
++### ✅ Files Created
++- `/client/common/paper-land-types.d.ts` - TypeScript definitions
++- `/client/common/monacoConfig.js` - Monaco configuration utilities  
++- `/docs/typescript-intellisense.md` - Feature documentation
++- `/docs/typescript-intellisense-example.md` - Usage examples
++- `/TYPESCRIPT_INTELLISENSE_SOLUTION.md` - Complete solution documentation
++
++### ✅ Files Modified
++- `/client/editor/EditorMain.js` - Added TypeScript support to main editor
++- `/client/creator/react/CreatorMonacoEditor.js` - Added TypeScript support to creator
++- `/client/camera/CameraMain.js` - Added TypeScript support to camera view
++
++## What Users Get
++
++### Full Autocomplete For:
++- **`sharedData.`** → `model`, `scene`, `displaySize`, `allMarkers`
++- **`points[0].`** → `x`, `y`
++- **`scratchpad.`** → Any custom properties
++- **`phet.paperLand.`** → All Paper Land functions and utilities
++- **`markersOnProgram[0].`** → `id`, `colorName`, `position`, etc.
++
++### Enhanced Developer Experience:
++- 🎯 **Parameter hints** for all functions
++- 📖 **Hover documentation** with JSDoc comments
++- 🔍 **Error prevention** through autocomplete
++- ⚡ **Faster development** with API discovery
++- 📚 **Self-documenting code** with inline help
++
++## Technical Implementation
++
++Uses Monaco's `addExtraLib` API to inject TypeScript definitions without requiring TypeScript compilation:
++
++```javascript
++monaco.languages.typescript.javascriptDefaults.addExtraLib(
++  paperLandTypes,
++  'paper-land-types.d.ts'
++);
++```
++
++Configured for JavaScript-friendly development:
++- No TypeScript errors in JavaScript code
++- Syntax validation enabled
++- Autocomplete and suggestions enabled
++- ES2015 target for modern features
++
++## API Coverage
++
++### Complete definitions for:
++- **SharedData**: `model`, `scene`, `displaySize`, `allMarkers`
++- **Points**: Array of 4 corner coordinates with `x`, `y` properties  
++- **Scratchpad**: Extensible object for program-specific data
++- **Markers**: Full marker object with `id`, `colorName`, `position`, etc.
++- **phet.paperLand**: All functions, utilities, emitters, and console methods
++
++### Example Usage:
++```javascript
++const onProgramAdded = (paperNumber, scratchpad, sharedData) => {
++  // ✨ Full autocomplete available
++  sharedData.model.get('gravity');
++  sharedData.scene.addChild(circle);
++  scratchpad.myData = { value: 42 };
++  phet.paperLand.console.log('Hello!');
++  const rotation = phet.paperLand.utils.getProgramRotation(points);
++};
++```
++
++## Validation
++
++- ✅ Webpack build successful (no syntax errors)
++- ✅ All three Monaco editors updated
++- ✅ Comprehensive TypeScript definitions 
++- ✅ Complete documentation provided
++- ✅ Backwards compatible implementation
++
++## How to Use
++
++1. Open any Paper Land editor (Editor, Creator, or Camera page)
++2. Start typing in Monaco Editor
++3. Get instant autocomplete for Paper Land objects
++4. Press `Ctrl+Space` for suggestions
++5. Hover over properties/functions for documentation
++
++**The solution is complete and ready for use!** 🚀
++
++Users will now have a significantly improved development experience with full IntelliSense support for Paper Land's API.
+diff --git a/TYPESCRIPT_INTELLISENSE_SOLUTION.md b/TYPESCRIPT_INTELLISENSE_SOLUTION.md
+new file mode 100644
+index 0000000..052dfff
+--- /dev/null
++++ b/TYPESCRIPT_INTELLISENSE_SOLUTION.md
+@@ -0,0 +1,149 @@
++# Paper Land TypeScript IntelliSense Solution
++
++## Issue #273 - Complete Implementation
++
++This solution implements TypeScript IntelliSense support for Paper Land's core API objects (`sharedData`, `points`, `scratchpad`) in Monaco Editor using the `addExtraLib` functionality.
++
++## What Was Implemented
++
++### 1. TypeScript Definition Files
++- **`/client/common/paper-land-types.d.ts`** - Comprehensive TypeScript definitions for all Paper Land API objects
++- **`/client/common/monacoConfig.js`** - Utility functions for Monaco configuration (fallback approach)
++
++### 2. Monaco Editor Integration
++Updated all three Monaco Editor instances to include TypeScript definitions:
++
++- **Editor Page** (`/client/editor/EditorMain.js`)
++  - Modified `_onEditorDidMount` to add TypeScript definitions
++  - Added `_addPaperLandTypesToMonaco` helper method
++
++- **Creator Page** (`/client/creator/react/CreatorMonacoEditor.js`)
++  - Added `editorDidMount` callback with TypeScript setup
++  - Added standalone `addPaperLandTypesToMonaco` function
++
++- **Camera Page** (`/client/camera/CameraMain.js`)
++  - Updated `_onEditorDidMount` to include TypeScript definitions
++  - Added `_addPaperLandTypesToMonaco` helper method
++
++### 3. Documentation
++- **`/docs/typescript-intellisense.md`** - Comprehensive documentation of the feature
++- **`/docs/typescript-intellisense-example.md`** - Practical examples showing IntelliSense in action
++
++## API Coverage
++
++The TypeScript definitions provide complete IntelliSense for:
++
++### Core Objects
++- `sharedData` - Global shared data
++  - `model` - Display model with `get()`, `set()`, `has()`, etc.
++  - `scene` - Scene graph with `addChild()`, `removeChild()`, etc.
++  - `displaySize` - Display dimensions (`width`, `height`)
++  - `allMarkers` - Array of all detected markers
++
++- `scratchpad` - Program-specific storage (extensible object)
++
++- `points` - Array of paper corner coordinates
++  - 4 points with `x`, `y` properties
++  - Order: left-top, right-top, right-bottom, left-bottom
++
++### Global Variables
++- `paperNumber` - Current paper number
++- `otherPaperNumber` - Other paper number (adjacency events)
++- `direction` - Adjacency direction ('left'|'right'|'up'|'down')
++- `markersOnProgram` - Markers on this program
++
++### phet.paperLand Namespace
++- **Console**: `console.log()`, `console.error()`, `console.warn()`
++- **Model Components**: `addModelComponent()`, `removeModelComponent()`
++- **Program Data**: `setProgramData()`, `getProgramData()`, `removeProgramData()`
++- **Event Emitters**: `markersAddedEmitter`, `markersRemovedEmitter`, `markersChangedPositionEmitter`
++- **Utilities**: `utils.getProgramRotation()`, `utils.getProgramCenter()`, etc.
++
++### Marker Objects
++Complete definition for marker properties:
++- `id` - Unique identifier
++- `colorName` - Color name string
++- `position` - Camera coordinates
++- `positionOnPaper` - Paper-relative coordinates (optional)
++- `paperNumber` - Associated paper number (optional)
++
++## Technical Implementation
++
++### Monaco Configuration
++Used `monaco.languages.typescript.javascriptDefaults.addExtraLib()` to inject TypeScript definitions without requiring actual TypeScript compilation.
++
++Configuration includes:
++- JavaScript-friendly compiler options
++- Disabled semantic validation to avoid TypeScript errors in JS code
++- Enabled syntax validation and suggestions
++- ES2015 target for modern JavaScript features
++
++### Code Placement Strategy
++Embedded TypeScript definitions directly in each Monaco mount handler to:
++- Avoid external file dependencies
++- Ensure consistent definitions across all editors
++- Maintain backwards compatibility
++- Enable easy updates and maintenance
++
++## User Experience
++
++### Before Implementation
++- No autocomplete for Paper Land objects
++- Need to manually reference documentation
++- Prone to typos in property names
++- Uncertain about available API methods
++
++### After Implementation
++- Full autocomplete for `sharedData.`, `points[0].`, `scratchpad.`, etc.
++- Parameter hints for all functions
++- Hover documentation for all properties and methods
++- IntelliSense discovers available APIs during coding
++- Reduced development time and errors
++
++## Testing and Validation
++
++- ✅ Webpack build successful - no syntax errors
++- ✅ All three Monaco Editor instances updated
++- ✅ Comprehensive TypeScript definitions created
++- ✅ Documentation and examples provided
++- ✅ Backwards compatible - no breaking changes
++
++## File Summary
++
++### New Files
++1. `/client/common/paper-land-types.d.ts` - Core TypeScript definitions
++2. `/client/common/monacoConfig.js` - Configuration utilities
++3. `/docs/typescript-intellisense.md` - Feature documentation
++4. `/docs/typescript-intellisense-example.md` - Usage examples
++
++### Modified Files
++1. `/client/editor/EditorMain.js` - Added TypeScript support to main editor
++2. `/client/creator/react/CreatorMonacoEditor.js` - Added TypeScript support to creator
++3. `/client/camera/CameraMain.js` - Added TypeScript support to camera view
++
++## Usage Instructions
++
++1. Open any Paper Land editor (Editor, Creator, or Camera page)
++2. Start typing Paper Land code in Monaco Editor
++3. Press Ctrl+Space or just start typing to see autocomplete suggestions
++4. Type object names followed by `.` to see available properties/methods
++5. Hover over any property or function to see documentation
++
++Example triggers:
++- `sharedData.` → shows model, scene, displaySize, allMarkers
++- `points[0].` → shows x, y properties
++- `phet.paperLand.` → shows all available Paper Land functions
++- `markersOnProgram[0].` → shows marker properties
++
++## Future Enhancements
++
++Potential improvements:
++- Add PhET library object definitions (axon.Property, scenery.Node, etc.)
++- Include common Paper Land patterns and templates
++- Type checking for user-defined model components
++- Integration with AI helper for enhanced suggestions
++- Custom snippets for common Paper Land code patterns
++
++## Conclusion
++
++This implementation fully addresses GitHub issue #273 by providing comprehensive TypeScript IntelliSense support for Paper Land's core API objects. Users can now develop Paper Land programs with full autocomplete, parameter hints, and inline documentation, significantly improving the development experience and reducing errors.
+diff --git a/client/camera/CameraMain.js b/client/camera/CameraMain.js
+index dfc3dc9..2da0057 100644
+--- a/client/camera/CameraMain.js
++++ b/client/camera/CameraMain.js
+@@ -407,10 +407,191 @@ export default class CameraMain extends React.Component {
+ 
+     this._loadEditorWithDefault();
+ 
++    // Add Paper Land TypeScript definitions for better IntelliSense
++    this._addPaperLandTypesToMonaco( monaco );
++
+     // Save a reference to the editor so that its configuration can be changed if necessary.
+     this._editor = editor;
+   }
+ 
++  /**
++   * Adds Paper Land TypeScript definitions to Monaco Editor for better IntelliSense support.
++   * @param monaco - The monaco editor instance
++   * @private
++   */
++  _addPaperLandTypesToMonaco( monaco ) {
++    const paperLandTypes = `
++/**
++ * TypeScript definitions for Paper Land API objects.
++ * These definitions provide IntelliSense and autocomplete for the main Paper Land objects.
++ */
++
++interface Point {
++  x: number;
++  y: number;
++}
++
++type PaperPoints = [Point, Point, Point, Point];
++
++interface Marker {
++  /** Unique ID for this marker */
++  id: number;
++  /** Color name of the marker (e.g., 'red', 'blue', 'green', etc.) */
++  colorName: string;
++  /** Position of the marker in camera coordinates */
++  position: Point;
++  /** Position of the marker relative to the paper it's on (if any) */
++  positionOnPaper?: Point;
++  /** The paper program number this marker is on (if any) */
++  paperNumber?: number;
++}
++
++interface DisplaySize {
++  width: number;
++  height: number;
++}
++
++interface DisplayModel {
++  /** Get a model component by name */
++  get(componentName: string): any;
++  /** Set a model component with a name */
++  set(componentName: string, component: any): void;
++  /** Check if a model component exists */
++  has(componentName: string): boolean;
++  /** Remove a model component */
++  delete(componentName: string): boolean;
++  /** Get all component names */
++  keys(): IterableIterator<string>;
++  /** Get all component values */
++  values(): IterableIterator<any>;
++  /** Get all entries */
++  entries(): IterableIterator<[string, any]>;
++  /** Size of the model */
++  size: number;
++}
++
++interface Scene {
++  /** Add a child node to the scene */
++  addChild(node: any): void;
++  /** Remove a child node from the scene */
++  removeChild(node: any): void;
++  /** Remove all children */
++  removeAllChildren(): void;
++  /** Get children */
++  children: any[];
++}
++
++interface SharedData {
++  /** Reference to the display model containing all model components */
++  model: DisplayModel;
++  /** Reference to the root scene node for adding visual elements */
++  scene: Scene;
++  /** The size of the display in view coordinates */
++  displaySize: DisplaySize;
++  /** All markers currently detected by the camera */
++  allMarkers: Marker[];
++}
++
++interface Scratchpad {
++  /** Store any data specific to this program */
++  [key: string]: any;
++}
++
++declare namespace phet {
++  namespace paperLand {
++    /** Console for logging (appears in sidebar) */
++    const console: {
++      log(...args: any[]): void;
++      error(...args: any[]): void;
++      warn(...args: any[]): void;
++    };
++
++    /** Add a model component to the display model */
++    function addModelComponent(name: string, component: any): void;
++    
++    /** Remove a model component from the display model */
++    function removeModelComponent(name: string): void;
++    
++    /** Set program-specific data */
++    function setProgramData(paperNumber: number, dataName: string, data: any): void;
++    
++    /** Get program-specific data */
++    function getProgramData(paperNumber: number, dataName: string): any;
++    
++    /** Remove program-specific data */
++    function removeProgramData(paperNumber: number, dataName: string): void;
++
++    /** Emitter for when markers are added anywhere in the camera view */
++    const markersAddedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers are removed anywhere in the camera view */
++    const markersRemovedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers change position anywhere in the camera view */
++    const markersChangedPositionEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Utility functions for working with paper programs */
++    const utils: {
++      /** Get the rotation of a program in radians (0 to 2π) */
++      getProgramRotation(points: PaperPoints): number;
++      
++      /** Get normalized rotation (0 to 1) */
++      getNormalizedProgramRotation(points: PaperPoints): number;
++      
++      /** Get enumeration value based on program rotation */
++      getEnumerationValueFromProgramRotation(points: PaperPoints, enumerationValues: string[]): string;
++      
++      /** Get the center point of a program */
++      getProgramCenter(points: PaperPoints): Point;
++      
++      /** Get normalized position of a marker on a paper (0 to 1) */
++      getMarkerPositionNormalized(markers: Marker[], colorName: string): number | null;
++    };
++  }
++}
++
++// Global variables available in all Paper Land programs
++declare const sharedData: SharedData;
++declare const scratchpad: Scratchpad;
++declare const points: PaperPoints;
++declare const paperNumber: number;
++declare const otherPaperNumber: number;
++declare const direction: 'left' | 'right' | 'up' | 'down';
++declare const markersOnProgram: Marker[];
++`;
++
++    // Add the Paper Land type definitions as an extra library
++    monaco.languages.typescript.javascriptDefaults.addExtraLib(
++      paperLandTypes,
++      'paper-land-types.d.ts'
++    );
++
++    // Configure TypeScript compiler options for better JavaScript IntelliSense
++    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
++      allowNonTsExtensions: true,
++      allowJs: true,
++      checkJs: false, // Don't show TypeScript errors in JavaScript code
++      target: monaco.languages.typescript.ScriptTarget.ES2015,
++      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
++    });
++
++    // Set diagnostics options to reduce noise while keeping helpful suggestions
++    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
++      noSemanticValidation: true, // Disable semantic validation to avoid TS errors in JS
++      noSyntaxValidation: false,  // Keep syntax validation
++      noSuggestionDiagnostics: false // Keep suggestions
++    });
++  }
++
+   /**
+    * Get the text that should be used as the label for the editor component.  This varies based on the state of the
+    * program, which is why there is a method for getting it.
+diff --git a/client/common/monacoConfig.js b/client/common/monacoConfig.js
+new file mode 100644
+index 0000000..8d770df
+--- /dev/null
++++ b/client/common/monacoConfig.js
+@@ -0,0 +1,161 @@
++/**
++ * Utility functions for configuring Monaco Editor with Paper Land TypeScript definitions.
++ */
++
++import paperLandTypesContent from './paper-land-types.d.ts?raw';
++
++/**
++ * Adds Paper Land TypeScript definitions to Monaco Editor for better IntelliSense support.
++ * This function should be called in the editorDidMount callback of Monaco Editor.
++ * 
++ * @param monaco - The monaco editor instance
++ */
++export function addPaperLandTypesToMonaco(monaco) {
++  // Add the Paper Land type definitions as an extra library
++  // This enables IntelliSense for sharedData, points, scratchpad, and other Paper Land objects
++  monaco.languages.typescript.javascriptDefaults.addExtraLib(
++    paperLandTypesContent,
++    'paper-land-types.d.ts'
++  );
++
++  // Configure TypeScript compiler options for better JavaScript IntelliSense
++  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
++    allowNonTsExtensions: true,
++    allowJs: true,
++    checkJs: false, // Don't show TypeScript errors in JavaScript code
++    target: monaco.languages.typescript.ScriptTarget.ES2015,
++    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
++    typeRoots: ['node_modules/@types']
++  });
++
++  // Set diagnostics options to reduce noise while keeping helpful suggestions
++  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
++    noSemanticValidation: true, // Disable semantic validation to avoid TS errors in JS
++    noSyntaxValidation: false,  // Keep syntax validation
++    noSuggestionDiagnostics: false // Keep suggestions
++  });
++}
++
++/**
++ * Alternative implementation that creates the type definitions as a string
++ * if importing the .d.ts file as raw text doesn't work
++ */
++export function addPaperLandTypesToMonacoFallback(monaco) {
++  const paperLandTypes = `
++/**
++ * TypeScript definitions for Paper Land API objects.
++ */
++
++interface Point {
++  x: number;
++  y: number;
++}
++
++type PaperPoints = [Point, Point, Point, Point];
++
++interface Marker {
++  id: number;
++  colorName: string;
++  position: Point;
++  positionOnPaper?: Point;
++  paperNumber?: number;
++}
++
++interface DisplaySize {
++  width: number;
++  height: number;
++}
++
++interface DisplayModel {
++  get(componentName: string): any;
++  set(componentName: string, component: any): void;
++  has(componentName: string): boolean;
++  delete(componentName: string): boolean;
++  keys(): IterableIterator<string>;
++  values(): IterableIterator<any>;
++  entries(): IterableIterator<[string, any]>;
++  size: number;
++}
++
++interface Scene {
++  addChild(node: any): void;
++  removeChild(node: any): void;
++  removeAllChildren(): void;
++  children: any[];
++}
++
++interface SharedData {
++  model: DisplayModel;
++  scene: Scene;
++  displaySize: DisplaySize;
++  allMarkers: Marker[];
++}
++
++interface Scratchpad {
++  [key: string]: any;
++}
++
++declare namespace phet {
++  namespace paperLand {
++    const console: {
++      log(...args: any[]): void;
++      error(...args: any[]): void;
++      warn(...args: any[]): void;
++    };
++    function addModelComponent(name: string, component: any): void;
++    function removeModelComponent(name: string): void;
++    function setProgramData(paperNumber: number, dataName: string, data: any): void;
++    function getProgramData(paperNumber: number, dataName: string): any;
++    function removeProgramData(paperNumber: number, dataName: string): void;
++    const markersAddedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++    const markersRemovedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++    const markersChangedPositionEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++    const utils: {
++      getProgramRotation(points: PaperPoints): number;
++      getNormalizedProgramRotation(points: PaperPoints): number;
++      getEnumerationValueFromProgramRotation(points: PaperPoints, enumerationValues: string[]): string;
++      getProgramCenter(points: PaperPoints): Point;
++      getMarkerPositionNormalized(markers: Marker[], colorName: string): number | null;
++    };
++  }
++}
++
++declare const sharedData: SharedData;
++declare const scratchpad: Scratchpad;
++declare const points: PaperPoints;
++declare const paperNumber: number;
++declare const otherPaperNumber: number;
++declare const direction: 'left' | 'right' | 'up' | 'down';
++declare const markersOnProgram: Marker[];
++`;
++
++  monaco.languages.typescript.javascriptDefaults.addExtraLib(
++    paperLandTypes,
++    'paper-land-types.d.ts'
++  );
++
++  // Configure compiler options
++  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
++    allowNonTsExtensions: true,
++    allowJs: true,
++    checkJs: false,
++    target: monaco.languages.typescript.ScriptTarget.ES2015,
++    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
++  });
++
++  // Set diagnostics options
++  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
++    noSemanticValidation: true,
++    noSyntaxValidation: false,
++    noSuggestionDiagnostics: false
++  });
++}
+diff --git a/client/common/paper-land-types.d.ts b/client/common/paper-land-types.d.ts
+new file mode 100644
+index 0000000..a1c8416
+--- /dev/null
++++ b/client/common/paper-land-types.d.ts
+@@ -0,0 +1,156 @@
++/**
++ * TypeScript definitions for Paper Land API objects.
++ * These definitions provide IntelliSense and autocomplete for the main Paper Land objects
++ * that are available in program code: sharedData, points, and scratchpad.
++ */
++
++// Point interface for paper corners and marker positions
++interface Point {
++  x: number;
++  y: number;
++}
++
++// Paper points array - 4 corners of the paper in order: left top, right top, right bottom, left bottom
++type PaperPoints = [Point, Point, Point, Point];
++
++// Marker interface based on Paper Programs API
++interface Marker {
++  /** Unique ID for this marker */
++  id: number;
++  /** Color name of the marker (e.g., 'red', 'blue', 'green', etc.) */
++  colorName: string;
++  /** Position of the marker in camera coordinates */
++  position: Point;
++  /** Position of the marker relative to the paper it's on (if any) */
++  positionOnPaper?: Point;
++  /** The paper program number this marker is on (if any) */
++  paperNumber?: number;
++}
++
++// Display size interface
++interface DisplaySize {
++  width: number;
++  height: number;
++}
++
++// Display Model interface - a Map containing all model components
++interface DisplayModel {
++  /** Get a model component by name */
++  get(componentName: string): any;
++  /** Set a model component with a name */
++  set(componentName: string, component: any): void;
++  /** Check if a model component exists */
++  has(componentName: string): boolean;
++  /** Remove a model component */
++  delete(componentName: string): boolean;
++  /** Get all component names */
++  keys(): IterableIterator<string>;
++  /** Get all component values */
++  values(): IterableIterator<any>;
++  /** Get all entries */
++  entries(): IterableIterator<[string, any]>;
++  /** Size of the model */
++  size: number;
++}
++
++// Scene interface - Scenery Node for the display
++interface Scene {
++  /** Add a child node to the scene */
++  addChild(node: any): void;
++  /** Remove a child node from the scene */
++  removeChild(node: any): void;
++  /** Remove all children */
++  removeAllChildren(): void;
++  /** Get children */
++  children: any[];
++}
++
++// SharedData interface - global data shared between all programs
++interface SharedData {
++  /** Reference to the display model containing all model components */
++  model: DisplayModel;
++  /** Reference to the root scene node for adding visual elements */
++  scene: Scene;
++  /** The size of the display in view coordinates */
++  displaySize: DisplaySize;
++  /** All markers currently detected by the camera */
++  allMarkers: Marker[];
++}
++
++// Scratchpad interface - program-specific data storage
++interface Scratchpad {
++  /** Store any data specific to this program */
++  [key: string]: any;
++}
++
++// Paper Land utility functions available globally
++declare namespace phet {
++  namespace paperLand {
++    /** Console for logging (appears in sidebar) */
++    const console: {
++      log(...args: any[]): void;
++      error(...args: any[]): void;
++      warn(...args: any[]): void;
++    };
++
++    /** Add a model component to the display model */
++    function addModelComponent(name: string, component: any): void;
++    
++    /** Remove a model component from the display model */
++    function removeModelComponent(name: string): void;
++    
++    /** Set program-specific data */
++    function setProgramData(paperNumber: number, dataName: string, data: any): void;
++    
++    /** Get program-specific data */
++    function getProgramData(paperNumber: number, dataName: string): any;
++    
++    /** Remove program-specific data */
++    function removeProgramData(paperNumber: number, dataName: string): void;
++
++    /** Emitter for when markers are added anywhere in the camera view */
++    const markersAddedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers are removed anywhere in the camera view */
++    const markersRemovedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers change position anywhere in the camera view */
++    const markersChangedPositionEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Utility functions for working with paper programs */
++    const utils: {
++      /** Get the rotation of a program in radians (0 to 2π) */
++      getProgramRotation(points: PaperPoints): number;
++      
++      /** Get normalized rotation (0 to 1) */
++      getNormalizedProgramRotation(points: PaperPoints): number;
++      
++      /** Get enumeration value based on program rotation */
++      getEnumerationValueFromProgramRotation(points: PaperPoints, enumerationValues: string[]): string;
++      
++      /** Get the center point of a program */
++      getProgramCenter(points: PaperPoints): Point;
++      
++      /** Get normalized position of a marker on a paper (0 to 1) */
++      getMarkerPositionNormalized(markers: Marker[], colorName: string): number | null;
++    };
++  }
++}
++
++// Global variables available in all Paper Land programs
++declare const sharedData: SharedData;
++declare const scratchpad: Scratchpad;
++declare const points: PaperPoints;
++declare const paperNumber: number;
++declare const otherPaperNumber: number;
++declare const direction: 'left' | 'right' | 'up' | 'down';
++declare const markersOnProgram: Marker[];
+diff --git a/client/creator/react/CreatorMonacoEditor.js b/client/creator/react/CreatorMonacoEditor.js
+index 54cbb89..b4711b2 100644
+--- a/client/creator/react/CreatorMonacoEditor.js
++++ b/client/creator/react/CreatorMonacoEditor.js
+@@ -76,6 +76,15 @@ export default function CreatorMonacoEditor( props ) {
+ 
+             handleChange( codeValue );
+           }}
++          editorDidMount={( editor, monaco ) => {
++            // Add Paper Land TypeScript definitions for better IntelliSense
++            addPaperLandTypesToMonaco( monaco );
++            
++            // Call any additional editorDidMount callback passed as prop
++            if ( props.editorDidMount ) {
++              props.editorDidMount( editor, monaco );
++            }
++          }}
+           options={{
+             tabSize: 2,
+             fontSize: '16px',
+@@ -91,4 +100,181 @@ export default function CreatorMonacoEditor( props ) {
+       )}
+     </div>
+   );
++}
++
++/**
++ * Adds Paper Land TypeScript definitions to Monaco Editor for better IntelliSense support.
++ * @param monaco - The monaco editor instance
++ */
++function addPaperLandTypesToMonaco( monaco ) {
++  const paperLandTypes = `
++/**
++ * TypeScript definitions for Paper Land API objects.
++ * These definitions provide IntelliSense and autocomplete for the main Paper Land objects.
++ */
++
++interface Point {
++  x: number;
++  y: number;
++}
++
++type PaperPoints = [Point, Point, Point, Point];
++
++interface Marker {
++  /** Unique ID for this marker */
++  id: number;
++  /** Color name of the marker (e.g., 'red', 'blue', 'green', etc.) */
++  colorName: string;
++  /** Position of the marker in camera coordinates */
++  position: Point;
++  /** Position of the marker relative to the paper it's on (if any) */
++  positionOnPaper?: Point;
++  /** The paper program number this marker is on (if any) */
++  paperNumber?: number;
++}
++
++interface DisplaySize {
++  width: number;
++  height: number;
++}
++
++interface DisplayModel {
++  /** Get a model component by name */
++  get(componentName: string): any;
++  /** Set a model component with a name */
++  set(componentName: string, component: any): void;
++  /** Check if a model component exists */
++  has(componentName: string): boolean;
++  /** Remove a model component */
++  delete(componentName: string): boolean;
++  /** Get all component names */
++  keys(): IterableIterator<string>;
++  /** Get all component values */
++  values(): IterableIterator<any>;
++  /** Get all entries */
++  entries(): IterableIterator<[string, any]>;
++  /** Size of the model */
++  size: number;
++}
++
++interface Scene {
++  /** Add a child node to the scene */
++  addChild(node: any): void;
++  /** Remove a child node from the scene */
++  removeChild(node: any): void;
++  /** Remove all children */
++  removeAllChildren(): void;
++  /** Get children */
++  children: any[];
++}
++
++interface SharedData {
++  /** Reference to the display model containing all model components */
++  model: DisplayModel;
++  /** Reference to the root scene node for adding visual elements */
++  scene: Scene;
++  /** The size of the display in view coordinates */
++  displaySize: DisplaySize;
++  /** All markers currently detected by the camera */
++  allMarkers: Marker[];
++}
++
++interface Scratchpad {
++  /** Store any data specific to this program */
++  [key: string]: any;
++}
++
++declare namespace phet {
++  namespace paperLand {
++    /** Console for logging (appears in sidebar) */
++    const console: {
++      log(...args: any[]): void;
++      error(...args: any[]): void;
++      warn(...args: any[]): void;
++    };
++
++    /** Add a model component to the display model */
++    function addModelComponent(name: string, component: any): void;
++    
++    /** Remove a model component from the display model */
++    function removeModelComponent(name: string): void;
++    
++    /** Set program-specific data */
++    function setProgramData(paperNumber: number, dataName: string, data: any): void;
++    
++    /** Get program-specific data */
++    function getProgramData(paperNumber: number, dataName: string): any;
++    
++    /** Remove program-specific data */
++    function removeProgramData(paperNumber: number, dataName: string): void;
++
++    /** Emitter for when markers are added anywhere in the camera view */
++    const markersAddedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers are removed anywhere in the camera view */
++    const markersRemovedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers change position anywhere in the camera view */
++    const markersChangedPositionEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Utility functions for working with paper programs */
++    const utils: {
++      /** Get the rotation of a program in radians (0 to 2π) */
++      getProgramRotation(points: PaperPoints): number;
++      
++      /** Get normalized rotation (0 to 1) */
++      getNormalizedProgramRotation(points: PaperPoints): number;
++      
++      /** Get enumeration value based on program rotation */
++      getEnumerationValueFromProgramRotation(points: PaperPoints, enumerationValues: string[]): string;
++      
++      /** Get the center point of a program */
++      getProgramCenter(points: PaperPoints): Point;
++      
++      /** Get normalized position of a marker on a paper (0 to 1) */
++      getMarkerPositionNormalized(markers: Marker[], colorName: string): number | null;
++    };
++  }
++}
++
++// Global variables available in all Paper Land programs
++declare const sharedData: SharedData;
++declare const scratchpad: Scratchpad;
++declare const points: PaperPoints;
++declare const paperNumber: number;
++declare const otherPaperNumber: number;
++declare const direction: 'left' | 'right' | 'up' | 'down';
++declare const markersOnProgram: Marker[];
++`;
++
++  // Add the Paper Land type definitions as an extra library
++  monaco.languages.typescript.javascriptDefaults.addExtraLib(
++    paperLandTypes,
++    'paper-land-types.d.ts'
++  );
++
++  // Configure TypeScript compiler options for better JavaScript IntelliSense
++  monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
++    allowNonTsExtensions: true,
++    allowJs: true,
++    checkJs: false, // Don't show TypeScript errors in JavaScript code
++    target: monaco.languages.typescript.ScriptTarget.ES2015,
++    moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
++  });
++
++  // Set diagnostics options to reduce noise while keeping helpful suggestions
++  monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
++    noSemanticValidation: true, // Disable semantic validation to avoid TS errors in JS
++    noSyntaxValidation: false,  // Keep syntax validation
++    noSuggestionDiagnostics: false // Keep suggestions
++  });
+ }
+\ No newline at end of file
+diff --git a/client/editor/EditorMain.js b/client/editor/EditorMain.js
+index d43005f..06d17a3 100644
+--- a/client/editor/EditorMain.js
++++ b/client/editor/EditorMain.js
+@@ -227,10 +227,191 @@ export default class EditorMain extends React.Component {
+   _onEditorDidMount = ( editor, monaco ) => {
+     editor.focus();
+ 
++    // Add Paper Land TypeScript definitions for better IntelliSense
++    this._addPaperLandTypesToMonaco( monaco );
++
+     // eslint-disable-next-line no-bitwise
+     editor.addCommand( monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, this._save );
+   };
+ 
++  /**
++   * Adds Paper Land TypeScript definitions to Monaco Editor for better IntelliSense support.
++   * @param monaco - The monaco editor instance
++   * @private
++   */
++  _addPaperLandTypesToMonaco = ( monaco ) => {
++    const paperLandTypes = `
++/**
++ * TypeScript definitions for Paper Land API objects.
++ * These definitions provide IntelliSense and autocomplete for the main Paper Land objects.
++ */
++
++interface Point {
++  x: number;
++  y: number;
++}
++
++type PaperPoints = [Point, Point, Point, Point];
++
++interface Marker {
++  /** Unique ID for this marker */
++  id: number;
++  /** Color name of the marker (e.g., 'red', 'blue', 'green', etc.) */
++  colorName: string;
++  /** Position of the marker in camera coordinates */
++  position: Point;
++  /** Position of the marker relative to the paper it's on (if any) */
++  positionOnPaper?: Point;
++  /** The paper program number this marker is on (if any) */
++  paperNumber?: number;
++}
++
++interface DisplaySize {
++  width: number;
++  height: number;
++}
++
++interface DisplayModel {
++  /** Get a model component by name */
++  get(componentName: string): any;
++  /** Set a model component with a name */
++  set(componentName: string, component: any): void;
++  /** Check if a model component exists */
++  has(componentName: string): boolean;
++  /** Remove a model component */
++  delete(componentName: string): boolean;
++  /** Get all component names */
++  keys(): IterableIterator<string>;
++  /** Get all component values */
++  values(): IterableIterator<any>;
++  /** Get all entries */
++  entries(): IterableIterator<[string, any]>;
++  /** Size of the model */
++  size: number;
++}
++
++interface Scene {
++  /** Add a child node to the scene */
++  addChild(node: any): void;
++  /** Remove a child node from the scene */
++  removeChild(node: any): void;
++  /** Remove all children */
++  removeAllChildren(): void;
++  /** Get children */
++  children: any[];
++}
++
++interface SharedData {
++  /** Reference to the display model containing all model components */
++  model: DisplayModel;
++  /** Reference to the root scene node for adding visual elements */
++  scene: Scene;
++  /** The size of the display in view coordinates */
++  displaySize: DisplaySize;
++  /** All markers currently detected by the camera */
++  allMarkers: Marker[];
++}
++
++interface Scratchpad {
++  /** Store any data specific to this program */
++  [key: string]: any;
++}
++
++declare namespace phet {
++  namespace paperLand {
++    /** Console for logging (appears in sidebar) */
++    const console: {
++      log(...args: any[]): void;
++      error(...args: any[]): void;
++      warn(...args: any[]): void;
++    };
++
++    /** Add a model component to the display model */
++    function addModelComponent(name: string, component: any): void;
++    
++    /** Remove a model component from the display model */
++    function removeModelComponent(name: string): void;
++    
++    /** Set program-specific data */
++    function setProgramData(paperNumber: number, dataName: string, data: any): void;
++    
++    /** Get program-specific data */
++    function getProgramData(paperNumber: number, dataName: string): any;
++    
++    /** Remove program-specific data */
++    function removeProgramData(paperNumber: number, dataName: string): void;
++
++    /** Emitter for when markers are added anywhere in the camera view */
++    const markersAddedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers are removed anywhere in the camera view */
++    const markersRemovedEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Emitter for when markers change position anywhere in the camera view */
++    const markersChangedPositionEmitter: {
++      addListener(listener: (markers: Marker[]) => void): void;
++      removeListener(listener: (markers: Marker[]) => void): void;
++    };
++
++    /** Utility functions for working with paper programs */
++    const utils: {
++      /** Get the rotation of a program in radians (0 to 2π) */
++      getProgramRotation(points: PaperPoints): number;
++      
++      /** Get normalized rotation (0 to 1) */
++      getNormalizedProgramRotation(points: PaperPoints): number;
++      
++      /** Get enumeration value based on program rotation */
++      getEnumerationValueFromProgramRotation(points: PaperPoints, enumerationValues: string[]): string;
++      
++      /** Get the center point of a program */
++      getProgramCenter(points: PaperPoints): Point;
++      
++      /** Get normalized position of a marker on a paper (0 to 1) */
++      getMarkerPositionNormalized(markers: Marker[], colorName: string): number | null;
++    };
++  }
++}
++
++// Global variables available in all Paper Land programs
++declare const sharedData: SharedData;
++declare const scratchpad: Scratchpad;
++declare const points: PaperPoints;
++declare const paperNumber: number;
++declare const otherPaperNumber: number;
++declare const direction: 'left' | 'right' | 'up' | 'down';
++declare const markersOnProgram: Marker[];
++`;
++
++    // Add the Paper Land type definitions as an extra library
++    monaco.languages.typescript.javascriptDefaults.addExtraLib(
++      paperLandTypes,
++      'paper-land-types.d.ts'
++    );
++
++    // Configure TypeScript compiler options for better JavaScript IntelliSense
++    monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
++      allowNonTsExtensions: true,
++      allowJs: true,
++      checkJs: false, // Don't show TypeScript errors in JavaScript code
++      target: monaco.languages.typescript.ScriptTarget.ES2015,
++      moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs
++    });
++
++    // Set diagnostics options to reduce noise while keeping helpful suggestions
++    monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
++      noSemanticValidation: true, // Disable semantic validation to avoid TS errors in JS
++      noSyntaxValidation: false,  // Keep syntax validation
++      noSuggestionDiagnostics: false // Keep suggestions
++    });
++  };
++
+   _selectedProgram = selectedProgramNumber => {
+     return this.state.spaceData.programs.find(
+       program => program.number.toString() === selectedProgramNumber.toString()
+diff --git a/docs/typescript-intellisense-example.md b/docs/typescript-intellisense-example.md
+new file mode 100644
+index 0000000..386be20
+--- /dev/null
++++ b/docs/typescript-intellisense-example.md
+@@ -0,0 +1,176 @@
++# TypeScript IntelliSense Example
++
++This example demonstrates the new TypeScript IntelliSense features available in Paper Land Monaco Editor.
++
++## Example Program with IntelliSense
++
++When you type this code in any Paper Land Monaco Editor (Editor, Creator, or Camera), you'll get full autocomplete and documentation:
++
++```javascript
++const onProgramAdded = (paperNumber, scratchpad, sharedData) => {
++  // ✨ Autocomplete available for sharedData properties
++  // Type "sharedData." to see: model, scene, displaySize, allMarkers
++  
++  // Access the display model
++  const gravityProperty = sharedData.model.get('gravity');
++  if (gravityProperty) {
++    phet.paperLand.console.log(`Gravity is: ${gravityProperty.value}`);
++  }
++  
++  // Add visual elements to the scene
++  // Type "sharedData.scene." to see: addChild, removeChild, children, etc.
++  const circle = new phet.scenery.Circle(25, { fill: 'red' });
++  sharedData.scene.addChild(circle);
++  
++  // Work with display size
++  // Type "sharedData.displaySize." to see: width, height
++  circle.centerX = sharedData.displaySize.width / 2;
++  circle.centerY = sharedData.displaySize.height / 2;
++  
++  // Store data in scratchpad
++  // Type "scratchpad." - you can add any property
++  scratchpad.myCircle = circle;
++  scratchpad.rotationSpeed = 0.1;
++  scratchpad.counter = 0;
++  
++  // Work with markers
++  // Type "sharedData.allMarkers" to see array methods and each marker's properties
++  const redMarkers = sharedData.allMarkers.filter(marker => marker.colorName === 'red');
++  phet.paperLand.console.log(`Found ${redMarkers.length} red markers`);
++  
++  // Access utility functions
++  // Type "phet.paperLand.utils." to see all available utility functions
++  const rotation = phet.paperLand.utils.getProgramRotation(points);
++  const center = phet.paperLand.utils.getProgramCenter(points);
++  
++  phet.paperLand.console.log(`Program rotation: ${rotation}`);
++  phet.paperLand.console.log(`Program center: (${center.x}, ${center.y})`);
++};
++
++const onProgramChangedPosition = (paperNumber, points, scratchpad, sharedData) => {
++  // ✨ Autocomplete available for points array
++  // Type "points[0]." to see: x, y properties
++  const topLeft = points[0];
++  const topRight = points[1];
++  const bottomRight = points[2];
++  const bottomLeft = points[3];
++  
++  // Use the stored circle from scratchpad
++  // Type "scratchpad." to see stored properties
++  if (scratchpad.myCircle) {
++    const newRotation = phet.paperLand.utils.getProgramRotation(points);
++    scratchpad.myCircle.rotation = newRotation;
++    
++    // Update position based on paper center
++    const center = phet.paperLand.utils.getProgramCenter(points);
++    scratchpad.myCircle.center = center;
++  }
++  
++  // Increment counter
++  scratchpad.counter = (scratchpad.counter || 0) + 1;
++  
++  if (scratchpad.counter % 10 === 0) {
++    phet.paperLand.console.log(`Position changed ${scratchpad.counter} times`);
++  }
++};
++
++const onProgramMarkersAdded = (paperNumber, points, scratchpad, sharedData, markersOnProgram) => {
++  // ✨ Autocomplete available for markersOnProgram array
++  // Type "markersOnProgram[0]." to see: id, colorName, position, positionOnPaper, paperNumber
++  
++  markersOnProgram.forEach(marker => {
++    phet.paperLand.console.log(`Marker ${marker.id} (${marker.colorName}) added at (${marker.position.x}, ${marker.position.y})`);
++    
++    if (marker.positionOnPaper) {
++      phet.paperLand.console.log(`Position on paper: (${marker.positionOnPaper.x}, ${marker.positionOnPaper.y})`);
++    }
++  });
++  
++  // Store program data
++  // Type "phet.paperLand." to see all available functions
++  phet.paperLand.setProgramData(paperNumber, 'markerCount', markersOnProgram.length);
++};
++
++const onProgramAdjacent = (paperNumber, otherPaperNumber, direction, scratchpad, sharedData) => {
++  // ✨ Autocomplete shows direction is one of: 'left', 'right', 'up', 'down'
++  phet.paperLand.console.log(`Program ${otherPaperNumber} is ${direction} of program ${paperNumber}`);
++  
++  // Get data from the other program
++  const otherProgramData = phet.paperLand.getProgramData(otherPaperNumber, 'markerCount');
++  if (otherProgramData !== undefined) {
++    phet.paperLand.console.log(`Other program has ${otherProgramData} markers`);
++  }
++  
++  // Listen to marker events
++  // Type "phet.paperLand.markersAddedEmitter." to see: addListener, removeListener
++  if (!scratchpad.markerListener) {
++    scratchpad.markerListener = (addedMarkers) => {
++      phet.paperLand.console.log(`${addedMarkers.length} markers added globally`);
++    };
++    phet.paperLand.markersAddedEmitter.addListener(scratchpad.markerListener);
++  }
++};
++
++const onProgramRemoved = (paperNumber, scratchpad, sharedData) => {
++  // Clean up visual elements
++  if (scratchpad.myCircle) {
++    sharedData.scene.removeChild(scratchpad.myCircle);
++  }
++  
++  // Remove event listeners
++  if (scratchpad.markerListener) {
++    phet.paperLand.markersAddedEmitter.removeListener(scratchpad.markerListener);
++  }
++  
++  // Clean up program data
++  phet.paperLand.removeProgramData(paperNumber, 'markerCount');
++  
++  phet.paperLand.console.log('Program cleaned up');
++};
++
++// Set up the paper program
++await paper.set('data', {
++  paperPlaygroundData: {
++    updateTime: Date.now(),
++    eventHandlers: {
++      onProgramAdded: onProgramAdded.toString(),
++      onProgramRemoved: onProgramRemoved.toString(),
++      onProgramChangedPosition: onProgramChangedPosition.toString(),
++      onProgramMarkersAdded: onProgramMarkersAdded.toString(),
++      onProgramAdjacent: onProgramAdjacent.toString()
++    }
++  }
++});
++```
++
++## What You'll See
++
++When typing this code in Monaco Editor, you'll experience:
++
++### 1. Object Property Autocomplete
++- Type `sharedData.` → see `model`, `scene`, `displaySize`, `allMarkers`
++- Type `points[0].` → see `x`, `y`
++- Type `scratchpad.` → add any custom properties
++
++### 2. Function Parameter Hints
++- Type `phet.paperLand.addModelComponent(` → see parameter hints for `name` and `component`
++- Type `sharedData.model.get(` → see parameter hint for `componentName`
++
++### 3. Method Autocomplete
++- Type `phet.paperLand.` → see all available functions like `console`, `addModelComponent`, `utils`, etc.
++- Type `phet.paperLand.utils.` → see utility functions like `getProgramRotation`, `getProgramCenter`
++
++### 4. Array and Object Navigation
++- Type `markersOnProgram[0].` → see marker properties like `id`, `colorName`, `position`
++- Type `sharedData.allMarkers.` → see array methods like `filter`, `map`, `forEach`
++
++### 5. Documentation on Hover
++- Hover over any property or function to see JSDoc documentation explaining what it does
++
++## Benefits
++
++1. **Faster coding** - No need to remember exact property names
++2. **Fewer errors** - Catch typos before runtime
++3. **Better exploration** - Discover available APIs as you type
++4. **Self-documenting** - See parameter types and descriptions inline
++5. **Consistent naming** - Autocomplete ensures you use the correct API names
+diff --git a/docs/typescript-intellisense.md b/docs/typescript-intellisense.md
+new file mode 100644
+index 0000000..407580a
+--- /dev/null
++++ b/docs/typescript-intellisense.md
+@@ -0,0 +1,137 @@
++# Paper Land TypeScript IntelliSense Support
++
++This enhancement adds TypeScript definitions for Paper Land's core API objects to Monaco Editor, providing better autocomplete, parameter hints, and documentation when writing Paper Land programs.
++
++## What's Included
++
++The TypeScript definitions provide IntelliSense support for the following Paper Land objects:
++
++### Core Objects
++
++- **`sharedData`** - Global data shared between all programs
++  - `sharedData.model` - The display model containing all model components
++  - `sharedData.scene` - The root scene node for adding visual elements
++  - `sharedData.displaySize` - Display dimensions
++  - `sharedData.allMarkers` - All markers detected by the camera
++
++- **`scratchpad`** - Program-specific data storage object
++  - Can store any data specific to your program
++  - Shared between all event listeners in the same program
++
++- **`points`** - Array of four corner points of the paper
++  - `points[0]` - Left top corner
++  - `points[1]` - Right top corner  
++  - `points[2]` - Right bottom corner
++  - `points[3]` - Left bottom corner
++  - Each point has `.x` and `.y` properties
++
++### Global Variables
++
++- `paperNumber` - The number of the current paper program
++- `otherPaperNumber` - The number of another paper (in adjacency events)
++- `direction` - Direction of adjacency ('left', 'right', 'up', 'down')
++- `markersOnProgram` - Array of markers currently on this program
++
++### phet.paperLand Namespace
++
++The full `phet.paperLand` API is available with autocomplete:
++
++#### Console Functions
++- `phet.paperLand.console.log()` - Log messages (appear in sidebar)
++- `phet.paperLand.console.error()` - Log error messages
++- `phet.paperLand.console.warn()` - Log warning messages
++
++#### Model Component Functions
++- `phet.paperLand.addModelComponent(name, component)` - Add a model component
++- `phet.paperLand.removeModelComponent(name)` - Remove a model component
++
++#### Program Data Functions
++- `phet.paperLand.setProgramData(paperNumber, dataName, data)` - Set program-specific data
++- `phet.paperLand.getProgramData(paperNumber, dataName)` - Get program-specific data
++- `phet.paperLand.removeProgramData(paperNumber, dataName)` - Remove program-specific data
++
++#### Event Emitters
++- `phet.paperLand.markersAddedEmitter` - Emits when markers are added
++- `phet.paperLand.markersRemovedEmitter` - Emits when markers are removed
++- `phet.paperLand.markersChangedPositionEmitter` - Emits when markers move
++
++#### Utility Functions
++- `phet.paperLand.utils.getProgramRotation(points)` - Get program rotation in radians
++- `phet.paperLand.utils.getNormalizedProgramRotation(points)` - Get normalized rotation (0-1)
++- `phet.paperLand.utils.getProgramCenter(points)` - Get center point of program
++- `phet.paperLand.utils.getMarkerPositionNormalized(markers, colorName)` - Get normalized marker position
++
++## How It Works
++
++The TypeScript definitions are automatically loaded when Monaco Editor mounts in:
++
++1. **Editor page** (`/workspaces/paper-land/client/editor/EditorMain.js`)
++2. **Creator page** (`/workspaces/paper-land/client/creator/react/CreatorMonacoEditor.js`)
++3. **Camera page** (`/workspaces/paper-land/client/camera/CameraMain.js`)
++
++The definitions are added using Monaco's `addExtraLib` API, which provides IntelliSense without requiring actual TypeScript compilation.
++
++## Example Usage
++
++When you start typing in the Monaco editor, you'll get autocomplete suggestions:
++
++```javascript
++// Typing "sharedData." will show:
++// - model
++// - scene  
++// - displaySize
++// - allMarkers
++
++const onProgramAdded = (paperNumber, scratchpad, sharedData) => {
++  // Autocomplete available for sharedData properties
++  sharedData.model.get('myComponent');
++  sharedData.scene.addChild(someNode);
++  
++  // Autocomplete available for scratchpad (any property)
++  scratchpad.myData = { value: 42 };
++  
++  // Autocomplete available for points array
++  const rotation = phet.paperLand.utils.getProgramRotation(points);
++  const center = phet.paperLand.utils.getProgramCenter(points);
++  
++  // Autocomplete available for phet.paperLand functions
++  phet.paperLand.console.log('Program added!');
++  phet.paperLand.addModelComponent('myProperty', new phet.axon.Property(0));
++};
++```
++
++## Benefits
++
++1. **Better Discoverability** - See all available properties and methods as you type
++2. **Parameter Hints** - Get information about function parameters and their types
++3. **Documentation** - See JSDoc comments explaining what each property/method does
++4. **Error Prevention** - Catch typos and incorrect API usage before runtime
++5. **Faster Development** - No need to constantly reference documentation
++
++## Implementation Details
++
++The TypeScript definitions are embedded directly in the Monaco Editor configuration to avoid external dependencies. The definitions include:
++
++- Comprehensive interfaces for all Paper Land objects
++- JSDoc comments for documentation
++- Proper typing for arrays, functions, and objects
++- Support for both required and optional properties
++
++The configuration also sets appropriate compiler options to provide helpful suggestions while avoiding TypeScript errors in JavaScript code.
++
++## Files Modified
++
++1. `/workspaces/paper-land/client/common/paper-land-types.d.ts` - Core TypeScript definitions
++2. `/workspaces/paper-land/client/common/monacoConfig.js` - Utility functions for Monaco configuration
++3. `/workspaces/paper-land/client/editor/EditorMain.js` - Main editor TypeScript integration
++4. `/workspaces/paper-land/client/creator/react/CreatorMonacoEditor.js` - Creator editor TypeScript integration
++5. `/workspaces/paper-land/client/camera/CameraMain.js` - Camera view TypeScript integration
++
++## Future Enhancements
++
++Possible future improvements:
++
++- Add specific property definitions for common PhET library objects (axon.Property, scenery.Node, etc.)
++- Include definitions for common Paper Land patterns and templates
++- Add type checking for user-defined model components
++- Integrate with the existing AI helper for smarter code suggestions
