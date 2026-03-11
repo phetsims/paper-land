@@ -1,7 +1,7 @@
 {
   "name": "paperplayground",
-  "version": "1.0.1",
-  "description": "Co-design environment for accessible educational simulations.",
+  "version": "1.1.0",
+  "description": "Build and explore multimodal web interactives with pieces of paper!",
   "author": "PhET Interactive Simulations <phethelp@colorado.edu>",
   "license": "MIT",
   "scripts": {
